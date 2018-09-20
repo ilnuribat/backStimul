@@ -1,0 +1,16 @@
+## Запуск backend
+```
+cd server
+npm i
+cp .env.example .env
+npm run databases:up
+npm run migrate:up
+npm run dev
+```
+
+## Запуск frontend
+```
+cd client
+npm i
+npm start
+```
