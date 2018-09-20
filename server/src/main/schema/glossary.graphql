@@ -1,0 +1,12 @@
+type Priority {
+  id: Int!,
+  name: String!,
+}
+
+type Glossary {
+  priorities: [Priority]!,
+}
+
+type Query {
+  glossary: Glossary!
+}

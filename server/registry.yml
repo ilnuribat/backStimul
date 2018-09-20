@@ -1,0 +1,17 @@
+registry:
+  restart: always
+  image: registry:2
+  ports:
+    - 443:443
+  environment:
+    REGISTRY_HTTP_TLS_CERTIFICATE: /certs/fullchain.pem
+    REGISTRY_HTTP_TLS_KEY: /certs/privkey.pem
+    REGISTRY_AUTH: htpasswd
+    REGISTRY_HTTP_ADDR: 0.0.0.0:443
+    REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+    REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+  volumes:
+    - /var/lib/registry:/var/lib/registry
+    - ./privkey.pem:/certs/privkey.pem
+    - ./fullchain.pem:/certs/fullchain.pem
+    - ./auth:/auth
