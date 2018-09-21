@@ -1,12 +1,10 @@
-import { _ } from 'lodash';
 const { Schema } = require('mongoose');
 
 
-// define messages
-const MessageModel = new Schema({
+module.exports = new Schema({
   fileurl: String,
   text: String,
-  userid: String,
+  userId: String,
 }, {
   timestamps: {
     createdAt: 'createdAt',
