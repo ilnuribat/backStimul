@@ -1,31 +1,16 @@
-const Sequelize = require('sequelize');
+const { Schema } = require('mongoose');
 
-module.exports = {
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+// define messages
+export default ProjectGrSch = new Schema({
+    name: String,
+    title: String,
+    description: String,
+    parentId: String,
+    createdBy: String,
+    type: { type: String, default: 'ProjectGroup' },
+}, {
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
   },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  createdBy: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'User',
-    },
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-    allowNull: false,
-  },
-  parentId: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'ProjectGroup',
-    },
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-    allowNull: false,
-  },
-};
+});

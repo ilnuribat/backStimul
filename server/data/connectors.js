@@ -35,138 +35,138 @@ const db = new Sequelize('chatty', null, null, {
 /* New */
 /* New */
 /* New */
-const ColumnModel = db.define('column', {
-  name: Sequelize.STRING,
-  order: Sequelize.INTEGER,
-  createdAt: {
-    type: Sequelize.DATE,
-    defaultValue: new Date(),
-  },
-  updatedAt: {
-    type: Sequelize.DATE,
-    defaultValue: new Date(),
-  },
-  projectId: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'Project',
-      onDelete: 'SET NULL',
-      onUpdate: 'CASCADE',
-    },
-  },
-});
-const PriorityModel = db.define('priority', {
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-});
-const ProjectModel = db.define('project', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  title: Sequelize.STRING,
-  description: Sequelize.TEXT,
-  parentId: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'ProjectGroup',
-    },
-  },
-});
-const ProjectGrModel = db.define('projectgr', {
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  createdBy: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'User',
-    },
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-    allowNull: false,
-  },
-  parentId: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'ProjectGroup',
-    },
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-    allowNull: false,
-  },
-});
-const ProjectUsrModel = db.define('projectusr', {
-  userId: {
-    type: Sequelize.INTEGER,
-  },
-  projectId: {
-    type: Sequelize.INTEGER,
-  },
-});
-const SessionModel = db.define('session', {
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  token: {
-    type: Sequelize.UUID,
-    unique: true,
-  },
-  createdAt: Sequelize.DATE,
-  userId: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-  },
-  ip: Sequelize.STRING,
-  userAgent: Sequelize.STRING,
-});
-const OldUsersModel = db.define('users', {
-  username: {
-    unique: true,
-    type: Sequelize.STRING,
-  },
-  email: {
-    unique: true,
-    type: Sequelize.STRING,
-  },
-  password: Sequelize.STRING,
-});
+// const ColumnModel = db.define('column', {
+//   name: Sequelize.STRING,
+//   order: Sequelize.INTEGER,
+//   createdAt: {
+//     type: Sequelize.DATE,
+//     defaultValue: new Date(),
+//   },
+//   updatedAt: {
+//     type: Sequelize.DATE,
+//     defaultValue: new Date(),
+//   },
+//   projectId: {
+//     type: Sequelize.INTEGER,
+//     references: {
+//       model: 'Project',
+//       onDelete: 'SET NULL',
+//       onUpdate: 'CASCADE',
+//     },
+//   },
+// });
+// const PriorityModel = db.define('priority', {
+//   id: {
+//     type: Sequelize.INTEGER,
+//     primaryKey: true,
+//     autoIncrement: true,
+//   },
+//   name: {
+//     type: Sequelize.STRING,
+//     allowNull: false,
+//   },
+// });
+// const ProjectModel = db.define('project', {
+//   id: {
+//     type: Sequelize.INTEGER,
+//     autoIncrement: true,
+//     primaryKey: true,
+//   },
+//   title: Sequelize.STRING,
+//   description: Sequelize.TEXT,
+//   parentId: {
+//     type: Sequelize.INTEGER,
+//     references: {
+//       model: 'ProjectGroup',
+//     },
+//   },
+// });
+// const ProjectGrModel = db.define('projectgr', {
+//   id: {
+//     type: Sequelize.INTEGER,
+//     primaryKey: true,
+//     autoIncrement: true,
+//   },
+//   name: {
+//     type: Sequelize.STRING,
+//     allowNull: false,
+//   },
+//   createdBy: {
+//     type: Sequelize.INTEGER,
+//     references: {
+//       model: 'User',
+//     },
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE',
+//     allowNull: false,
+//   },
+//   parentId: {
+//     type: Sequelize.INTEGER,
+//     references: {
+//       model: 'ProjectGroup',
+//     },
+//     onDelete: 'CASCADE',
+//     onUpdate: 'CASCADE',
+//     allowNull: false,
+//   },
+// });
+// const ProjectUsrModel = db.define('projectusr', {
+//   userId: {
+//     type: Sequelize.INTEGER,
+//   },
+//   projectId: {
+//     type: Sequelize.INTEGER,
+//   },
+// });
+// const SessionModel = db.define('session', {
+//   id: {
+//     type: Sequelize.INTEGER,
+//     primaryKey: true,
+//     autoIncrement: true,
+//   },
+//   token: {
+//     type: Sequelize.UUID,
+//     unique: true,
+//   },
+//   createdAt: Sequelize.DATE,
+//   userId: {
+//     type: Sequelize.INTEGER,
+//     allowNull: false,
+//   },
+//   ip: Sequelize.STRING,
+//   userAgent: Sequelize.STRING,
+// });
+// const OldUsersModel = db.define('users', {
+//   username: {
+//     unique: true,
+//     type: Sequelize.STRING,
+//   },
+//   email: {
+//     unique: true,
+//     type: Sequelize.STRING,
+//   },
+//   password: Sequelize.STRING,
+// });
 
 
-const TaskModel = new Schema({
-  name: String,
-  description: String,
-  createdAt: Date,
-  updatedAt: Date,
-  deletedAt: Date,
-  columnId: Number,
-  createdBy: Number,
-  priority: {
-    type: Number,
-    default: 3,
-  },
-}, {
-  timestamps: {
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-  },
-});
+// const TaskModel = new Schema({
+//   name: String,
+//   description: String,
+//   createdAt: Date,
+//   updatedAt: Date,
+//   deletedAt: Date,
+//   columnId: Number,
+//   createdBy: Number,
+//   priority: {
+//     type: Number,
+//     default: 3,
+//   },
+// }, {
+//   timestamps: {
+//     createdAt: 'createdAt',
+//     updatedAt: 'updatedAt',
+//   },
+// });
 
 
 /* end new */

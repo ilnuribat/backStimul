@@ -1,8 +1,12 @@
-import Sequelize from 'sequelize';
-import { _ } from 'lodash';
-import db from '../connectors';
+const { Schema } = require('mongoose');
 
-// define groups
-const GroupModel = db.define('group', {
-    name: { type: Sequelize.STRING },
-  });
+
+// define messages
+export default GroupSch = new Schema({
+    name: String,
+}, {
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+  },
+});
