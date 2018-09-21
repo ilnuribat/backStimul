@@ -1,6 +1,6 @@
 const { Schema } = require('mongoose');
 
-// define messages
+// define Project
 export default ProjectSch = new Schema({
     name: String,
     title: String,
