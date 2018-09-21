@@ -3,6 +3,6 @@ node_modules
 .DS_Store
 .env
 
-dev/db
+*/dev/db
 
 test commit

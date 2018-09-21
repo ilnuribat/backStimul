@@ -1,19 +1,21 @@
-## Запуск одной командой
-./dev.sh
+## backend
 
-## Запуск backend
+### requirements
 ```
-cd server
+  git
+  docker
+  docker-compose
+  nodejs:10
+```
+
+### шаги для старта backend-а
+
+```
+git pull git@bitbucket.org:guov/guov-kanban-back
+cd guov-kanban-back
 npm i
 cp .env.example .env
 npm run databases:up
 npm run migrate:up
 npm run dev
-```
-
-## Запуск frontend
-```
-cd client
-npm i
-npm start
 ```
