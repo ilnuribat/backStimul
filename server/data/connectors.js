@@ -2,6 +2,7 @@ import { _ } from 'lodash';
 import faker from 'faker';
 import Sequelize from 'sequelize';
 import bcrypt from 'bcrypt';
+const { Schema } = require('mongoose');
 
 // initialize our database
 const db = new Sequelize('chatty', null, null, {
@@ -115,6 +116,55 @@ const ProjectUsrModel = db.define('projectusr', {
   },
   projectId: {
     type: Sequelize.INTEGER,
+  },
+});
+const SessionModel = db.define('session', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  token: {
+    type: Sequelize.UUID,
+    unique: true,
+  },
+  createdAt: Sequelize.DATE,
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+  ip: Sequelize.STRING,
+  userAgent: Sequelize.STRING,
+});
+const OldUsersModel = db.define('users', {
+  username: {
+    unique: true,
+    type: Sequelize.STRING,
+  },
+  email: {
+    unique: true,
+    type: Sequelize.STRING,
+  },
+  password: Sequelize.STRING,
+});
+
+
+const TaskModel = new Schema({
+  name: String,
+  description: String,
+  createdAt: Date,
+  updatedAt: Date,
+  deletedAt: Date,
+  columnId: Number,
+  createdBy: Number,
+  priority: {
+    type: Number,
+    default: 3,
+  },
+}, {
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
   },
 });
 
