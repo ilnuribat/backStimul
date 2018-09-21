@@ -4,6 +4,7 @@ type Column {
   createdAt: String!
   name: String!
   order: Int
+  hide: Boolean
   project: Project!
   tasks: [Task]
 }
