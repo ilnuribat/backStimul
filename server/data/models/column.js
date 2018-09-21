@@ -1,10 +1,8 @@
-import { _ } from 'lodash';
+const _ = require('lodash');
 const { Schema } = require('mongoose');
 
 
-// define messages
-export default ColumnSch = new Schema({
-    name: String,
+module.exports = new Schema({
     title: String,
     order: Number,
     projectId: Number,

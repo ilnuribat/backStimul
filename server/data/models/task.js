@@ -1,7 +1,7 @@
 const { Schema } = require('mongoose');
 
-export default TaskSch = new Schema({
-  name: String,
+module.exports = new Schema({
+  title: String,
   description: String,
   deletedAt: Date,
   hide: { type: Boolean, default: false },

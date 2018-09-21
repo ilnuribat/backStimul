@@ -1,7 +1,7 @@
 const { Schema } = require('mongoose');
 
 // define Project
-export default ProjectSch = new Schema({
+module.exports = new Schema({
     name: String,
     title: String,
     description: String,

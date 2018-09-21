@@ -12,13 +12,9 @@ const associate = require('./associations');
 
 const columnModel = require('./column');
 const projectModel = require('./project');
-const projectUserModel = require('./projectUser');
 const taskSchema = require('./task');
 const userModel = require('./user');
-const usersModel = require('./users');
 const projectGroupModel = require('./projectGroup');
-const sessionModel = require('./session');
-const glossaryPriorityModel = require('./glossaryPriority');
 const { logger } = require('../../utils/logger');
 
 const sequelize = new Sequelize({
@@ -39,18 +35,12 @@ const sequelize = new Sequelize({
 const tableOptions = { freezeTableName: true, timestamps: false };
 
 const db = {
-  Column: sequelize.define('Column', columnModel, tableOptions),
-  Project: sequelize.define('Project', projectModel, tableOptions),
-  ProjectGroup: sequelize.define('ProjectGroup', projectGroupModel, tableOptions),
-  ProjectUser: sequelize.define('ProjectUser', projectUserModel, tableOptions),
+  Column: mongoose.model('Column', columnModel),
+  Project: mongoose.model('Project', projectModel),
+  ProjectGroup: mongoose.model('ProjectGroup', projectGroupModel),
   Task: mongoose.model('Task', taskSchema),
-  Users: mongoose.model('Users', usersModel),
-  User: sequelize.define('User', userModel, tableOptions),
-  Session: sequelize.define('Session', sessionModel, tableOptions),
-  GlossaryPriority: sequelize.define('GlossaryPriority', glossaryPriorityModel, tableOptions),
+  User: mongoose.model('User', userModel),
   sequelize,
 };
-
-associate(db);
 
 module.exports = db;

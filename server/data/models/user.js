@@ -1,7 +1,7 @@
 const { Schema } = require('mongoose');
 
 // define UserSch
-export default UserSch = new Schema({
+module.exports = new Schema({
     firstname: String,
     lastname: String,
     name: String,

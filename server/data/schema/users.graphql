@@ -2,18 +2,11 @@ type Users {
   _id: ID!
   name: String!
   email: String!
-  todos: [Todo!]
 }
 
 type AuthPayload {
   token: String!
   user: Users
-}
-
-
-type Todo {
-  _id: ID!
-  content: String!
 }
 
 type Mutation {

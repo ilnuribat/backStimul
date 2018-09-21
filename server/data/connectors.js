@@ -1,7 +1,7 @@
-import { _ } from 'lodash';
-import faker from 'faker';
-import Sequelize from 'sequelize';
-import bcrypt from 'bcrypt';
+const _ =  require('lodash');
+const faker =  require('faker');
+const Sequelize =  require('sequelize');
+const bcrypt =  require('bcrypt');
 const { Schema } = require('mongoose');
 
 // initialize our database

@@ -1,13 +1,6 @@
-import { _ } from 'lodash';
 const { Schema } = require('mongoose');
 
-// define messages
-export default PrioritySch = new Schema({
-    name: String,
+module.exports = new Schema({
+    id: Number,
     title: String,
-}, {
-  timestamps: {
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-  },
 });
