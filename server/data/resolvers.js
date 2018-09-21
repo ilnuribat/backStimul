@@ -252,6 +252,8 @@ export const resolvers = {
       ),
     },
   },
+
+  
   Glossary: {
     priorities: () => models.GlossaryPriority.findAll(),
   },

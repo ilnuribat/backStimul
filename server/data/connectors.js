@@ -28,6 +28,103 @@ const UserModel = db.define('user', {
   version: { type: Sequelize.INTEGER }, // version the password
 });
 
+
+
+/* New */
+/* New */
+/* New */
+/* New */
+const ColumnModel = db.define('column', {
+  name: Sequelize.STRING,
+  order: Sequelize.INTEGER,
+  createdAt: {
+    type: Sequelize.DATE,
+    defaultValue: new Date(),
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: new Date(),
+  },
+  projectId: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: 'Project',
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
+    },
+  },
+});
+const PriorityModel = db.define('priority', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+});
+const ProjectModel = db.define('project', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  title: Sequelize.STRING,
+  description: Sequelize.TEXT,
+  parentId: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: 'ProjectGroup',
+    },
+  },
+});
+const ProjectGrModel = db.define('projectgr', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  createdBy: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: 'User',
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    allowNull: false,
+  },
+  parentId: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: 'ProjectGroup',
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    allowNull: false,
+  },
+});
+const ProjectUsrModel = db.define('projectusr', {
+  userId: {
+    type: Sequelize.INTEGER,
+  },
+  projectId: {
+    type: Sequelize.INTEGER,
+  },
+});
+
+
+/* end new */
+/* end new */
+/* end new */
+/* end new */
+
+
 // users belong to multiple groups
 UserModel.belongsToMany(GroupModel, { through: 'GroupUser' });
 
@@ -47,43 +144,43 @@ GroupModel.belongsToMany(UserModel, { through: 'GroupUser' });
 const GROUPS = 4;
 const USERS_PER_GROUP = 5;
 const MESSAGES_PER_USER = 5;
-faker.seed(123); // get consistent data every time we reload app
+// faker.seed(123); // get consistent data every time we reload app
 
 // you don't need to stare at this code too hard
 // just trust that it fakes a bunch of groups, users, and messages
-db.sync({ force: true }).then(() => _.times(GROUPS, () => GroupModel.create({
-  name: faker.lorem.words(3),
-}).then(group => _.times(USERS_PER_GROUP, () => {
-  const password = faker.internet.password();
-  return bcrypt.hash(password, 10).then(hash => group.createUser({
-    email: faker.internet.email(),
-    username: faker.internet.userName(),
-    password: hash,
-    version: 1,
-  }).then((user) => {
-    console.log(
-      '{email, username, password}',
-      `{${user.email}, ${user.username}, ${password}}`
-    );
-    _.times(MESSAGES_PER_USER, () => MessageModel.create({
-      userId: user.id,
-      groupId: group.id,
-      text: faker.lorem.sentences(3),
-    }));
-    return user;
-  }));
-})).then((userPromises) => {
-  // make users friends with all users in the group
-  Promise.all(userPromises).then((users) => {
-    _.each(users, (current, i) => {
-      _.each(users, (user, j) => {
-        if (i !== j) {
-          current.addFriend(user);
-        }
-      });
-    });
-  });
-})));
+// db.sync({ force: true }).then(() => _.times(GROUPS, () => GroupModel.create({
+//   name: faker.lorem.words(3),
+// }).then(group => _.times(USERS_PER_GROUP, () => {
+//   const password = faker.internet.password();
+//   return bcrypt.hash(password, 10).then(hash => group.createUser({
+//     email: faker.internet.email(),
+//     username: faker.internet.userName(),
+//     password: hash,
+//     version: 1,
+//   }).then((user) => {
+//     console.log(
+//       '{email, username, password}',
+//       `{${user.email}, ${user.username}, ${password}}`
+//     );
+//     _.times(MESSAGES_PER_USER, () => MessageModel.create({
+//       userId: user.id,
+//       groupId: group.id,
+//       text: faker.lorem.sentences(3),
+//     }));
+//     return user;
+//   }));
+// })).then((userPromises) => {
+//   // make users friends with all users in the group
+//   Promise.all(userPromises).then((users) => {
+//     _.each(users, (current, i) => {
+//       _.each(users, (user, j) => {
+//         if (i !== j) {
+//           current.addFriend(user);
+//         }
+//       });
+//     });
+//   });
+// })));
 
 const Group = db.models.group;
 const Message = db.models.message;
