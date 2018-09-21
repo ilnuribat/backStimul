@@ -114,6 +114,7 @@ export default class CrTile extends Component {
             <span className="chkbx-label">проект?</span><span className={this.state.chk ? "chkbx active" : "chkbx"}></span>
           </div>
           <div className="button" onClick={this._create}>Добавить</div>
+          <div className="button" onClick={this._open}>Отмена</div>
         </div>
       );
     }else{
