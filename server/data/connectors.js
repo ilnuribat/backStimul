@@ -11,23 +11,23 @@ const db = new Sequelize('chatty', null, null, {
   logging: false, // mark this true if you want to see logs
 });
 
-// define groups
-const GroupModel = db.define('group', {
-  name: { type: Sequelize.STRING },
-});
+// // define groups
+// const GroupModel = db.define('group', {
+//   name: { type: Sequelize.STRING },
+// });
 
-// define messages
-const MessageModel = db.define('message', {
-  text: { type: Sequelize.STRING },
-});
+// // define messages
+// const MessageModel = db.define('message', {
+//   text: { type: Sequelize.STRING },
+// });
 
-// define users
-const UserModel = db.define('user', {
-  email: { type: Sequelize.STRING },
-  username: { type: Sequelize.STRING },
-  password: { type: Sequelize.STRING },
-  version: { type: Sequelize.INTEGER }, // version the password
-});
+// // define users
+// const UserModel = db.define('user', {
+//   email: { type: Sequelize.STRING },
+//   username: { type: Sequelize.STRING },
+//   password: { type: Sequelize.STRING },
+//   version: { type: Sequelize.INTEGER }, // version the password
+// });
 
 
 

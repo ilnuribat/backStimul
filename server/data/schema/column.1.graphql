@@ -1,0 +1,20 @@
+type Column {
+  id: Int!
+  updatedAt: String!
+  createdAt: String!
+  name: String!
+  order: Int
+  project: Project!
+  tasks: [Task]
+}
+
+type Query {
+  column(id: Int): Column
+  columns(ids: [Int], projectId: Int): [Column]
+}
+
+type Mutation {
+  createColumn (projectId: Int!, name: String!, order: Int): Column!
+  updateColumn (id: Int!, name: String, order: Int): Boolean!
+  deleteColumn (id: Int!): Boolean!
+}
