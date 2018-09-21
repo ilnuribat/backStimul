@@ -1,10 +1,12 @@
-const DataTypes = require('sequelize');
+const { Schema } = require('mongoose');
 
-module.exports = {
-  userId: {
-    type: DataTypes.INTEGER,
+// define ProjectUsr
+export default ProjectUsrSch = new Schema({
+  userId: String,
+  projectId: String,
+}, {
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
   },
-  projectId: {
-    type: DataTypes.INTEGER,
-  },
-};
+});

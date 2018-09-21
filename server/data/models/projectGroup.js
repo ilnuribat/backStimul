@@ -7,6 +7,8 @@ export default ProjectGrSch = new Schema({
     description: String,
     parentId: String,
     createdBy: String,
+    deletedAt: Date,
+    hide: { type: Boolean, default: false },
     type: { type: String, default: 'ProjectGroup' },
 }, {
   timestamps: {

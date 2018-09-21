@@ -1,7 +1,7 @@
 const { Schema } = require('mongoose');
 
 
-// define messages
+// define GroupSch
 export default GroupSch = new Schema({
     name: String,
 }, {

@@ -1,20 +1,14 @@
-const DataTypes = require('sequelize');
+const { Schema } = require('mongoose');
 
-module.exports = {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+// define SessionSch
+export default SessionSch = new Schema({
+  token: String,
+  userId: String,
+  ip: String,
+  userAgent: String,
+}, {
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
   },
-  token: {
-    type: DataTypes.UUID,
-    unique: true,
-  },
-  createdAt: DataTypes.DATE,
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  ip: DataTypes.STRING,
-  userAgent: DataTypes.STRING,
-};
+});

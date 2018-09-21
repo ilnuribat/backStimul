@@ -1,13 +1,22 @@
-const DataTypes = require('sequelize');
+const { Schema } = require('mongoose');
 
-module.exports = {
-  username: {
-    unique: true,
-    type: DataTypes.STRING,
+// define UserSch
+export default UserSch = new Schema({
+    firstname: String,
+    lastname: String,
+    name: String,
+    description: String,
+    pinkey: String,
+    email: { type: String, default: 'User', unique: true },
+    password: String,
+    groupId: { type: String, default: 'none' },
+    createdBy: String,
+    deletedAt: Date,
+    hide: { type: Boolean, default: false },
+    type: { type: String, default: 'User' },
+}, {
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
   },
-  email: {
-    unique: true,
-    type: DataTypes.STRING,
-  },
-  password: DataTypes.STRING,
-};
+});

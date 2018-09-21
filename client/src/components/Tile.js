@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { quf } from '../constants';
+import 'animate.css';
 
 const delPRG = (thisid) => {
   return (
@@ -66,7 +67,7 @@ export default class Tile extends Component {
     }
 
     return(
-      <div className="tile">
+      <div className="tile animated fadeInLeftBig">
         <div className="tile-name" onClick={()=>this.props.open(Number(this.props.id), type, this.props.name )}>{this.props.name ? this.props.name : this.props.title }</div>
         <div className="tile-id">id: {this.props.id}</div>
         <div className="tile-description">{this.props.full.description}</div>
