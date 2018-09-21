@@ -1,6 +1,5 @@
-import Sequelize from 'sequelize';
 import { _ } from 'lodash';
-import db from '../connectors';
+const { Schema } = require('mongoose');
 
 
 // define messages
