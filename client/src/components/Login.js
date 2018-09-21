@@ -18,10 +18,8 @@ class Login extends Component {
   _confirm = async () => {
     const { name, email, password } = this.state;
 
-    if(!name || !password){
+    if(!email || !password) return( this.setState({loginerror: `ошибка! Не введен логин или пароль`}) )
 
-      return( this.setState({loginerror: `ошибка! Не введен логин или пароль`}) )
-    }
     console.log(this.state)
     console.log(this.props)
     if (!this.state.login) {
@@ -32,7 +30,6 @@ class Login extends Component {
       console.log(q);
       
       let result = quf(q).then((d)=>d).catch(e=>console.log(e));
-
       // const result = await this.props.loginMutation({
       //   variables: {
       //     email,
@@ -42,7 +39,8 @@ class Login extends Component {
 
       console.log('result',result);
       
-      const { token, user } = /*result.data.login*/ `{token: 'token', user: {name:'${email}'} }`
+      const { token, user } = /*result.data.login*/ `{token: 'token', user: {name:'${email}'} }`;
+      if(!user || !token) return( this.setState({loginerror: `ошибка! Ответ не пришел`}) )
       this._saveUserData(token, user.name)
 
     } else {
@@ -78,8 +76,8 @@ class Login extends Component {
             <div className="logo">
               <img src="" />
             </div>
-            <input type="text" placeholder="Email" onChange={(e) => { this.setState({ email: e.target.value }) }} />
-            <input type="password" placeholder="Пароль" onChange={(e) => { this.setState({ password: e.target.value }) }} />
+            <input type="text" placeholder="Email" onChange={(e) => { this.setState({ loginerror: "", email: e.target.value }) }} />
+            <input type="password" placeholder="Пароль" onChange={(e) => { this.setState({ loginerror: "", password: e.target.value }) }} />
             <div className="button" onClick={() => { this._confirm() }}>Войти</div>
             {
               this.state.loginerror ? (<div className="errorMessage">{this.state.loginerror}</div>) : ('')
