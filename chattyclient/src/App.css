@@ -52,3 +52,11 @@ input{
   margin:20px auto;
   padding: 20px;
 }
+.loader{
+  padding:50px;
+}
+.loader svg{
+  fill: #222;
+  width:60px;
+  height:60px;
+}
