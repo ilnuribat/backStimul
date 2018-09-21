@@ -2,8 +2,13 @@ import React from 'react'
 
 class Message extends React.Component {
   render() {
-    const fromMe = this.props.fromMe ? 'from-me' : ''
+    let user = localStorage.getItem('username');
+    let fromMe = this.props.fromMe ? 'from-me' : '';
     
+    if(user === this.props.username){
+      fromMe = 'from-me';
+    }
+
     return (
       <div className={`message ${fromMe}`}>
         <div className='username'>Пользователь {this.props.username}</div>

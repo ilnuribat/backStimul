@@ -1,3 +1,15 @@
+# input for signing in users
+input SigninUserInput {
+  email: String!
+  password: String!
+  username: String
+}
+
+# input for updating users
+input UpdateUserInput {
+  username: String
+}
+
 type User {
     id: Int! # unique id for the user
     email: String! # we will also require a unique email per user
