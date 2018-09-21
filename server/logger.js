@@ -1,5 +1,5 @@
 const { createLogger, transports, format } = require('winston');
-const { LOG_LEVEL, MICROSERVICES } = require('../config');
+const { LOG_LEVEL, MICROSERVICES } = require('./config');
 
 const {
   combine, timestamp, label, printf, colorize, metadata,
