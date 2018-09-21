@@ -1,13 +1,12 @@
 const { Schema } = require('mongoose');
 
-module.exports = new Schema({
+export default TaskSch = new Schema({
   name: String,
   description: String,
-  createdAt: Date,
-  updatedAt: Date,
   deletedAt: Date,
-  columnId: Number,
-  createdBy: Number,
+  hide: { type: Boolean, default: false },
+  columnId: String,
+  createdBy: String,
   priority: {
     type: Number,
     default: 3,
