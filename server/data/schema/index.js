@@ -9,7 +9,6 @@ const projectTypes = readFileSync(`${__dirname}/project.graphql`, settings);
 const columnTypes = readFileSync(`${__dirname}/column.graphql`, settings);
 const taskTypes = readFileSync(`${__dirname}/task.graphql`, settings);
 const projectGroupTypes = readFileSync(`${__dirname}/projectGroup.graphql`, settings);
-const glossaryTypes = readFileSync(`${__dirname}/glossary.graphql`, settings);
 const messageTypes = readFileSync(`${__dirname}/message.graphql`, settings);
 const groupmessageTypes = readFileSync(`${__dirname}/groupmessageTypes.graphql`, settings);
 
@@ -21,7 +20,6 @@ module.exports = mergeTypes([
   columnTypes,
   taskTypes,
   projectGroupTypes,
-  glossaryTypes,
   messageTypes,
   groupmessageTypes,
 ]);
