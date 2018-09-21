@@ -32,16 +32,10 @@ class Login extends Component {
 
       let result = '';
       await quf(q+'a')
-      .then((r) => {
-        r.json()
-      })
-      .then(a=>
-        {
-          console.log('result',a);
-        }
-        )
+      .then((r) => r.json())
+      .then(a=>{console.log('result',a);})
       .catch((e)=>{
-        console.log('error from query',e)
+        console.warn('Login Error: ',e)
       });
       // const result = await this.props.loginMutation({
       //   variables: {
