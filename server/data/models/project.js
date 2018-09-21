@@ -1,17 +1,16 @@
-const DataTypes = require('sequelize');
+const { Schema } = require('mongoose');
 
-module.exports = {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
+// define Project
+export default ProjectSch = new Schema({
+    name: String,
+    title: String,
+    description: String,
+    parentId: String,
+    createdBy: String,
+    type: { type: String, default: 'Project' },
+}, {
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
   },
-  title: DataTypes.STRING,
-  description: DataTypes.TEXT,
-  parentId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'ProjectGroup',
-    },
-  },
-};
+});

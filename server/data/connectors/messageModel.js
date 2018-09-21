@@ -3,11 +3,10 @@ const { Schema } = require('mongoose');
 
 
 // define messages
-export default ColumnSch = new Schema({
-    name: String,
-    title: String,
-    order: Number,
-    projectId: Number,
+const MessageModel = new Schema({
+  fileurl: String,
+  text: String,
+  userid: String,
 }, {
   timestamps: {
     createdAt: 'createdAt',

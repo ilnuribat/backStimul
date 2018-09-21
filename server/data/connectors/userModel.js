@@ -1,13 +1,12 @@
 import { _ } from 'lodash';
 const { Schema } = require('mongoose');
 
-
-// define messages
-export default ColumnSch = new Schema({
-    name: String,
-    title: String,
-    order: Number,
-    projectId: Number,
+// define users
+const UserModel = new Schema({
+  email: String,
+  username: String,
+  password: String,
+  version: String, // version the password
 }, {
   timestamps: {
     createdAt: 'createdAt',
