@@ -1,0 +1,6 @@
+# query for types
+type Query {
+  # Return a group by its id
+  group(id: Int!): Group
+}
+
