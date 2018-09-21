@@ -29,7 +29,20 @@ class Login extends Component {
       let q = LoginQuery(email, password);
       console.log(q);
       
-      let result = quf(q).then((d)=>d).catch(e=>console.log(e));
+
+      let result = '';
+      await quf(q+'a')
+      .then((r) => {
+        r.json()
+      })
+      .then(a=>
+        {
+          console.log('result',a);
+        }
+        )
+      .catch((e)=>{
+        console.log('error from query',e)
+      });
       // const result = await this.props.loginMutation({
       //   variables: {
       //     email,
@@ -37,7 +50,7 @@ class Login extends Component {
       //   },
       // });
 
-      console.log('result',result);
+      
       
       const { token, user } = /*result.data.login*/ `{token: 'token', user: {name:'${email}'} }`;
       if(!user || !token) return( this.setState({loginerror: `ошибка! Ответ не пришел`}) )
@@ -61,7 +74,7 @@ class Login extends Component {
 
   _saveUserData = (token, name) => {
     console.log("save user data");
-    
+
     localStorage.setItem('username', name);
     localStorage.setItem(AUTH_TOKEN, token)
   }
@@ -100,8 +113,6 @@ class Login extends Component {
       </div>
     )
   }
-
-
 }
 
 const SIGNUP_MUTATION = gql`
