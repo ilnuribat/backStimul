@@ -2,13 +2,14 @@ import { ApolloError, AuthenticationError, ForbiddenError } from 'apollo-server'
 import { Group, Message, User } from './connectors';
 
 // reusable function to check for a user with context
-function getAuthenticatedUser(ctx) {
-  return ctx.user.then((user) => {
-    if (!user) {
-      throw new AuthenticationError('Unauthenticated');
-    }
-    return user;
-  });
+async function getAuthenticatedUser(ctx) {
+  const user = await ctx.user();
+
+  if (!user) {
+    throw new AuthenticationError('Unauthenticated');
+  }
+
+  return user;
 }
 
 export const messageLogic = {

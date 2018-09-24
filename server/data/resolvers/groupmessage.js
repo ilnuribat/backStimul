@@ -1,7 +1,9 @@
-import { map } from 'lodash';
-import { withFilter } from 'apollo-server';
-import { groupLogic, subscriptionLogic } from './logic';
-import { pubsub } from '../subscriptions';
+const { map } = require('lodash');
+const { withFilter } = require('apollo-server');
+const { groupLogic, subscriptionLogic } = require('./logic');
+const { pubsub } = require('../subscriptions');
+
+const GROUP_ADDED_TOPIC = 'GROUP_ADDED_TOPIC';
 
 module.exports = {
   Group: {
@@ -21,6 +23,7 @@ module.exports = {
     createGroup(_, args, ctx) {
       return groupLogic.createGroup(_, args, ctx).then((group) => {
         pubsub.publish(GROUP_ADDED_TOPIC, { [GROUP_ADDED_TOPIC]: group });
+
         return group;
       });
     },
@@ -41,15 +44,11 @@ module.exports = {
           GROUP_ADDED_TOPIC,
           subscriptionLogic.groupAdded(payload, args, ctx),
         ),
-        (payload, args, ctx) => {
-          return ctx.user.then((user) => {
-            return Boolean(
-              args.userId &&
-              ~map(payload.groupAdded.users, 'id').indexOf(args.userId) &&
-              user.id !== payload.groupAdded.users[0].id, // don't send to user creating group
-            );
-          });
-        },
+        (payload, args, ctx) => ctx.user.then(user => Boolean(
+          args.userId
+              && !map(payload.groupAdded.users, 'id').indexOf(args.userId)
+              && user.id !== payload.groupAdded.users[0].id, // don't send to user creating group
+        )),
       ),
     },
   },

@@ -1,6 +1,6 @@
 const { ServiceBroker } = require('moleculer');
 const winston = require('winston');
-const { logFormat } = require('./utils/logger');
+const { logFormat } = require('./logger');
 const { MOLECULER_TRANSPORTER, MICROSERVICES } = require('./config');
 
 function extend(logger) {

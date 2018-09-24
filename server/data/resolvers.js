@@ -1,39 +1,44 @@
-import GraphQLDate from 'graphql-date';
-import { withFilter } from 'apollo-server';
-import { map } from 'lodash';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-
-import { Group, Message, User } from './connectors';
-import { pubsub } from '../subscriptions';
-import { JWT_SECRET } from '../config';
-import { groupLogic, messageLogic, userLogic, subscriptionLogic } from './logic';
+// const GraphQLDate = require('graphql-date');
+const _ = require('lodash');
+const { withFilter } = require('apollo-server');
+const { map } = require('lodash');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+// const { Group, Message, User } = require('./connectors');
+const { pubsub } = require('./subscriptions');
+const models = require('./models');
+const { JWT_SECRET } = require('../config');
+const {
+  groupLogic, messageLogic, userLogic, subscriptionLogic,
+} = require('./logic');
 
 const MESSAGE_ADDED_TOPIC = 'messageAdded';
 const GROUP_ADDED_TOPIC = 'groupAdded';
 
 export const resolvers = {
-  Date: GraphQLDate,
+  MESSAGE_ADDED_TOPIC,
+  GROUP_ADDED_TOPIC,
+  // Date: GraphQLDate,
   PageInfo: {
     // we will have each connection supply its own hasNextPage/hasPreviousPage functions!
-    hasNextPage(connection, args) {
+    hasNextPage(connection) {
       return connection.hasNextPage();
     },
-    hasPreviousPage(connection, args) {
+    hasPreviousPage(connection) {
       return connection.hasPreviousPage();
     },
   },
   Query: {
     glossary: () => true, // hack
-    column: async (parent, { id }) => models.Column.findOne({ where: { id } }),
+    column: async (parent, { id }) => models.Column.findOne({ _id: id }),
     columns: async (parent, { projectId }) => {
-      const where = { [Op.and]: [] };
+      const where = { $and: [] };
 
       if (projectId) {
-        where[Op.and].push({ projectId });
+        where.$and.push({ projectId });
       }
 
-      return models.Column.findAll({ where });
+      return models.Column.find(where);
     },
     group(_, args, ctx) {
       return groupLogic.query(_, args, ctx);
@@ -43,32 +48,30 @@ export const resolvers = {
     },
     project: (parent, { id }) => models.Project.findOne({ where: { id } }),
     projects: async (parent, { userId, parentId }) => {
-      const where = { [Op.and]: [] };
+      const where = { $and: [] };
 
       if (userId) {
         const projectUsers = await models.ProjectUser.findAll({ where: { userId } });
 
-        where[Op.and].push({ id: { [Op.in]: _.map(projectUsers, 'projectId') } });
+        where.$and.push({ id: { $in: _.map(projectUsers, 'projectId') } });
       }
 
       if (parentId) {
-        where[Op.and].push({ parentId });
+        where.$and.push({ parentId });
       }
 
-      return models.Project.findAll({ where });
+      return models.Project.find(where);
     },
     projectGroup: (parent, { id }) => models.ProjectGroup.findOne({ where: { id } }),
     projectGroups: (parent, { parentId }, ctx) => {
       authenticate(ctx);
 
-      return models.ProjectGroup.findAll({
-        where: {
-          [Op.and]: [{
-            parentId,
-          }, {
-            id: { [Op.ne]: 1 },
-          }],
-        },
+      return models.ProjectGroup.find({
+        $and: [{
+          parentId,
+        }, {
+          id: { $ne: 1 },
+        }],
       });
     },
     task: async (parent, { id }, ctx) => {
@@ -139,18 +142,20 @@ export const resolvers = {
     deleteColumn: (parent, { id }) => models.Column.destroy({
       where: { id },
     }),
-  },
+    // },
     createMessage(_, args, ctx) {
       return messageLogic.createMessage(_, args, ctx)
         .then((message) => {
           // Publish subscription notification with message
           pubsub.publish(MESSAGE_ADDED_TOPIC, { [MESSAGE_ADDED_TOPIC]: message });
+
           return message;
         });
     },
     createGroup(_, args, ctx) {
       return groupLogic.createGroup(_, args, ctx).then((group) => {
         pubsub.publish(GROUP_ADDED_TOPIC, { [GROUP_ADDED_TOPIC]: group });
+
         return group;
       });
     },
@@ -163,7 +168,7 @@ export const resolvers = {
     updateGroup(_, args, ctx) {
       return groupLogic.updateGroup(_, args, ctx);
     },
-    
+
     login(_, signinUserInput, ctx) {
       // find user by email
       const { email, password } = signinUserInput.user;
@@ -179,8 +184,10 @@ export const resolvers = {
                 email: user.email,
                 version: user.version,
               }, JWT_SECRET);
+
               user.jwt = token;
               ctx.user = Promise.resolve(user);
+
               return user;
             }
 
@@ -206,8 +213,10 @@ export const resolvers = {
           })).then((user) => {
             const { id } = user;
             const token = jwt.sign({ id, email, version: 1 }, JWT_SECRET);
+
             user.jwt = token;
             ctx.user = Promise.resolve(user);
+
             return user;
           });
         }
@@ -223,15 +232,13 @@ export const resolvers = {
           MESSAGE_ADDED_TOPIC,
           subscriptionLogic.messageAdded(payload, args, ctx),
         ),
-        (payload, args, ctx) => {
-          return ctx.user.then((user) => {
+        (payload, args, ctx) => ctx.user.then((user) => {
             return Boolean(
               args.groupIds &&
               ~args.groupIds.indexOf(payload.messageAdded.groupId) &&
               user.id !== payload.messageAdded.userId, // don't send to user creating message
             );
-          });
-        },
+          }),
       ),
     },
     groupAdded: {
@@ -240,20 +247,18 @@ export const resolvers = {
           GROUP_ADDED_TOPIC,
           subscriptionLogic.groupAdded(payload, args, ctx),
         ),
-        (payload, args, ctx) => {
-          return ctx.user.then((user) => {
+        (payload, args, ctx) => ctx.user.then((user) => {
             return Boolean(
               args.userId &&
               ~map(payload.groupAdded.users, 'id').indexOf(args.userId) &&
               user.id !== payload.groupAdded.users[0].id, // don't send to user creating group
             );
-          });
-        },
+          }),
       ),
     },
   },
 
-  
+
   Glossary: {
     priorities: () => models.GlossaryPriority.findAll(),
   },
@@ -307,10 +312,10 @@ export const resolvers = {
   ProjectGroup: {
     projectGroups: parent => models.ProjectGroup.findAll({
       where: {
-        [Op.and]: [{
+        $and: [{
           parentId: parent.id,
         }, {
-          id: { [Op.ne]: 1 },
+          id: { $ne: 1 },
         }],
       },
     }),

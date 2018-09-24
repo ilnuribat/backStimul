@@ -1,6 +1,7 @@
-import { withFilter } from 'apollo-server';
-import { pubsub } from '../subscriptions';
-import { messageLogic, subscriptionLogic } from './logic';
+const { withFilter } = require('apollo-server');
+const { pubsub } = require('../subscriptions');
+const { messageLogic, subscriptionLogic } = require('../logic');
+const { MESSAGE_ADDED_TOPIC } = require('../resolvers');
 
 
 module.exports = {
@@ -18,6 +19,7 @@ module.exports = {
         .then((message) => {
           // Publish subscription notification with message
           pubsub.publish(MESSAGE_ADDED_TOPIC, { [MESSAGE_ADDED_TOPIC]: message });
+
           return message;
         });
     },
@@ -32,9 +34,9 @@ module.exports = {
         (payload, args, ctx) => {
           return ctx.user.then((user) => {
             return Boolean(
-              args.groupIds &&
-              ~args.groupIds.indexOf(payload.messageAdded.groupId) &&
-              user.id !== payload.messageAdded.userId, // don't send to user creating message
+              args.groupIds
+              && !args.groupIds.indexOf(payload.messageAdded.groupId)
+              && user.id !== payload.messageAdded.userId, // don't send to user creating message
             );
           });
         },

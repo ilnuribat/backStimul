@@ -16,6 +16,7 @@ const authenticate = (context) => {
   throw new Error('Not authorized');
 };
 
+
 module.exports = {
   authenticate,
 };
