@@ -1,14 +1,13 @@
 const { Schema } = require('mongoose');
 
-// define UserSch
 module.exports = new Schema({
+  email: { type: String, unique: true },
+  password: String,
   firstname: String,
   lastname: String,
   name: String,
   description: String,
   pinkey: String,
-  email: { type: String, default: 'User', unique: true },
-  password: String,
   groupId: { type: String, default: 'none' },
   createdBy: String,
   deletedAt: Date,
