@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server';
+const { gql } = require('apollo-server');
 
-export const typeDefs = gql`
+module.exports = gql`
   # declare custom scalars
   scalar Date
 
@@ -221,5 +221,3 @@ export const typeDefs = gql`
     subscription: Subscription
   }
 `;
-
-export default typeDefs;

@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const { pubsub } = require('./subscriptions');
 const models = require('./models');
 const { JWT_SECRET } = require('../config');
+const { User } = require('./models');
 const {
   groupLogic, messageLogic, userLogic, subscriptionLogic,
 } = require('./logic');
@@ -15,7 +16,13 @@ const {
 const MESSAGE_ADDED_TOPIC = 'messageAdded';
 const GROUP_ADDED_TOPIC = 'groupAdded';
 
-export const resolvers = {
+async function authenticate() {
+  console.log('fix mee!!!');
+
+  return true;
+}
+
+exports.resolvers = {
   MESSAGE_ADDED_TOPIC,
   GROUP_ADDED_TOPIC,
   // Date: GraphQLDate,
@@ -198,31 +205,31 @@ export const resolvers = {
         return Promise.reject('email not found');
       });
     },
-    signup(_, signinUserInput, ctx) {
+    async signup(_, signinUserInput, ctx) {
       const { email, password, username } = signinUserInput.user;
 
       // find user by email
-      return User.findOne({ where: { email } }).then((existing) => {
-        if (!existing) {
-          // hash password and create user
-          return bcrypt.hash(password, 10).then(hash => User.create({
-            email,
-            password: hash,
-            username: username || email,
-            version: 1,
-          })).then((user) => {
-            const { id } = user;
-            const token = jwt.sign({ id, email, version: 1 }, JWT_SECRET);
+      const existing = await User.findOne({ email });
 
-            user.jwt = token;
-            ctx.user = Promise.resolve(user);
+      if (!existing) {
+        // hash password and create user
+        return bcrypt.hash(password, 10).then(hash => User.create({
+          email,
+          password: hash,
+          username: username || email,
+          version: 1,
+        })).then((user) => {
+          const { id } = user;
+          const token = jwt.sign({ id, email, version: 1 }, JWT_SECRET);
 
-            return user;
-          });
-        }
+          user.jwt = token;
+          ctx.user = Promise.resolve(user);
 
-        return Promise.reject('email already exists'); // email already exists
-      });
+          return user;
+        });
+      }
+
+      return Promise.reject('email already exists'); // email already exists
     },
   },
   Subscription: {
@@ -232,13 +239,11 @@ export const resolvers = {
           MESSAGE_ADDED_TOPIC,
           subscriptionLogic.messageAdded(payload, args, ctx),
         ),
-        (payload, args, ctx) => ctx.user.then((user) => {
-            return Boolean(
-              args.groupIds &&
-              ~args.groupIds.indexOf(payload.messageAdded.groupId) &&
-              user.id !== payload.messageAdded.userId, // don't send to user creating message
-            );
-          }),
+        (payload, args, ctx) => ctx.user.then(user => Boolean(
+          args.groupIds
+              && !args.groupIds.indexOf(payload.messageAdded.groupId)
+              && user.id !== payload.messageAdded.userId, // don't send to user creating message
+        )),
       ),
     },
     groupAdded: {
@@ -247,13 +252,11 @@ export const resolvers = {
           GROUP_ADDED_TOPIC,
           subscriptionLogic.groupAdded(payload, args, ctx),
         ),
-        (payload, args, ctx) => ctx.user.then((user) => {
-            return Boolean(
-              args.userId &&
-              ~map(payload.groupAdded.users, 'id').indexOf(args.userId) &&
-              user.id !== payload.groupAdded.users[0].id, // don't send to user creating group
-            );
-          }),
+        (payload, args, ctx) => ctx.user.then(user => Boolean(
+          args.userId
+              && !map(payload.groupAdded.users, 'id').indexOf(args.userId)
+              && user.id !== payload.groupAdded.users[0].id, // don't send to user creating group
+        )),
       ),
     },
   },
