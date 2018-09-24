@@ -18,6 +18,7 @@ class Login extends Component {
 
   _confirm = async () => {
     const { name, email, password } = this.state;
+    this.setState({loginerror: ''})
 
     if(!email || !password) return( this.setState({loginerror: `ошибка! Не введен логин или пароль`}) )
 

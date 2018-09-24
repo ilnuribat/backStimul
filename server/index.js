@@ -5,8 +5,11 @@ import jsonwebtoken from 'jsonwebtoken';
 import { typeDefs } from './data/schema';
 import { mocks } from './data/mocks';
 import { resolvers } from './data/resolvers';
-import { JWT_SECRET } from './config';
+// import { JWT_SECRET } from './config';
 import { User } from './data/connectors';
+
+
+const JWT_SECRET = 'key';
 
 const PORT = 8081;
 

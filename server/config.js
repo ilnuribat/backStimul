@@ -15,6 +15,6 @@ dotenv.config({ silent: true });
 //     throw new Error(`Please enter a custom ${key} in .env on the root directory`);
 //   }
 // });
-const JWT_SECRET = "key";
+const JWT_SECRET = 'key';
 
 export default JWT_SECRET;
