@@ -1,69 +1,139 @@
-const { ApolloServer } = require('apollo-server');
-// const jwt = require('express-jwt');
-// const jsonwebtoken = require('jsonwebtoken');
-const { typeDefs } = require('./data/schema/index.js');
-const { resolvers } = require('./data/resolvers');
-const { JWT_SECRET, HTTP_PORT } = require('./config');
+const { ApolloServer, PubSub } = require('apollo-server');
+const connectToMongo = require('./connectDB');
+const jsonwebtoken = require('jsonwebtoken');
+// const { typeDefs } = require('./data/schema/index.js');
+// const { resolvers } = require('./data/resolvers');
+const { HTTP_PORT, JWT_SECRET } = require('./config');
 const { User } = require('./data/models');
+const { logger } = require('./logger');
+
+const pubsub = new PubSub();
+const BOOK_ADDED = 'BOOK_ADDED';
+
+const booksDB = [
+  {
+    title: 'Work hard',
+    author: 'Den',
+  },
+];
 
 const server = new ApolloServer({
-  resolvers,
-  typeDefs,
-  context: ({ req, res, connection }) => {
-    // web socket subscriptions will return a connection
+  resolvers: {
+    Query: {
+      books: (parent, args, { user }) => {
+        if (!user) {
+          throw new Error('no auth');
+        }
+
+        return booksDB;
+      },
+    },
+    Mutation: {
+      addBook: (root, args, ctx) => {
+        console.log(ctx.user);
+        booksDB.push(args);
+        console.log(args);
+        pubsub.publish(BOOK_ADDED, args);
+      },
+      async login(root, args) {
+        const { email, password } = args;
+
+        const user = await User.findOne({ email, password });
+
+        const token = jsonwebtoken.sign({
+          userId: user.id,
+        }, JWT_SECRET, {
+          noTimestamp: true,
+        });
+
+        return {
+          user: user.email,
+          token,
+        };
+      },
+    },
+    Subscription: {
+      bookAdded: {
+        subscribe: () => pubsub.asyncIterator([BOOK_ADDED]),
+      },
+    },
+  },
+  typeDefs: `
+    type Book { title: String, author: String }
+    type AuthToken {
+      token: String,
+      user: String
+    }
+    type Query { books: [Book] }
+    type Mutation {
+      addBook(title: String, author: String): Book
+      login(email: String, password: String): AuthToken
+    }
+    type Subscription {
+      bookAdded: Book
+    }
+  `,
+
+  context: async ({ req = { body: {} }, res, connection = {} }) => {
+    console.log({ connection });
+    // console.log({ 'req.body': req.body });
+
+    console.log(req.body.query);
+    console.log(connection.query);
+    const query = req.body.query || connection.query;
+
+    console.log(query);
+
     if (connection) {
       // check connection for metadata
       return connection.context;
     }
 
-    console.log(req.headers);
+    const token = req.headers.authorization;
 
-    const user = new Promise((resolve, reject) => {
-      // всё хранит в bearer
-      jwt({
-        secret: JWT_SECRET,
-        credentialsRequired: false,
-      })(req, res, (e) => {
-        if (req.user) {
-          resolve(User.findOne({ _id: req.user.id, version: req.user.version }));
-        } else {
-          resolve(null);
-        }
-      });
-    });
+    console.log({ token });
+    const user = await User.findOne({ email: 'a' });
+
 
     return {
       user,
+      ctx: {
+        req,
+        res,
+      },
     };
   },
-  // subscriptions: {
-  //   onConnect(connectionParams, websocket, wsContext) {
-  //     const userPromise = new Promise((resolve, reject) => {
-  //       if (connectionParams.jwt) {
-  //         jsonwebtoken.verify(
-  //           connectionParams.jwt, JWT_SECRET,
-  //           (err, decoded) => {
-  //             if (err) {
-  //               reject(new AuthenticationError('No token'));
-  //             }
+  subscriptions: {
+    async onConnect(connectionParams, websocket, wsContext) {
+      const [type = '', body] = connectionParams.Authorization.split(' ');
 
-  //             resolve(User.findOne({ _id: decoded.id, version: decoded.version }));
-  //           },
-  //         );
-  //       } else {
-  //         reject(new AuthenticationError('No token'));
-  //       }
-  //     });
+      if (type.toLowerCase() !== 'bearer') {
+        throw new Error('test');
+      }
 
-  //     return userPromise.then((user) => {
-  //       if (user) {
-  //         return { user: Promise.resolve(user) };
-  //       }
+      const res = jsonwebtoken.verify(body, JWT_SECRET);
 
-  //       return Promise.reject(new AuthenticationError('No user'));
-  //     });
-  //   },
-  // },
+      if (!res || !res.userId) {
+        throw new Error('bad payload');
+      }
+
+      const user = await User.findOne({ _id: res.userId });
+
+      if (!user) {
+        throw new Error('no user found');
+      }
+
+      console.log(user);
+      console.log({ token: body });
+    },
+  },
 });
 
-server.listen({ port: HTTP_PORT }).then(({ url }) => console.log(`🚀 Server ready at ${url}`));
+async function start() {
+  await connectToMongo();
+  const listening = await server.listen({ port: HTTP_PORT });
+
+  logger.info(`server started at port: ${listening.port}`);
+}
+
+start();
