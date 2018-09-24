@@ -6,8 +6,10 @@ import jwt from 'jsonwebtoken';
 
 import { Group, Message, User } from './connectors';
 import { pubsub } from '../subscriptions';
-import { JWT_SECRET } from '../config';
+// import { JWT_SECRET } from '../config';
 import { groupLogic, messageLogic, userLogic, subscriptionLogic } from './logic';
+
+const JWT_SECRET = 'key';
 
 const MESSAGE_ADDED_TOPIC = 'messageAdded';
 const GROUP_ADDED_TOPIC = 'groupAdded';
