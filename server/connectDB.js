@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const models = require('../main/models');
-const { logger } = require('../utils/logger');
-const { MONGODB_HOST } = require('../config');
+// const models = require('../main/models');
+const { logger } = require('./logger');
+const { MONGODB_HOST } = require('./config');
 
-async function connectToMongo() {
+module.exports = async function () {
   return new Promise((resolve, reeject) => {
     logger.info('Connecting to mongo...');
     mongoose.connection
@@ -16,19 +16,10 @@ async function connectToMongo() {
         reeject(error);
       });
 
+    mongoose.set('debug', true);
+
     mongoose.connect(MONGODB_HOST, {
       useNewUrlParser: true,
     });
   });
-}
-
-async function connectToPostgres() {
-  logger.info('connecting to postgres...');
-  await models.sequelize.authenticate();
-  logger.info('connected to postgres');
-}
-
-module.exports = {
-  connectToMongo,
-  connectToPostgres,
 };
