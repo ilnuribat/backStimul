@@ -24,14 +24,121 @@ export const resolvers = {
     },
   },
   Query: {
+    glossary: () => true, // hack
+    column: async (parent, { id }) => models.Column.findOne({ where: { id } }),
+    columns: async (parent, { projectId }) => {
+      const where = { [Op.and]: [] };
+
+      if (projectId) {
+        where[Op.and].push({ projectId });
+      }
+
+      return models.Column.findAll({ where });
+    },
     group(_, args, ctx) {
       return groupLogic.query(_, args, ctx);
     },
     user(_, args, ctx) {
       return userLogic.query(_, args, ctx);
     },
+    project: (parent, { id }) => models.Project.findOne({ where: { id } }),
+    projects: async (parent, { userId, parentId }) => {
+      const where = { [Op.and]: [] };
+
+      if (userId) {
+        const projectUsers = await models.ProjectUser.findAll({ where: { userId } });
+
+        where[Op.and].push({ id: { [Op.in]: _.map(projectUsers, 'projectId') } });
+      }
+
+      if (parentId) {
+        where[Op.and].push({ parentId });
+      }
+
+      return models.Project.findAll({ where });
+    },
+    projectGroup: (parent, { id }) => models.ProjectGroup.findOne({ where: { id } }),
+    projectGroups: (parent, { parentId }, ctx) => {
+      authenticate(ctx);
+
+      return models.ProjectGroup.findAll({
+        where: {
+          [Op.and]: [{
+            parentId,
+          }, {
+            id: { [Op.ne]: 1 },
+          }],
+        },
+      });
+    },
+    task: async (parent, { id }, ctx) => {
+      authenticate(ctx);
+
+      return broker.call('task.getOne', { id });
+    },
+    tasks: async (parent, { columnId }, ctx) => {
+      authenticate(ctx);
+
+      return broker.call('task.get', { columnId });
+    },
   },
   Mutation: {
+    createTask: async (parent, { input }, ctx) => {
+      authenticate(ctx);
+
+      return broker.call('task.create', input);
+    },
+    updateTask: async (parent, args, ctx) => {
+      authenticate(ctx);
+
+      const { id, input } = args;
+
+      return broker.call('task.update', { id, input });
+    },
+    deleteTask: async (parent, { id }, ctx) => {
+      authenticate(ctx);
+
+      return broker.call('task.deleteOne', { id });
+    },
+    createProjectGroup: (parent, args) => models.ProjectGroup.create(args),
+    updateProjectGroup: (parent, args) => models.ProjectGroup.update(args, { where: { id: args.id } }),
+    deleteProjectGroup: (parent, { id }) => models.ProjectGroup.destroy({ where: { id } }),
+    createProject: async (parent, args) => {
+      try {
+        const project = await models.sequelize.transaction(async (transaction) => {
+          const newProject = await models.Project.create(args, { transaction });
+
+          await models.ProjectUser.create({
+            userId: args.createdBy,
+            projectId: newProject.id,
+          }, { transaction });
+          await models.Column.create({ projectId: newProject.id, name: 'To Do', order: 0 },
+            { transaction });
+
+          return newProject;
+        });
+
+        return project;
+      } catch (err) {
+        throw new Error(`createProject: ${err.message}`);
+      }
+    },
+    updateProject: async (parent, args) => models.Project.update(
+      args, { where: { id: args.id } },
+    ),
+    deleteProject: (parent, { id }) => models.Project.destroy({
+      where: { id },
+    }),
+    createColumn: (parent, args) => models.Column.create(args),
+    updateColumn: async (parent, args) => models.Column.update(
+      args,
+      {
+        where: { id: args.id },
+      },
+    ),
+    deleteColumn: (parent, { id }) => models.Column.destroy({
+      where: { id },
+    }),
     createMessage(_, args, ctx) {
       return messageLogic.createMessage(_, args, ctx)
         .then((message) => {
@@ -143,6 +250,16 @@ export const resolvers = {
       ),
     },
   },
+
+  Glossary: {
+    priorities: () => models.GlossaryPriority.findAll(),
+  },
+  Column: {
+    project: parent => models.Project.findOne({
+      where: { id: parent.projectId },
+    }),
+    tasks: parent => broker.call('task.get', { columnId: parent.id }),
+  },
   Group: {
     users(group, args, ctx) {
       return groupLogic.users(group, args, ctx);
@@ -176,6 +293,35 @@ export const resolvers = {
       return userLogic.messages(user, args, ctx);
     },
   },
+  Project: {
+    creator: parent => models.User.findOne({
+      where: { id: parent.createdBy },
+    }),
+    columns: parent => models.Column.findAll({
+      where: { projectId: parent.id },
+    }),
+  },
+  ProjectGroup: {
+    projectGroups: parent => models.ProjectGroup.findAll({
+      where: {
+        [Op.and]: [{
+          parentId: parent.id,
+        }, {
+          id: { [Op.ne]: 1 },
+        }],
+      },
+    }),
+    projects: parent => models.Project.findAll({ where: { parentId: parent.id } }),
+  },
+  Task: {
+    column: parent => Column.findOne({
+      where: { id: parent.columnId },
+    }),
+    creator: parent => User.findOne({
+      where: { id: parent.createdBy },
+    }),
+  },
+
 };
 
 export default resolvers;

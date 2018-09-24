@@ -1,10 +1,11 @@
-import { $$asyncIterator } from 'iterall';
-import { PubSub } from 'apollo-server';
+const { $$asyncIterator } = require('iterall');
+const { PubSub } = require('apollo-server');
 
-export const pubsub = new PubSub();
+const pubsub = new PubSub();
 
 pubsub.asyncAuthIterator = (messages, authPromise) => {
   const asyncIterator = pubsub.asyncIterator(messages);
+
   return {
     next() {
       return authPromise.then(() => asyncIterator.next());
@@ -21,4 +22,4 @@ pubsub.asyncAuthIterator = (messages, authPromise) => {
   };
 };
 
-export default pubsub;
+module.exports = pubsub;

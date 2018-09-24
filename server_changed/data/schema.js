@@ -86,6 +86,81 @@ export const typeDefs = gql`
     createdAt: Date! # when message was created
   }
 
+  type Users {
+    _id: ID!
+    name: String!
+    email: String!
+    todos: [Todo!]
+  }
+
+  type AuthPayload {
+    token: String!
+    user: Users
+  }
+
+
+  type Todo {
+    _id: ID!
+    content: String!
+  }
+
+
+
+    type Column {
+      id: Int!
+      updatedAt: String!
+      createdAt: String!
+      name: String!
+      order: Int
+      project: Project!
+      tasks: [Task]
+    }
+    type Priority {
+      id: Int!,
+      name: String!,
+    }
+    type Glossary {
+      priorities: [Priority]!,
+    }
+
+    type Project {
+      id: ID!
+      createdAt: String
+      updatedAt: String
+      title: String
+      name: String
+      description: String
+      creator: User!
+      columns: [Column]
+      parentId: Int!
+    }
+    type ProjectGroup {
+      id: Int!
+      name: String!
+      parentId: Int!
+      projectGroups: [ProjectGroup]
+      projects: [Project]
+    }
+    type Task {
+      id: String
+      createdAt: String
+      updatedAt: String
+      name: String
+      description: String
+      columnId: Int
+      priority: Int
+      column: Column
+      creator: User
+      index: Int
+    }
+    input TaskInput {
+      name: String
+      description: String
+      columnId: Int
+      priority: Int
+      createdBy: Int
+    }
+
   # query for types
   type Query {
     # Return a user by their email or id
@@ -97,6 +172,16 @@ export const typeDefs = gql`
 
     # Return a group by its id
     group(id: Int!): Group
+
+    column(id: Int): Column
+    columns(ids: [Int], projectId: Int): [Column]
+    glossary: Glossary!
+    project (id: Int): Project!
+    projects (userId: Int, parentId: Int): [Project]!
+    projectGroup (id: Int!): ProjectGroup
+    projectGroups (parentId: Int!): [ProjectGroup]
+    task(id: String!): Task
+    tasks(columnId: Int, columnIds: [Int], projectId: Int): [Task]
   }
 
   type Mutation {
@@ -108,6 +193,19 @@ export const typeDefs = gql`
     updateGroup(group: UpdateGroupInput!): Group
     login(user: SigninUserInput!): User
     signup(user: SigninUserInput!): User
+
+    createColumn (projectId: Int!, name: String!, order: Int): Column!
+    updateColumn (id: Int!, name: String, order: Int): Boolean!
+    deleteColumn (id: Int!): Boolean!
+    createProject (title: String, name: String, description: String, createdBy: Int!, parentId: Int!): Project!
+    updateProject (id: Int!, title: String, description: String): Boolean
+    deleteProject (id: Int!): Boolean
+    createProjectGroup (name: String!, parentId: Int!, createdBy: Int!): ProjectGroup
+    updateProjectGroup (id: Int!, name: String!, parentId: Int): Boolean
+    deleteProjectGroup (id: Int!): Boolean
+    createTask (input: TaskInput): Task
+    updateTask (id: String!, input: TaskInput): Boolean
+    deleteTask (id: String!): Boolean
   }
 
   type Subscription {

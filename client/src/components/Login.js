@@ -3,6 +3,7 @@ import { AUTH_TOKEN } from '../constants'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag';
 import {quf} from '../constants';
+import Message from '../chat/Message';
 
 class Login extends Component {
   constructor(props) {
@@ -20,20 +21,10 @@ class Login extends Component {
 
     if(!email || !password) return( this.setState({loginerror: `ошибка! Не введен логин или пароль`}) )
 
-    console.log(this.state)
-    console.log(this.props)
     if (!this.state.login) {
-
-      console.log('Not login');
-
       let q = LoginQuery(email, password);
-      console.log(q);
-      
-
-      let result = '';
-      await quf(q+'a')
-      .then((r) => r.json())
-      .then(a=>{console.log('result',a);})
+      let result = await quf(q)
+      .then(a=>{return a;})
       .catch((e)=>{
         console.warn('Login Error: ',e)
       });
@@ -44,22 +35,29 @@ class Login extends Component {
       //   },
       // });
 
-      
-      
-      const { token, user } = /*result.data.login*/ `{token: 'token', user: {name:'${email}'} }`;
-      if(!user || !token) return( this.setState({loginerror: `ошибка! Ответ не пришел`}) )
-      this._saveUserData(token, user.name)
+      if(result && result.errors){
+        this.setState({loginerror: `ошибка! ${result.errors[0].message}`})
+      }
+      else if(result && result.data && result.data.login){
+        const { jwt, username } = result.data.login;
+        if(!jwt || !username) return( this.setState({loginerror: `ошибка! Ответ не пришел`}) )
+        this._saveUserData(jwt, username)
+      }else{
+        this.setState({loginerror: `ошибка! Свистать все на верх!`})
+        return false;
+      }
 
     } else {
-      const result = await this.props.signupMutation({
-        variables: {
-          name,
-          email,
-          password,
-        },
-      })
-      const { token } = result.data.signup
-      this._saveUserData(token)
+      // const result = await this.props.signupMutation({
+      //   variables: {
+      //     name,
+      //     email,
+      //     password,
+      //   },
+      // })
+      // const { jwt } = result.data.signup
+      // this._saveUserData(jwt)
+      this.setState({loginerror: `ошибка! Такого пользователя нет`})
     }
     this.props.lookft();
     //window.location.reload();
@@ -115,27 +113,28 @@ const SIGNUP_MUTATION = gql`
       token
     }
   }
-`
+`;
 
 const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token,
-      user {name}
+    login(user:{email: $email, password: $password}) {
+      username
+      jwt
     }
   }
-`
+`;
 
 const LoginQuery = (email, password) => `
-  mutation{ login(email: "${email}", password: "${password}") {
-      token,
-      user {name}
-    }
+mutation{
+  login(user:{email:"${email}",password:"${password}"}){
+    username
+    jwt
   }
-`
+}
+`;
 
-export default compose(
-  graphql(SIGNUP_MUTATION, { name: 'signupMutation' }),
-  graphql(LOGIN_MUTATION, { name: 'loginMutation' }),
-
-)(Login)
+// export default compose(
+//   // graphql(SIGNUP_MUTATION, { name: 'signupMutation' }),
+//   // graphql(LOGIN_MUTATION, { name: 'loginMutation' }),
+// )(Login)
+export default Login;

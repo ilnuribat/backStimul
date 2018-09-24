@@ -1,23 +1,19 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
 
-const {
-  HTTP_PORT = 8500,
-  JWT_SECRET = 'super secret',
-  MONGODB_HOST = 'mongodb://127.0.0.1/guov',
-  NODE_ENV = 'dev',
-  SOCKET_PORT = 4080,
-  MICROSERVICES = '',
-  LOG_LEVEL = 'info',
-  MOLECULER_TRANSPORTER = 'redis://localhost',
+dotenv.config({ silent: true });
+
+export const {
+  JWT_SECRET,
 } = process.env;
 
-module.exports = {
-  HTTP_PORT,
-  JWT_SECRET,
-  MONGODB_HOST,
-  NODE_ENV,
-  SOCKET_PORT,
-  MICROSERVICES,
-  LOG_LEVEL,
-  MOLECULER_TRANSPORTER,
+const defaults = {
+  JWT_SECRET: 'key',
 };
+
+Object.keys(defaults).forEach((key) => {
+  if (!process.env[key] || process.env[key] === defaults[key]) {
+    throw new Error(`Please enter a custom ${key} in .env on the root directory`);
+  }
+});
+
+export default JWT_SECRET;
