@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/main/index.js",
-    "dev": "nodemon src",
+    "dev": "nodemon server",
     "databases:up": "docker-compose -f dev/docker-compose.yml up --build -d",
     "databases:down": "docker-compose -f dev/docker-compose.yml down --volumes",
     "migrate:add": "node src/utils/createMigration",
