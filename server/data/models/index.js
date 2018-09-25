@@ -1,19 +1,13 @@
 const mongoose = require('mongoose');
 
-// const columnModel = require('./column');
-// const projectModel = require('./project');
-// const taskSchema = require('./task');
 const groupModel = require('./group');
 const userModel = require('./user');
-// const projectGroupModel = require('./projectGroup');
+const userGroupModel = require('./userGroup');
 
 const db = {
-  // Column: mongoose.model('Column', columnModel),
-  // Project: mongoose.model('Project', projectModel),
-  // ProjectGroup: mongoose.model('ProjectGroup', projectGroupModel),
-  // Task: mongoose.model('Task', taskSchema),
   Group: mongoose.model('groups', groupModel),
   User: mongoose.model('users', userModel),
+  UserGroup: mongoose.model('userGroups', userGroupModel),
 };
 
 module.exports = db;
