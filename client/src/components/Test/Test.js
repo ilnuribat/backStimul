@@ -170,8 +170,6 @@ const PinsQuery = ({ children }) => (
             id: 4,
             text: this.state.input[0],
           });
-          // this.props.update();
-        // return true;
       }
 
     render() {
