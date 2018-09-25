@@ -8,7 +8,7 @@ import { resolvers } from './data/resolvers';
 // import { JWT_SECRET } from './config';
 import { User } from './data/connectors';
 
-
+let iii = 0;
 const JWT_SECRET = 'key';
 
 const PORT = 8081;
@@ -40,19 +40,24 @@ const server = new ApolloServer({
   },
   subscriptions: {
     onConnect(connectionParams, websocket, wsContext) {
+      iii++;
+      console.log("User connected",iii)
+      // console.log(wsContext)
+      // console.log("connectionParams");
+      // console.log(connectionParams);
       const userPromise = new Promise((res, rej) => {
         if (connectionParams.jwt) {
           jsonwebtoken.verify(
             connectionParams.jwt, JWT_SECRET,
             (err, decoded) => {
               if (err) {
-                rej(new AuthenticationError('No token'));
+                rej(new AuthenticationError('No token 1'));
               }
               res(User.findOne({ where: { id: decoded.id, version: decoded.version } }));
             },
           );
         } else {
-          rej(new AuthenticationError('No token'));
+          rej(new AuthenticationError('No token 2'));
         }
       });
 

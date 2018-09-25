@@ -1034,3 +1034,22 @@ width:100px;
   overflow-x: hidden;
   overflow-y: auto;
 }
+.loader{
+  text-align: center;
+  width: 100%;
+  margin:20px auto;
+  padding: 50px;
+}
+.left-bar-inner .scroller{
+  color:#fff;
+}
+.chmessage{
+  background: #08B6CE;
+  padding: 20px;
+  margin:5px;
+}
+.left-bar-inner.test .scroller{
+  height: 85%;
+  max-height: 85%;
+  min-height: 80%;
+}

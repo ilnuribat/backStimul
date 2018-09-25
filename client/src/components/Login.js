@@ -10,6 +10,7 @@ class Login extends Component {
     super(props);
     this.state = {
       email: '',
+      id: 0,
       name: '',
       login: false,
       loginerror: "", 
@@ -17,18 +18,22 @@ class Login extends Component {
   }
 
   _confirm = async () => {
-    const { name, email, password } = this.state;
+    const { name, email, password, id } = this.state;
     this.setState({loginerror: ''})
 
     if(!email || !password) return( this.setState({loginerror: `ошибка! Не введен логин или пароль`}) )
 
     if (!this.state.login) {
       let q = LoginQuery(email, password);
+
+      console.log(q)
+
       let result = await quf(q)
       .then(a=>{return a;})
       .catch((e)=>{
         console.warn('Login Error: ',e)
       });
+
       // const result = await this.props.loginMutation({
       //   variables: {
       //     email,
@@ -39,10 +44,11 @@ class Login extends Component {
       if(result && result.errors){
         this.setState({loginerror: `ошибка! ${result.errors[0].message}`})
       }
+
       else if(result && result.data && result.data.login){
-        const { jwt, username } = result.data.login;
+        const { jwt, username, id } = result.data.login;
         if(!jwt || !username) return( this.setState({loginerror: `ошибка! Ответ не пришел`}) )
-        this._saveUserData(jwt, username)
+        this._saveUserData(jwt, username, id)
       }else{
         this.setState({loginerror: `ошибка! Свистать все на верх!`})
         return false;
@@ -65,9 +71,10 @@ class Login extends Component {
     // this.props.history.push(`/`)
   }
 
-  _saveUserData = (token, name) => {
+  _saveUserData = (token, name, id) => {
     console.log("save user data");
 
+    localStorage.setItem('userid', id);
     localStorage.setItem('username', name);
     localStorage.setItem(AUTH_TOKEN, token)
   }
@@ -119,6 +126,7 @@ const SIGNUP_MUTATION = gql`
 const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
     login(user:{email: $email, password: $password}) {
+      id
       username
       jwt
     }
@@ -128,6 +136,7 @@ const LOGIN_MUTATION = gql`
 const LoginQuery = (email, password) => `
 mutation{
   login(user:{email:"${email}",password:"${password}"}){
+    id
     username
     jwt
   }

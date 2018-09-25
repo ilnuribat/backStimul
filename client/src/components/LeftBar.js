@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Appср from '../chat/App';
+import Test from './Test';
 
 class LeftBar extends Component {
   constructor(props) {
@@ -22,6 +23,12 @@ class LeftBar extends Component {
       return (
         <div className="left-bar">
           <Appср />
+        </div>
+      )
+    case "test":
+      return (
+        <div className="left-bar">
+                <Test />
         </div>
       )
     case "fire":

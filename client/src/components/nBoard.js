@@ -8,6 +8,8 @@ let log = (fun, e) => {
   console.warn(filename, "func:", fun, e)
 };
 
+
+
 export default class Column extends Component {
 
   constructor(props) {
@@ -42,13 +44,12 @@ export default class Column extends Component {
     let input = `name: "${name}", description: "${description}", columnId: ${columnId}, priority: ${1}, createdBy: ${1}`;
     let q = crTask(`input: {${input}}`);
 
-    console.log(q)
     quf(q)
       .then((a) => {
         console.warn(a)
       });
       this.props.refetch();
-    this.setState({
+      this.setState({
       open: !this.state.open,
       input: [],
     })

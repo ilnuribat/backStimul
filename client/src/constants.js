@@ -34,6 +34,22 @@ export const quf = (query) => {
     .then(r => r.json())
     .then(data => data)
 };
+export const qauf = (query, uri, auth) => {
+
+ return fetch(uri, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${auth}`,
+    },
+    body: JSON.stringify({
+      query
+    })
+  })
+    .then(r => r.json())
+    .then(data => data)
+};
 
 export const grid = 8;
 
