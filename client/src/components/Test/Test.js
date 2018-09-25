@@ -5,7 +5,6 @@ import Loading from '../Loading.js';
 
 
 const PinsQuery = ({ children }) => (
-    // <Query query={GR_QUERY} variables={{id: localStorage.getItem("userid")}}>
     <Query query={GR_QUERY} variables={{id: 4 }}>
       {({ loading, error, data, refetch, subscribeToMore }) => {
         if (loading)
@@ -19,24 +18,13 @@ const PinsQuery = ({ children }) => (
           subscribeToMore({
             document: MESSAGE_CREATED,
             updateQuery: (prev, { subscriptionData }) => {
-                // console.log("prev")
-                // console.log(prev)
-                // console.log("subscriptionData")
-                // console.log(subscriptionData)
               if (!subscriptionData.data || !subscriptionData.data.messageAdded)
                 return prev;
               const newPinAdded = {"node": subscriptionData.data.messageAdded };
-
-                
               let arr = [];
               arr = Array.from(prev.group.messages.edges);
               arr.push(newPinAdded);
-
-            //   const a = Object.assign({}, prev);
               const a = prev;
-              
-            //   const b = a.group.messages.edges = Object.assign({}, prev);
-
                 let Clone = JSON.parse(JSON.stringify(prev));
                 Clone.group.messages.edges = arr;
 
@@ -48,7 +36,6 @@ const PinsQuery = ({ children }) => (
               console.log("a object",a)
               console.log("Clone object",Clone)
               console.log("b object",b)
-            //   
               return a;
             }
           });
@@ -57,7 +44,6 @@ const PinsQuery = ({ children }) => (
           refetch();
         }
         
-        //console.log(data)
         if(data.group){
             return children(data.group.messages.edges, subscribeToMorePins, refc);
         }
@@ -101,9 +87,7 @@ const PinsQuery = ({ children }) => (
     }
 
     _update(){
-        console.log("add return")
         this.setState({messages: this.state.messages + 1})
-        console.log("messages",this.state.messages)
         this.props.refc()
     }
 
@@ -187,7 +171,6 @@ const PinsQuery = ({ children }) => (
 
   export default () => (
       <PinsQuery>
-        {/* Wrap App with PinsQuery because we need to access subscribeToMorePins in componentDidMount */}
         {(messages, subscribeToMorePins, refc) => (
           <App messages={messages} refc={refc} subscribeToMorePins={subscribeToMorePins} />
         )}
@@ -229,23 +212,6 @@ const PinsQuery = ({ children }) => (
     }
 `;
 
-  const USER_QUERY = gql`
-    query user($id: Int!){
-        user(id: $id ){
-            email
-            messages{
-                id
-                text
-                from{
-                    id
-                }
-                to{
-                    id
-                }
-            }
-        }
-    }
-`;
 const MESSAGE_CREATED = gql`
     subscription{
         messageAdded(groupIds: 4){
