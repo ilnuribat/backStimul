@@ -1,6 +1,6 @@
 const { Schema } = require('mongoose');
 
-module.exports = new Schema({
+const user = new Schema({
   email: { type: String, unique: true },
   password: String,
   firstname: String,
@@ -19,3 +19,9 @@ module.exports = new Schema({
     updatedAt: 'updatedAt',
   },
 });
+
+user.virtual('id').get(function () {
+  return this._id.toString();
+});
+
+module.exports = user;
