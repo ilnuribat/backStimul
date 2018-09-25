@@ -1,78 +1,16 @@
-const { ApolloServer, PubSub } = require('apollo-server');
-const connectToMongo = require('./connectDB');
+const { ApolloServer } = require('apollo-server');
 const jsonwebtoken = require('jsonwebtoken');
-// const { typeDefs } = require('./data/schema/index.js');
-// const { resolvers } = require('./data/resolvers');
+const connectToMongo = require('./connectDB');
 const { HTTP_PORT, JWT_SECRET } = require('./config');
 const { User } = require('./data/models');
 const { logger } = require('./logger');
+const schema = require('./data/schema');
+const resolvers = require('./data/resolvers');
 
-const pubsub = new PubSub();
-const BOOK_ADDED = 'BOOK_ADDED';
-
-const booksDB = [
-  {
-    title: 'Work hard',
-    author: 'Den',
-  },
-];
 
 const server = new ApolloServer({
-  resolvers: {
-    Query: {
-      books: (parent, args, { user }) => {
-        if (!user) {
-          throw new Error('no auth');
-        }
-
-        return booksDB;
-      },
-    },
-    Mutation: {
-      addBook: (root, args, ctx) => {
-        console.log(ctx.user);
-        booksDB.push(args);
-        console.log(args);
-        pubsub.publish(BOOK_ADDED, args);
-      },
-      async login(root, args) {
-        const { email, password } = args;
-
-        const user = await User.findOne({ email, password });
-
-        const token = jsonwebtoken.sign({
-          userId: user.id,
-        }, JWT_SECRET, {
-          noTimestamp: true,
-        });
-
-        return {
-          user: user.email,
-          token,
-        };
-      },
-    },
-    Subscription: {
-      bookAdded: {
-        subscribe: () => pubsub.asyncIterator([BOOK_ADDED]),
-      },
-    },
-  },
-  typeDefs: `
-    type Book { title: String, author: String }
-    type AuthToken {
-      token: String,
-      user: String
-    }
-    type Query { books: [Book] }
-    type Mutation {
-      addBook(title: String, author: String): Book
-      login(email: String, password: String): AuthToken
-    }
-    type Subscription {
-      bookAdded: Book
-    }
-  `,
+  resolvers,
+  typeDefs: schema,
 
   context: async ({ req = { body: {} }, res, connection = {} }) => {
     console.log({ connection });
@@ -104,7 +42,7 @@ const server = new ApolloServer({
     };
   },
   subscriptions: {
-    async onConnect(connectionParams, websocket, wsContext) {
+    async onConnect(connectionParams) {
       const [type = '', body] = connectionParams.Authorization.split(' ');
 
       if (type.toLowerCase() !== 'bearer') {
