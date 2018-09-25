@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 import { Query, Mutation } from "react-apollo";
 import React, { Component, Fragment } from "react";
 import Loading from '../Loading.js';
-
+import { GR_QUERY, MESSAGE_CREATED, ADD_MUT } from './querys'
 
 const PinsQuery = ({ children }) => (
     <Query query={GR_QUERY} variables={{id: 4 }}>
@@ -54,20 +54,7 @@ const PinsQuery = ({ children }) => (
   
   const AddPinMutation = ({ children }) => (
     <Mutation
-      mutation={gql
-        `mutation Add($id: Int!, $text: String! ){
-            createMessage(message:{groupId: $id, text: $text}){
-              id
-              text
-              from{
-                  id
-              }
-              to{
-                  id
-              }
-            }
-          }`
-      }
+      mutation={ADD_MUT}
     >
       {(addPin, { data, loading, error }) =>
         children(addPin, { data, loading, error })
@@ -78,11 +65,9 @@ const PinsQuery = ({ children }) => (
   class App extends Component {
     constructor(props){
         super(props)
-
         this.state = {
             messages: 0,
         }
-
         this._update = this._update.bind(this)
     }
 
@@ -133,7 +118,6 @@ const PinsQuery = ({ children }) => (
             input: [],
         }
 
-
     this.changeInput = this.changeInput.bind(this)
     this.addMessage = this.addMessage.bind(this)
     }
@@ -178,51 +162,3 @@ const PinsQuery = ({ children }) => (
   );
   
 
-  const GR_QUERY = gql`
-    query group($id: Int!, $messageConnection: ConnectionInput = {first: 0}){
-        group(id: $id ){
-            id
-            name
-            users{
-                id
-                username
-            }
-            messages(messageConnection: $messageConnection) {
-                edges {
-                    cursor
-                    node {
-                        id
-                        to {
-                        id
-                        }
-                        from {
-                        id
-                        username
-                        }
-                        createdAt
-                        text
-                    }
-                }
-                pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                }
-            }
-        }
-    }
-`;
-
-const MESSAGE_CREATED = gql`
-    subscription{
-        messageAdded(groupIds: 4){
-            id
-            text
-            from{
-                    id
-                }
-                to{
-                    id
-                }
-        }
-    }
-`;
