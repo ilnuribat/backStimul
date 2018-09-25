@@ -1,85 +1,65 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../../config');
+const { User } = require('../models');
+const { logger } = require('../../logger');
 
-import { userLogic } from './logic';
-import { JWT_SECRET } from '../config';
-import { User } from './connectors';
+function generateToken(user) {
+  return jwt.sign({
+    id: user.id,
+    password: user.password.slice(-10),
+  }, JWT_SECRET);
+}
 
 module.exports = {
-  User: {
-    email(user, args, ctx) {
-      return userLogic.email(user, args, ctx);
-    },
-    friends(user, args, ctx) {
-      return userLogic.friends(user, args, ctx);
-    },
-    groups(user, args, ctx) {
-      return userLogic.groups(user, args, ctx);
-    },
-    jwt(user, args, ctx) {
-      return userLogic.jwt(user, args, ctx);
-    },
-    messages(user, args, ctx) {
-      return userLogic.messages(user, args, ctx);
-    },
-  },
   Query: {
-    user(_, args, ctx) {
-      return userLogic.query(_, args, ctx);
+    user(parent, { email, id }) {
+      return User.findOne({ $or: [{ _id: id }, { email }] });
     },
   },
 
   Mutation: {
-    login(_, signinUserInput, ctx) {
-      // find user by email
-      const { email, password } = signinUserInput.user;
+    async login(parent, { user }) {
+      const { email, password } = user;
+      const foundUser = await User.findOne({ email });
 
-      return User.findOne({ where: { email } }).then((user) => {
-        if (user) {
-          // validate password
-          return bcrypt.compare(password, user.password).then((res) => {
-            if (res) {
-              // create jwt
-              const token = jwt.sign({
-                id: user.id,
-                email: user.email,
-                version: user.version,
-              }, JWT_SECRET);
-              user.jwt = token;
-              ctx.user = Promise.resolve(user);
-              return user;
-            }
+      if (!foundUser) {
+        throw new Error('no user found with such email');
+      }
 
-            return Promise.reject('password incorrect');
-          });
-        }
+      const validatePassword = await bcrypt.compare(password, foundUser.password);
 
-        return Promise.reject('email not found');
-      });
+      if (!validatePassword) {
+        throw new Error('password is incorrect');
+      }
+
+      const token = generateToken(foundUser);
+
+      return {
+        userId: foundUser.id,
+        token,
+      };
     },
-    signup(_, signinUserInput, ctx) {
-      const { email, password, username } = signinUserInput.user;
+    async signup(_, { user }) {
+      const { email, password } = user;
 
-      // find user by email
-      return User.findOne({ where: { email } }).then((existing) => {
-        if (!existing) {
-          // hash password and create user
-          return bcrypt.hash(password, 10).then(hash => User.create({
-            email,
-            password: hash,
-            username: username || email,
-            version: 1,
-          })).then((user) => {
-            const { id } = user;
-            const token = jwt.sign({ id, email, version: 1 }, JWT_SECRET);
-            user.jwt = token;
-            ctx.user = Promise.resolve(user);
-            return user;
-          });
+      try {
+        const hashPassword = await bcrypt.hash(password, 12);
+        const newUser = await User.create({ email, password: hashPassword });
+        const token = generateToken(newUser);
+
+        return {
+          token,
+          id: user.id,
+        };
+      } catch (err) {
+        if (err.errmsg.indexOf('duplicate key error')) {
+          logger.error('user with such email exists', { email });
+          throw new Error('user with such email exists');
         }
 
-        return Promise.reject('email already exists'); // email already exists
-      });
+        throw err;
+      }
     },
   },
 };
