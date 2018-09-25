@@ -40,12 +40,15 @@ const PinsQuery = ({ children }) => (
                 let Clone = JSON.parse(JSON.stringify(prev));
                 Clone.group.messages.edges = arr;
 
+                const b = Object.assign({}, prev, Clone);
+
               console.log(subscriptionData)
               console.log(prev)
               console.log(newPinAdded)
               console.log("a object",Clone)
+              console.log("b object",b)
             //   
-              return Clone;
+              return b;
             }
           });
         };
