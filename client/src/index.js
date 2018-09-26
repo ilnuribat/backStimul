@@ -16,7 +16,7 @@ import { AUTH_TOKEN } from './constants';
 import App from './App';
 import { setContext } from 'apollo-link-context';
 import { withClientState } from 'apollo-link-state';
-import {url} from './config';
+import {url} from './constants';
 
 
 const httpLink = new HttpLink({

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import io from 'socket.io-client'
-import config from '../config'
+import { api } from '../constants'
 import Messages from './Messages'
 import ChatInput from './ChatInput'
 
@@ -12,7 +12,7 @@ class ChatApp extends Component {
       messages: []
     }
     this.sendHandler = this.sendHandler.bind(this)
-    this.socket = io(config.api, {
+    this.socket = io(api, {
       query: `username= ${props.username}`
     }).connect()
 

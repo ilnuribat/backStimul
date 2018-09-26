@@ -6,8 +6,7 @@ import { PropTypes } from 'prop-types';
 import { update } from 'immutability-helper';
 import { map } from 'lodash';
 import { Buffer } from 'buffer';
-import { qauf } from '../../constants';
-import {url} from '../../config';
+import { qauf, url } from '../../constants';
 
 
 export default class MesQuery extends React.Component {
