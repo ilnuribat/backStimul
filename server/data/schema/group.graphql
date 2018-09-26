@@ -4,7 +4,9 @@ type Group {
 }
 
 input GroupInput {
+  id: ID
   name: String!
+  userIds: [String]
 }
 
 type Query {
@@ -15,5 +17,6 @@ type Query {
 type Mutation {
   createGroup(group: GroupInput): Group
   updateGroup(id: ID, group: GroupInput): Boolean
-  deleteGroup(id: ID): Boolean
+  deleteGroup(id: ID!): Boolean
+  joinGroup(id: ID): Boolean
 }

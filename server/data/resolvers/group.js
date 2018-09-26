@@ -1,4 +1,4 @@
-const { Group } = require('../models');
+const { Group, UserGroup } = require('../models');
 
 module.exports = {
   Query: {
@@ -6,9 +6,25 @@ module.exports = {
     group: (parent, { id }) => Group.findOne({ _id: id }),
   },
   Mutation: {
-    createGroup: (parent, { group }) => Group.create(group),
+    createGroup: async (parent, { group }, { user }) => {
+      const created = await Group.create(group);
+
+      await UserGroup.create({
+        userId: user.id,
+        groupId: created.id,
+      });
+      const { userIds } = group;
+
+      if (Array.isArray(userIds) && userIds.length) {
+        await UserGroup.insertMany(userIds.map(u => ({
+          userId: u,
+          groupId: created.id,
+        })));
+      }
+    },
     updateGroup: async (parent, { id, group }) => {
-      const foundGroup = await Group.findById(id);
+      const groupId = id || group.id;
+      const foundGroup = await Group.findById(groupId);
 
       if (!foundGroup) {
         return false;
