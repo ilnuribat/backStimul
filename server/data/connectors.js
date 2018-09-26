@@ -4,19 +4,19 @@ import Sequelize from 'sequelize';
 import bcrypt from 'bcrypt';
 
 // initialize our database
-const db = new Sequelize('chatty', null, null, {
-  dialect: 'sqlite',
-  storage: './chatty.sqlite',
-  logging: false, // mark this true if you want to see logs
-});
+//const db = new Sequelize('chatty', null, null, {
+//  dialect: 'sqlite',
+//  storage: './chatty.sqlite',
+//  logging: false, // mark this true if you want to see logs
+//});
 
 
 // // initialize our database
-// const db = new Sequelize('db', 'a', '1', {
-//   dialect: 'postgres',
-//   // storage: './chatty.sqlite',
-//   logging: false, // mark this true if you want to see logs
-// });
+const db = new Sequelize('guov', 'guov', 'guov', {
+   dialect: 'postgres',
+   // storage: './chatty.sqlite',
+   logging: false, // mark this true if you want to see logs
+ });
 
 
 // define groups
@@ -61,6 +61,7 @@ faker.seed(1); // get consistent data every time we reload app
 // you don't need to stare at this code too hard
 // just trust that it fakes a bunch of groups, users, and messages
 
+<<<<<<< HEAD
 // db.sync({ force: true }).then(() => _.times(GROUPS, () => GroupModel.create({
 //   name: faker.lorem.words(3),
 // }).then(group => _.times(USERS_PER_GROUP, () => {
@@ -94,6 +95,43 @@ faker.seed(1); // get consistent data every time we reload app
 //     });
 //   });
 // })));
+=======
+/* db.sync({ force: true }).then(() => _.times(GROUPS, () => GroupModel.create({
+  name: faker.lorem.words(3),
+}).then(group => _.times(USERS_PER_GROUP, () => {
+  const password = faker.internet.password();
+  return bcrypt.hash(password, 10).then(hash => group.createUser({
+    email: faker.internet.email(),
+    username: faker.internet.userName(),
+    password: hash,
+    version: 1,
+  }).then((user) => {
+    console.log(
+      '{email, username, password}',
+      `{${user.email}, ${user.username}, ${password}}`
+    );
+    _.times(MESSAGES_PER_USER, () => MessageModel.create({
+      userId: user.id,
+      groupId: group.id,
+      text: faker.lorem.sentences(3),
+    }));
+    return user;
+  }));
+})).then((userPromises) => {
+   // make users friends with all users in the group
+  Promise.all(userPromises).then((users) => {
+    _.each(users, (current, i) => {
+      _.each(users, (user, j) => {
+        if (i !== j) {
+          current.addFriend(user);
+        }
+      });
+    });
+  });
+})));
+>>>>>>> 09ea3678ffb03e591aef8dfdb34c055c13d866d1
+
+*/
 
 const Group = db.models.group;
 const Message = db.models.message;
