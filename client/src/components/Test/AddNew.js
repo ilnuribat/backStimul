@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { graphql, compose } from 'react-apollo';
 
 export default class AddNew extends Component {
   constructor(props){
@@ -24,8 +25,18 @@ export default class AddNew extends Component {
   }
     
   addMessage(){
+    // this.props.appendMessage({
+    //  node:{
+    //   id: 1,
+    //   text: this.state.input[0]
+    //  }
+    // });
+
+    if(!this.state.input[0]){
+      return false;
+    }
     this.props.add({
-      id: 4,
+      id: 1,
       text: this.state.input[0],
     });
   }
@@ -39,3 +50,4 @@ export default class AddNew extends Component {
     );
   }
 }
+

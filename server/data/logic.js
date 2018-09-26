@@ -31,7 +31,7 @@ export const messageLogic = {
               groupId,
             });
           }
-          throw new ForbiddenError('Unauthorized');
+          throw new ForbiddenError('Unauthorized create message');
         }));
   },
 };

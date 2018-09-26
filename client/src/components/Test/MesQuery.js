@@ -1,11 +1,11 @@
 import React from "react";
 import { Query } from "react-apollo";
-import { GR_QUERY, MESSAGE_CREATED } from './querys';
 import Loading from '../Loading';
 import { PropTypes } from 'prop-types';
 import { update } from 'immutability-helper';
 import { map } from 'lodash';
 import { Buffer } from 'buffer';
+import { GR_QUERY, MESSAGE_CREATED } from './querys';
 
 const MesQuery = ({ children }) => (
   <Query query={GR_QUERY} variables={{id: 1 }}>
@@ -16,67 +16,38 @@ const MesQuery = ({ children }) => (
             <Loading />
           </div>
         );
-      let ErrComp;
-      if (error){
-        return <p>Error :( {error.toString()}</p>
-      };
-      const subscribeToMoreMes = () => {
-        subscribeToMore({
+
+      if (error) return <p> {'Ошибочка вышла :( ' + error.toString()} </p>
+
+      const subscribeToMoreMes = ()=>{
+        return subscribeToMore({
           document: MESSAGE_CREATED,
+          variables: {
+            id: 1,
+          },
           updateQuery: (previousResult, { subscriptionData }) => {
-            const previousGroups = previousResult.user.groups;
+            refetch();
             const newMessage = subscriptionData.data.messageAdded;
-  
-            const groupIndex = map(previousGroups, 'id').indexOf(newMessage.to.id);
 
             return update(previousResult, {
-              user: {
-                groups: {
-                  [groupIndex]: {
-                    messages: {
-                      edges: {
-                        $set: [{
-                          __typename: 'MessageEdge',
-                          node: newMessage,
-                          cursor: Buffer.from(newMessage.id.toString()).toString('base64'),
-                        }],
-                      },
-                    },
+              group: {
+                messages: {
+                  edges: {
+                    $set: [{
+                      __typename: 'MessageEdge',
+                      node: newMessage,
+                      cursor: Buffer.from(newMessage.id.toString()).toString('base64'),
+                    }],
                   },
                 },
               },
             });
-            // if (!subscriptionData.data || !subscriptionData.data.messageAdded)
-            //   return prev;
-            // const newMesAdded = {"node": subscriptionData.data.messageAdded };
-            // let arr = [];
-
-            // arr = Array.from(prev.group.messages.edges);
-            // arr.push(newMesAdded);
-            // const a = prev;
-            // let Clone = JSON.parse(JSON.stringify(prev));
-
-            // Clone.group.messages.edges = arr;
-
-            // const b = Object.assign({}, Clone, { "Symbol(id)": "ROOT_QUERY"});
-
-            // console.log(subscriptionData)
-            // console.log(prev)
-            // console.log(newMesAdded)
-            // console.log("a object",a)
-            // console.log("Clone object",Clone)
-            // console.log("b object",b)
-
-            // return a;
-          }
+          },
         });
       };
-      const refc = () =>{
-        refetch();
-      }
-        
+       
       if(data.group){
-        return children(data.group.messages.edges, subscribeToMoreMes, refc);
+        return children(data, subscribeToMoreMes);
       }
 
       return true;

@@ -4,8 +4,9 @@ import MesQuery from './MesQuery';
 
 const Chat = () => (
   <MesQuery>
-    {(messages, subscribeToMoreMes, refc) => (
-      <ChatBody messages={messages} refc={refc} subscribeToMoreMes={subscribeToMoreMes} />
+    {(data, subscribeToMoreMes, refc) => (
+      
+      <ChatBody data={data} refc={refc} subscribeToMoreMes={subscribeToMoreMes} />
     )}
   </MesQuery>
 );

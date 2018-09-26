@@ -17,26 +17,44 @@ export default class ChatBody extends Component {
   constructor(props){
     super(props)
     this.state = {
-      messages: 0,
+      data: {},
+      messages: [],
+      messagesInt: 0,
+      
     }
-    this._update = this._update.bind(this)
+
+    this.update = this.update.bind(this)
+    this.appendMessage = this.appendMessage.bind(this)
   }
 
-    componentDidMount() {
-    this.props.subscribeToMoreMes();
+  componentDidMount() {
+    let { data, subscribeToMoreMes } = this.props;
+
+    this.setState({
+      messages: data.group.messages.edges
+    });
+    subscribeToMoreMes();
   }
-  _update(){
-    this.setState({messages: this.state.messages + 1})
-    this.props.refc()
+  update(){
+  }
+
+  appendMessage(message){
+    let { messages } = this.state;
+
+    this.setState({
+      messages: [...messages, message]
+    })
   }
 
   render() {
+    let { messages } = this.state;
+
     return (
       <div className="left-bar-inner test">
         <AddMesMut>
           {(add, { data, loading, error }) => (
-              <AddNew 
-              update={this._update}
+            <AddNew 
+              append={this.appendMessage}
               add={({ id, text }) => add({ variables: { id, text } })}
             />
               
@@ -44,7 +62,7 @@ export default class ChatBody extends Component {
         </AddMesMut>
         <div className="scroller">
           {
-            this.props.messages.map((el,i,arr)=>{
+            messages.map((el,i,arr)=>{
               return(
                 <div className="chmessage" key={i}>{el.node.text}</div>
               )
