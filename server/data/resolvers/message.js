@@ -1,12 +1,16 @@
-const { Message } = require('../models');
+const { Message, User, Group } = require('../models');
 
 module.exports = {
   Message: {
-    from() {
+    from(parent) {
+      const { userId } = parent;
 
+      return User.findById(userId);
     },
-    to() {
+    to(parent) {
+      const { groupId } = parent;
 
+      return Group.findById(groupId);
     },
   },
   Query: {
