@@ -9,4 +9,5 @@ function getSchema(name) {
 module.exports = mergeTypes([
   getSchema('user'),
   getSchema('group'),
+  getSchema('message'),
 ]);

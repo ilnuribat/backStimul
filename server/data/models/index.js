@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 
-const groupModel = require('./group');
-const userModel = require('./user');
-const userGroupModel = require('./userGroup');
+const group = require('./group');
+const user = require('./user');
+const userGroup = require('./userGroup');
+const message = require('./message');
 
 const db = {
-  Group: mongoose.model('groups', groupModel),
-  User: mongoose.model('users', userModel),
-  UserGroup: mongoose.model('userGroups', userGroupModel),
+  Group: mongoose.model('groups', group),
+  User: mongoose.model('users', user),
+  UserGroup: mongoose.model('userGroups', userGroup),
+  Message: mongoose.model('messages', message),
 };
 
 module.exports = db;
