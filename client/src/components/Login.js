@@ -27,7 +27,10 @@ class Login extends Component {
       let q = LoginQuery(email, password);
 
       let result = await quf(q)
-      .then(a=>{return a;})
+      .then(a=>{
+        console.log(a);
+        
+        return a;})
       .catch((e)=>{
         console.warn('Login Error: ',e)
       });
@@ -45,10 +48,12 @@ class Login extends Component {
 
       else if(result && result.data && result.data.login){
         const { jwt, username, id } = result.data.login;
-        if(!jwt || !username) return( this.setState({loginerror: `ошибка! Ответ не пришел`}) )
+
+        if(!jwt || !username) return( this.setState({loginerror: `ошибка! сервер не дал ответ`}) )
         this._saveUserData(jwt, username, id)
       }else{
         this.setState({loginerror: `ошибка! Свистать все на верх!`})
+
         return false;
       }
 

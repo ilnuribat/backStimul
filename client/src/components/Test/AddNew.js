@@ -25,26 +25,33 @@ export default class AddNew extends Component {
   }
     
   addMessage(){
-    // this.props.appendMessage({
-    //  node:{
-    //   id: 1,
-    //   text: this.state.input[0]
-    //  }
-    // });
+    let { input } = this.state;
 
-    if(!this.state.input[0]){
+    this.props.append({
+     node:{
+      id: 1,
+      text: input[0]
+     }
+    });
+
+    if(!input[0]){
       return false;
     }
     this.props.add({
       id: 1,
-      text: this.state.input[0],
+      text: input[0],
     });
+    this.setState({
+      input: [],
+    })
   }
 
   render() {
+    let { input } = this.state;
+    
     return (
       <div>
-        <input name="1" type="text" value={this.state.input[0]} onChange={this.changeInput} />
+        <input name="1" type="text" value={input[0]} onChange={this.changeInput} />
         <div className="btn" onClick={this.addMessage}>Add message</div>
       </div>
     );

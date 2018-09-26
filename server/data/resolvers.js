@@ -120,8 +120,8 @@ export const resolvers = {
           return ctx.user.then((user) => {
             return Boolean(
               args.groupIds &&
-              ~args.groupIds.indexOf(payload.messageAdded.groupId) &&
-              user.id !== payload.messageAdded.userId, // don't send to user creating message
+              ~args.groupIds.indexOf(payload.messageAdded.groupId) //&&
+              //user.id !== payload.messageAdded.userId, // don't send to user creating message
             );
           });
         },
