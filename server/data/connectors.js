@@ -4,19 +4,19 @@ import Sequelize from 'sequelize';
 import bcrypt from 'bcrypt';
 
 // initialize our database
-const db = new Sequelize('chatty', null, null, {
-  dialect: 'sqlite',
-  storage: './chatty.sqlite',
-  logging: false, // mark this true if you want to see logs
-});
+//const db = new Sequelize('chatty', null, null, {
+//  dialect: 'sqlite',
+//  storage: './chatty.sqlite',
+//  logging: false, // mark this true if you want to see logs
+//});
 
 
 // // initialize our database
-// const db = new Sequelize('db', 'a', '1', {
-//   dialect: 'postgres',
-//   // storage: './chatty.sqlite',
-//   logging: false, // mark this true if you want to see logs
-// });
+const db = new Sequelize('guov', 'guov', 'guov', {
+   dialect: 'postgres',
+   // storage: './chatty.sqlite',
+   logging: false, // mark this true if you want to see logs
+ });
 
 
 // define groups
@@ -61,7 +61,7 @@ faker.seed(1); // get consistent data every time we reload app
 // you don't need to stare at this code too hard
 // just trust that it fakes a bunch of groups, users, and messages
 
-db.sync({ force: true }).then(() => _.times(GROUPS, () => GroupModel.create({
+/* db.sync({ force: true }).then(() => _.times(GROUPS, () => GroupModel.create({
   name: faker.lorem.words(3),
 }).then(group => _.times(USERS_PER_GROUP, () => {
   const password = faker.internet.password();
@@ -94,6 +94,8 @@ db.sync({ force: true }).then(() => _.times(GROUPS, () => GroupModel.create({
     });
   });
 })));
+
+*/
 
 const Group = db.models.group;
 const Message = db.models.message;
