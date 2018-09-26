@@ -16,10 +16,11 @@ import { AUTH_TOKEN } from './constants';
 import App from './App';
 import { setContext } from 'apollo-link-context';
 import { withClientState } from 'apollo-link-state';
+import {url} from './config';
 
 
 const httpLink = new HttpLink({
-  uri: 'http://185.168.187.103:8081/',
+  uri: `http://${url}/`,
   // uri: 'http://localhost:8081/',
   // uri: 'http://185.168.187.103:8500/graphql',
 });
@@ -60,7 +61,7 @@ const httpLinkWithAuthToken = middlewareLink.concat(httpLink);
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://185.168.187.103:8081/graphql`,
+  uri: `ws://${url}/graphql`,
   options: {
     // lazy: true,
     reconnect: true,
@@ -83,8 +84,6 @@ const link = split(
   httpLinkWithAuthToken,
 );
 
-
-// const client = new ApolloClient({ uri: 'http://localhost:8081/' });
 export const client = new ApolloClient({
   link,
   cache: new InMemoryCache(),
