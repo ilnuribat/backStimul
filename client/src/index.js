@@ -28,17 +28,12 @@ const middlewareLink = setContext((req, previousContext) => {
   // get the authentication token from local storage if it exists
   const jwt = localStorage.getItem('auth-token');
   if (jwt) {
-    console.log('My jwt');
-    console.log(jwt);
-
-
     return {
       headers: {
         authorization: `Bearer ${jwt}`,
       },
     };
   }
-    console.log('No jwt');
   return previousContext;
 });
 // const middlewareAuthLink = new ApolloLink((operation, forward) => {

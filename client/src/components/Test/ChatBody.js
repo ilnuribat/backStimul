@@ -24,8 +24,6 @@ export default class ChatBody extends Component {
 
     componentDidMount() {
     this.props.subscribeToMoreMes();
-    console.log("mounted")
-    console.log(this.props)
   }
   _update(){
     this.setState({messages: this.state.messages + 1})
@@ -45,7 +43,6 @@ export default class ChatBody extends Component {
           )}
         </AddMesMut>
         <div className="scroller">
-          {console.log("messages",this.props)}
           {
             this.props.messages.map((el,i,arr)=>{
               return(

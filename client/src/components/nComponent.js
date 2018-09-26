@@ -53,8 +53,6 @@ export default class CreateCol extends Component {
   render(){
     let id = this.state.id;
 
-    console.log("prpsnc",this.props);
-
     if(false){
       return(
         <Fragment>
@@ -93,8 +91,6 @@ export default class CreateCol extends Component {
 
                 return(<div className="errorMessage">Не могу выполнить запрос</div>);
               }
-
-              console.log(data);
 
               if(data){
                 if(data.projectGroups && data.projectGroups.length > 0){

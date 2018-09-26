@@ -40,10 +40,8 @@ export default class Column extends Component {
     let input = `name: "${name}", description: "${description}", columnId: ${columnId}, priority: ${1}, createdBy: ${1}`;
     let q = crTask(`input: {${input}}`);
 
-    console.log(q)
     quf(q)
       .then((a) => {
-        console.warn(a)
       });
       this.props.refetch();
     this.setState({
@@ -54,11 +52,8 @@ export default class Column extends Component {
 
   _mutTask(id, input) {
     let q = updTask(id, `input: {${input}}`);
-
-    console.warn(q)
     quf(q)
       .then((a) => {
-        console.warn(a)
       });
   }
   

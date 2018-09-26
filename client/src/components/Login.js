@@ -26,8 +26,6 @@ class Login extends Component {
     if (!this.state.login) {
       let q = LoginQuery(email, password);
 
-      console.log(q)
-
       let result = await quf(q)
       .then(a=>{return a;})
       .catch((e)=>{
@@ -72,8 +70,6 @@ class Login extends Component {
   }
 
   _saveUserData = (token, name, id) => {
-    console.log("save user data");
-
     localStorage.setItem('userid', id);
     localStorage.setItem('username', name);
     localStorage.setItem(AUTH_TOKEN, token)
