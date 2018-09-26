@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// const models = require('../main/models');
 const { logger } = require('./logger');
 const { MONGODB_HOST } = require('./config');
 
