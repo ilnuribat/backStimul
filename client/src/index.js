@@ -15,6 +15,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AUTH_TOKEN } from './constants';
 import App from './App';
 import { setContext } from 'apollo-link-context';
+import { withClientState } from 'apollo-link-state';
 
 
 const httpLink = new HttpLink({

@@ -3,6 +3,9 @@ import { Query } from "react-apollo";
 import { GR_QUERY, MESSAGE_CREATED } from './querys';
 import Loading from '../Loading';
 import { PropTypes } from 'prop-types';
+import { update } from 'immutability-helper';
+import { map } from 'lodash';
+import { Buffer } from 'buffer';
 
 const MesQuery = ({ children }) => (
   <Query query={GR_QUERY} variables={{id: 4 }}>
@@ -17,29 +20,51 @@ const MesQuery = ({ children }) => (
       const subscribeToMoreMes = () => {
         subscribeToMore({
           document: MESSAGE_CREATED,
-          updateQuery: (prev, { subscriptionData }) => {
-            if (!subscriptionData.data || !subscriptionData.data.messageAdded)
-              return prev;
-            const newMesAdded = {"node": subscriptionData.data.messageAdded };
-            let arr = [];
+          updateQuery: (previousResult, { subscriptionData }) => {
+            const previousGroups = previousResult.user.groups;
+            const newMessage = subscriptionData.data.messageAdded;
+  
+            const groupIndex = map(previousGroups, 'id').indexOf(newMessage.to.id);
 
-            arr = Array.from(prev.group.messages.edges);
-            arr.push(newMesAdded);
-            const a = prev;
-            let Clone = JSON.parse(JSON.stringify(prev));
+            return update(previousResult, {
+              user: {
+                groups: {
+                  [groupIndex]: {
+                    messages: {
+                      edges: {
+                        $set: [{
+                          __typename: 'MessageEdge',
+                          node: newMessage,
+                          cursor: Buffer.from(newMessage.id.toString()).toString('base64'),
+                        }],
+                      },
+                    },
+                  },
+                },
+              },
+            });
+            // if (!subscriptionData.data || !subscriptionData.data.messageAdded)
+            //   return prev;
+            // const newMesAdded = {"node": subscriptionData.data.messageAdded };
+            // let arr = [];
 
-            Clone.group.messages.edges = arr;
+            // arr = Array.from(prev.group.messages.edges);
+            // arr.push(newMesAdded);
+            // const a = prev;
+            // let Clone = JSON.parse(JSON.stringify(prev));
 
-            const b = Object.assign({}, Clone, { "Symbol(id)": "ROOT_QUERY"});
+            // Clone.group.messages.edges = arr;
 
-            console.log(subscriptionData)
-            console.log(prev)
-            console.log(newMesAdded)
-            console.log("a object",a)
-            console.log("Clone object",Clone)
-            console.log("b object",b)
+            // const b = Object.assign({}, Clone, { "Symbol(id)": "ROOT_QUERY"});
 
-            return a;
+            // console.log(subscriptionData)
+            // console.log(prev)
+            // console.log(newMesAdded)
+            // console.log("a object",a)
+            // console.log("Clone object",Clone)
+            // console.log("b object",b)
+
+            // return a;
           }
         });
       };
