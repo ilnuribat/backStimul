@@ -8,7 +8,7 @@ import { map } from 'lodash';
 import { Buffer } from 'buffer';
 
 const MesQuery = ({ children }) => (
-  <Query query={GR_QUERY} variables={{id: 4 }}>
+  <Query query={GR_QUERY} variables={{id: 1 }}>
     {({ loading, error, data, refetch, subscribeToMore }) => {
       if (loading)
         return (
@@ -16,7 +16,10 @@ const MesQuery = ({ children }) => (
             <Loading />
           </div>
         );
-      if (error) return <p>Error :(</p>;
+      let ErrComp;
+      if (error){
+        return <p>Error :( {error.toString()}</p>
+      };
       const subscribeToMoreMes = () => {
         subscribeToMore({
           document: MESSAGE_CREATED,
