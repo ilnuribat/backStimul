@@ -2,13 +2,20 @@ type Group {
   id: ID!
   name: String
   users: [User]
-  messages: [Message]
+  messages(messageConnection: ConnectionInput): MessageConnection
 }
 
 input GroupInput {
   id: ID
   name: String!
   userIds: [String]
+}
+
+input ConnectionInput {
+  first: Int
+  after: String
+  last: Int
+  before: String
 }
 
 type Query {

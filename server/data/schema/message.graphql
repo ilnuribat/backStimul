@@ -1,5 +1,5 @@
 type Message {
-  id: ID
+  id: ID!
   text: String
   createdAt: String
   from: User
@@ -8,13 +8,28 @@ type Message {
   groupId: String
 }
 
+type MessageConnection {
+  edges: [MessageEdge]!
+  pageInfo: PageInfo!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+type MessageEdge {
+  node: Message!
+  cursor: String!
+}
+
 input MessageInput {
   groupId: String!
   text: String!
 }
 
 type Query {
-  messages(groupId: String): [Message]
+  messages(groupId: String!): [Message]
 }
 
 type Mutation {

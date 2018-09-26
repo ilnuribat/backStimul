@@ -5,6 +5,44 @@ const {
   Message,
 } = require('../models');
 
+async function getPageInfo({
+  messages, groupId, before, after,
+}) {
+  if (messages.length === 0) {
+    const isPrev = await Message.findOne({
+      groupId,
+      _id: { $lt: before || after },
+    });
+    const isNext = await Message.findOne({
+      groupId,
+      _id: { $gt: before || after },
+    });
+
+    return {
+      hasPreviousPage: !!isPrev,
+      hasNextPage: !!isNext,
+    };
+  }
+
+  const isPrev = await Message.findOne({
+    groupId,
+    _id: {
+      $lt: messages[0].id,
+    },
+  });
+  const isNext = await Message.findOne({
+    groupId,
+    _id: {
+      $gt: messages[messages.length - 1].id,
+    },
+  });
+
+  return {
+    hasPreviousPage: !!isPrev,
+    hasNextPage: !!isNext,
+  };
+}
+
 module.exports = {
   Group: {
     async users(parent) {
@@ -14,15 +52,53 @@ module.exports = {
 
       return users;
     },
-    async messages(parent) {
+    async messages(parent, args) {
       const { id } = parent;
+      const {
+        first, last, before, after,
+      } = args;
+      // before - last, after - first
 
-      return Message.find({ groupId: id });
+      let idCond;
+
+      if (after) {
+        idCond = {
+          $gt: after,
+        };
+      }
+      if (before) {
+        idCond = {
+          $lt: before,
+        };
+      }
+
+      const where = {
+        _id: idCond,
+        groupId: id,
+      };
+
+      if (!idCond) {
+        delete where._id;
+      }
+
+      const messages = await Message.find(where).limit(first || last);
+
+      const pageInfo = await getPageInfo({
+        messages, groupId: id, before, after,
+      });
+
+      return {
+        pageInfo,
+        edges: messages.map(m => ({
+          node: m,
+          cursor: m.id,
+        })),
+      };
     },
   },
   Query: {
     groups: () => Group.find(),
-    group: (parent, { id }) => Group.findOne({ _id: id }),
+    group: (parent, { id }) => Group.findById(id),
   },
   Mutation: {
     createGroup: async (parent, { group }, { user }) => {
