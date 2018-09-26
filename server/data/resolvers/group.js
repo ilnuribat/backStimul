@@ -39,5 +39,29 @@ module.exports = {
 
       return res.n;
     },
+    joinGroup: async (parent, { id }, { user }) => {
+      const group = await Group.findById(id);
+
+      if (!group) {
+        return false;
+      }
+
+      try {
+        await UserGroup.create({ userId: user.id, groupId: id });
+
+        return true;
+      } catch (err) {
+        if (err.errmsg.indexOf('duplicate key error') > -1) {
+          return false;
+        }
+
+        throw err;
+      }
+    },
+    leaveGroup: async (parent, { id }, { user }) => {
+      const res = await UserGroup.deleteOne({ userId: user.id, groupId: id });
+
+      return res.n;
+    },
   },
 };

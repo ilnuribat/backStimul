@@ -19,4 +19,5 @@ type Mutation {
   updateGroup(id: ID, group: GroupInput): Boolean
   deleteGroup(id: ID!): Boolean
   joinGroup(id: ID): Boolean
+  leaveGroup(id: ID): Boolean
 }
