@@ -11,7 +11,17 @@ function handleMeta(meta) {
     .join(', ');
 }
 
-const customFormat = printf(log => `${log.level} [${log.timestamp}]: ${log.label} ${log.message} ${handleMeta(log.metadata)}`);
+const customFormat = printf(log => `${
+  log.level
+} [${
+  log.timestamp
+}]: ${
+  log.label
+} ${
+  !log.message ? log.message : log.message.toString().toString()
+} ${
+  handleMeta(log.metadata)
+}`);
 
 const logFormat = combine(
   colorize(),
