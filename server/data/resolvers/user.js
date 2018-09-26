@@ -56,7 +56,10 @@ module.exports = {
 
       return {
         userId: foundUser.id,
+        id: foundUser.id,
         token,
+        jwt: token,
+        username: 'test',
       };
     },
     async signup(_, { user }) {
