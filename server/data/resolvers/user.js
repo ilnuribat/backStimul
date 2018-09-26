@@ -50,7 +50,7 @@ module.exports = {
 
         return {
           token,
-          id: user.id,
+          userId: newUser.id,
         };
       } catch (err) {
         if (err.errmsg.indexOf('duplicate key error')) {
