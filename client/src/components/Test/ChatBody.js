@@ -48,21 +48,21 @@ export default class ChatBody extends Component {
 
   render() {
     let { messages } = this.state;
-
+    let { data, subscribeToMoreMes } = this.props;
+    let mes = data.group.messages.edges;
     return (
       <div className="left-bar-inner test">
         <AddMesMut>
           {(add, { data, loading, error }) => (
             <AddNew 
-              append={this.appendMessage}
+              // append={this.appendMessage}
               add={({ id, text }) => add({ variables: { id, text } })}
             />
-              
           )}
         </AddMesMut>
         <div className="scroller">
           {
-            messages.map((el,i,arr)=>{
+            mes.map((el,i,arr)=>{
               return(
                 <div className="chmessage" key={i}>{el.node.text}</div>
               )
