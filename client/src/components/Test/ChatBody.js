@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Mutation } from "react-apollo";
 import { ADD_MUT } from './querys';
+import AddNew from './AddNew';
 
 const AddMesMut = ({ children }) => (
   <Mutation
