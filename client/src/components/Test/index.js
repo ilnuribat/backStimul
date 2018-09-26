@@ -1,3 +1,3 @@
-import Test from './Test.js';
+import Chat from './Chat';
 
-export default Test
+export default Chat

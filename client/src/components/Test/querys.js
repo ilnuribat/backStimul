@@ -1,7 +1,6 @@
 import gql from "graphql-tag";
 
-
-  const GR_QUERY = gql`
+const GR_QUERY = gql`
   query group($id: Int!, $messageConnection: ConnectionInput = {first: 0}){
       group(id: $id ){
           id
