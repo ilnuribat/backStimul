@@ -1,5 +1,5 @@
 const { ApolloServer } = require('apollo-server');
-const jsonwebtoken = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const connectToMongo = require('./connectDB');
 const { HTTP_PORT, JWT_SECRET } = require('./config');
 const { User } = require('./data/models');
@@ -12,33 +12,38 @@ const server = new ApolloServer({
   resolvers,
   typeDefs: schema,
 
-  context: async ({ req = { body: {} }, res, connection = {} }) => {
-    console.log({ connection });
-    // console.log({ 'req.body': req.body });
+  context: async ({ req = { body: {} }, res }) => {
+    const ctx = { };
+    // const query = req.body.query || connection.query;
 
-    console.log(req.body.query);
-    console.log(connection.query);
-    const query = req.body.query || connection.query;
+    // logger.debug(query);
 
-    console.log(query);
+    const token = (req.headers.authorization || '').split(' ')[1];
 
-    if (connection) {
-      // check connection for metadata
-      return connection.context;
+    if (!token) {
+      return ctx;
     }
 
-    const token = req.headers.authorization;
+    let payload;
 
-    console.log({ token });
-    const user = await User.findOne({ email: 'a' });
+    try {
+      payload = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      logger.debug('invalid jwt');
+
+      throw new Error('invalid jwt');
+    }
+
+    const { id } = payload;
+
+    const user = await User.findById(id);
+
+    logger.debug(id, user);
 
 
     return {
       user,
-      ctx: {
-        req,
-        res,
-      },
+      ...ctx,
     };
   },
   subscriptions: {
@@ -49,7 +54,7 @@ const server = new ApolloServer({
         throw new Error('test');
       }
 
-      const res = jsonwebtoken.verify(body, JWT_SECRET);
+      const res = jwt.verify(body, JWT_SECRET);
 
       if (!res || !res.userId) {
         throw new Error('bad payload');
@@ -61,8 +66,8 @@ const server = new ApolloServer({
         throw new Error('no user found');
       }
 
-      console.log(user);
-      console.log({ token: body });
+      logger.debug(user);
+      logger.debug({ token: body });
     },
   },
 });
