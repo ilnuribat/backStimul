@@ -1,6 +1,25 @@
-const { Group, UserGroup } = require('../models');
+const {
+  Group,
+  UserGroup,
+  User,
+  Message,
+} = require('../models');
 
 module.exports = {
+  Group: {
+    async users(parent) {
+      const { id } = parent;
+      const usersGroup = await UserGroup.find({ groupId: id });
+      const users = await User.find({ _id: { $in: usersGroup.map(u => u.userId) } });
+
+      return users;
+    },
+    async messages(parent) {
+      const { id } = parent;
+
+      return Message.find({ groupId: id });
+    },
+  },
   Query: {
     groups: () => Group.find(),
     group: (parent, { id }) => Group.findOne({ _id: id }),
