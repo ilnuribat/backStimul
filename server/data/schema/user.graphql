@@ -8,6 +8,8 @@ input AuthUserInput {
 type User {
   id: String! # unique id for the user
   email: String! # we will also require a unique email per user
+  messages: [Message]
+  groups: [Group]
 }
 
 type AuthToken {

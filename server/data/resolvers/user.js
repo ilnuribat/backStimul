@@ -1,7 +1,12 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../../config');
-const { User } = require('../models');
+const {
+  User,
+  Message,
+  Group,
+  UserGroup,
+} = require('../models');
 const { logger } = require('../../logger');
 
 function generateToken(user) {
@@ -12,6 +17,20 @@ function generateToken(user) {
 }
 
 module.exports = {
+  User: {
+    async messages({ id }) {
+      return Message.find({ userId: id });
+    },
+    async groups({ id }) {
+      const usersGroups = await UserGroup.find({ userId: id });
+
+      return Group.find({
+        _id: {
+          $in: usersGroups.map(u => u.groupId),
+        },
+      });
+    },
+  },
   Query: {
     user(parent, { email, id }) {
       return User.findOne({ $or: [{ _id: id }, { email }] });
