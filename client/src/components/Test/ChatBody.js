@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Mutation } from "react-apollo";
 import { ADD_MUT } from './querys';
 import AddNew from './AddNew';
+import moment from 'moment';
 
 const AddMesMut = ({ children }) => (
   <Mutation
@@ -82,17 +83,24 @@ export default class ChatBody extends Component {
         </AddMesMut>
         <div className="scroller">
           {
-            messages.map((el,i,arr)=>{
+            messages.map((el,i)=>{
               let tr = '';
+              let createdAt = el.node.createdAt
+              let text = el.node.text
+              let id = el.node.from.id
+              let username = el.node.from.username
+
+              let data = moment(createdAt).fromNow();
               
-              if(el.node.from.id == uid){
+
+              if(id == uid){
                 tr = 'from-me';
               }
 
               return(
-                <div className={'chmessage '+ tr } key={'chat-'+i} from={el.node.from.id}>
-                  <div className="from-user small">от {el.node.from.username}</div>
-                  <div className="message">{el.node.text}<div className="when">{el.node.createdAt}</div></div>
+                <div className={'chmessage '+ tr } key={'chat-'+i} from={id}>
+                  <div className="from-user small">от {username}</div>
+                  <div className="message">{text}<div className="when">{data}</div></div>
                 </div>
               )
             })
