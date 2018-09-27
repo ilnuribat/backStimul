@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 const GR_QUERY = gql`
-  query group($id: Int!, $messageConnection: ConnectionInput = {first: 0}){
+  query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       group(id: $id ){
           id
           name
@@ -35,7 +35,7 @@ const GR_QUERY = gql`
 `;
 
 const MESSAGE_CREATED = gql`
-  subscription Added($id: [Int]){
+  subscription Added($id: [ID]){
       messageAdded(groupIds: $id){
           id
           text
@@ -49,7 +49,7 @@ const MESSAGE_CREATED = gql`
   }
 `;
 const ADD_MUT = gql`
-mutation Add($id: Int!, $text: String! ){
+mutation Add($id: String!, $text: String! ){
     createMessage(message:{groupId: $id, text: $text}){
       id
       text
