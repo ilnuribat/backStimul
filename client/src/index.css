@@ -1053,3 +1053,21 @@ width:100px;
   max-height: 85%;
   min-height: 80%;
 }
+
+input[type="submit"] {
+  background-color: #435e85 !important;
+  color: white;
+  font: 700 1rem "proxima-nova",sans-serif;
+  border: none;
+  position: relative;
+  -webkit-transition: 0.3s ease-in-out;
+  -o-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
+  text-decoration: none;
+  padding: 20px 80px;
+  text-align: center;
+  cursor: pointer;
+  -webkit-box-shadow: -7px 7px 0px rgba(50,50,50,0.15);
+  box-shadow: -7px 7px 0px rgba(50,50,50,0.15);
+  margin-top: 20px;
+}

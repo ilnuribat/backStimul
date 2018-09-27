@@ -27,6 +27,9 @@ export default class AddNew extends Component {
   submitHandler = e => {
     e.preventDefault()
     let { input } = this.state;
+    this.setState({
+      input: [''],
+    })
     // let gid = localStorage.getItem('gid');
     let gid = 1;
     console.log('input');
@@ -46,17 +49,13 @@ export default class AddNew extends Component {
       }
     });
 
-    this.setState({
-      input: [],
-    })
+
   }
   addMessage(e){
     // e.preventDefault();
     // e.stopPropagation();
     // e.nativeEvent.stopImmediatePropagation();
     let { input } = this.state;
-
-
 
     // if(!input[0]){
     //   return false;
