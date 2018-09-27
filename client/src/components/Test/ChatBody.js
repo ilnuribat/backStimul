@@ -75,7 +75,7 @@ export default class ChatBody extends Component {
           {(add, { data, loading, error }) => (
             <AddNew 
               append={this.appendMessage}
-              add={({ id, text }) => add({ variables: { id, text } })}
+              add={({ id, text }) => add({ variables: { id: `${id}`, text } })}
             />
           )}
         </AddMesMut>
