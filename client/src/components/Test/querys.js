@@ -35,8 +35,8 @@ const GR_QUERY = gql`
 `;
 
 const MESSAGE_CREATED = gql`
-  subscription Added($id: [ID]){
-      messageAdded(groupIds: $id){
+  subscription Added($id: String!){
+      messageAdded(groupId: $id){
           id
           text
           from{
