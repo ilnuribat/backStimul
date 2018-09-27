@@ -2,12 +2,12 @@ FROM node:10
 
 WORKDIR /app
 
-COPY package-lock.json package-lock.json
-COPY package.json package.json
+COPY package*.json /app/
+
 
 RUN npm i --production
 
 
 COPY . .
 
-CMD ["node", "src"]
+CMD ["node", "server"]
