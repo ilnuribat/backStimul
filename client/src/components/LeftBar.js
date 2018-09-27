@@ -23,6 +23,7 @@ class LeftBar extends Component {
       return (
         <div className="left-bar">
           {/* <Appср /> */}
+          <Test />
         </div>
       )
     case "test":
