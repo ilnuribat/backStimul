@@ -36,7 +36,7 @@ export const quf = (query) => {
 };
 export const qauf = (query, uri, auth) => {
 
- return fetch(`http://${uri}/`, {
+  return fetch(`http://${uri}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -55,11 +55,11 @@ export const grid = 8;
 
 export const borderRadius = 2;
 
-export const _fullurl = 'http://185.168.187.103:8081/';
-// export const url = 'http://localhost:8081/';
-// export const url = 'http://185.168.187.103:8500/graphql';
-export const _api = "185.168.187.103:4060";
-export const _url = '185.168.187.103:8081';
-export const _uri = '185.168.187.103:8500';
+export const _fullurl = 'http://localhost:8500/';
+export const url = 'localhost:8500/';
+// export const url = 'http://localhost:8500/graphql';
+export const _api = 'localhost:4060';
+export const _url = 'localhost:8500';
+export const _uri = 'localhost:8500';
 
 export const AUTH_TOKEN = 'auth-token';
