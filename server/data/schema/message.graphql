@@ -35,3 +35,7 @@ type Query {
 type Mutation {
   createMessage(message: MessageInput): Message
 }
+
+type Subscription {
+  messageAdded(groupId: String!): Message
+}

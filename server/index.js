@@ -12,11 +12,12 @@ const server = new ApolloServer({
   resolvers,
   typeDefs: schema,
 
-  context: async ({ req = { body: {} }, res }) => {
+  context: async ({ req = { body: {} } }) => {
     const ctx = { };
-    // const query = req.body.query || connection.query;
 
-    // logger.debug(query);
+    if (!req.headers) {
+      return ctx;
+    }
 
     const token = (req.headers.authorization || '').split(' ')[1];
 
@@ -35,11 +36,7 @@ const server = new ApolloServer({
     }
 
     const { id } = payload;
-
     const user = await User.findById(id);
-
-    logger.debug(id, user);
-
 
     return {
       user,
@@ -47,27 +44,27 @@ const server = new ApolloServer({
     };
   },
   subscriptions: {
-    async onConnect(connectionParams) {
+    async onConnect(connectionParams, websocket, context) {
       const [type = '', body] = connectionParams.Authorization.split(' ');
 
+
       if (type.toLowerCase() !== 'bearer') {
-        throw new Error('test');
+        throw new Error('its not bearer');
       }
 
       const res = jwt.verify(body, JWT_SECRET);
 
-      if (!res || !res.userId) {
+      if (!res || !res.id) {
         throw new Error('bad payload');
       }
 
-      const user = await User.findOne({ _id: res.userId });
+      const user = await User.findById(res.id);
 
       if (!user) {
         throw new Error('no user found');
       }
 
-      logger.debug(user);
-      logger.debug({ token: body });
+      Object.assign(context, { user });
     },
   },
 });
