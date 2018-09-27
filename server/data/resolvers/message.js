@@ -18,9 +18,7 @@ module.exports = {
     },
   },
   Query: {
-    messages(parent, { groupId }) {
-      return Message.find({ groupId });
-    },
+    messages: (parent, { groupId }) => Message.find({ groupId }),
   },
   Mutation: {
     async createMessage(parent, args, { user }) {
@@ -38,11 +36,7 @@ module.exports = {
   },
   Subscription: {
     messageAdded: {
-      subscribe: (parent, args, context) => {
-        console.log(args, context);
-
-        return pubsub.asyncIterator([MESSAGED_ADDED]);
-      },
+      subscribe: () => pubsub.asyncIterator([MESSAGED_ADDED]),
     },
   },
 };
