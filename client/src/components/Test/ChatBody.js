@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Mutation } from "react-apollo";
 import { ADD_MUT } from './querys';
 import AddNew from './AddNew';
+import moment from 'moment';
 
 const AddMesMut = ({ children }) => (
   <Mutation
@@ -33,7 +34,8 @@ export default class ChatBody extends Component {
     let { data, subscribeToMoreMes } = this.props;
 
     this.setState({
-      messages: data.group.messages.edges
+      // messages: data.group.messages.edges
+      messages: data
     });
     subscribeToMoreMes();
   }
@@ -42,11 +44,9 @@ export default class ChatBody extends Component {
 
   appendMessage(message){
     // let { messages } = this.state;
-
     // this.setState({
     //   messages: [...messages, message]
     // })
-    // this.forceUpdate()
   }
 
   stater(state, props){
@@ -60,15 +60,13 @@ export default class ChatBody extends Component {
   }
 
   render() {
-
-
     let { messages } = this.state;
     let { data } = this.props;
-    let mes = data.group.messages.edges;
-    let uid = localStorage.getItem('userid')
+    // let mes = data.group.messages.edges;
+    let mes = data || messages;
+    let uid = localStorage.getItem('userid');
 
-    this.stater(messages, mes);
-
+    this.stater(messages, data);
 
     return (
       <div className="left-bar-inner test">
@@ -82,18 +80,22 @@ export default class ChatBody extends Component {
         </AddMesMut>
         <div className="scroller">
           {
-            messages.map((el,i,arr)=>{
+            mes.map((el,i)=>{
               let tr = '';
+              let createdAt = el.node.createdAt
+              let text = el.node.text
+              let id = el.node.from.id
+              let username = el.node.from.username
+              let data = moment(createdAt).fromNow();
               
-              if(el.node.from.id == uid){
-                tr = 'from-me';
+              if(id == uid){
+                tr = 'me';
               }
 
               return(
-                <div className={'chmessage '+ tr } key={'chat-'+i} from={el.node.from.id}>
-                <div className="message">{el.node.text}</div>
-                <div className="from-user small">{el.node.from.username}</div>
-                <div className="when">{el.node.createdAt}</div>
+                <div className={'chmessage '+ tr } key={'chat-'+i} from={id}>
+                  <div className="from-user small">от {username}</div>
+                  <div className="nmessage">{text}<div className="when">{data}</div></div>
                 </div>
               )
             })
