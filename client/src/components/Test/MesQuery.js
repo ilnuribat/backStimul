@@ -50,7 +50,7 @@ export default class MesQuery extends React.Component {
     if(!this.state.gid || this.state.gid == 0){
       let q = (id) => `
         query{
-          user(id: ${id}){
+          user(id: "${id}"){
             groups{
               id
             }
@@ -59,7 +59,7 @@ export default class MesQuery extends React.Component {
       `;
 
       qauf(q(this.state.uid), _url, this.state.jwt).then(a=>{
-          console.log(a);
+        console.log(a);
         if(a && a.data.user.groups){
           console.log("a gid",a.data.user.groups[0].id);
 
