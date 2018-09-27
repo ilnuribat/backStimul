@@ -22,7 +22,7 @@ class LeftBar extends Component {
     case "chat":
       return (
         <div className="left-bar">
-          <Appср />
+          {/* <Appср /> */}
         </div>
       )
     case "test":
