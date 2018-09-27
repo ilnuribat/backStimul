@@ -82,6 +82,7 @@ export default class ChatBody extends Component {
           {
             mes.map((el,i)=>{
               let tr = '';
+              let color = '';
               let createdAt = el.node.createdAt
               let text = el.node.text
               let id = el.node.from.id
@@ -90,6 +91,8 @@ export default class ChatBody extends Component {
               
               if(id == uid){
                 tr = 'me';
+              }else{
+                color = ""
               }
 
               return(
