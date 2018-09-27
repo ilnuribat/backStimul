@@ -1,14 +1,20 @@
 {
-  "name": "chatty",
-  "description": "A WhatsApp clone with React Native and Apollo",
-  "private": true,
-  "version": "3.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/srtucker22/chatty.git",
-  "author": "Simon Tucker <srtucker22@gmail.com>",
-  "license": "MIT",
   "scripts": {
-    "start": "nodemon --watch server --watch package.json --watch .env server/index.js --exec babel-node --presets env"
+    "start": "node src/main/index.js",
+    "dev": "nodemon server",
+    "databases:up": "docker-compose -f dev/docker-compose.yml up --build -d",
+    "databases:down": "docker-compose -f dev/docker-compose.yml down --volumes",
+    "migrate:add": "node src/utils/createMigration",
+    "migrate:up": "npx sequelize db:migrate",
+    "migrate:down": "npx sequelize db:migrate:undo",
+    "services:up": "docker-compose -f dev/services.yml up -d",
+    "services:down": "docker-compose -f dev/services.yml down"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "dev/*",
+      "node_modules/*"
+    ]
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

@@ -1,0 +1,31 @@
+# input for signing in users
+input AuthUserInput {
+  email: String!
+  password: String!
+}
+
+
+type User {
+  id: String! # unique id for the user
+  email: String! # we will also require a unique email per user
+  username: String
+  messages: [Message]
+  groups: [Group]
+}
+
+type AuthToken {
+  id: ID
+  token: String!
+  userId: String
+  username: String
+  jwt: String
+}
+
+type Query {
+  user(email: String, id: String): User
+}
+
+type Mutation {
+  login(user: AuthUserInput!): AuthToken
+  signup(user: AuthUserInput!): AuthToken
+}

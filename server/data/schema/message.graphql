@@ -1,0 +1,37 @@
+type Message {
+  id: ID!
+  text: String
+  createdAt: String
+  from: User
+  to: Group
+  userId: String
+  groupId: String
+}
+
+type MessageConnection {
+  edges: [MessageEdge]!
+  pageInfo: PageInfo!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+type MessageEdge {
+  node: Message!
+  cursor: String!
+}
+
+input MessageInput {
+  groupId: String!
+  text: String!
+}
+
+type Query {
+  messages(groupId: String!): [Message]
+}
+
+type Mutation {
+  createMessage(message: MessageInput): Message
+}

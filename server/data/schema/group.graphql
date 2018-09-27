@@ -1,0 +1,32 @@
+type Group {
+  id: ID!
+  name: String
+  users: [User]
+  messages(messageConnection: ConnectionInput): MessageConnection
+}
+
+input GroupInput {
+  id: ID
+  name: String!
+  userIds: [String]
+}
+
+input ConnectionInput {
+  first: Int
+  after: String
+  last: Int
+  before: String
+}
+
+type Query {
+  groups: [Group]
+  group(id: ID!): Group
+}
+
+type Mutation {
+  createGroup(group: GroupInput): Group
+  updateGroup(id: ID, group: GroupInput): Boolean
+  deleteGroup(id: ID!): Boolean
+  joinGroup(id: ID): Boolean
+  leaveGroup(id: ID): Boolean
+}
