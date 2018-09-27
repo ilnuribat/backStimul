@@ -91,9 +91,10 @@ export default class ChatBody extends Component {
 
               return(
                 <div className={'chmessage '+ tr } key={'chat-'+i} from={el.node.from.id}>
-                <div className="message">{el.node.text}</div>
-                <div className="from-user small">{el.node.from.username}</div>
-                <div className="when">{el.node.createdAt}</div>
+                <div className="from-user small">от {el.node.from.username}</div>
+                <div className="message">{el.node.text}<div className="when">{el.node.createdAt}</div></div>
+                
+                
                 </div>
               )
             })
