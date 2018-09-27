@@ -66,7 +66,7 @@ const wsLink = new WebSocketLink({
     // lazy: true,
     reconnect: true,
     connectionParams() {
-      return { jwt: localStorage.getItem('auth-token') };
+      return { Authorization: `Bearer ${localStorage.getItem('auth-token')}` };
     },
     jwt: localStorage.getItem('auth-token'),
   }
