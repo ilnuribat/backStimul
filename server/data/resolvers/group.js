@@ -116,6 +116,8 @@ module.exports = {
           groupId: created.id,
         })));
       }
+
+      return created;
     },
     updateGroup: async (parent, { id, group }) => {
       const groupId = id || group.id;
