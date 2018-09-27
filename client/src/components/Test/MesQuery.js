@@ -71,30 +71,26 @@ export default class MesQuery extends React.Component {
     } else{
       return(
         <Query query={GR_QUERY} variables={{id: this.state.gid }}>
-          {({ loading, error, data, refetch, subscribeToMore }) => {
-            if (loading)
-              return (
-                <div style={{ paddingTop: 20 }}>
-                  <Loading />
-                </div>
-              );
-            let ErrComp;
+        {({ loading, error, data, refetch, subscribeToMore }) => {
+          if (loading)
+            return (
+              <div style={{ paddingTop: 20 }}>
+                <Loading />
+              </div>
+            );
+          let ErrComp;
 
-            if (error){
-              return <p> 
-                {' '}
-                {'Ошибочка вышла :( ' + error.toString()}
-                {' '}
-                </p>
-            }
+          if (error){
+            return <p> {'Ошибочка вышла :( ' + error.toString()} </p>
+          };
 
-            const subscribeToMoreMes = ()=>{
-              return subscribeToMore({
-                document: MESSAGE_CREATED,
-                variables: {
-                  id: 1,
-                },
-                updateQuery: (previousResult, { subscriptionData }) => {
+          const subscribeToMoreMes = ()=>{
+             return subscribeToMore({
+              document: MESSAGE_CREATED,
+              variables: {
+                id: this.state.gid,
+              },
+              updateQuery: (previousResult, { subscriptionData }) => {
                 
                   refetch();
 

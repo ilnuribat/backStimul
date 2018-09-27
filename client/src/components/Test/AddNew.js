@@ -30,28 +30,28 @@ export default class AddNew extends Component {
     this.setState({
       input: [''],
     })
-    let gid = localStorage.getItem('gid');
-    
+    let gid = localStorage.getItem('gid') || 1;
     
     if(!input[0]){
       return false;
     }
-
+    this.props.add({
+      id: gid,
+      text: input[0],
+    });
     this.props.append({
       node:{
         id: gid,
         text: input[0],
-        from: {
-          id: localStorage.getItem('userid'),
-          username:localStorage.getItem('username'),
-        }
       }
     });
 
 
   }
   addMessage(e){
-
+    // e.preventDefault();
+    // e.stopPropagation();
+    // e.nativeEvent.stopImmediatePropagation();
     let { input } = this.state;
 
     // if(!input[0]){
