@@ -4,8 +4,6 @@ type Message {
   createdAt: String
   from: User
   to: Group
-  userId: String
-  groupId: String
 }
 
 type MessageConnection {

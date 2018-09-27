@@ -1,4 +1,4 @@
-const { PubSub } = require('apollo-server');
+const { PubSub, withFilter } = require('apollo-server');
 const {
   Message, User, Group, UserGroup,
 } = require('../models');
@@ -50,7 +50,23 @@ module.exports = {
   },
   Subscription: {
     messageAdded: {
-      subscribe: () => pubsub.asyncIterator([MESSAGED_ADDED]),
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([MESSAGED_ADDED]),
+        ({ messageAdded: { groupId: mGroupId } }, { groupId }) => {
+          console.log('should send?', mGroupId.toString() === groupId, { mGroupId, groupId });
+
+          // 5bab4acd749d802d39565e3f
+          // 5bab4acd749d802d39565e3f
+
+          // return true;
+          return mGroupId.toString() === groupId;
+        },
+      ),
+      // (parent, args, ctx) => {
+      //   console.log(parent, args, ctx);
+
+      //   return pubsub.asyncIterator([MESSAGED_ADDED]);
+      // },
     },
   },
 };
