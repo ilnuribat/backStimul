@@ -821,7 +821,6 @@ svg:hover{
 }
 .chkbx-label{
 display: inline-block;
-
 width:100px;
 }
 .chkbx{
@@ -1046,38 +1045,53 @@ width:100px;
 
 .chmessage{
   /* display: -webkit-flex;
-	display: flex; */
-	/* -webkit-flex-direction: row;
+	display: flex;
+	-webkit-flex-direction: row;
 	flex-direction: row; */
   background: rgba(255, 255, 255, 0);
   padding: 0px;
   margin:5px;
+  flex: 1 1 20%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
 
 .chmessage .from-user{
+  
   font-size: 10px;
   padding:5px;
 }
 
-.chmessage .message {
-  -webkit-flex: start;
-  flex: start;
+.chmessage .nmessage {
+  flex: 1 1 auto;
   clear: both;
   width:80%;
   border-radius: 10px; 
   padding: 10px;
   background: #08B6CE;
+  align-self: flex-start;
 }
 
-.chmessage.me .message {
-  -webkit-flex: end;
-  flex: end;
+/* .chmessage {
+  justify-content: left;
+}
+
+.chmessage.me {
+  justify-content: right;
+} */
+.chmessage.me .nmessage {
+  flex: 1 1 auto;
+  align-self: flex-end;
   width:80%;
   background: rgb(62, 180, 47);
 }
 .chmessage .when {
   font-size: 10px;
 }
+
+
+
 
 .left-bar-inner.test .scroller{
   height: 85%;

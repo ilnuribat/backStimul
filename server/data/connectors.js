@@ -15,7 +15,7 @@ import bcrypt from 'bcrypt';
 const db = new Sequelize('guov', 'guov', 'guov', {
    dialect: 'postgres',
    // storage: './chatty.sqlite',
-   logging: false, // mark this true if you want to see logs
+   logging: true, // mark this true if you want to see logs
  });
 
 

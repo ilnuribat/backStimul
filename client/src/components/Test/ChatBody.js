@@ -34,7 +34,8 @@ export default class ChatBody extends Component {
     let { data, subscribeToMoreMes } = this.props;
 
     this.setState({
-      messages: data.group.messages.edges
+      // messages: data.group.messages.edges
+      messages: data
     });
     subscribeToMoreMes();
   }
@@ -43,11 +44,9 @@ export default class ChatBody extends Component {
 
   appendMessage(message){
     // let { messages } = this.state;
-
     // this.setState({
     //   messages: [...messages, message]
     // })
-    // this.forceUpdate()
   }
 
   stater(state, props){
@@ -61,15 +60,13 @@ export default class ChatBody extends Component {
   }
 
   render() {
-
-
     let { messages } = this.state;
     let { data } = this.props;
-    let mes = data.group.messages.edges;
-    let uid = localStorage.getItem('userid')
+    // let mes = data.group.messages.edges;
+    let mes = data || messages;
+    let uid = localStorage.getItem('userid');
 
-    this.stater(messages, mes);
-
+    this.stater(messages, data);
 
     return (
       <div className="left-bar-inner test">
@@ -83,24 +80,22 @@ export default class ChatBody extends Component {
         </AddMesMut>
         <div className="scroller">
           {
-            messages.map((el,i)=>{
+            mes.map((el,i)=>{
               let tr = '';
               let createdAt = el.node.createdAt
               let text = el.node.text
               let id = el.node.from.id
               let username = el.node.from.username
-
               let data = moment(createdAt).fromNow();
               
-
               if(id == uid){
-                tr = 'from-me';
+                tr = 'me';
               }
 
               return(
                 <div className={'chmessage '+ tr } key={'chat-'+i} from={id}>
                   <div className="from-user small">от {username}</div>
-                  <div className="message">{text}<div className="when">{data}</div></div>
+                  <div className="nmessage">{text}<div className="when">{data}</div></div>
                 </div>
               )
             })

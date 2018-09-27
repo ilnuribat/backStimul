@@ -16,6 +16,7 @@ export default class MesQuery extends React.Component {
       gid: 0,
       uid: 0,
       jwt: '',
+      mess: [],
     }
   }
 
@@ -30,6 +31,7 @@ export default class MesQuery extends React.Component {
       jwt: jwt,
     })
     this.changeState = this.changeState.bind(this)
+    this.messUpdate = this.messUpdate.bind(this)
   }
 
 
@@ -39,8 +41,14 @@ export default class MesQuery extends React.Component {
     })
   }
 
+  messUpdate(a){
+    this.setState({
+      mess: a,
+    })
+  }
+
   render() {
-    let { gid, uid, jwt } = this.state;
+    let { gid, uid, jwt, mess } = this.state;
     if(!gid || gid == 0){
       let q = (id) => `
         query{
@@ -89,14 +97,46 @@ export default class MesQuery extends React.Component {
                 variables: {
                   id: gid,
                 },
-                updateQuery: (previousResult, { subscriptionData }) => {refetch();},
+                updateQuery: (previousResult, { subscriptionData }) => {
+                  
+                  refetch();
+
+                  const newMessage = subscriptionData.data.messageAdded;
+                  let result = [...previousResult.group.messages.edges, {
+                    __typename: 'MessageEdge',
+                    node: newMessage,
+                    cursor: Buffer.from(newMessage.id.toString()).toString('base64'),
+                  }];
+                  // this.messUpdate(result)
+                  //return result;
+
+
+                  // return update(previousResult, {
+                  //   group: {
+                  //     messages: {
+                  //       edges: {
+                  //         $set: [{
+                  //           __typename: 'MessageEdge',
+                  //           node: newMessage,
+                  //           cursor: Buffer.from(newMessage.id.toString()).toString('base64'),
+                  //         }],
+                  //       },
+                  //     },
+                  //   },
+                  // });
+                
+                },
               });
             };
+            
+            if(!mess || mess.length != data.group.messages.edges.length){
+              this.messUpdate(data.group.messages.edges)
+              // refetch()
+            }else{
+                // return this.props.children(data, subscribeToMoreMes);
+                return this.props.children(mess, subscribeToMoreMes);
               
-            if(data.group){
-              return this.props.children(data, subscribeToMoreMes);
             }
-    
             return true;
           }}
         </Query>
