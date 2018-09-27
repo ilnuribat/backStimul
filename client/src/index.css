@@ -1066,7 +1066,9 @@ width:100px;
 .chmessage .nmessage {
   flex: 1 1 auto;
   clear: both;
-  width:80%;
+  width:auto;
+  max-width:80%;
+  min-width:40%;
   border-radius: 10px; 
   padding: 10px;
   background: #08B6CE;
@@ -1083,7 +1085,6 @@ width:100px;
 .chmessage.me .nmessage {
   flex: 1 1 auto;
   align-self: flex-end;
-  width:80%;
   background: rgb(62, 180, 47);
 }
 .chmessage .when {
