@@ -43,10 +43,6 @@ export default class MesQuery extends React.Component {
 
   render() {
 
-    
-    console.log(this.state);
-    
-
     if(!this.state.gid || this.state.gid == 0){
       let q = (id) => `
         query{
@@ -94,7 +90,7 @@ export default class MesQuery extends React.Component {
              return subscribeToMore({
               document: MESSAGE_CREATED,
               variables: {
-                id: 1,
+                id: this.state.gid,
               },
               updateQuery: (previousResult, { subscriptionData }) => {
                 

@@ -83,7 +83,6 @@ export default class ChatBody extends Component {
         <div className="scroller">
           {
             messages.map((el,i,arr)=>{
-              console.log(el)
               let tr = '';
               
               if(el.node.from.id == uid){
@@ -94,7 +93,7 @@ export default class ChatBody extends Component {
                 <div className={'chmessage '+ tr } key={'chat-'+i} from={el.node.from.id}>
                 <div className="message">{el.node.text}</div>
                 <div className="from-user small">{el.node.from.username}</div>
-                <div className="when"></div>
+                <div className="when">{el.node.createdAt}</div>
                 </div>
               )
             })
