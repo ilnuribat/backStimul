@@ -32,8 +32,12 @@ module.exports = {
     },
   },
   Query: {
-    user(parent, { email, id }) {
-      return User.findOne({ $or: [{ _id: id }, { email }] });
+    user(parent, args, { user }) {
+      if (!user) {
+        throw new Error('not authenticated');
+      }
+
+      return User.findById(user.id);
     },
   },
 

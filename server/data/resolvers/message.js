@@ -1,4 +1,8 @@
+const { PubSub } = require('apollo-server');
 const { Message, User, Group } = require('../models');
+
+const pubsub = new PubSub();
+const MESSAGED_ADDED = 'MESSAGED_ADDED';
 
 module.exports = {
   Message: {
@@ -19,15 +23,26 @@ module.exports = {
     },
   },
   Mutation: {
-    createMessage(parent, args, { user }) {
+    async createMessage(parent, args, { user }) {
       if (!user) {
         throw new Error(401);
       }
 
-      return Message.create({
+      const message = await Message.create({
         userId: user.id,
         ...args.message,
       });
+
+      pubsub.publish(MESSAGED_ADDED, { messageAdded: message });
+    },
+  },
+  Subscription: {
+    messageAdded: {
+      subscribe: (parent, args, context) => {
+        console.log(args, context);
+
+        return pubsub.asyncIterator([MESSAGED_ADDED]);
+      },
     },
   },
 };
