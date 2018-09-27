@@ -42,6 +42,8 @@ export default class MesQuery extends React.Component {
   }
 
   render() {
+
+    
     console.log(this.state);
     
 
@@ -59,9 +61,14 @@ export default class MesQuery extends React.Component {
       qauf(q(this.state.uid), _url, this.state.jwt).then(a=>{
           console.log(a);
         if(a && a.data.user.groups){
-          console.log("a",a.data.user.groups[0].id);
-          this.changeState(a.data.user.groups[0].id)
+          console.log("a gid",a.data.user.groups[0].id);
 
+          // this.setState({
+          //   gid: a.data.user.groups[0].id,
+          // })
+
+          this.changeState(a.data.user.groups[0].id);
+          localStorage.setItem('gid', a.data.user.groups[0].id);
         }
       }).catch((e)=>{
         console.warn(e);
@@ -75,7 +82,7 @@ export default class MesQuery extends React.Component {
     
     }else{
       return(
-        <Query query={GR_QUERY} variables={{id: 1 }}>
+        <Query query={GR_QUERY} variables={{id: this.state.gid }}>
         {({ loading, error, data, refetch, subscribeToMore }) => {
           if (loading)
             return (

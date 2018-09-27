@@ -11,6 +11,7 @@ export default class AddNew extends Component {
 
     this.changeInput = this.changeInput.bind(this)
     this.addMessage = this.addMessage.bind(this)
+    this.submitHandler = this.submitHandler.bind(this)
   }
 
   changeInput(e){
@@ -23,36 +24,67 @@ export default class AddNew extends Component {
       input: input
     })
   }
-    
-  addMessage(){
+  submitHandler = e => {
+    e.preventDefault()
     let { input } = this.state;
-
-    this.props.append({
-     node:{
-      id: 1,
-      text: input[0]
-     }
-    });
-
+    // let gid = localStorage.getItem('gid');
+    let gid = 1;
+    console.log('input');
+    
+    
     if(!input[0]){
       return false;
     }
     this.props.add({
-      id: 1,
+      id: gid,
       text: input[0],
     });
+    this.props.append({
+      node:{
+        id: gid,
+        text: input[0]
+      }
+    });
+
     this.setState({
       input: [],
     })
   }
+  addMessage(e){
+    // e.preventDefault();
+    // e.stopPropagation();
+    // e.nativeEvent.stopImmediatePropagation();
+    let { input } = this.state;
+
+
+
+    // if(!input[0]){
+    //   return false;
+    // }
+    // this.props.add({
+    //   id: 1,
+    //   text: input[0],
+    // });
+    // this.props.append({
+    //   node:{
+    //    id: 1,
+    //    text: input[0]
+    //   }
+    //  });
+    // this.setState({
+    //   input: [],
+    // })
+  }
 
   render() {
     let { input } = this.state;
-    
+
     return (
-      <div>
-        <input name="1" type="text" value={input[0]} onChange={this.changeInput} />
-        <div className="btn" onClick={this.addMessage}>Add message</div>
+      <div style={{textAlign: "center"}}>
+        <form className='chat-input' onSubmit={this.submitHandler}>
+          <input name="1" type="text" value={input[0]} placeholder='Сообщение...' onChange={this.changeInput} required />
+          <input type="submit" className="button" onClick={this.submitHandler} value="Отправить" />
+        </form>
       </div>
     );
   }
