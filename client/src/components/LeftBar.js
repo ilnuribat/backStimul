@@ -29,7 +29,7 @@ class LeftBar extends Component {
     case "test":
       return (
         <div className="left-bar">
-                <Test />
+                {/* <Test /> */}
         </div>
       )
     case "fire":
