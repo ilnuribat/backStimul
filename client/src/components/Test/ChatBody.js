@@ -65,6 +65,7 @@ export default class ChatBody extends Component {
     let { messages } = this.state;
     let { data } = this.props;
     let mes = data.group.messages.edges;
+    let uid = localStorage.getItem('userid')
 
     this.stater(messages, mes);
 
@@ -82,8 +83,19 @@ export default class ChatBody extends Component {
         <div className="scroller">
           {
             messages.map((el,i,arr)=>{
+              console.log(el)
+              let tr = '';
+              
+              if(el.node.from.id == uid){
+                tr = 'from-me';
+              }
+
               return(
-                <div className="chmessage" key={i}>{el.node.text}</div>
+                <div className={'chmessage '+ tr } key={'chat-'+i} from={el.node.from.id}>
+                <div className="message">{el.node.text}</div>
+                <div className="from-user small">{el.node.from.username}</div>
+                <div className="when"></div>
+                </div>
               )
             })
           }
