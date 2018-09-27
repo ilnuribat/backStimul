@@ -1,5 +1,7 @@
 const { PubSub } = require('apollo-server');
-const { Message, User, Group } = require('../models');
+const {
+  Message, User, Group, UserGroup,
+} = require('../models');
 
 const pubsub = new PubSub();
 const MESSAGED_ADDED = 'MESSAGED_ADDED';
@@ -21,17 +23,29 @@ module.exports = {
     messages: (parent, { groupId }) => Message.find({ groupId }),
   },
   Mutation: {
-    async createMessage(parent, args, { user }) {
+    async createMessage(parent, { message }, { user }) {
       if (!user) {
         throw new Error(401);
       }
 
-      const message = await Message.create({
+      const userGroup = await UserGroup.findOne({
         userId: user.id,
-        ...args.message,
+        groupId: message.groupId,
       });
 
-      pubsub.publish(MESSAGED_ADDED, { messageAdded: message });
+      if (!userGroup) {
+        throw new Error('forbidden');
+      }
+
+
+      const createdMessage = await Message.create({
+        userId: user.id,
+        ...message,
+      });
+
+      pubsub.publish(MESSAGED_ADDED, { messageAdded: createdMessage });
+
+      return createdMessage;
     },
   },
   Subscription: {
