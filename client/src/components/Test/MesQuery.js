@@ -6,7 +6,7 @@ import { PropTypes } from 'prop-types';
 import { update } from 'immutability-helper';
 import { map } from 'lodash';
 import { Buffer } from 'buffer';
-import { qauf, url } from '../../constants';
+import { qauf, _url } from '../../constants';
 
 
 export default class MesQuery extends React.Component {
@@ -56,7 +56,7 @@ export default class MesQuery extends React.Component {
         }
       `;
 
-      qauf(q(this.state.uid), url, this.state.jwt).then(a=>{
+      qauf(q(this.state.uid), _url, this.state.jwt).then(a=>{
           console.log(a);
         if(a && a.data.user.groups){
           console.log("a",a.data.user.groups[0].id);
