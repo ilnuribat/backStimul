@@ -1,4 +1,5 @@
 import React from 'react'
+import { PropTypes } from 'prop-types';
 
 class ChatInput extends React.Component {
   constructor(props) {
@@ -36,6 +37,8 @@ class ChatInput extends React.Component {
   }
 }
 
-ChatInput.defaultProps = {}
+ChatInput.propTypes = {
+  onSend: PropTypes.func,
+};
 
 export default ChatInput

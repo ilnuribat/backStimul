@@ -59,13 +59,7 @@ export default class MesQuery extends React.Component {
       `;
 
       qauf(q(this.state.uid), _url, this.state.jwt).then(a=>{
-          console.log(a);
         if(a && a.data.user.groups){
-          console.log("a gid",a.data.user.groups[0].id);
-
-          // this.setState({
-          //   gid: a.data.user.groups[0].id,
-          // })
 
           this.changeState(a.data.user.groups[0].id);
           localStorage.setItem('gid', a.data.user.groups[0].id);
