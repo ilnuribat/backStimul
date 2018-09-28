@@ -29,4 +29,5 @@ type Mutation {
   deleteGroup(id: ID!): Boolean
   joinGroup(id: ID): Boolean
   leaveGroup(id: ID): Boolean
+  directMessage(id: ID): Group
 }

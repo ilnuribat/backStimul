@@ -160,5 +160,46 @@ module.exports = {
 
       return res.n;
     },
+    directMessage: async (parent, { id }, { user }) => {
+      const dUser = await User.findById(id);
+
+      if (!dUser) {
+        throw new Error('no user found with such id');
+      }
+      const names = [user.email, dUser.email];
+
+      console.log(names.sort());
+
+      // try to create such group
+      let group;
+
+      try {
+        group = await Group.create({
+          name: names.join(', '),
+          code: names.join(''),
+        });
+      } catch (err) {
+        if (err.errmsg.indexOf('duplicate key error') > -1) {
+          group = await Group.findOne({ code: names.join('') });
+        }
+      }
+
+      try {
+        await UserGroup.insertMany([{
+          userId: user.id,
+          groupId: group.id,
+        }, {
+          userId: dUser.id,
+          groupId: group.id,
+        }]);
+      } catch (err) {
+        if (err.errmsg.indexOf('duplicate key error')) {
+          return group;
+        }
+      }
+
+      return group;
+
+    },
   },
 };
