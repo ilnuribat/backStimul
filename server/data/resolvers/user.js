@@ -39,6 +39,9 @@ module.exports = {
 
       return User.findById(user.id);
     },
+    users() {
+      return User.find();
+    }
   },
 
   Mutation: {
