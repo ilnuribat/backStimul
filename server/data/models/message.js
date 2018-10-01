@@ -4,14 +4,15 @@ const schema = new Schema({
   userId: Schema.Types.ObjectId, // from user
   groupId: Schema.Types.ObjectId, // to group
   text: String,
-  createdAt_: {
+  createdAt: {
     type: Date,
     default: () => new Date(),
   },
+  createdAt_: Date,
 });
 
-schema.virtual('createdAt').get(function () {
-  return this.createdAt_.toString();
-});
+// schema.virtual('createdAt').get(function () {
+//   return this.createdAt_.toString();
+// });
 
 module.exports = schema;

@@ -20,9 +20,6 @@ const user = new Schema({
   },
 });
 
-user.virtual('id').get(function () {
-  return this._id.toString();
-});
 user.virtual('username').get(function () {
   return this.email;
 });
