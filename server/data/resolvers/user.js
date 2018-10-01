@@ -30,6 +30,7 @@ module.exports = {
         },
       });
     },
+    id: user => user._id.toString(),
   },
   Query: {
     user(parent, args, { user }) {
@@ -41,7 +42,7 @@ module.exports = {
     },
     users() {
       return User.find();
-    }
+    },
   },
 
   Mutation: {

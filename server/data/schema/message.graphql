@@ -28,6 +28,7 @@ input MessageInput {
 
 type Query {
   messages(groupId: String!): [Message]
+  message(id: ID!): Message
 }
 
 type Mutation {

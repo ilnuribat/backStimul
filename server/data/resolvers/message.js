@@ -1,4 +1,5 @@
 const { PubSub, withFilter } = require('apollo-server');
+const moment = require('moment');
 const {
   Message, User, Group, UserGroup,
 } = require('../models');
@@ -18,9 +19,11 @@ module.exports = {
 
       return Group.findById(groupId);
     },
+    createdAt: message => moment(message.createdAt).format(),
   },
   Query: {
     messages: (parent, { groupId }) => Message.find({ groupId }),
+    message: (parent, { id }) => Message.findById(id),
   },
   Mutation: {
     async createMessage(parent, { message }, { user }) {
