@@ -1,5 +1,5 @@
 module.exports = {
-  "extends": "airbnb",
+  "extends": "airbnb-base",
   "rules": {
     "padding-line-between-statements": [
       "error",
