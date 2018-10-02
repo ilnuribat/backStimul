@@ -28,6 +28,19 @@ module.exports = {
         _id: {
           $in: usersGroups.map(u => u.groupId),
         },
+        code: null,
+      });
+    },
+    async directs({ id }) {
+      const usersGroups = await UserGroup.find({ userId: id });
+
+      return Group.find({
+        _id: {
+          $in: usersGroups.map(u => u.groupId),
+        },
+        code: {
+          $exists: true,
+        },
       });
     },
     id: user => user._id.toString(),

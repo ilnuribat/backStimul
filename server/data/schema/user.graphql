@@ -11,6 +11,7 @@ type User {
   username: String
   messages: [Message]
   groups: [Group]
+  directs: [Group]
 }
 
 type AuthToken {
