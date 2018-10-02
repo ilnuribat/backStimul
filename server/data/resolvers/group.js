@@ -124,7 +124,7 @@ module.exports = {
       if (!dUser) {
         throw new Error('no user found with such id');
       }
-      const names = [user.email, dUser.email];
+      const names = [user.email, dUser.email].sort();
 
       // try to create such group
       let group;
