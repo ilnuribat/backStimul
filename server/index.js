@@ -70,34 +70,32 @@ const server = new ApolloServer({
   },
 });
 
-/* eslint-disable */
-async function migrate() {
-  const cursor = await Message.findOne().cursor();
-  let doc = await cursor.next();
+// /* eslint-disable */
+// async function migrate() {
+//   const cursor = await Message.findOne().cursor();
+//   let doc = await cursor.next();
 
-  while (doc) {
-    await doc.update({
-      createdAt: doc.createdAt_ || doc.createdAt,
-    });
+//   while (doc) {
+//     await doc.update({
+//       createdAt: doc.createdAt_ || doc.createdAt,
+//     });
 
-    await doc.update({
-      $unset: {
-        createdAt_: '',
-      },
-    });
+//     await doc.update({
+//       $unset: {
+//         createdAt_: '',
+//       },
+//     });
 
-    doc = await cursor.next();
-  }
-}
-/* eslint-enable */
+//     doc = await cursor.next();
+//   }
+// }
+// /* eslint-enable */
 
 async function start() {
   await connectToMongo();
   const listening = await server.listen({ port: HTTP_PORT });
 
   logger.info(`server started at port: ${listening.port}`);
-
-  await migrate();
 }
 
 start();
