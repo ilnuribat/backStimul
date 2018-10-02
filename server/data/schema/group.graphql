@@ -6,7 +6,9 @@ type Group {
 }
 
 input GroupInput {
+  id: ID
   name: String!
+  userIds: [String]
 }
 
 input ConnectionInput {
