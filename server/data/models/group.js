@@ -5,13 +5,20 @@ const schema = new Schema({
   code: {
     type: String,
     // unique: true,
-  }
+  },
 });
 
 schema.virtual('id').get(function () {
   return this._id.toString();
 });
 
-schema.index({ code: 1 }, { unique: true });
+schema.index({ code: 1 }, {
+  unique: true,
+  partialFilterExpression: {
+    code: {
+      $exists: true,
+    },
+  },
+});
 
 module.exports = schema;

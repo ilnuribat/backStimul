@@ -1,0 +1,15 @@
+type Direct {
+  id: ID
+  name: String
+  users: [User]
+  messages(messageConnection: ConnectionInput): MessageConnection
+}
+
+type Query {
+  directs: [Direct]
+  direct: [Direct]
+}
+
+type Mutation {
+  directMessage(id: ID): Group
+}

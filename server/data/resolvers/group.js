@@ -4,44 +4,7 @@ const {
   User,
   Message,
 } = require('../models');
-
-async function getPageInfo({
-  messages, groupId, before, after,
-}) {
-  if (messages.length === 0) {
-    const isPrev = await Message.findOne({
-      groupId,
-      _id: { $lt: before || after },
-    });
-    const isNext = await Message.findOne({
-      groupId,
-      _id: { $gt: before || after },
-    });
-
-    return {
-      hasPreviousPage: !!isPrev,
-      hasNextPage: !!isNext,
-    };
-  }
-
-  const isPrev = await Message.findOne({
-    groupId,
-    _id: {
-      $lt: messages[0].id,
-    },
-  });
-  const isNext = await Message.findOne({
-    groupId,
-    _id: {
-      $gt: messages[messages.length - 1].id,
-    },
-  });
-
-  return {
-    hasPreviousPage: !!isPrev,
-    hasNextPage: !!isNext,
-  };
-}
+const { getPageInfo, formWhere } = require('./chat');
 
 module.exports = {
   Group: {
@@ -54,32 +17,17 @@ module.exports = {
     },
     async messages(parent, args) {
       const { id } = parent;
+      const group = await Group.findById(id);
+
+      if (!group /* || group.code */) {
+        throw new Error('no group found');
+      }
       const {
         first, last, before, after,
       } = args;
       // before - last, after - first
 
-      let idCond;
-
-      if (after) {
-        idCond = {
-          $gt: after,
-        };
-      }
-      if (before) {
-        idCond = {
-          $lt: before,
-        };
-      }
-
-      const where = {
-        _id: idCond,
-        groupId: id,
-      };
-
-      if (!idCond) {
-        delete where._id;
-      }
+      const where = formWhere({ id, before, after });
 
       const messages = await Message.find(where).limit(first || last);
 
@@ -97,8 +45,8 @@ module.exports = {
     },
   },
   Query: {
-    groups: () => Group.find(),
-    group: (parent, { id }) => Group.findById(id),
+    groups: () => Group.find({ code: null }),
+    group: (parent, { id }) => Group.findOne({ _id: id, code: null }),
   },
   Mutation: {
     createGroup: async (parent, { group }, { user }) => {
@@ -108,14 +56,6 @@ module.exports = {
         userId: user.id,
         groupId: created.id,
       });
-      const { userIds } = group;
-
-      if (Array.isArray(userIds) && userIds.length) {
-        await UserGroup.insertMany(userIds.map(u => ({
-          userId: u,
-          groupId: created.id,
-        })));
-      }
 
       return created;
     },
@@ -139,7 +79,7 @@ module.exports = {
     joinGroup: async (parent, { id }, { user }) => {
       const group = await Group.findById(id);
 
-      if (!group) {
+      if (!group || group.code) {
         return false;
       }
 
@@ -167,8 +107,6 @@ module.exports = {
         throw new Error('no user found with such id');
       }
       const names = [user.email, dUser.email];
-
-      console.log(names.sort());
 
       // try to create such group
       let group;
@@ -199,7 +137,6 @@ module.exports = {
       }
 
       return group;
-
     },
   },
 };
