@@ -47,5 +47,11 @@ module.exports = {
 
       return directs;
     },
+    direct: async (parent, { id }) => Group.findOne({
+      _id: id,
+      code: {
+        $exists: true,
+      },
+    }),
   },
 };

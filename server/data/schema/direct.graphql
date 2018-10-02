@@ -7,7 +7,7 @@ type Direct {
 
 type Query {
   directs: [Direct]
-  direct: [Direct]
+  direct(id: ID!): Direct
 }
 
 type Mutation {
