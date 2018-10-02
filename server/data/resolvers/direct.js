@@ -37,6 +37,10 @@ module.exports = {
   Query: {
     directs: async (parent, args, ctx) => {
       const { user } = ctx;
+
+      if (!user) {
+        throw new Error('not authorized');
+      }
       const userGroups = await UserGroup.find({ userId: user.id });
       const directs = await Group.find({
         code: { $exists: true },

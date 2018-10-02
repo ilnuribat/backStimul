@@ -20,6 +20,7 @@ module.exports = {
       return Group.findById(groupId);
     },
     createdAt: message => moment(message.createdAt).format(),
+    userId: message => message.userId.toString(),
   },
   Query: {
     messages: (parent, { groupId }) => Message.find({ groupId }),
