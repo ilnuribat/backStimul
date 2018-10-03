@@ -1,9 +1,17 @@
-const { Group, UserGroup, Message } = require('../models');
+const {
+  Group, UserGroup, Message, User,
+} = require('../models');
 const GroupResolver = require('./group');
 const { getPageInfo, formWhere } = require('./chat');
 
 module.exports = {
   Direct: {
+    name: async (direct, args, ctx) => {
+      const anotherUserId = direct.code.split('|').filter(dId => dId !== ctx.user.id);
+      const anotherUser = await User.findById(anotherUserId);
+
+      return anotherUser.email;
+    },
     users: parent => GroupResolver.Group.users(parent),
     messages: async (parent, args) => {
       const { id } = parent;
