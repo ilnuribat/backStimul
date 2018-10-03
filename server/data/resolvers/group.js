@@ -124,19 +124,19 @@ module.exports = {
       if (!dUser) {
         throw new Error('no user found with such id');
       }
-      const names = [user.id, dUser.id].sort();
+      const ids = [user.id, dUser.id].sort();
 
       // try to create such group
       let group;
 
       try {
         group = await Group.create({
-          name: names.join(', '),
-          code: names.join(''),
+          name: ids.join(', '),
+          code: ids.join(''),
         });
       } catch (err) {
         if (err.errmsg.indexOf('duplicate key error') > -1) {
-          group = await Group.findOne({ code: names.join('') });
+          group = await Group.findOne({ code: ids.join('') });
         }
       }
 
