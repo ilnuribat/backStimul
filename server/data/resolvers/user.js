@@ -59,7 +59,7 @@ module.exports = {
 
       return directs.map(d => ({
         ...d,
-        name: users.find(u => u.id === d.name).email,
+        name: (users.find(u => u.id === d.name) || user).email,
       }));
     },
     id: user => user._id.toString(),
