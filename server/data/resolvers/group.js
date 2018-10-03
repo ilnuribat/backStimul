@@ -135,8 +135,8 @@ module.exports = {
           code: ids.join('|'),
         });
       } catch (err) {
-        if (err.errmsg.indexOf('duplicate key error') > -1) {
-          group = await Group.findOne({ code: ids.join('') });
+        if (err.errmsg && err.errmsg.indexOf('duplicate key error') > -1) {
+          group = await Group.findOne({ code: ids.join('|') });
         }
       }
 
@@ -149,7 +149,7 @@ module.exports = {
           groupId: group.id,
         }]);
       } catch (err) {
-        if (err.errmsg.indexOf('duplicate key error')) {
+        if (err.errmsg && err.errmsg.indexOf('duplicate key error')) {
           return group;
         }
       }
