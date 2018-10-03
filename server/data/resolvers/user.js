@@ -31,10 +31,10 @@ module.exports = {
         code: null,
       });
     },
-    async directs({ id }) {
+    async directs({ id }, args, { user }) {
       const usersGroups = await UserGroup.find({ userId: id });
 
-      return Group.find({
+      const directsRaw = await Group.find({
         _id: {
           $in: usersGroups.map(u => u.groupId),
         },
@@ -42,6 +42,25 @@ module.exports = {
           $exists: true,
         },
       });
+
+      const directs = directsRaw.map(d => ({
+        ...d,
+        name: d.code
+          .split('|')
+          .filter(dId => dId !== user.id)[0],
+        id: d._id.toString(),
+      }));
+
+      const users = await User.find({
+        _id: {
+          $in: directs.map(d => d.name),
+        },
+      });
+
+      return directs.map(d => ({
+        ...d,
+        name: users.find(u => u.id === d.name).email,
+      }));
     },
     id: user => user._id.toString(),
   },
