@@ -132,7 +132,7 @@ module.exports = {
       try {
         group = await Group.create({
           name: ids.join(', '),
-          code: ids.join(''),
+          code: ids.join('|'),
         });
       } catch (err) {
         if (err.errmsg.indexOf('duplicate key error') > -1) {
