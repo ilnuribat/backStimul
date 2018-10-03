@@ -47,7 +47,7 @@ module.exports = {
         ...d,
         name: d.code
           .split('|')
-          .filter(dId => dId !== user.id)[0],
+          .filter(dId => dId !== user.id)[0] || user.id,
         id: d._id.toString(),
       }));
 
@@ -59,7 +59,7 @@ module.exports = {
 
       return directs.map(d => ({
         ...d,
-        name: (users.find(u => u.id === d.name) || user).email,
+        name: users.find(u => u.id === d.name).email,
       }));
     },
     id: user => user._id.toString(),
