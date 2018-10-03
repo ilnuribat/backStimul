@@ -51,6 +51,27 @@ module.exports = {
 
       return createdMessage;
     },
+    async messageRead(parent, { id }, { user }) {
+      if (!user) {
+        throw new Error('not authenticated');
+      }
+      const message = await Message.findById(id);
+
+      if (!message) {
+        throw new Error('no message found');
+      }
+
+      const userGroup = await UserGroup.updateOne({
+        userId: user.id,
+        groupId: message.groupId,
+      }, {
+        $set: {
+          lastReadCursor: message.id,
+        },
+      });
+
+      return userGroup.nModified;
+    },
   },
   Subscription: {
     messageAdded: {

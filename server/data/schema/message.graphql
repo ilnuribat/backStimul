@@ -34,6 +34,7 @@ type Query {
 
 type Mutation {
   createMessage(message: MessageInput): Message
+  messageRead(id: ID!): Boolean
 }
 
 type Subscription {
