@@ -94,6 +94,34 @@ module.exports = {
 
       return res.n;
     },
+    updateUsersGroup: async (parent, { group }) => {
+      const groupId = group.id;
+      const foundGroup = await Group.findById(groupId);
+
+      if (!foundGroup) {
+        return false;
+      }
+
+      const { users } = group;
+
+      if (!group.delete) {
+        if (Array.isArray(users) && users.length) {
+          await UserGroup.insertMany(users.map(u => ({
+            userId: u,
+            groupId: foundGroup.id,
+          })));
+        } else if (Array.isArray(users) && users.length) {
+          await UserGroup.deleteMany(users.map(u => ({
+            userId: u,
+            groupId: foundGroup.id,
+          })));
+        }
+
+        return true;
+      }
+
+      return false;
+    },
     joinGroup: async (parent, { id }, { user }) => {
       const group = await Group.findById(id);
 

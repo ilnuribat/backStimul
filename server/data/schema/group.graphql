@@ -7,8 +7,14 @@ type Group {
 
 input GroupInput {
   id: ID
-  name: String!
+  name: String
   userIds: [String]
+}
+
+input UsersGroupInput {
+  id: ID!
+  delete: Boolean
+  users: [String]!
 }
 
 input ConnectionInput {
@@ -29,4 +35,5 @@ type Mutation {
   deleteGroup(id: ID!): Boolean
   joinGroup(id: ID): Boolean
   leaveGroup(id: ID): Boolean
+  updateUsersGroup(group: UsersGroupInput): Boolean
 }
