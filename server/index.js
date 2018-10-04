@@ -6,7 +6,6 @@ const { User } = require('./data/models');
 const { logger } = require('./logger');
 const schema = require('./data/schema');
 const resolvers = require('./data/resolvers');
-const { Message } = require('./data/models');
 
 
 const server = new ApolloServer({
@@ -69,27 +68,6 @@ const server = new ApolloServer({
     },
   },
 });
-
-// /* eslint-disable */
-// async function migrate() {
-//   const cursor = await Message.findOne().cursor();
-//   let doc = await cursor.next();
-
-//   while (doc) {
-//     await doc.update({
-//       createdAt: doc.createdAt_ || doc.createdAt,
-//     });
-
-//     await doc.update({
-//       $unset: {
-//         createdAt_: '',
-//       },
-//     });
-
-//     doc = await cursor.next();
-//   }
-// }
-// /* eslint-enable */
 
 async function start() {
   await connectToMongo();
