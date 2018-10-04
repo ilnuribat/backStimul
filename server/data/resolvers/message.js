@@ -66,6 +66,7 @@ module.exports = {
       const createdMessage = await Message.create({
         userId: user.id,
         ...message,
+        isRead: false,
       });
 
       pubsub.publish(MESSAGED_ADDED, { messageAdded: createdMessage });
