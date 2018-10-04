@@ -14,6 +14,6 @@ module.exports = {
     ],
     "func-names": ["off"],
     "class-methods-use-this": ["off"],
-    "no-underscore-dangle": ["off"]
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }]
   }
 };
