@@ -35,7 +35,7 @@ class ChatBody extends Component {
   }
 
   componentDidMount(){
-    setTimeout( this.toBottom, 500)
+    // setTimeout( this.toBottom, 500)
   }
 
   componentDidUpdate(){
@@ -44,7 +44,6 @@ class ChatBody extends Component {
 
   toBottom(){
     const node = this.messageList.current;
-
     node.scrollTop = node.scrollHeight;
   }
 

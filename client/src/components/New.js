@@ -62,9 +62,6 @@ class GroupList extends Component {
   allUserGet(){
     qauf(allUsers(), _url, localStorage.getItem('auth-token')).then(a=>{
           if(a && a.data){
-            console.log("us")
-            console.log(a)
-
             this.setState({
               allusers: a.data.users
             })
@@ -107,37 +104,31 @@ class GroupList extends Component {
 
   userAdd(i){
 
+    // let q = () => {return(`mutation{
+    //   updateGroup(id: "${this.props.showCurrentGroup.currentGroup}", group: {userIds: ["${i}"]} )
+    // }`)} ;
+
+    let q = () => {return(`mutation{
+      updateUsersGroup(group: {id: "${this.props.showCurrentGroup.currentGroup}", users: ["${i}"]} )
+    }`)} ;
+
+    qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
+      if(a && a.data){
+      }
+    })
+    .then(()=>{
+      this.loadu(this.props.showCurrentGroup.currentGroup)
+    })
+    .catch((e)=>{
+      console.warn(e);
+    });
   }
 
   render() {
-    // let {grl, users, _grid, gid} = this.state;
     const {users, _grid, allusers} = this.state;
     const {showCurrentGroup} = this.props;
-    let newArr = (a1, a2)=>
-                          {
-                            var a=[], diff=[];
-                            for(var i=0;i<a1.length;i++)
-                              a[a1[i]]=true;
-                            for(var i=0;i<a2.length;i++)
-                              if(a[a2[i]]) delete a[a2[i]];
-                              else a[a2[i]]=true;
-                            for(var k in a)
-                              diff.push(k);
-                            return diff
-                          }
 
-
-    
-    // let diff = (a) => {
-    //   return this.filter(function(i) {return a.indexOf(i) < 0;});
-    // };
-    // let onlyunicusers = allusers.filter((i)=> { return users.indexOf(i) == -1; });
-    // let onlyunicusers = allusers.filter((i)=> { return users.indexOf(i) < 0; });
-
-    let onlyunicusers = _.differenceWith(allusers,users);
-
-    // let onlyunicusers = newArr(users, allusers);
-   
+    let onlyunicusers = _.differenceWith(allusers, users, _.isEqual);
 
 
     if(showCurrentGroup.currentGroup !== _grid){
@@ -153,7 +144,10 @@ class GroupList extends Component {
           }
           </div>
           <div className="f-column">
-            <div className="tab-roll">
+
+          {
+            this.props.showCurrentGroup && this.props.showCurrentGroup.currentGroup ? (
+              <div className="tab-roll">
               <div className="header"><h4>Выберите пользователя</h4></div>
               <div className="content">
                 <div className="content-scroll">
@@ -174,6 +168,9 @@ class GroupList extends Component {
                 </div>
               </div>
             </div>
+            ): null
+          }
+
               {
                 this.props.showCurrentGroup && this.props.showCurrentGroup.currentGroup ? (
                   <div className="tab-roll">
