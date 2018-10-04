@@ -5,6 +5,7 @@ type Message {
   from: User
   to: Group
   userId: String
+  isRead: Boolean
 }
 
 type MessageConnection {

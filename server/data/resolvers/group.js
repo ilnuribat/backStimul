@@ -15,7 +15,7 @@ module.exports = {
 
       return users;
     },
-    async messages(parent, args) {
+    async messages(parent, args, { user }) {
       const { id } = parent;
       const group = await Group.findById(id);
 
@@ -29,7 +29,19 @@ module.exports = {
 
       const where = formWhere({ id, before, after });
 
-      const messages = await Message.find(where).limit(first || last);
+      let messages = await Message.find(where).limit(first || last).lean();
+      const oldestCursor = await UserGroup.findOne({
+        groupId: id,
+        userId: {
+          $ne: user.id,
+        },
+      }).sort({ lastReadCursor: 1 });
+
+      messages = messages.map(m => ({
+        ...m,
+        id: m._id.toString(),
+        isRead: oldestCursor.lastReadCursor >= m._id,
+      }));
 
       const pageInfo = await getPageInfo({
         messages, groupId: id, before, after,

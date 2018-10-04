@@ -21,6 +21,27 @@ module.exports = {
     },
     createdAt: message => moment(message.createdAt).format(),
     userId: message => message.userId.toString(),
+    isRead: async (message, args, { user }) => {
+      if (message.isRead !== undefined) {
+        return message.isRead;
+      }
+      console.log('каждый раз');
+      if (message.userId.toString() !== user.id) {
+        return true;
+      }
+
+      const userGroups = await UserGroup.find({
+        userId: {
+          $ne: user.id,
+        },
+        groupId: message.groupId,
+        lastReadCursor: { $exists: true },
+      });
+
+      const unReadMessages = userGroups.filter(ug => ug.lastReadCursor < message.id);
+
+      return unReadMessages.length === 0;
+    },
   },
   Query: {
     messages: (parent, { groupId }) => Message.find({ groupId }),
