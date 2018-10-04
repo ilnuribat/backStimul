@@ -104,20 +104,23 @@ module.exports = {
 
       const { users } = group;
 
-      if (!group.delete) {
-        if (Array.isArray(users) && users.length) {
+      if (!group.delete && Array.isArray(users) && users.length) {
+        try {
           await UserGroup.insertMany(users.map(u => ({
             userId: u,
             groupId: foundGroup.id,
           })));
-        } else if (Array.isArray(users) && users.length) {
-          await UserGroup.deleteMany(users.map(u => ({
-            userId: u,
-            groupId: foundGroup.id,
-          })));
-        }
 
-        return true;
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+
+      if (group.delete && Array.isArray(users) && users.length) {
+        const res = await UserGroup.deleteMany({ userId: { $in: users.map(u => u) }, groupId: foundGroup.id });
+
+        return !!res.n;
       }
 
       return false;
