@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { quf } from '../constants';
-import Appср from '../chat/App';
+// import Appср from '../chat/App';
 import { updTask, getPriority, getById, crTask } from '../graph/querys';
 let filename = "file: Card";
 let log = (fun, e) => {
@@ -58,7 +58,6 @@ export default class Column extends Component {
   _mutTask(id, input) {
     let q = updTask(id, `input: {${input}}`);
 
-    console.warn(q)
     quf(q)
       .then((a) => {
         console.warn(a)
@@ -127,7 +126,6 @@ export default class Column extends Component {
     quf(q)
       .then((a) => {
         if (a.data) {
-          console.warn("a log", a)
           this.setState({
             id: this.props.id,
             task: a.data.task,
@@ -218,7 +216,7 @@ export default class Column extends Component {
       <div className="nHeader">Чат {this.state.taskEdit.name}</div>
       <div className="nBoard-container">
       <div className="nBoard-inner">
-        {this.state.taskEdit.id ? (<Appср />) : ("Выберите задачу")}
+        {this.state.taskEdit.id ? ("") : ("Выберите задачу")}
       </div>
       </div>
       </div>

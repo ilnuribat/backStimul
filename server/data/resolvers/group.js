@@ -90,15 +90,6 @@ module.exports = {
 
       const res = await foundGroup.update(group);
 
-      const { userIds } = group;
-
-      if (Array.isArray(userIds) && userIds.length) {
-        await UserGroup.insertMany(userIds.map(u => ({
-          userId: u,
-          groupId: foundGroup.id,
-        })));
-      }
-
       return res.nModified;
     },
     deleteGroup: async (parent, { id }) => {
@@ -106,29 +97,36 @@ module.exports = {
 
       return res.n;
     },
-    joinGroup: async (parent, { id }, { user }) => {
-      const group = await Group.findById(id);
+    updateUsersGroup: async (parent, { group }) => {
+      const groupId = group.id;
+      const foundGroup = await Group.findById(groupId);
 
-      if (!group || group.code) {
+      if (!foundGroup) {
         return false;
       }
 
-      try {
-        await UserGroup.create({ userId: user.id, groupId: id });
+      const { users } = group;
 
-        return true;
-      } catch (err) {
-        if (err.errmsg.indexOf('duplicate key error') > -1) {
+      if (!group.delete && Array.isArray(users) && users.length) {
+        try {
+          await UserGroup.insertMany(users.map(u => ({
+            userId: u,
+            groupId: foundGroup.id,
+          })));
+
+          return true;
+        } catch (err) {
           return false;
         }
-
-        throw err;
       }
-    },
-    leaveGroup: async (parent, { id }, { user }) => {
-      const res = await UserGroup.deleteOne({ userId: user.id, groupId: id });
 
-      return res.n;
+      if (group.delete && Array.isArray(users) && users.length) {
+        const res = await UserGroup.deleteMany({ userId: { $in: users }, groupId: foundGroup.id });
+
+        return !!res.n;
+      }
+
+      return false;
     },
     directMessage: async (parent, { id }, { user }) => {
       const dUser = await User.findById(id);

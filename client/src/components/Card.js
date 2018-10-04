@@ -22,13 +22,6 @@ check on backend
 if ColumnIdOld->ProjectIdSame != ColumnIdNew->ProjectIdSame then FuckU
 */
 
-
-
-
-// const _DB = {
-//   priority: []
-// }
-
 export default class Card extends Component {
   constructor(props) {
     super(props)
@@ -57,16 +50,10 @@ export default class Card extends Component {
       });
 
     }
-    //  else if (event.target.name && event.target.name === "description") {
 
-    // } else { }
-    console.warn(event.target.value)
     let val = event.target.value;
-    console.warn(typeof (event.target.value));
-    console.warn(typeof (val));
     let id = this.state.id;
     if (event.target.value === "description") {
-      //val = `"${event.target.value}"`;
 
       this._mutTask(id, `${event.target.name}: "${val}"`)
     } else {
@@ -74,18 +61,9 @@ export default class Card extends Component {
     }
   }
 
-  // setNewDescr(event){
-  //     this.setState({
-  //         task: event.target.value
-  //     });
-
-  //     let id = this.state.id;
-  //     this._mutTask(id, `description: ${event.target.value}`)
-  // }
 
   _mutTask(id, input) {
     let q = updTask(id, `input: {${input}}`);
-    console.warn(q)
     quf(q)
       .then((a) => {
         console.warn(a)
@@ -116,7 +94,6 @@ export default class Card extends Component {
     quf(q)
       .then((a) => {
         if (a.data) {
-          console.warn("a log", a)
           this.setState({
             id: this.props.opid,
             task: a.data.task,
@@ -150,13 +127,6 @@ export default class Card extends Component {
     }))
   }
 
-  // changeA(e){
-  //     let val = e.target.value;
-  //     let task = Object.assign({}, this.state.task);
-  //     task.name = 'new';                        
-  //     this.setState({task});
-  // }
-
   changeDescription(e) {
     let val = e.target.value;
     this.setState(prevState => ({
@@ -178,7 +148,6 @@ export default class Card extends Component {
       { name: "Пользователь Д.В.", id: 2 },
     ];
 
-    console.warn(data)
     if (this.state.dataGet) {
       return (
         <div className="taskModule">

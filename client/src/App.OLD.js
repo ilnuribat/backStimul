@@ -7,7 +7,7 @@ import { withRouter } from 'react-router';
 // import Home from './components/Home';
 // import Card from './components/Card';
 import LeftNav from './components/LeftNav';
-
+import LeftBar from './components/LeftBar';
 // import nComponent from './components/nComponent';
 // import gql from 'graphql-tag';
 import Login from './components/Login';
@@ -16,10 +16,7 @@ import New from './components/New';
 import Private from './components/Private';
 // import { stat } from 'fs';
 
-import { AUTH_TOKEN } from './constants';
-// import FirstLayout from './components/Layout';
-
-
+import { AUTH_TOKEN } from './constants'
 
 export const qf = (_url, ...params) => {
   return fetch(_url, {
@@ -41,19 +38,58 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // email: '',
-      // password: '',
-      // name: '',
-      // logged: false,
-      // lbar: true,
+      email: '',
+      password: '',
+      name: '',
+      logged: false,
+      lbar: true,
       barstate: 'chat',
-      // user: true,
-      // gid:'',
+      user: true,
+      gid:'',
 
     };
     this._lbarstate = this._lbarstate.bind(this);
     this.lookft = this.lookft.bind(this);
-    this.barstate = this.barstate.bind(this);
+    this.chgr = this.chgr.bind(this);
+
+  }
+
+  _lbarstate = (state) => {
+    // let newState = '';
+
+    if (this.state.barstate === state) {
+      this.setState({
+        // lbar: !this.state.lbar,
+        barstate: state,
+      })
+    } else {
+      this.setState({
+        // lbar: true,
+        barstate: state,
+      })
+    }
+  }
+
+  logState(value) {
+    this.setState({ logged: value });
+  }
+
+  lookft() {
+    let authToken = localStorage.getItem(AUTH_TOKEN)
+
+    if (authToken) {
+      this.setState({
+        user: true,
+      })
+    }
+
+  }
+
+  ltrim() {
+
+  }
+
+  chgr(){
 
   }
 
@@ -67,52 +103,6 @@ class App extends Component {
     }
   }
 
-  _lbarstate = (state) => {
-    const {barstate} = this.state
-
-    if (barstate === state) {
-      this.setState({
-        // lbar: !this.state.lbar,
-        barstate: state,
-      })
-    } else {
-      this.setState({
-        // lbar: true,
-        barstate: state,
-      })
-    }
-  }
-
-  barstate = (state) => {
-    const {barstate} = this.state
-
-    if (barstate === state) {
-      this.setState({
-        // lbar: !this.state.lbar,
-        barstate: state,
-      })
-    } else {
-      this.setState({
-        // lbar: true,
-        barstate: state,
-      })
-    }
-  }
-
-  // logState(value) {
-  //   this.setState({ logged: value });
-  // }
-
-  lookft() {
-    let authToken = localStorage.getItem(AUTH_TOKEN)
-
-    if (authToken) {
-      this.setState({
-        user: true,
-      })
-    }
-
-  }
 
   render() {
     // let username = '';
@@ -125,28 +115,43 @@ class App extends Component {
           <Login lookft={this.lookft} />
         ) : (
           <Fragment>
-            <LeftNav lstate={this._lbarstate} />
+            <LeftNav lstate={this._lbarstate} chgr={this.chgr}/>
+
+
+            {this.state.lbar ? (<LeftBar lstate={this.state.lbar} barstate={this.state.barstate} ltrim={this.ltrim} />) : ''}
+
+            <div className={this.state.lbar ? 'main-container' : 'main-container full'}>
             <Switch>
-              {/* <Route exact path="/" component={Home} /> */}
-              <Route exact path="/login" component={Login} />
-              {/* <Route exact path="/projectgroup/:id" component={DraftGroup} />
-                  <Route exact path="/projects/:id" component={Drafts} />
-                  <Route exact path="/project/:id" component={Board} />
-                  <Route exact path="/card/:id" component={Card} /> */}
-              {/* <Route exact path="/:type/:id" component={nComponent} />
-                  <Route exact path="/:type" component={nComponent} /> */}
-              {/* <Route exact path="/" component={nComponent} /> */}
-              {/* <Route exact path="/" component={New} /> */}
-              <Route exact path="/" render={(props) => <New {...props} />} />
-              <Route exact path="/profile" component={Profile} />
-              <Route exact path="/private" render={(props) => <Private {...props} />} />
-            </Switch>
+                {/* <Route exact path="/" component={Home} /> */}
+                <Route exact path="/login" component={Login} />
+                {/* <Route exact path="/projectgroup/:id" component={DraftGroup} />
+                <Route exact path="/projects/:id" component={Drafts} />
+                <Route exact path="/project/:id" component={Board} />
+                <Route exact path="/card/:id" component={Card} /> */}
+                {/* <Route exact path="/:type/:id" component={nComponent} />
+                <Route exact path="/:type" component={nComponent} /> */}
+                {/* <Route exact path="/" component={nComponent} /> */}
+                {/* <Route exact path="/" component={New} /> */}
+                <Route exact path="/" render={(props) => <New chgr={this.chgr} {...props} />} />
+                <Route exact path="/profile" component={Profile} />
+                <Route exact path="/private" component={Private} />
+              </Switch>
+            
+            {/* {this.state.barstate == 'private' ? (
+              <Private />
+            ) : (
+
+            )} */}
+
+
+            </div>
           </Fragment>
         )
         }
       </Fragment>
     )
   }
+
 }
 
 export default withRouter(App);

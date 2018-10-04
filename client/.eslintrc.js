@@ -27,6 +27,7 @@ module.exports = {
           2
       ],
       "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+      "react/no-array-index-key": [0],
       "linebreak-style":0,
       "max-len": ["warn", 200],
       "no-console": ["error", { allow: ["warn", "error"] }],

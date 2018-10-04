@@ -28,14 +28,9 @@ export default class Column extends Component {
 
   _crTask() {
 
-
-    
     let name = this.state.input[0];
     let description = this.state.input[1];
     let columnId = this.props.id;
-    // let priority = this.state.input[3];
-    // let createdBy = this.state.input[4];
-    // name description columnId priority createdBy
     let input = `name: "${name}", description: "${description}", columnId: ${columnId}, priority: ${1}, createdBy: ${1}`;
     let q = crTask(`input: {${input}}`);
 
@@ -107,7 +102,6 @@ export default class Column extends Component {
     quf(q)
       .then((a) => {
         if (a.data) {
-          console.warn("a log", a)
           this.setState({
             id: this.props.id,
             task: a.data.task,
@@ -153,9 +147,6 @@ export default class Column extends Component {
       }
     }))
   }
-
-
-
 
   render(){
     let type = '';

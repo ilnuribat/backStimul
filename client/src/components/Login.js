@@ -1,46 +1,48 @@
-import React, { Component, Fragment } from 'react'
-import { AUTH_TOKEN } from '../constants'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag';
-import {quf} from '../constants';
-import Message from '../chat/Message';
+import React, { Component } from 'react'
+// import { graphql, compose } from 'react-apollo'
+// import gql from 'graphql-tag';
+import {quf, AUTH_TOKEN} from '../constants';
+
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
-      id: 0,
-      name: '',
+      // id: 0,
+      // name: '',
       login: false,
-      loginerror: "", 
+      loginerror: "",
     };
+
+    this.onKeyDown = this.onKeyDown.bind(this)
+    this._confirm = this._confirm.bind(this)
+  }
+
+  onKeyDown(e){
+    if(e.keyCode===13)
+    {
+      this._confirm()
+    }
   }
 
   _confirm = async () => {
-    const { name, email, password, id } = this.state;
+    const { email, password, login } = this.state;
+    const { lookft } = this.props
+
     this.setState({loginerror: ''})
 
     if(!email || !password) return( this.setState({loginerror: `ошибка! Не введен логин или пароль`}) )
 
-    if (!this.state.login) {
+    if (!login) {
       let q = LoginQuery(email, password);
 
       let result = await quf(q)
-      .then(a=>{
-        console.log(a);
-        
-        return a;})
-      .catch((e)=>{
-        console.warn('Login Error: ',e)
-      });
+        .then(a=>{return a;})
+        .catch((e)=>{
+          console.warn('Login Error: ',e)
+        });
 
-      // const result = await this.props.loginMutation({
-      //   variables: {
-      //     email,
-      //     password,
-      //   },
-      // });
 
       if(result && result.errors){
         this.setState({loginerror: `ошибка! ${result.errors[0].message}`})
@@ -58,20 +60,9 @@ class Login extends Component {
       }
 
     } else {
-      // const result = await this.props.signupMutation({
-      //   variables: {
-      //     name,
-      //     email,
-      //     password,
-      //   },
-      // })
-      // const { jwt } = result.data.signup
-      // this._saveUserData(jwt)
       this.setState({loginerror: `ошибка! Такого пользователя нет`})
     }
-    this.props.lookft();
-    //window.location.reload();
-    // this.props.history.push(`/`)
+    lookft();
   }
 
   _saveUserData = (token, name, id) => {
@@ -82,57 +73,45 @@ class Login extends Component {
 
   render() {
     const authToken = localStorage.getItem(AUTH_TOKEN)
+    const { loginerror } = this.state;
+    const { history } = this.props
+
     return (
 
       <div>
         {!authToken ? (
           <div className="auth">
             <div className="logo">
-              <img src="" />
             </div>
             <input type="text" placeholder="Email" onChange={(e) => { this.setState({ loginerror: "", email: e.target.value }) }} />
-            <input type="password" placeholder="Пароль" onChange={(e) => { this.setState({ loginerror: "", password: e.target.value }) }} />
-            <div className="button" onClick={() => { this._confirm() }}>Войти</div>
+            <input type="password" placeholder="Пароль" onKeyDown={this.onKeyDown} onChange={(e) => { this.setState({ loginerror: "", password: e.target.value }) }} />
+            <div className="button" role="presentation" onClick={() => { this._confirm() }}>Войти</div>
             {
-              this.state.loginerror ? (<div className="errorMessage">{this.state.loginerror}</div>) : ('')
+              loginerror ? (<div className="errorMessage">{loginerror}</div>) : ('')
             }
-          </div>) : (
+          </div>) :
+          (
             <div className="auth">
               <div className="logo">
-                <img src="" />
+                <img src="" alt="222" />
               </div>
-              <div className="button" onClick={() => {
-                localStorage.removeItem(AUTH_TOKEN)
-                localStorage.removeItem('username')
-                this.props.history.push(`/`)
-              }}
+              <div
+                className="button"
+                role="presentation"
+                onClick={() => {
+                  localStorage.removeItem(AUTH_TOKEN)
+                  localStorage.removeItem('username')
+                  history.push(`/`)
+                }}
               >
-                Выйти
-                  </div>
+                  Выйти
+              </div>
             </div>
           )}
       </div>
     )
   }
 }
-
-const SIGNUP_MUTATION = gql`
-  mutation SignupMutation($email: String!, $password: String!, $name: String!) {
-    signup(email: $email, password: $password, name: $name) {
-      token
-    }
-  }
-`;
-
-const LOGIN_MUTATION = gql`
-  mutation LoginMutation($email: String!, $password: String!) {
-    login(user:{email: $email, password: $password}) {
-      id
-      username
-      jwt
-    }
-  }
-`;
 
 const LoginQuery = (email, password) => `
 mutation{
@@ -143,6 +122,7 @@ mutation{
   }
 }
 `;
+
 
 // export default compose(
 //   // graphql(SIGNUP_MUTATION, { name: 'signupMutation' }),

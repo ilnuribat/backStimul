@@ -20,24 +20,6 @@ export default class Column extends Component {
   }
 
   render() {
-    console.warn('col props', this.props);
-    // if (!this.state.update) {
-    //   return (
-    //     <div className="column" >
-    //       {this.props.name}
-
-    //       <div className="small">id: {this.props.id}</div>
-    //       {this.props.data.tasks.map((task, i, arr) => {
-    //         return (
-    //           <Task key={i} name={task.name} description={task.description} id={task.id} />
-    //         )
-    //       }
-    //       )}
-
-    //       {/* <CreateTask action={this.handler} columnId={this.props.id} /> */}
-    //     </div>
-    //   )
-    // } else {
     return (
       <Query query={GETTASKS_BYCID} variables={{ id: this.props.id }}>
         {({ loading, error, data, refetch }) => {
@@ -57,7 +39,6 @@ export default class Column extends Component {
                 }
                 )}
   
-                {/* <CreateTask action={this.handler} columnId={this.props.id} /> */}
               </div>
             );
           }else{

@@ -16,9 +16,9 @@ export default class Column extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: false,
-      key: 0,
-      opncr: false,
+      // status: false,
+      // key: 0,
+      // opncr: false,
       open: false,
       input: [],
     };
@@ -30,35 +30,58 @@ export default class Column extends Component {
 
   }
 
-  _crTask() {
-    let name = this.state.input[0];
-    let description = this.state.input[1];
-    let columnId = this.props.id;
-    // let priority = this.state.input[3];
-    // let createdBy = this.state.input[4];
-    // name description columnId priority createdBy
-    let input = `name: "${name}", description: "${description}", columnId: ${columnId}, priority: ${1}, createdBy: ${1}`;
-    let q = crTask(`input: {${input}}`);
+  componentWillMount() {
+    const { id } = this.props;
+    let q = getById(id);
 
     quf(q)
       .then((a) => {
+        if (a.data) {
+          this.setState({
+            task: a.data.task,
+          })
+        } else {
+          return false;
+        }
+      })
+      .catch((e) => {
+        log("getById", e);
       });
-      this.props.refetch();
+    this._qPriority();
+  }
+
+  _crTask() {
+    const {input} = this.state
+    const {id, refetch} = this.props
+    let name = input[0];
+    let description = input[1];
+    // let priority = this.state.input[3];
+    // let createdBy = this.state.input[4];
+    // name description columnId priority createdBy
+    let inputNew = `name: "${name}", description: "${description}", columnId: ${id}, priority: ${1}, createdBy: ${1}`;
+    let q = crTask(`input: {${inputNew}}`);
+
+    quf(q)
+      .then(() => {
+      });
+    refetch();
     this.setState({
-      open: !this.state.open,
+      open: !this.open,
       input: [],
     })
   }
 
   _mutTask(id, input) {
     let q = updTask(id, `input: {${input}}`);
+
     quf(q)
-      .then((a) => {
+      .then(() => {
       });
   }
-  
+
   _input(e){
-    let inp = this.state.input;
+    const {input} = this.state
+    let inp = input;
     let val = e.target.value;
     let num = Number(e.target.name);
 
@@ -72,13 +95,13 @@ export default class Column extends Component {
   _opencr(){
 
     this.setState({
-      open: !this.state.open,
+      open: !this.open,
     })
   }
 
   _closecr(){
     this.setState({
-      open: !this.state.open,
+      open: !this.open,
     })
   }
 
@@ -87,9 +110,9 @@ export default class Column extends Component {
     quf(getPriority)
       .then((a) => {
         if (a.data) {
-          this.setState({
-            priority: a.data.glossary.priorities
-          })
+          // this.setState({
+          //   priority: a.data.glossary.priorities
+          // })
 
           return a.data.glossary.priorities;
         } else {
@@ -101,37 +124,14 @@ export default class Column extends Component {
       });
   }
 
-  componentWillMount() {
-    let id = this.props.id;
-    let q = getById(id);
-
-    quf(q)
-      .then((a) => {
-        if (a.data) {
-          console.warn("a log", a)
-          this.setState({
-            id: this.props.id,
-            task: a.data.task,
-            dataGet: true,
-            selectNewState: a.data.task.columnId,
-            prior: a.data.task.priority,
-          })
-        } else {
-          return false;
-        }
-      })
-      .catch((e) => {
-        log("getById", e);
-      });
-    this._qPriority();
-  }
 
 
-  editName() {
-    this.setState({
-      editName: true,
-    })
-  }
+
+  // editName() {
+  //   this.setState({
+  //     editName: true,
+  //   })
+  // }
 
   changeName(e) {
     let val = e.target.value;
@@ -159,22 +159,23 @@ export default class Column extends Component {
 
 
   render(){
-    let type = '';
-    let projgrlen = '';
-    let projlen = '';
-    let collen = '';
+    const {id, name, title, full} = this.props
+    const {open, input} = this.state
 
     return(
       <div className="column">
-        <div className="column-name">{this.props.name ? this.props.name : this.props.title }</div>
-        <div className="column-id">id: {this.props.id}</div>
+        <div className="column-name">{name ? name : title }</div>
+        <div className="column-id">
+        id:
+          {' '}
+          {id}
+        </div>
         <div className="column-content">
           <div className="column-inner">
             {
-              this.props.full.tasks.map((e,i,a)=>{
+              full.tasks.map((e,i,a)=>{
                 return(
-                  <TaskBlock />
-                  // <Task key={"task-"+i} id={e.id} name={e.name} description={e.description} />
+                  <TaskBlock key={"task-"+i} />
                 )
               })
             }
@@ -182,16 +183,16 @@ export default class Column extends Component {
         </div>
         <div className="column-bottom">
           {
-            this.state.open ? (
+            open ? (
               <div className="create-row">
-                <div><input type="text" name="0" placeholder="Название" value={this.state.input[0]} onChange={this._input}/></div>
-                <div><input type="text" name="1" placeholder="" value={this.state.input[1]} onChange={this._input}/></div>
-                <div className="open" onClick={this._crTask}>Создать задачу</div>
-                <div className="open" onClick={this._closecr}>отменить</div>
+                <div><input type="text" name="0" placeholder="Название" value={input[0]} onChange={this._input} /></div>
+                <div><input type="text" name="1" placeholder="" value={input[1]} onChange={this._input} /></div>
+                <div className="open" role="presentation" onClick={this._crTask}>Создать задачу</div>
+                <div className="open" role="presentation" onClick={this._closecr}>отменить</div>
               </div>
-            ) : (<div className="open" onClick={this._opencr}>Добавить задачу</div>)
+            ) : (<div className="open" role="presentation" onClick={this._opencr}>Добавить задачу</div>)
           }
-          
+
         </div>
 
 
@@ -207,7 +208,9 @@ export default class Column extends Component {
 
 
 Column.propTypes = {
-  name: PropTypes.string,
-  id: PropTypes.number,
-  full: PropTypes.object,
+  name: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  full: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
+  refetch: PropTypes.func.isRequired,
 };
