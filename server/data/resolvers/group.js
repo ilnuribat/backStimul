@@ -78,15 +78,6 @@ module.exports = {
 
       const res = await foundGroup.update(group);
 
-      const { userIds } = group;
-
-      if (Array.isArray(userIds) && userIds.length) {
-        await UserGroup.insertMany(userIds.map(u => ({
-          userId: u,
-          groupId: foundGroup.id,
-        })));
-      }
-
       return res.nModified;
     },
     deleteGroup: async (parent, { id }) => {
