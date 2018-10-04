@@ -70,7 +70,7 @@ module.exports = {
         throw new Error('not authenticated');
       }
 
-      return User.findById(user.id);
+      return user;
     },
     users() {
       return User.find();
