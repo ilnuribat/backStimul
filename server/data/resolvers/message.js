@@ -35,7 +35,6 @@ module.exports = {
           $ne: user.id,
         },
         groupId: message.groupId,
-        lastReadCursor: { $exists: true },
       });
 
       const unReadMessages = userGroups.filter(ug => ug.lastReadCursor < message.id);
