@@ -3,6 +3,7 @@ type Direct {
   name: String
   users: [User]
   messages(messageConnection: ConnectionInput): MessageConnection
+  unreadCount: Int
 }
 
 type Query {

@@ -69,6 +69,15 @@ module.exports = {
         isRead: false,
       });
 
+      await UserGroup.update({
+        userId: user.id,
+        groupId: message.groupId,
+      }, {
+        $set: {
+          lastReadCursor: createdMessage._id,
+        },
+      });
+
       pubsub.publish(MESSAGED_ADDED, { messageAdded: createdMessage });
 
       return createdMessage;

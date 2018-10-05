@@ -13,6 +13,7 @@ module.exports = {
       return anotherUser.email;
     },
     users: parent => GroupResolver.Group.users(parent),
+    unreadCount: (parent, args, ctx) => GroupResolver.Group.unreadCount(parent, args, ctx),
     messages: async (parent, args) => {
       const { id } = parent;
       const group = await Group.findById(id);

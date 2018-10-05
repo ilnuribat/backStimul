@@ -55,6 +55,20 @@ module.exports = {
         })),
       };
     },
+    async unreadCount({ id }, args, { user }) {
+      const userGroup = await UserGroup.findOne({ groupId: id, userId: user.id });
+      const { lastReadCursor } = userGroup || {};
+
+      return Message.find({
+        groupId: id,
+        userId: {
+          $ne: user.id,
+        },
+        _id: {
+          $gt: lastReadCursor,
+        },
+      }).count();
+    },
   },
   Query: {
     groups: () => Group.find({ code: null }),
