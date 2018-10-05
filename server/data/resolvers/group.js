@@ -40,7 +40,7 @@ module.exports = {
       messages = messages.map(m => ({
         ...m,
         id: m._id.toString(),
-        isRead: oldestCursor.lastReadCursor >= m._id,
+        isRead: oldestCursor && oldestCursor.lastReadCursor >= m._id,
       }));
 
       const pageInfo = await getPageInfo({
