@@ -15,7 +15,7 @@ module.exports = {
 
       return users;
     },
-    async messages(parent, args, { user }) {
+    async messages(parent, { messageConnection }, { user }) {
       const { id } = parent;
       const group = await Group.findById(id);
 
@@ -24,9 +24,8 @@ module.exports = {
       }
       const {
         first, last, before, after,
-      } = args;
+      } = messageConnection || {};
       // before - last, after - first
-
       const where = formWhere({ id, before, after });
 
       let messages = await Message.find(where).limit(first || last).lean();

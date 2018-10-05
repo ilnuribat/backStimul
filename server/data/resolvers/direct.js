@@ -14,7 +14,7 @@ module.exports = {
     },
     users: parent => GroupResolver.Group.users(parent),
     unreadCount: (parent, args, ctx) => GroupResolver.Group.unreadCount(parent, args, ctx),
-    messages: async (parent, args) => {
+    messages: async (parent, { messageConnection }) => {
       const { id } = parent;
       const group = await Group.findById(id);
 
@@ -23,7 +23,7 @@ module.exports = {
       }
       const {
         first, last, before, after,
-      } = args;
+      } = messageConnection || {};
       // before - last, after - first
 
       const where = formWhere({ id, before, after });
