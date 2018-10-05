@@ -21,7 +21,7 @@ export const colors = {
 };
 
 export const quf = (query) => {
-  return fetch(`http://${_uri}/`, {
+  return fetch(`http://${_url}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export const quf = (query) => {
 };
 export const qauf = (query, uri, auth) => {
 
-  return fetch(`http://${uri}/`, {
+  return fetch(`http://${url}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
