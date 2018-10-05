@@ -106,12 +106,14 @@ module.exports = {
       }
 
       const { users } = group;
+      const lastMessage = await Message.findOne({ groupId });
 
       if (!group.delete && Array.isArray(users) && users.length) {
         try {
           await UserGroup.insertMany(users.map(u => ({
             userId: u,
             groupId: foundGroup.id,
+            lastReadCursor: lastMessage ? lastMessage._id : null,
           })));
 
           return true;
