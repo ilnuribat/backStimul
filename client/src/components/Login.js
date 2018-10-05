@@ -97,6 +97,7 @@ class Login extends Component {
                 onClick={() => {
                   localStorage.removeItem(AUTH_TOKEN)
                   localStorage.removeItem('username')
+                  localStorage.removeItem('userid')
                   history.push(`/`)
                 }}
               >

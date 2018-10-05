@@ -1,5 +1,19 @@
 @import 'https://fonts.googleapis.com/css?family=Open+Sans:300, 400';
 
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+svg {
+  display: block;
+  pointer-events: none;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -857,6 +871,7 @@ width:100px;
 .mess{
   background: rgba(255, 0, 191, 0.651);
   padding:20px;
+  margin:2px auto;
 }
 .tile{
   display: inline-block;
@@ -1615,4 +1630,16 @@ textarea{
   position: relative;
   white-space: pre-wrap;
   word-wrap: break-word;
+}
+.msgs svg{
+  width:20px;
+  height:20px;
+}
+
+.f-row > *{
+  flex:1;
+  justify-content: baseline;
+  justify-content: center;
+  justify-self: center;
+  justify-items: center;
 }

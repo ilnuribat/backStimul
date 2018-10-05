@@ -13,3 +13,6 @@ type Query {
 type Mutation {
   directMessage(id: ID): Group
 }
+type Subscription {
+  directs: [Direct]
+}

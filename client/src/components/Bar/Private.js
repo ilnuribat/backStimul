@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPrivateChat, setPrivateChat, allUsers, privates, createDirect, PRIVS_QUERY, USERS_QUERY } from '../../graph/querys';
+import { getPrivateChat, setPrivateChat, allUsers, privates, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED } from '../../graph/querys';
 import { graphql, compose, Query  } from "react-apollo";
 import { qauf, _url } from '../../constants';
 import Loading from '../Loading';
@@ -67,7 +67,6 @@ class Private extends React.Component {
     }
 
     allPrivates(){
-      console.log("all pricates")
       if(this.state.directs){
         this.state.directs.map((e,i,a)=>{
           return(
@@ -82,9 +81,13 @@ class Private extends React.Component {
 
 
     componentDidMount(){
+
     }
 
 render(){
+  let open = '';
+  
+
   return (
     <div className="f-column-l">
       <div className="tab-roll">
@@ -104,22 +107,29 @@ render(){
                     </div>
                   );
                 }
-
+                const subscrMes = (idu)=>{
+                  return subscribeToMore({ document: MESSAGE_CREATED, variables: {id: idu,},
+                    updateQuery: () => {
+                      refetch().then(()=>{
+                      })
+                    },
+                  });
+                };
+  
                 if(data && data.user && data.user.directs){
 
                   return(
                     <div>{
                       data.user.directs.map((e,i,a)=>{
-                        return(
-                          <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
-                          
-                          {e.name}
-                          
-                          {e.messages && e.messages.edges.length ? (<span className="small-ruond-info">{e.messages.edges.length}</span>) : null}
-                          
-                          </div>
-                        )
-                      })
+                            this.props.getchat.id != e.id ? subscrMes(e.id) : null ;
+                            
+                              return(
+                                <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
+                                {e.name}
+                                {e.messages && e.messages.edges.length && this.props.getchat.id != e.id  ? (<span className="small-ruond-info">{e.messages.edges.length}</span>) : null}
+                                </div>
+                              )
+                            })
                           }</div>
                         )
                 }else{
@@ -139,7 +149,7 @@ render(){
         <div className="content">
           <div className="content-scroll">
           {
-                  <Query query={USERS_QUERY}>
+              <Query query={USERS_QUERY}>
                   {({ loading, error, data, refetch, subscribeToMore }) => {
                     ref2 = refetch;
                     if (loading){
@@ -153,14 +163,14 @@ render(){
                     if(data && data.users){
                       return(
                         <div>{
-                          data.users.map((e,i,a)=>{
-                            if(e.id == localStorage.getItem('userid')) return true;
-                            return(
-                              <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>
-                              <span style={{color: colorHash.hex(e.username)}}>{e.username}</span>
-                              </div>
-                            )
-                          })
+                              data.users.map((e,i,a)=>{
+                                  if(e.id == localStorage.getItem('userid')) return true;
+                                  return(
+                                    <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>
+                                    <span style={{color: colorHash.hex(e.username)}}>{e.username}</span>
+                                    </div>
+                                  )
+                                })
                               }</div>
                             )
                     }else{
@@ -170,7 +180,7 @@ render(){
                     }
 
                   }}
-                  </Query>
+              </Query>
             }
           </div>
         </div>

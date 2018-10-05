@@ -37,10 +37,7 @@ module.exports = {
         groupId: message.groupId,
       });
 
-      if (!userGroup) {
-        throw new Error('forbidden');
-      }
-
+      if (!userGroup) { throw new Error('forbidden'); }
 
       const createdMessage = await Message.create({
         userId: user.id,
@@ -51,12 +48,39 @@ module.exports = {
 
       return createdMessage;
     },
+    async message(parent, { message }, { user }) {
+      if (!user) {
+        throw new Error(401);
+      }
+
+      const userGroup = await UserGroup.findOne({
+        userId: user.id,
+        groupId: message.groupId,
+      });
+
+      if (!userGroup) { throw new Error('forbidden'); }
+
+      const message = await Message.create({
+        userId: user.id,
+        ...message,
+      });
+
+      pubsub.publish('MESSAGE_READ', { message: message });
+
+      return message;
+    },
   },
   Subscription: {
     messageAdded: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([MESSAGED_ADDED]),
         ({ messageAdded: { groupId: mGroupId } }, { groupId }) => mGroupId.toString() === groupId,
+      ),
+    },
+    message: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(['MESSAGE_READ']),
+        ({ message: { id: mid } }, { id }) => mid.toString() === id,
       ),
     },
   },

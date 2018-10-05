@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { Mutation } from 'react-apollo';
 
 export const updTask = (...params) => {
   return (`mutation{
@@ -167,9 +168,11 @@ export const PRIVS_QUERY = gql`
             edges{
               node{
                 id
+                userId
               }
             }
           }
+          
         }
       }
     }
@@ -182,7 +185,9 @@ export const PRIV_QUERY = gql`
               edges {
                   cursor
                   node {
+                      isRead
                       id
+                      userId
                       from {
                       id
                       username
@@ -195,6 +200,37 @@ export const PRIV_QUERY = gql`
       }
   }
 `;
+
+export const MESSAGE_QUERY = gql`
+  query message($id: ID!){
+    message(id: $id ){
+          isRead
+          text
+      }
+  }
+`;
+
+export const MESSAGE_SUBS = gql`
+  subscription message($id: ID!){
+    message(id: $id ){
+          isRead
+          text
+      }
+  }
+`;
+
+export const MESSAGEREAD_MUT = gql`
+  mutation message($id: ID!){
+    messageRead(id: $id )
+  }
+`;
+
+export const messageRead_MUT = ()=>(`
+mutation {
+  messageRead(id: $id )
+}
+`);
+
 export const GR_QUERY = gql`
   query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       group(id: $id ){
@@ -208,7 +244,9 @@ export const GR_QUERY = gql`
               edges {
                   cursor
                   node {
+                      isRead
                       id
+                      userId
                       from {
                       id
                       username
@@ -231,13 +269,15 @@ export const MESSAGE_CREATED = gql`
       messageAdded(groupId: $id){
           id
           text
-          from{
-                  id
-              }
-              to{
-                  id
-              }
+          userId
+          isRead
       }
+  }
+`;
+
+export const MESSAGE_READ = gql`
+  subscription messageRead($id: String!){
+      messageRead(id: $id)
   }
 `;
 
@@ -261,4 +301,8 @@ mutation Add($id: String!, $text: String! ){
       }
     }
   }`;
+
+export const messRead = gql`{
+  id
+}`;
 
