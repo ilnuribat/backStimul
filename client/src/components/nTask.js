@@ -31,22 +31,3 @@ export default class Task extends Component {
       );
     }
   }
-  
-
-// export default class Task extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//           priority: [],
-//         };
-//       }
-// render(){
-//     return(
-//         <div className="task">
-//             <div className="task-name">{this.props.name}</div>
-//             <div className="task-description">{this.props.description}</div>
-//             <div className="task-id">{this.props.id}</div>
-//         </div>
-//     )
-// }
-// };

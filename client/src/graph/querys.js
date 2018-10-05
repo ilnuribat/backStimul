@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-// import CreateCol from '../components/nComponent';
 
 export const updTask = (...params) => {
   return (`mutation{
@@ -262,27 +261,4 @@ mutation Add($id: String!, $text: String! ){
       }
     }
   }`;
-
-// export const newprivatechat = gql`
-//   mutation Private($name: String!, $uid: String!) {
-//     private(uid: $uid, name: $name) @client {
-//       name
-//       uid
-//     }
-//   }
-// `;
-
-// const { getById } = client.readQuery({
-//   query: gql`
-//     query ReadGet($id: Int!) {
-//       get(id: $id) {
-//         id
-//         text
-//       }
-//     }
-//   `,
-//   variables: {
-//     id: 5,
-//   },
-// });
 

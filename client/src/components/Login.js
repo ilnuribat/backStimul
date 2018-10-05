@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-// import { graphql, compose } from 'react-apollo'
-// import gql from 'graphql-tag';
 import {quf, AUTH_TOKEN} from '../constants';
 
 
@@ -9,8 +7,6 @@ class Login extends Component {
     super(props);
     this.state = {
       email: '',
-      // id: 0,
-      // name: '',
       login: false,
       loginerror: "",
     };
@@ -123,9 +119,4 @@ mutation{
 }
 `;
 
-
-// export default compose(
-//   // graphql(SIGNUP_MUTATION, { name: 'signupMutation' }),
-//   // graphql(LOGIN_MUTATION, { name: 'loginMutation' }),
-// )(Login)
 export default Login;

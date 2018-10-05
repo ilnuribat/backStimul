@@ -3,16 +3,13 @@ import PropTypes from 'prop-types';
 import ColorHash from 'color-hash';
 import moment from 'moment';
 import { Query, Mutation, graphql, compose  } from "react-apollo";
-// import gql from 'graphql-tag';
 import { showCurrentGroup, ADD_MUT, getPrivateChat, GR_QUERY, PRIV_QUERY, MESSAGE_CREATED } from '../../graph/querys';
 import AddNew from './AddNew';
 import Loading from '../Loading';
-// import { qauf, _url } from '../../constants';
 
 
 var colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
 let subscrMes;
-// let fillFun;
 
 const AddMesMut = ({ children }) => (
   <Mutation
@@ -43,6 +40,9 @@ class ChatBody extends Component {
   }
 
   toBottom(){
+    const a = document.getElementById("messageList");
+    a.scrollTop = a.scrollHeight;
+
     const node = this.messageList.current;
     node.scrollTop = node.scrollHeight;
   }
@@ -55,9 +55,6 @@ class ChatBody extends Component {
     let _query = GR_QUERY;
 
     priv ? _query = PRIV_QUERY : null;
-
-
-    // console.log(this.props)
 
     return (
       <div className="nChat flexbox2">
@@ -72,7 +69,6 @@ class ChatBody extends Component {
           </section>
         </header>
         <section id="messageList" ref={this.messageList} className="messages col1">
-          {/* <MesQr id={id} priv={priv} /> */}
 
           <Query query={_query} variables={{id: id }}>
             {({ loading, error, data, refetch, subscribeToMore }) => {
@@ -100,7 +96,6 @@ class ChatBody extends Component {
               subscrMes = ()=>{
                 return subscribeToMore({ document: MESSAGE_CREATED, variables: {id: id,},
                   updateQuery: () => {
-                    // refetch();
                     refetch().then(()=>{
                       this.toBottom()
                     })
@@ -121,8 +116,12 @@ class ChatBody extends Component {
               }
 
               if(datas && datas.length > 0){
+                
+                let n = 0;
+
                 return(
                   datas.map((el,i)=>{
+                    n++;
                     let {node} = el;
                     let tr = 'them';
                     let createdAt = node.createdAt || "none";
@@ -130,6 +129,8 @@ class ChatBody extends Component {
                     let id = node.from.id || "none";
                     let username = node.from.username || "none";
                     let date = moment(createdAt).fromNow() || "none";
+                    let messageText = text;
+
 
                     if(id === uid){
                       tr = 'me';
@@ -137,6 +138,13 @@ class ChatBody extends Component {
                     }
                     usid === id ? same = true : same = false;
                     usid = id;
+
+                    console.log("n",n)
+                    console.log("i",i+1)
+                    let l = i+1;
+                    if(datas.length == l ){
+                      this.toBottom()
+                    }
 
                     return(
                       <div className={'msg '+ tr} key={'chat-'+i} from={id}>
@@ -147,7 +155,7 @@ class ChatBody extends Component {
                                               :
                             </div>)}
                           <blockquote className="2msg">
-                            <div className="text">{text}</div>
+                            <div className="text prewr">{messageText}</div>
                             <div className="msg-date">{date}</div>
                           </blockquote>
                         </div>
@@ -158,43 +166,6 @@ class ChatBody extends Component {
               }else{
                 return <div className="mess">нет сообщений</div>
               }
-
-              // if(!data.direct || !data.direct.messages.edges || data.direct.messages.edges.length === 0 ){
-              //   return <div className="mess">нет сообщений</div>
-              // }else{
-              //   return(
-              //     data.direct.messages.edges.map((el,i)=>{
-              //       let {node} = el;
-              //       let tr = 'them';
-              //       let createdAt = node.createdAt || "none";
-              //       let text = node.text || "none";
-              //       let id = node.from.id || "none";
-              //       let username = node.from.username+':' || "none";
-              //       let date = moment(createdAt).fromNow() || "none";
-
-              //       if(id === uid){
-              //         tr = 'me';
-              //         username = "Я"
-              //       }
-              //       usid === id ? same = true : same = false;
-              //       usid = id;
-
-              //     return(
-              //       <div className={'msg '+ tr} key={'chat-'+i} from={id}>
-              //         <div className="msg-flex">
-              //           {same ? ('') : (<div className="msg-user" style={{color: colorHash.hex(username)}}>{username}</div>)}
-              //           <blockquote className="2msg">
-              //             <div className="text">{text}</div>
-              //             <div className="msg-date">{date}</div>
-              //           </blockquote>
-              //         </div>
-              //       </div>
-              //     )
-              //     })
-              //   )
-
-              // }
-              return "Not work";
             }}
 
           </Query>

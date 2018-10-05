@@ -1,16 +1,10 @@
 import React, { Component } from 'react'
-import { _api, quf, qauf, _url } from '../constants'
 import 'animate.css';
 import { graphql, compose  } from "react-apollo";
-import gql from 'graphql-tag';
-import { getPrivateChat } from '../graph/querys';
-import { stat } from 'fs';
 import FirstLayout from './Layout';
 import ChatPrivate from './ChatPrivate';
-
-var ColorHash = require('color-hash');
-var colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
-
+import { getPrivateChat } from '../graph/querys';
+import { _api, quf, qauf, _url } from '../constants'
 
 class Private extends Component {
   constructor(props) {

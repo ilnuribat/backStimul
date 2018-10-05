@@ -55,7 +55,6 @@ class Private extends React.Component {
     
       qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
         if(a && a.data){
-          // this.fetcher()
           ref1()
         }
       }).catch((e)=>{
@@ -63,45 +62,8 @@ class Private extends React.Component {
       });
     }
 
-
-    // messager(id){
-    //   qauf(SUBS_GR(id), _url, localStorage.getItem('auth-token')).then(a=>{
-    //     if(a && a.data){
-
-    //       this.setState({
-    //         users: a.data.users
-    //       })
-    //     }
-    //   }).catch((e)=>{
-    //     console.warn(e);
-    //   });
-    // }
-
-
-
-
     fetcher(){
-    //   qauf(allUsers(), _url, localStorage.getItem('auth-token')).then(a=>{
-    //     if(a && a.data){
 
-    //       this.setState({
-    //         users: a.data.users
-    //       })
-    //     }
-    //   }).catch((e)=>{
-    //     console.warn(e);
-    //   });
-    // qauf(privates(), _url, localStorage.getItem('auth-token')).then(a=>{
-    //     if(a && a.data){
-
-    //       this.setState({
-    //         chats: a.data.user.directs
-    //       })
-
-    //     }
-    //   }).catch((e)=>{
-    //     console.warn(e);
-    //   });
     }
 
     allPrivates(){
@@ -120,10 +82,6 @@ class Private extends React.Component {
 
 
     componentDidMount(){
-
-
-      
-      // this.fetcher()
     }
 
 render(){
@@ -148,12 +106,6 @@ render(){
                 }
 
                 if(data && data.user && data.user.directs){
-                  // this.setState({
-                  //   directs: data.user.directs
-                  // })
-
-                  // return true;
-
 
                   return(
                     <div>{
@@ -177,14 +129,6 @@ render(){
                 }
               }}
             </Query>
-
-            {/* {
-              this.state.chats.map((e,i,a)=>{
-                return(
-                  <div className="user-private" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>{e.name}</div>
-                )
-              })
-            } */}
           </div>
         </div>
       </div>
@@ -193,7 +137,6 @@ render(){
           <h4>Создать приватный чай</h4>
         </div>
         <div className="content">
-          {/* <input type="text" placeholder="Введите имя пользователя..."/> */}
           <div className="content-scroll">
           {
                   <Query query={USERS_QUERY}>
@@ -228,12 +171,6 @@ render(){
 
                   }}
                   </Query>
-
-              // this.state.users.map((e,i,a)=>{
-              //   return(
-              //     <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>{e.username}</div>
-              //   )
-              // })
             }
           </div>
         </div>

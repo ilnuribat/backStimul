@@ -21,7 +21,6 @@ export default class Task extends Component {
     const id = this.props.id;
     const colId = this.colId;
     const i = this.i;
-    const full = this.props.full[7];
     const priority = this.props.full[7].priority;
     const priorityname = this.props.priorityname;
 
@@ -46,8 +45,6 @@ export default class Task extends Component {
                   <path fill="none" d="M0 0h18v18H0z" />
                 </svg>
               </div>
-              {/* <div className="small">{cols.id+''+i}</div> */}
-              {/* <div className="micro">id: {task.id}</div> */}
             </div>
             <div className="taskDescr">{description}</div>
             <div className="priority">{priorityname}</div>

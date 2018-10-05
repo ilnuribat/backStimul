@@ -57,7 +57,6 @@ export const borderRadius = 2;
 
 export const _fullurl = 'http://185.168.187.103:8500/';
 export const url = '185.168.187.103:8500/';
-// export const url = 'http://localhost:8500/graphql';
 export const _api = '185.168.187.103:4060';
 export const _url = '185.168.187.103:8500';
 export const _uri = '185.168.187.103:8500';

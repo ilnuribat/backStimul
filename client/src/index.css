@@ -1596,3 +1596,23 @@ html,body{
   height: 100%;
   background: #1B2126;
 }
+.noBtn svg{
+  fill: #1fc55f;
+}
+.noBtn{
+  background: transparent;
+  padding: 0;
+  margin:0;
+  width:auto;
+  height:auto;
+  box-shadow: 0 0 0 transparent;
+  border:0 transparent;
+}
+textarea{
+  height: auto;
+}
+.prewr{
+  position: relative;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
