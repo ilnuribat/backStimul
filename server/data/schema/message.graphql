@@ -28,6 +28,11 @@ input MessageInput {
   text: String!
 }
 
+type MessageReadEvent {
+  id: ID!
+  isRead: Boolean
+}
+
 type Query {
   messages(groupId: String!): [Message]
   message(id: ID!): Message
@@ -40,4 +45,5 @@ type Mutation {
 
 type Subscription {
   messageAdded(groupId: String!): Message
+  messageRead(id: ID!): MessageReadEvent
 }
