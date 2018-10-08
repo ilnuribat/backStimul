@@ -21,18 +21,17 @@ const AddMesMut = ({ children }) => (
 );
 
 const MessagesListData = (params) => {
-  console.log("params",params)
 
   return(
     <Query
       query={params.query}
       variables={{ id: `${params.id}` }}
     >
-      {({ subscribeToMore, ...result }) =>{
+      {({ subscribeToMore, refetch, ...result }) =>{
+
+        ref1 = refetch;
 
         const subs = (id) =>{
-          console.warn("id group is - --------------------")
-
           return subscribeToMore({
             document: MESSAGE_CREATED,
             variables: { id: id },
@@ -46,10 +45,6 @@ const MessagesListData = (params) => {
               const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
                 __typename: "MessageEdge" };
 
-              // console.log("newFeedItem2",subscriptionData)
-              console.warn("NEW MESSAGE-------------------",newFeedItem)
-              console.warn("OLD MESSAGE-------------------",prev)
-
               if(params.priv){
                 const aaa  = Object.assign({}, prev, {
                   direct: {
@@ -60,8 +55,6 @@ const MessagesListData = (params) => {
                     __typename: "Direct"
                   }
                 });
-
-                console.warn ("----------------NEW MESSAGE-------------------", aaa)
 
                 return aaa
               }else{
@@ -85,6 +78,7 @@ const MessagesListData = (params) => {
 
         return(
           <MessagesList
+            key={params.id}
             priv={params.priv}
             {...result}
 
@@ -102,6 +96,10 @@ export class MessagesList extends Component {
     super(props)
     this.state = {
     }
+  }
+
+  componentDidMount(){
+    console.log("MOUNTED!",this.props)
   }
 
   componentDidMount() {

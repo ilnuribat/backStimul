@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
 
 export const updTask = (...params) => {
   return (`mutation{

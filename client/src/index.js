@@ -77,7 +77,7 @@ const link = split(
   prelink,
 );
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   link,
   cache
 })

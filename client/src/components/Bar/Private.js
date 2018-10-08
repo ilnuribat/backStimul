@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql, compose, Query  } from "react-apollo";
-import { getPrivateChat, setPrivateChat, allUsers, privates, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED } from '../../graph/querys';
+import { getPrivateChat, setPrivateChat, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED } from '../../graph/querys';
 import { qauf, _url } from '../../constants';
 import Loading from '../Loading';
 import ColorHash from 'color-hash';
@@ -8,8 +8,8 @@ import ColorHash from 'color-hash';
 var colorHash = new ColorHash({ saturation: 0.8, hue: 0.8 });
 
 let ref1;
-let ref2;
-let gref;
+// let ref2;
+// let gref;
 
 const subscrMes = (subscribeToMore,idu, refetch)=>{
   return subscribeToMore({ document: MESSAGE_CREATED, variables: {id: idu,},
@@ -20,35 +20,35 @@ const subscrMes = (subscribeToMore,idu, refetch)=>{
   });
 };
 
-const subsToGroup = (id) => {
-  return (
-    <Query query={MESSAGE_CREATED} variables={{ id:id }}>
-      {({ loading, error, data, refetch, subscribeToMore }) => {
-        ref1 = refetch;
-        if (loading){
-          return (
-            <div style={{ paddingTop: 20 }}>
-              No Data
-            </div>
-          );
-        }
-        if (error) {
-          return (
-            <div style={{ paddingTop: 20 }}>
-              Error: {error.toString()}
-            </div>
-          )
-        }
-        if (data) {
+// const subsToGroup = (id) => {
+//   return (
+//     <Query query={MESSAGE_CREATED} variables={{ id:id }}>
+//       {({ loading, error, data, refetch, subscribeToMore }) => {
+//         ref1 = refetch;
+//         if (loading){
+//           return (
+//             <div style={{ paddingTop: 20 }}>
+//               No Data
+//             </div>
+//           );
+//         }
+//         if (error) {
+//           return (
+//             <div style={{ paddingTop: 20 }}>
+//               Error: {error.toString()}
+//             </div>
+//           )
+//         }
+//         if (data) {
 
-        }
+//         }
 
-      }}
+//       }}
 
 
-    </Query>
-  )
-};
+//     </Query>
+//   )
+// };
 
 
 class Private extends React.Component {
@@ -127,8 +127,6 @@ class Private extends React.Component {
   }
 
   render(){
-    let open = '';
-
 
     return (
       <div className="f-column-l">
@@ -149,6 +147,13 @@ class Private extends React.Component {
                       </div>
                     );
                   }
+                  if (error){
+                    return (
+                      <div style={{ paddingTop: 20 }}>
+                        <Loading />
+                      </div>
+                    );
+                  }
 
 
                   if(data && data.user && data.user.directs){
@@ -156,12 +161,12 @@ class Private extends React.Component {
                     return(
                       <div>{
                         data.user.directs.map((e,i,a)=>{
-                          this.props.getchat.id != e.id ? subscrMes(subscribeToMore,e.id, refetch) : null ;
+                          this.props.getchat.id !== e.id ? subscrMes(subscribeToMore,e.id, refetch) : null ;
 
                           return(
                             <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
                               {e.name}
-                              {e.unreadCount && this.props.getchat.id != e.id  ? (<span className="small-ruond-info">{e.unreadCount}</span>) : null}
+                              {e.unreadCount && this.props.getchat.id !== e.id  ? (<span className="small-ruond-info">{e.unreadCount}</span>) : null}
                             </div>
                           )
                         })
@@ -185,8 +190,7 @@ class Private extends React.Component {
             <div className="content-scroll">
               {
                 <Query query={USERS_QUERY}>
-                  {({ loading, error, data, refetch, subscribeToMore }) => {
-                    ref2 = refetch;
+                  {({ loading, data }) => {
                     if (loading){
                       return (
                         <div style={{ paddingTop: 20 }}>
@@ -199,7 +203,7 @@ class Private extends React.Component {
                       return(
                         <div>{
                           data.users.map((e,i,a)=>{
-                            if(e.id == localStorage.getItem('userid')) return true;
+                            if(e.id === localStorage.getItem('userid')) return true;
 
                             return(
                               <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>
