@@ -22,19 +22,14 @@ module.exports = {
     },
     createdAt: message => moment(message.createdAt).format(),
     userId: message => message.userId.toString(),
-    isRead: async (message, args, ctx) => {
-      const { user } = ctx;
-
+    isRead: async (message) => {
       if (message.isRead !== undefined) {
         return message.isRead;
-      }
-      if (message.userId.toString() !== user.id) {
-        return true;
       }
 
       const userGroups = await UserGroup.find({
         userId: {
-          $ne: user.id,
+          $ne: message.userId,
         },
         groupId: message.groupId,
       }).sort({ _id: 1 });

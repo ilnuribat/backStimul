@@ -7,7 +7,7 @@ const { getPageInfo, formWhere, getDirectChats } = require('./chat');
 module.exports = {
   Direct: {
     name: async (direct, args, ctx) => {
-      if (direct.name && direct.name.indexOf('|') === -1) {
+      if (direct.code && direct.code.indexOf('|') === -1) {
         return direct.name;
       }
 
