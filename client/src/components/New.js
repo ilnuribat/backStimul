@@ -30,26 +30,12 @@ class GroupList extends Component {
     const {showCurrentGroup} = this.props
     let _grid = showCurrentGroup.currentGroup || localStorage.getItem('grid');
 
-    // let _grnm = this.props.showCurrentGroup.groupName || '';
     this.loadg()
     this.loadu(_grid)
     this.allUserGet()
-    // this.setState({
-    //   grid: _grid,
-    //   grnm: _grnm,
-    //   gid: _grid,
-    // })
-
   }
 
   changeState(a){
-    // let groupList = this.state.groupList;
-    // let arr = groupList.concat(...a);
-
-    // this.setState({
-    //   // groupList: [...groupList, ...a]
-    //   grl: [...a],
-    // })
 
   }
 
@@ -104,17 +90,11 @@ class GroupList extends Component {
 
   userAdd(i){
 
-    // let q = () => {return(`mutation{
-    //   updateGroup(id: "${this.props.showCurrentGroup.currentGroup}", group: {userIds: ["${i}"]} )
-    // }`)} ;
-
     let q = () => {return(`mutation{
       updateUsersGroup(group: {id: "${this.props.showCurrentGroup.currentGroup}", users: ["${i}"]} )
     }`)} ;
 
     qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
-      if(a && a.data){
-      }
     })
     .then(()=>{
       this.loadu(this.props.showCurrentGroup.currentGroup)

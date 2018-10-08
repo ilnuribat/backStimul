@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import 'tachyons';
 import './index.css';
 import { HttpLink } from 'apollo-link-http';
@@ -13,11 +12,9 @@ import { setContext } from 'apollo-link-context';
 import { withClientState } from 'apollo-link-state';
 import { split, ApolloLink } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
-// import { AUTH_TOKEN } from './constants';
 import App from './App';
 import {_url} from './constants';
 import resolvers from './graph/resolvers';
-
 
 const httpLink = new HttpLink({
   uri: `http://${_url}/`,
@@ -25,7 +22,6 @@ const httpLink = new HttpLink({
 
 
 const middlewareLink = setContext((req, previousContext) => {
-  // get the authentication token from local storage if it exists
   const jwt = localStorage.getItem('auth-token');
 
   if (jwt) {
@@ -72,7 +68,6 @@ const wsLink = new WebSocketLink({
 });
 
 const link = split(
-  // split based on operation type
   ({ query }) => {
     const { kind, operation } = getMainDefinition(query);
 

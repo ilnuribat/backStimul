@@ -18,18 +18,6 @@ export default {
 
       return {id, name, __typename: 'chat' };
     },
-    // setPrivate: (_, { uid, name },  { cache }) => {
-
-    //   const data = {
-    //       __typename: 'setchat',
-    //       uid: uid,
-    //       name: name,
-    //   };
-
-    //   cache.writeData({ data });
-
-    //   return {uid, name, __typename: 'selectUser' };
-    // },
   },
   Query: {
     isLiked: () => false,

@@ -1,26 +1,11 @@
 import React, { Component } from 'react';
 import { quf } from '../constants';
 import { updTask, getPriority, getById } from '../graph/querys';
-// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-// import gql from "graphql-tag";
-// import {
-//     NavLink,
-//     Link,
-//     Redirect,
-//     Switch,
-// } from 'react-router-dom';
-
 
 let filename = "file: Card";
 let log = (fun, e) => {
   console.warn(filename, "func:", fun, e)
 };
-
-/*
-check on backend
-
-if ColumnIdOld->ProjectIdSame != ColumnIdNew->ProjectIdSame then FuckU
-*/
 
 export default class Card extends Component {
   constructor(props) {

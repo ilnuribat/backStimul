@@ -62,4 +62,12 @@ module.exports = {
       },
     }),
   },
+  Subscription: {
+    messageAdded: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([MESSAGED_ADDED]),
+        ({ messageAdded: { groupId: mGroupId } }, { groupId }) => mGroupId.toString() === groupId,
+      ),
+    },
+  },
 };

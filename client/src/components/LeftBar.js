@@ -48,18 +48,6 @@ class LeftBar extends Component {
       </div>
     )
 
-
-
-    // if(this.props.lstate){
-    //   return (
-    //   <div className="left-bar">
-    //       <Appср/>
-    //   </div>
-    //   )
-    // }else{
-    //   return true;
-    // }
-
   }
 }
 

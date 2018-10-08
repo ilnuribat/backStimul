@@ -1,3 +1,4 @@
+require('dotenv').load();
 
 export const colors = {
   blue: {
@@ -36,7 +37,7 @@ export const quf = (query) => {
 };
 export const qauf = (query, uri, auth) => {
 
-  return fetch(`http://${url}/`, {
+  return fetch(`http://${_url}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -55,11 +56,6 @@ export const grid = 8;
 
 export const borderRadius = 2;
 
-export const _fullurl = 'http://185.168.187.103:8500/';
-export const url = '185.168.187.103:8500/';
-// export const url = 'http://localhost:8500/graphql';
-export const _api = '185.168.187.103:4060';
-export const _url = `${document.location.hostname}:8500`;
-export const _uri = '185.168.187.103:8500';
+export const _url = process.env.URL || '185.168.187.103:8500' || 'localhost:8500';
 
 export const AUTH_TOKEN = 'auth-token';

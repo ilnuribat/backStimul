@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { quf } from '../constants';
-// import Appср from '../chat/App';
 import { updTask, getPriority, getById, crTask } from '../graph/querys';
+
 let filename = "file: Card";
 let log = (fun, e) => {
   console.warn(filename, "func:", fun, e)
@@ -38,9 +38,6 @@ export default class Column extends Component {
     let name = this.state.input[0];
     let description = this.state.input[1];
     let columnId = this.props.id;
-    // let priority = this.state.input[3];
-    // let createdBy = this.state.input[4];
-    // name description columnId priority createdBy
     let input = `name: "${name}", description: "${description}", columnId: ${columnId}, priority: ${1}, createdBy: ${1}`;
     let q = crTask(`input: {${input}}`);
 
@@ -91,6 +88,7 @@ export default class Column extends Component {
 
   taskEdit(id, name, description){
     let taskEdit = this.state.taskEdit;
+    
     taskEdit.id = id;
     taskEdit.name = name;
     taskEdit.description = description;

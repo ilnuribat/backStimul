@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-// import { CreateTask } from './CreateTask';
-import Task from './Task';
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
+import Task from './Task';
 
 export default class Column extends Component {
   constructor(props) {

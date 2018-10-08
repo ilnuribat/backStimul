@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo';
 import { PropTypes } from 'prop-types';
-// import gql from 'graphql-tag';
-// import io from 'socket.io-client'
 import { changeGroup, showCurrentGroup, createGroup, user } from '../../graph/querys';
-// import { _api, quf, qauf, _url } from '../../constants'
 import { qauf, _url } from '../../constants'
 import 'animate.css';
 
@@ -12,17 +9,9 @@ class Tasks extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      // groupList: [
-      //   {id:"1",name:"Группа 1"},
-      //   {id:"2",name:"Группа 2"},
-      //   {id:"3",name:"Группа 3"},
-      //   {id:"4",name:"Группа 4"},
-      //   {id:"5",name:"Группа 5"},
-      // ],
       grl: [],
       grid: '',
       addGroupInputs: false,
-      // input: [],
       newGrName: '',
     }
 
@@ -46,7 +35,6 @@ class Tasks extends Component {
     localStorage.setItem('grnm',n);
     this.setState({
       grid: i,
-      // grnm: n,
     })
     changeGroup ({
       variables: { currentGroup: i, groupName: n }
@@ -60,7 +48,6 @@ class Tasks extends Component {
     localStorage.setItem('grnm',n);
     this.setState({
       grid: e,
-      // grnm: n,
     })
     chgr();
   }

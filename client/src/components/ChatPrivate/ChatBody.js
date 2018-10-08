@@ -2,17 +2,14 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import ColorHash from 'color-hash';
 import moment from 'moment';
-import { Query, Mutation, graphql, compose  } from "react-apollo";
-// import gql from 'graphql-tag';
-import { showCurrentGroup, ADD_MUT, getPrivateChat, GR_QUERY, PRIV_QUERY, MESSAGE_CREATED } from '../../graph/querys';
+import { Query, Mutation, Subscription, graphql, compose  } from "react-apollo";
+import { showCurrentGroup, ADD_MUT, getPrivateChat, GR_QUERY, PRIV_QUERY, MESSAGE_CREATED, MESSAGE_READ, MESSAGEREAD_MUT, messRead, MESSAGE_QUERY, messageRead_MUT } from '../../graph/querys';
 import AddNew from './AddNew';
 import Loading from '../Loading';
-// import { qauf, _url } from '../../constants';
-
+import { MsgCheck, MsgDblcheck, MsgDblcheckAck } from '../Svg/index';
+import { qauf, _url } from '../../constants';
 
 var colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
-let subscrMes;
-// let fillFun;
 
 const AddMesMut = ({ children }) => (
   <Mutation
@@ -22,42 +19,296 @@ const AddMesMut = ({ children }) => (
   </Mutation>
 );
 
+const MessagesListData = (params) => {
+  console.log("params",params)
+  return(
+  <Query
+    query={params.query}
+    variables={{ id: `${params.id}` }}
+  >
+    {({ subscribeToMore, ...result }) =>{
+      return(
+      <MessagesList
+        priv={params.priv}
+        {...result}
+
+        subscribeToNewMessages={() =>{
+          return subscribeToMore({
+            document: MESSAGE_CREATED,
+            variables: { id: params.id },
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data) return prev;
+              subscriptionData.data.messageAdded.from = {id:'new',username: "menog", __typename: "User"};
+              subscriptionData.data.messageAdded.createdAt = 'new';
+              subscriptionData.data.messageAdded.isRead = false;
+              const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
+              __typename: "MessageEdge" };
+              console.log("newFeedItem2",subscriptionData)
+
+              if(params.priv){
+                return Object.assign({}, prev, {
+                  direct: {
+                    messages:{
+                      edges: [...prev.direct.messages.edges, newFeedItem],
+                      __typename: "MessageConnection"
+                    },
+                    __typename: "Direct"
+                  }
+                });
+              }else{
+                return Object.assign({}, prev, {
+                  group: {
+                    messages:{
+                      edges: [...prev.direct.group.edges, newFeedItem],
+                      __typename: "MessageConnection"
+                    },
+                    __typename: "Group"
+                  }
+                });
+              }
+
+            },
+            onError: (err)=>{
+              console.log('ERR-----',err)
+            },
+          })
+        }
+
+        }
+      />
+    )}
+    }
+  </Query>
+)};
+
+export class MessagesList extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+    }
+
+  }
+
+  componentDidMount() {
+    this.props.subscribeToNewMessages();
+    toBottom();
+  }
+  componentDidUpdate(){
+    toBottom();
+  }
+
+  render(){
+    const { priv, data } = this.props;
+    let datas = '';
+    let uid = localStorage.getItem('userid');
+    let same = false;
+    let usid = "";
+
+    if(priv && data.direct && data.direct.messages && data.direct.messages.edges ){
+                datas = data.direct.messages.edges;
+    }else if(data.group && data.group.messages && data.group.messages.edges ){
+                datas = data.group.messages.edges;
+    }else{
+      return(<div className="mess">нет данных</div>)
+    }
+              if(datas){
+                let n = 0;
+                return(
+                  <div>
+                  {
+                    datas.map((e,i,a)=>{
+                      n++;
+                      let {node} = e;
+                      let tr = 'them';
+                      let createdAt = node.createdAt || "none";
+                      let text = node.text || "none";
+                      let id = node.userId || "none";
+                      let username = node.from.username || "none";
+                      let date = moment(createdAt).fromNow() || "none";
+                      let messageText = text;
+                      let read = node.isRead;
+
+                      console.log(node);
+
+                      if(id === uid){
+                        tr = 'me';
+                        username = "Я";
+                      }else{
+                        console.log("----------else--------------");
+                        if(read === false ){
+                          console.log("----------read--------------");
+                          let notread = messageRead_MUT(node.id);
+                          console.log('Message read', notread);
+                          // qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
+                          //   if(a && a.data){
+                          //     console.log("Answer about read",a);
+                          //   }
+                          // }).catch((e)=>{
+                          //   console.warn("Err read",e);
+                          // });
+                        }
+                      }
+  
+                      usid === id ? same = true : same = false;
+                      usid = id;
+  
+                      return(
+                        <div className={'msg '+ tr} key={'chat-'+i} from={id}>
+                          <div className="msg-flex">
+                            {same ? ('') : (
+                              <div className="msg-user" style={{color: colorHash.hex(username)}}>
+                                {username}:</div>)}
+                            <blockquote className="msgs">
+                              <div className="text prewr">{messageText}</div>
+                              <div className="f-row">
+                                {id === uid && read === false ? (
+
+                                  <Query
+                                    query={MESSAGE_QUERY}
+                                    variables={{ id:node.id }}
+                                    >
+                                    {({ data, loading, subscribeToMore }) => (
+                                              // subscribeToNewMessages={() =>{
+                                              //   return subscribeToMore({
+                                              //     document: MESSAGE_CREATED,
+                                              //     variables: { id: params.id },
+                                              //     updateQuery: (prev, { subscriptionData }) => {
+                                              //       if (!subscriptionData.data) return prev;
+                                              //       subscriptionData.data.messageAdded.from = {id:'new',username: "menog", __typename: "User"};
+                                              //       subscriptionData.data.messageAdded.createdAt = 'new';
+                                              //       subscriptionData.data.messageAdded.isRead = false;
+                                              //       const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
+                                              //       __typename: "MessageEdge" };
+                                              //       console.log("newFeedItem2",subscriptionData)
+                                      
+                                              //       if(params.priv){
+                                              //         return Object.assign({}, prev, {
+                                              //           direct: {
+                                              //             messages:{
+                                              //               edges: [...prev.direct.messages.edges, newFeedItem],
+                                              //               __typename: "MessageConnection"
+                                              //             },
+                                              //             __typename: "Direct"
+                                              //           }
+                                              //         });
+                                              //       }else{
+                                              //         return Object.assign({}, prev, {
+                                              //           group: {
+                                              //             messages:{
+                                              //               edges: [...prev.direct.group.edges, newFeedItem],
+                                              //               __typename: "MessageConnection"
+                                              //             },
+                                              //             __typename: "Group"
+                                              //           }
+                                              //         });
+                                              //       }
+                                      
+                                              //     },
+                                              //     onError: (err)=>{
+                                              //       console.log('ERR-----',err)
+                                              //     },
+                                              //   })
+                                              // }
+                                      
+                                      <div className="events">status: {data.message && data.message.isRead ? data.message.isRead.toString() : null}  {console.log('subs read data',data)}</div>
+                                    )}
+                                  </Query>
+                                ) : null }
+  
+                                <div className="msg-date">{date}</div>
+                              </div>
+  
+                            </blockquote>
+                          </div>
+                        </div>
+                      )
+                    })
+                  }
+                  </div>
+                )
+              }
+  }
+}
+
+
+class Fetch extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      messages: [],
+      loading: true,
+      id: '',
+      name: '',
+      datas: [],
+    }
+
+    this.fillMessages = this.fillMessages.bind(this)
+  }
+
+  fillMessages(datas){
+    if(datas && datas != this.state.messages){
+      this.setState({
+        messages: datas,
+      })
+    }
+  }
+
+  componentWillMount(){
+
+  }
+
+
+  render(){
+    let { id, priv } = this.props;
+    let { messages } = this.state;
+    
+    let _query = GR_QUERY;
+  
+    priv ? _query = PRIV_QUERY : null;
+  
+    return(
+      <MessagesListData query={_query} id={id} priv={priv} />
+    );
+  }
+}
+
 class ChatBody extends Component {
   constructor(props){
     super(props)
     this.state = {
       messages: [],
+      loading: true,
       id: '',
       name: '',
+      datas: [],
     }
     this.messageList = React.createRef();
     this.toBottom = this.toBottom.bind(this)
   }
 
+
   componentDidMount(){
-    // setTimeout( this.toBottom, 500)
   }
 
   componentDidUpdate(){
-    this.toBottom()
   }
 
   toBottom(){
-    const node = this.messageList.current;
-    node.scrollTop = node.scrollHeight;
+    // if(document.getElementById("messageList")){
+    //       const a = document.getElementById("messageList");
+    //       a.scrollTop = a.scrollHeight;
+
+    //       const node = this.messageList.current;
+    //       node.scrollTop = node.scrollHeight;
+    // }
+
   }
 
   render() {
-    let { messages, id, name, priv, data } = this.props;
-    let uid = localStorage.getItem('userid');
-    let same = false;
-    let usid = "";
+    let { id, name, priv, data } = this.props;
     let _query = GR_QUERY;
 
     priv ? _query = PRIV_QUERY : null;
-
-
-    // console.log(this.props)
 
     return (
       <div className="nChat flexbox2">
@@ -72,133 +323,7 @@ class ChatBody extends Component {
           </section>
         </header>
         <section id="messageList" ref={this.messageList} className="messages col1">
-          {/* <MesQr id={id} priv={priv} /> */}
-
-          <Query query={_query} variables={{id: id }}>
-            {({ loading, error, data, refetch, subscribeToMore }) => {
-              if (loading){
-                return (
-                  <div style={{ paddingTop: 20 }}>
-                    <Loading />
-                  </div>
-                );
-              }else{
-                this.toBottom()
-              }
-
-
-              if (error){
-                return (
-                  <p className="mess">
-                    {' '}
-                    {'Ошибочка вышла :( ' + error.toString()}
-                    {' '}
-                  </p>
-                )
-              }
-
-              subscrMes = ()=>{
-                return subscribeToMore({ document: MESSAGE_CREATED, variables: {id: id,},
-                  updateQuery: () => {
-                    // refetch();
-                    refetch().then(()=>{
-                      this.toBottom()
-                    })
-                  },
-                });
-              };
-
-              subscrMes();
-
-              let datas;
-
-              if(priv && data.direct && data.direct.messages && data.direct.messages.edges ){
-                datas = data.direct.messages.edges;
-              }else if(data.group && data.group.messages && data.group.messages.edges ){
-                datas = data.group.messages.edges;
-              }else{
-                return <div className="mess">нет данных</div>
-              }
-
-              if(datas && datas.length > 0){
-                return(
-                  datas.map((el,i)=>{
-                    let {node} = el;
-                    let tr = 'them';
-                    let createdAt = node.createdAt || "none";
-                    let text = node.text || "none";
-                    let id = node.from.id || "none";
-                    let username = node.from.username || "none";
-                    let date = moment(createdAt).fromNow() || "none";
-
-                    if(id === uid){
-                      tr = 'me';
-                      username = "Я"
-                    }
-                    usid === id ? same = true : same = false;
-                    usid = id;
-
-                    return(
-                      <div className={'msg '+ tr} key={'chat-'+i} from={id}>
-                        <div className="msg-flex">
-                          {same ? ('') : (
-                            <div className="msg-user" style={{color: colorHash.hex(username)}}>
-                              {username}
-                                              :
-                            </div>)}
-                          <blockquote className="2msg">
-                            <div className="text">{text}</div>
-                            <div className="msg-date">{date}</div>
-                          </blockquote>
-                        </div>
-                      </div>
-                    )
-                  })
-                )
-              }else{
-                return <div className="mess">нет сообщений</div>
-              }
-
-              // if(!data.direct || !data.direct.messages.edges || data.direct.messages.edges.length === 0 ){
-              //   return <div className="mess">нет сообщений</div>
-              // }else{
-              //   return(
-              //     data.direct.messages.edges.map((el,i)=>{
-              //       let {node} = el;
-              //       let tr = 'them';
-              //       let createdAt = node.createdAt || "none";
-              //       let text = node.text || "none";
-              //       let id = node.from.id || "none";
-              //       let username = node.from.username+':' || "none";
-              //       let date = moment(createdAt).fromNow() || "none";
-
-              //       if(id === uid){
-              //         tr = 'me';
-              //         username = "Я"
-              //       }
-              //       usid === id ? same = true : same = false;
-              //       usid = id;
-
-              //     return(
-              //       <div className={'msg '+ tr} key={'chat-'+i} from={id}>
-              //         <div className="msg-flex">
-              //           {same ? ('') : (<div className="msg-user" style={{color: colorHash.hex(username)}}>{username}</div>)}
-              //           <blockquote className="2msg">
-              //             <div className="text">{text}</div>
-              //             <div className="msg-date">{date}</div>
-              //           </blockquote>
-              //         </div>
-              //       </div>
-              //     )
-              //     })
-              //   )
-
-              // }
-              return "Not work";
-            }}
-
-          </Query>
-
+        <Fetch priv={priv} id={id} />
         </section>
 
         <div className="rela col1" style={{textAlign: "center"}}>
@@ -214,7 +339,13 @@ class ChatBody extends Component {
       </div>
     );
   }
+}
 
+const toBottom = () => {
+  if(document.getElementById("messageList")){
+        const a = document.getElementById("messageList");
+        a.scrollTop = a.scrollHeight;
+  }
 }
 
 ChatBody.propTypes = {

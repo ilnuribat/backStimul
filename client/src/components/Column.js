@@ -16,9 +16,6 @@ export default class Column extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // status: false,
-      // key: 0,
-      // opncr: false,
       open: false,
       input: [],
     };
@@ -55,9 +52,6 @@ export default class Column extends Component {
     const {id, refetch} = this.props
     let name = input[0];
     let description = input[1];
-    // let priority = this.state.input[3];
-    // let createdBy = this.state.input[4];
-    // name description columnId priority createdBy
     let inputNew = `name: "${name}", description: "${description}", columnId: ${id}, priority: ${1}, createdBy: ${1}`;
     let q = crTask(`input: {${inputNew}}`);
 
@@ -110,9 +104,6 @@ export default class Column extends Component {
     quf(getPriority)
       .then((a) => {
         if (a.data) {
-          // this.setState({
-          //   priority: a.data.glossary.priorities
-          // })
 
           return a.data.glossary.priorities;
         } else {
@@ -123,15 +114,6 @@ export default class Column extends Component {
         log("getPriority", e);
       });
   }
-
-
-
-
-  // editName() {
-  //   this.setState({
-  //     editName: true,
-  //   })
-  // }
 
   changeName(e) {
     let val = e.target.value;

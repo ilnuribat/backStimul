@@ -52,24 +52,25 @@ class AddNew extends Component {
     let inp = input[0];
 
     inp = inp.replace(/\s\s/g,'');
+    inp = inp.replace(/(?:\r\n\r\n|\n\n|\r\r|\r\n|\r|\n)/g, '\n');
     inp = inp.trim();
 
     this.setState({
       input: [''],
     })
     let gid = showCurrentGroup.currentGroup || getchat.id || localStorage.getItem('gid') || 1;
-    
-    if(!inp){
+
+    let message = appendUser.userName?'@'+appendUser.userName + ' ' + inp:inp;
+
+    if(!message){
       return false;
     }else{
       add({
         id: gid,
-        text: appendUser.userName?'@'+appendUser.userName + ' ' + inp:inp,
+        text: message,
       });
       this.userSelect();
     }
-
-    // this.props.toBottom();
 
   }
 
@@ -113,7 +114,12 @@ class AddNew extends Component {
           <span className="chat-to" style={{color: colorHash.hex(user)}}>{user}</span>
           <textarea id="focus-chpocus" onKeyDown={this.onKeyDown} ref={this.setTextInputRef} name="1" type="text" value={input} placeholder='Сообщение...' onChange={this.changeInput} required />
         </div>
-        <div><button className="circ" type="submit" form="addNew">></button></div>
+        <div><button className="noBtn" type="submit" form="addNew">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M20 8H4V6h16v2zm-2-6H6v2h12V2zm4 10v8c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-8c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2zm-6 4l-6-3.27v6.53L16 16z"/>
+            <path fill="none" d="M0 0h24v24H0z"/>
+          </svg>
+        </button></div>
       </form>
     );
   }

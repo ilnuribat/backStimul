@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-// import { graphql, compose } from 'react-apollo'
-// import gql from 'graphql-tag';
 import {quf, AUTH_TOKEN} from '../constants';
 
 
@@ -9,8 +7,6 @@ class Login extends Component {
     super(props);
     this.state = {
       email: '',
-      // id: 0,
-      // name: '',
       login: false,
       loginerror: "",
     };
@@ -93,7 +89,6 @@ class Login extends Component {
           (
             <div className="auth">
               <div className="logo">
-                <img src="" alt="222" />
               </div>
               <div
                 className="button"
@@ -101,6 +96,7 @@ class Login extends Component {
                 onClick={() => {
                   localStorage.removeItem(AUTH_TOKEN)
                   localStorage.removeItem('username')
+                  localStorage.removeItem('userid')
                   history.push(`/`)
                 }}
               >
@@ -123,9 +119,4 @@ mutation{
 }
 `;
 
-
-// export default compose(
-//   // graphql(SIGNUP_MUTATION, { name: 'signupMutation' }),
-//   // graphql(LOGIN_MUTATION, { name: 'loginMutation' }),
-// )(Login)
 export default Login;

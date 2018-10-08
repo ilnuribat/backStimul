@@ -18,6 +18,7 @@ class Profile extends Component {
       return false;
     } else {
       localStorage.removeItem('username')
+      localStorage.removeItem('userid')
       localStorage.setItem('username', this.state.email)
     }
   }

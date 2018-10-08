@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo';
-import gql from 'graphql-tag';
-// import io from 'socket.io-client'
 import { changeGroup, showCurrentGroup, createGroup, user } from '../graph/querys';
-import { _api, quf, qauf, _url } from '../constants'
+import { qauf, _url } from '../constants'
 import 'animate.css';
 
 class GroupList extends Component {

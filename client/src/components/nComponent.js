@@ -4,7 +4,6 @@ import { gql } from 'apollo-boost';
 import PropTypes from 'prop-types';
 import Tile from './Tile';
 import TileCr from './TileCr';
-import Column from './Column';
 import Board from './nBoard';
 
 
@@ -119,17 +118,9 @@ export default class CreateCol extends Component {
                 }
                 else if(data.project){
                   return(
-                    // <Board key={'tile-'+i} name={o.name} title={o.title} id={o.id} refetch={refetch} full={o} type={o.__typename} remove={this._remove} open={this._open}/>
                           
                     <div className="board-inner">
                     <Board refetch={refetch} full={data.project} remove={this._remove} open={this._open}/>
-                      {/* {data.project.columns.map((o,i) => {
-                        return(
-                          <Board key={'tile-'+i} name={o.name} title={o.title} id={o.id} refetch={refetch} full={o} type={o.__typename} remove={this._remove} open={this._open}/>
-                          // <Column key={'tile-'+i} name={o.name} title={o.title} id={o.id} refetch={refetch} full={o} type={o.__typename} remove={this._remove} open={this._open}/>
-                        )
-                      })} */}
-                      {/* <TileCr pid={this.state.id} refetch={refetch} parentupd={this.parentup}/> */}
                     </div>
                   )
                 }
