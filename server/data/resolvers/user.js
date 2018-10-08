@@ -8,6 +8,7 @@ const {
   UserGroup,
 } = require('../models');
 const { logger } = require('../../logger');
+const { getDirectChats } = require('./chat');
 
 function generateToken(user) {
   return jwt.sign({
@@ -31,36 +32,8 @@ module.exports = {
         code: null,
       });
     },
-    async directs({ id }, args, { user }) {
-      const usersGroups = await UserGroup.find({ userId: id });
-
-      const directsRaw = await Group.find({
-        _id: {
-          $in: usersGroups.map(u => u.groupId),
-        },
-        code: {
-          $exists: true,
-        },
-      });
-
-      const directs = directsRaw.map(d => ({
-        ...d,
-        name: d.code
-          .split('|')
-          .filter(dId => dId !== user.id)[0] || user.id,
-        id: d._id.toString(),
-      }));
-
-      const users = await User.find({
-        _id: {
-          $in: directs.map(d => d.name),
-        },
-      });
-
-      return directs.map(d => ({
-        ...d,
-        name: users.find(u => u.id === d.name).email,
-      }));
+    async directs(parent, args, { user }) {
+      return getDirectChats(user);
     },
     id: user => user._id.toString(),
   },
@@ -70,7 +43,7 @@ module.exports = {
         throw new Error('not authenticated');
       }
 
-      return User.findById(user.id);
+      return user;
     },
     users() {
       return User.find();

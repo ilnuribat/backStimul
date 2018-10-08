@@ -21,7 +21,7 @@ export const colors = {
 };
 
 export const quf = (query) => {
-  return fetch(`http://${_uri}/`, {
+  return fetch(`http://${_url}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export const quf = (query) => {
 };
 export const qauf = (query, uri, auth) => {
 
-  return fetch(`http://${uri}/`, {
+  return fetch(`http://${url}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export const _fullurl = 'http://185.168.187.103:8500/';
 export const url = '185.168.187.103:8500/';
 // export const url = 'http://localhost:8500/graphql';
 export const _api = '185.168.187.103:4060';
-export const _url = '185.168.187.103:8500';
+export const _url = `${document.location.hostname}:8500`;
 export const _uri = '185.168.187.103:8500';
 
 export const AUTH_TOKEN = 'auth-token';

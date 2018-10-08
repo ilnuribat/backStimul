@@ -1,3 +1,4 @@
+const { Types: { ObjectId } } = require('mongoose');
 const {
   Group,
   UserGroup,
@@ -15,7 +16,7 @@ module.exports = {
 
       return users;
     },
-    async messages(parent, args) {
+    async messages(parent, { messageConnection }, { user }) {
       const { id } = parent;
       const group = await Group.findById(id);
 
@@ -24,12 +25,23 @@ module.exports = {
       }
       const {
         first, last, before, after,
-      } = args;
+      } = messageConnection || {};
       // before - last, after - first
-
       const where = formWhere({ id, before, after });
 
-      const messages = await Message.find(where).limit(first || last);
+      let messages = await Message.find(where).limit(first || last).lean();
+      const oldestCursor = await UserGroup.findOne({
+        groupId: id,
+        userId: {
+          $ne: user.id,
+        },
+      }).sort({ lastReadCursor: 1 });
+
+      messages = messages.map(m => ({
+        ...m,
+        id: m._id.toString(),
+        isRead: oldestCursor && oldestCursor.lastReadCursor >= m._id,
+      }));
 
       const pageInfo = await getPageInfo({
         messages, groupId: id, before, after,
@@ -43,6 +55,20 @@ module.exports = {
         })),
       };
     },
+    async unreadCount({ id }, args, { user }) {
+      const userGroup = await UserGroup.findOne({ groupId: id, userId: user.id });
+      const { lastReadCursor } = userGroup || {};
+
+      return Message.find({
+        groupId: id,
+        userId: {
+          $ne: user.id,
+        },
+        _id: {
+          $gt: lastReadCursor,
+        },
+      }).count();
+    },
   },
   Query: {
     groups: () => Group.find({ code: null }),
@@ -55,6 +81,7 @@ module.exports = {
       await UserGroup.create({
         userId: user.id,
         groupId: created.id,
+        lastReadCursor: ObjectId.createFromTime(0),
       });
 
       const { userIds } = group;
@@ -63,6 +90,7 @@ module.exports = {
         await UserGroup.insertMany(userIds.map(u => ({
           userId: u,
           groupId: created.id,
+          lastReadCursor: ObjectId.createFromTime(0),
         })));
       }
 
@@ -94,12 +122,14 @@ module.exports = {
       }
 
       const { users } = group;
+      const lastMessage = await Message.findOne({ groupId });
 
       if (!group.delete && Array.isArray(users) && users.length) {
         try {
           await UserGroup.insertMany(users.map(u => ({
             userId: u,
             groupId: foundGroup.id,
+            lastReadCursor: lastMessage ? lastMessage._id : ObjectId.createFromTime(0),
           })));
 
           return true;
@@ -142,9 +172,11 @@ module.exports = {
         await UserGroup.insertMany([{
           userId: user.id,
           groupId: group.id,
+          lastReadCursor: ObjectId.createFromTime(0),
         }, {
           userId: dUser.id,
           groupId: group.id,
+          lastReadCursor: ObjectId.createFromTime(0),
         }]);
       } catch (err) {
         if (err.errmsg && err.errmsg.indexOf('duplicate key error')) {
