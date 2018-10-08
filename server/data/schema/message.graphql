@@ -5,6 +5,7 @@ type Message {
   from: User
   to: Group
   userId: String
+  groupId: String
   isRead: Boolean
 }
 
@@ -44,6 +45,6 @@ type Mutation {
 }
 
 type Subscription {
-  messageAdded(groupId: String!): Message
+  messageAdded(groupId: String): Message
   messageRead(id: ID!): MessageReadEvent
 }
