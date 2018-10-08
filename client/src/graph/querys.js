@@ -160,7 +160,6 @@ export const privates = () => `
 export const PRIVS_QUERY = gql`
     query{
       user{
-        id
         directs{
           id
           name

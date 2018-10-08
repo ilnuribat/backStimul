@@ -10,6 +10,7 @@ import { MsgCheck, MsgDblcheck, MsgDblcheckAck } from '../Svg/index';
 import { qauf, _url } from '../../constants';
 
 var colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
+let ref1;
 
 const AddMesMut = ({ children }) => (
   <Mutation
@@ -21,21 +22,20 @@ const AddMesMut = ({ children }) => (
 
 const MessagesListData = (params) => {
   console.log("params",params)
-  return(
-  <Query
-    query={params.query}
-    variables={{ id: `${params.id}` }}
-  >
-    {({ subscribeToMore, ...result }) =>{
-      return(
-      <MessagesList
-        priv={params.priv}
-        {...result}
 
-        subscribeToNewMessages={() =>{
+  return(
+    <Query
+      query={params.query}
+      variables={{ id: `${params.id}` }}
+    >
+      {({ subscribeToMore, ...result }) =>{
+
+        const subs = (id) =>{
+          console.warn("id group is - --------------------")
+
           return subscribeToMore({
             document: MESSAGE_CREATED,
-            variables: { id: params.id },
+            variables: { id: id },
 
             updateQuery: (prev, { subscriptionData }) => {
 
@@ -44,11 +44,14 @@ const MessagesListData = (params) => {
               subscriptionData.data.messageAdded.createdAt = Date.now();
               subscriptionData.data.messageAdded.isRead = false;
               const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
-              __typename: "MessageEdge" };
-              console.log("newFeedItem2",subscriptionData)
+                __typename: "MessageEdge" };
+
+              // console.log("newFeedItem2",subscriptionData)
+              console.warn("NEW MESSAGE-------------------",newFeedItem)
+              console.warn("OLD MESSAGE-------------------",prev)
 
               if(params.priv){
-                return Object.assign({}, prev, {
+                const aaa  = Object.assign({}, prev, {
                   direct: {
                     messages:{
                       edges: [...prev.direct.messages.edges, newFeedItem],
@@ -57,6 +60,10 @@ const MessagesListData = (params) => {
                     __typename: "Direct"
                   }
                 });
+
+                console.warn ("----------------NEW MESSAGE-------------------", aaa)
+
+                return aaa
               }else{
                 return Object.assign({}, prev, {
                   group: {
@@ -74,14 +81,21 @@ const MessagesListData = (params) => {
               console.log('ERR-----',err)
             },
           })
-        }
+        };
 
-        }
-      />
-    )}
-    }
-  </Query>
-)};
+        return(
+          <MessagesList
+            priv={params.priv}
+            {...result}
+
+            subscribeToNewMessages={() =>subs(params.id)
+
+            }
+          />
+        )}
+      }
+    </Query>
+  )};
 
 export class MessagesList extends Component {
   constructor(props){
@@ -93,105 +107,115 @@ export class MessagesList extends Component {
   componentDidMount() {
     this.props.subscribeToNewMessages();
     toBottom();
+    if (ref1) ref1();
   }
 
   componentDidUpdate(){
+    console.warn("UPDATE!")
+    if (ref1) ref1();
+    // this.props.subscribeToNewMessages();
     toBottom();
   }
 
   render(){
-    const { priv, data } = this.props;
+    const { priv, data, variables } = this.props;
+
+    console.warn("our group is: ", variables.id )
+
     let datas = '';
     let uid = localStorage.getItem('userid');
     let same = false;
     let usid = "";
 
     if(priv && data.direct && data.direct.messages && data.direct.messages.edges ){
-                datas = data.direct.messages.edges;
+      datas = data.direct.messages.edges;
     }else if(data.group && data.group.messages && data.group.messages.edges ){
-                datas = data.group.messages.edges;
+      datas = data.group.messages.edges;
     }else{
       return(<div className="mess">нет данных</div>)
     }
-              if(datas){
-                let n = 0;
-                let l = datas.length;
-                return(
-                  <div>
-                  {
-                    datas.map((e,i,a)=>{
-                      n++;
-                      let {node} = e;
-                      let tr = 'them';
-                      let createdAt = node.createdAt || "none";
-                      let text = node.text || "none";
-                      let id = node.userId || "none";
-                      let username = node.from.username || "none";
-                      let date = moment(createdAt).fromNow() || "none";
-                      let messageText = text;
-                      let read = node.isRead;
+    if(datas){
+      let n = 0;
+      let l = datas.length;
 
-                      if(id === uid){
-                        tr = 'me';
-                        username = "Я";
-                      }else{
-                        if( n === l ){
-                          let notread = messageRead_MUT(node.id);
-                          qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
-                            if(a && a.data){
-                              console.log("Answer about read",a);
-                            }
-                          }).catch((e)=>{
-                            console.warn("Err read",e);
-                          });
-                        }
-                      }
+      return(
+        <div>
+          {
+            datas.map((e,i,a)=>{
+              n++;
+              let {node} = e;
+              let tr = 'them';
+              let createdAt = node.createdAt || "none";
+              let text = node.text || "none";
+              let id = node.userId || "none";
+              let username = node.from.username || "none";
+              let date = moment(createdAt).fromNow() || "none";
+              let messageText = text;
+              let read = node.isRead;
 
-                      usid === id ? same = true : same = false;
-                      usid = id;
+              if(id === uid){
+                tr = 'me';
+                username = "Я";
+              }else{
+                if( n === l ){
+                  let notread = messageRead_MUT(node.id);
 
-                      return(
-                        <div className={'msg '+ tr} key={'chat-'+i} from={id}>
-                          <div className="msg-flex">
-                            {same ? ('') : (
-                              <div className="msg-user" style={{color: colorHash.hex(username)}}>
-                                {username}:</div>)}
-                            <blockquote className="msgs">
-                              <div className="text prewr">{messageText}</div>
-                              <div>{node.id}</div>
-                              <div className="f-row">
-                                { id === uid ? (
-                                  <div>
-                                { !read ? (
-                                  <Query
-                                    query={MESSAGE_QUERY}
-                                    variables={{ id:node.id }}
-                                    >
-                                    {({ data, loading, subscribeToMore }) => {
-                                        subscribeToRead(subscribeToMore, node.id);
-
-                                      return(
-                                      <div className="events">{data.message && data.message.isRead ? <MsgDblcheckAck /> : <MsgDblcheck />}  {console.log('subs read data',data)}</div>
-                                    )}
-                                  }
-                                  </Query>
-                                          ) : ( <MsgDblcheckAck /> ) }
-                                  </div>
-                                ) : null }
-
-
-                                <div className="msg-date">{date}</div>
-                              </div>
-
-                            </blockquote>
-                          </div>
-                        </div>
-                      )
-                    })
-                  }
-                  </div>
-                )
+                  qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
+                    if(a && a.data){
+                      console.log("Answer about read",a);
+                    }
+                  }).catch((e)=>{
+                    console.warn("Err read",e);
+                  });
+                }
               }
+
+              usid === id ? same = true : same = false;
+              usid = id;
+
+              return(
+                <div className={'msg '+ tr} key={'chat-'+i} from={id}>
+                  <div className="msg-flex">
+                    {same ? ('') : (
+                      <div className="msg-user" style={{color: colorHash.hex(username)}}>
+                        {username}:</div>)}
+                    <blockquote className="msgs">
+                      <div className="text prewr">{messageText}</div>
+                      <div>{node.id}</div>
+                      <div className="f-row">
+                        { id === uid ? (
+                          <div>
+                            { !read ? (
+                              <Query
+                                query={MESSAGE_QUERY}
+                                variables={{ id:node.id }}
+                              >
+                                {({ data, loading, subscribeToMore, refetch }) => {
+                                  subscribeToRead(subscribeToMore, node.id);
+                                  ref1 = refetch;
+
+                                  return(
+                                    <div className="events">{data.message && data.message.isRead ? <MsgDblcheckAck /> : <MsgDblcheck />}  {console.log('subs read data',data)}</div>
+                                  )}
+                                }
+                              </Query>
+                            ) : ( <MsgDblcheckAck /> ) }
+                          </div>
+                        ) : null }
+
+
+                        <div className="msg-date">{date}</div>
+                      </div>
+
+                    </blockquote>
+                  </div>
+                </div>
+              )
+            })
+          }
+        </div>
+      )
+    }
   }
 }
 
@@ -232,7 +256,7 @@ class Fetch extends Component {
     priv ? _query = PRIV_QUERY : null;
 
     return(
-      <MessagesListData query={_query} id={id} priv={priv} />
+      <MessagesListData query={_query} id={id} priv={priv} {...this.props} />
     );
   }
 }
@@ -251,12 +275,6 @@ class ChatBody extends Component {
     this.toBottom = this.toBottom.bind(this)
   }
 
-
-  componentDidMount(){
-  }
-
-  componentDidUpdate(){
-  }
 
   toBottom(){
     // if(document.getElementById("messageList")){
@@ -288,7 +306,7 @@ class ChatBody extends Component {
           </section>
         </header>
         <section id="messageList" ref={this.messageList} className="messages col1">
-        <Fetch priv={priv} id={id} />
+          <Fetch priv={priv} id={id} {...this.props} />
         </section>
 
         <div className="rela col1" style={{textAlign: "center"}}>
@@ -308,8 +326,9 @@ class ChatBody extends Component {
 
 const toBottom = () => {
   if(document.getElementById("messageList")){
-        const a = document.getElementById("messageList");
-        a.scrollTop = a.scrollHeight;
+    const a = document.getElementById("messageList");
+
+    a.scrollTop = a.scrollHeight;
   }
 }
 
@@ -356,3 +375,4 @@ export default compose(
   graphql(showCurrentGroup, { name: 'showCurrentGroup' }),
   graphql(getPrivateChat, { name: 'getchat' }),
 )(ChatBody);
+
