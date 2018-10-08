@@ -178,7 +178,7 @@ export const PRIV_QUERY = gql`
               edges {
                   cursor
                   node {
-                    
+
                       isRead
                       id
                       userId
@@ -227,7 +227,6 @@ mutation {
 export const GR_QUERY = gql`
   query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       group(id: $id ){
-          id
           name
           users{
               id

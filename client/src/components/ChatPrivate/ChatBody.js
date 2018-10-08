@@ -36,10 +36,12 @@ const MessagesListData = (params) => {
           return subscribeToMore({
             document: MESSAGE_CREATED,
             variables: { id: params.id },
+
             updateQuery: (prev, { subscriptionData }) => {
+
               if (!subscriptionData.data) return prev;
-              subscriptionData.data.messageAdded.from = {id:'new',username: "menog", __typename: "User"};
-              subscriptionData.data.messageAdded.createdAt = 'new';
+              subscriptionData.data.messageAdded.from = {id: localStorage.getItem("userid"),username: localStorage.getItem("username"), __typename: "User"};
+              subscriptionData.data.messageAdded.createdAt = Date.now();
               subscriptionData.data.messageAdded.isRead = false;
               const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
               __typename: "MessageEdge" };
@@ -59,7 +61,7 @@ const MessagesListData = (params) => {
                 return Object.assign({}, prev, {
                   group: {
                     messages:{
-                      edges: [...prev.direct.group.edges, newFeedItem],
+                      edges: [...prev.group.messages.edges, newFeedItem],
                       __typename: "MessageConnection"
                     },
                     __typename: "Group"
@@ -144,10 +146,10 @@ export class MessagesList extends Component {
                           });
                         }
                       }
-  
+
                       usid === id ? same = true : same = false;
                       usid = id;
-  
+
                       return(
                         <div className={'msg '+ tr} key={'chat-'+i} from={id}>
                           <div className="msg-flex">
@@ -177,10 +179,10 @@ export class MessagesList extends Component {
                                   </div>
                                 ) : null }
 
-  
+
                                 <div className="msg-date">{date}</div>
                               </div>
-  
+
                             </blockquote>
                           </div>
                         </div>
@@ -224,11 +226,11 @@ class Fetch extends Component {
   render(){
     let { id, priv } = this.props;
     let { messages } = this.state;
-    
+
     let _query = GR_QUERY;
-  
+
     priv ? _query = PRIV_QUERY : null;
-  
+
     return(
       <MessagesListData query={_query} id={id} priv={priv} />
     );
