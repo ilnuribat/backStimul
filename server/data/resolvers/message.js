@@ -78,6 +78,14 @@ module.exports = {
         },
       });
 
+      await Group.update({
+        _id: message.groupId,
+      }, {
+        $set: {
+          lastMessageAt: moment(),
+        },
+      });
+
       pubsub.publish(MESSAGED_ADDED, { messageAdded: createdMessage });
 
       return createdMessage;

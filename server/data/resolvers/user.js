@@ -41,7 +41,7 @@ module.exports = {
         code: {
           $exists: true,
         },
-      });
+      }).sort({ lastMessageAt: -1 });
 
       const directs = directsRaw.map(d => ({
         ...d,
