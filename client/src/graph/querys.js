@@ -227,7 +227,7 @@ export const MESSAGEREAD_MUT = gql`
 
 export const messageRead_MUT = (id)=> {return(`
 mutation {
-  messageRead(id: ${id} )
+  messageRead(id: "${id}" )
 }
 `)};
 

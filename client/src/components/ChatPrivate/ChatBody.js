@@ -169,7 +169,7 @@ export class MessagesList extends Component {
                                     >
                                     {({ data, loading }) => (
                                       
-                                      <div className="events">status: {node.id} {data.text}  {console.log('subs read data',data)}</div>
+                                      <div className="events">status: {data.message && data.message.isRead ? data.message.isRead.toString() : null}  {console.log('subs read data',data)}</div>
                                     )}
                                   </Query>
                                 ) : null }
