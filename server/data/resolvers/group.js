@@ -1,3 +1,4 @@
+const { Types: { ObjectId } } = require('mongoose');
 const {
   Group,
   UserGroup,
@@ -80,6 +81,7 @@ module.exports = {
       await UserGroup.create({
         userId: user.id,
         groupId: created.id,
+        lastReadCursor: ObjectId.createFromTime(0),
       });
 
       const { userIds } = group;
@@ -88,6 +90,7 @@ module.exports = {
         await UserGroup.insertMany(userIds.map(u => ({
           userId: u,
           groupId: created.id,
+          lastReadCursor: ObjectId.createFromTime(0),
         })));
       }
 
@@ -126,7 +129,7 @@ module.exports = {
           await UserGroup.insertMany(users.map(u => ({
             userId: u,
             groupId: foundGroup.id,
-            lastReadCursor: lastMessage ? lastMessage._id : null,
+            lastReadCursor: lastMessage ? lastMessage._id : ObjectId.createFromTime(0),
           })));
 
           return true;
@@ -169,9 +172,11 @@ module.exports = {
         await UserGroup.insertMany([{
           userId: user.id,
           groupId: group.id,
+          lastReadCursor: ObjectId.createFromTime(0),
         }, {
           userId: dUser.id,
           groupId: group.id,
+          lastReadCursor: ObjectId.createFromTime(0),
         }]);
       } catch (err) {
         if (err.errmsg && err.errmsg.indexOf('duplicate key error')) {
