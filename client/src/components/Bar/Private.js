@@ -126,7 +126,7 @@ render(){
                               return(
                                 <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
                                 {e.name}
-                                {e.messages && e.messages.edges.length && this.props.getchat.id != e.id  ? (<span className="small-ruond-info">{e.messages.edges.length}</span>) : null}
+                                {e.unreadCount && this.props.getchat.id != e.id  ? (<span className="small-ruond-info">{e.unreadCount}</span>) : null}
                                 </div>
                               )
                             })

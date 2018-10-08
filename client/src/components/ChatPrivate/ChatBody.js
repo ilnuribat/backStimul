@@ -86,13 +86,13 @@ export class MessagesList extends Component {
     super(props)
     this.state = {
     }
-
   }
 
   componentDidMount() {
     this.props.subscribeToNewMessages();
     toBottom();
   }
+
   componentDidUpdate(){
     toBottom();
   }
@@ -134,18 +134,16 @@ export class MessagesList extends Component {
                         tr = 'me';
                         username = "Я";
                       }else{
-                        console.log("----------else--------------");
-                        if(read === false ){
-                          console.log("----------read--------------");
+                        let k = i + 1;
+                        if(read === false && n === k ){
                           let notread = messageRead_MUT(node.id);
-                          console.log('Message read', notread);
-                          // qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
-                          //   if(a && a.data){
-                          //     console.log("Answer about read",a);
-                          //   }
-                          // }).catch((e)=>{
-                          //   console.warn("Err read",e);
-                          // });
+                          qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
+                            if(a && a.data){
+                              console.log("Answer about read",a);
+                            }
+                          }).catch((e)=>{
+                            console.warn("Err read",e);
+                          });
                         }
                       }
   
@@ -160,60 +158,27 @@ export class MessagesList extends Component {
                                 {username}:</div>)}
                             <blockquote className="msgs">
                               <div className="text prewr">{messageText}</div>
+                              <div>{node.id}</div>
                               <div className="f-row">
-                                {id === uid && read === false ? (
-
+                                { id === uid ? (
+                                  <div>
+                                { !read ? (
                                   <Query
                                     query={MESSAGE_QUERY}
                                     variables={{ id:node.id }}
                                     >
-                                    {({ data, loading, subscribeToMore }) => (
-                                              // subscribeToNewMessages={() =>{
-                                              //   return subscribeToMore({
-                                              //     document: MESSAGE_CREATED,
-                                              //     variables: { id: params.id },
-                                              //     updateQuery: (prev, { subscriptionData }) => {
-                                              //       if (!subscriptionData.data) return prev;
-                                              //       subscriptionData.data.messageAdded.from = {id:'new',username: "menog", __typename: "User"};
-                                              //       subscriptionData.data.messageAdded.createdAt = 'new';
-                                              //       subscriptionData.data.messageAdded.isRead = false;
-                                              //       const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
-                                              //       __typename: "MessageEdge" };
-                                              //       console.log("newFeedItem2",subscriptionData)
-                                      
-                                              //       if(params.priv){
-                                              //         return Object.assign({}, prev, {
-                                              //           direct: {
-                                              //             messages:{
-                                              //               edges: [...prev.direct.messages.edges, newFeedItem],
-                                              //               __typename: "MessageConnection"
-                                              //             },
-                                              //             __typename: "Direct"
-                                              //           }
-                                              //         });
-                                              //       }else{
-                                              //         return Object.assign({}, prev, {
-                                              //           group: {
-                                              //             messages:{
-                                              //               edges: [...prev.direct.group.edges, newFeedItem],
-                                              //               __typename: "MessageConnection"
-                                              //             },
-                                              //             __typename: "Group"
-                                              //           }
-                                              //         });
-                                              //       }
-                                      
-                                              //     },
-                                              //     onError: (err)=>{
-                                              //       console.log('ERR-----',err)
-                                              //     },
-                                              //   })
-                                              // }
-                                      
-                                      <div className="events">status: {data.message && data.message.isRead ? data.message.isRead.toString() : null}  {console.log('subs read data',data)}</div>
+                                    {({ data, loading, subscribeToMore }) => {
+                                        subscribeToRead(subscribeToMore, node.id);
+
+                                      return(
+                                      <div className="events">{data.message && data.message.isRead ? <MsgDblcheckAck /> : <MsgDblcheck />}  {console.log('subs read data',data)}</div>
                                     )}
+                                  }
                                   </Query>
+                                          ) : ( <MsgDblcheckAck /> ) }
+                                  </div>
                                 ) : null }
+
   
                                 <div className="msg-date">{date}</div>
                               </div>
@@ -346,6 +311,31 @@ const toBottom = () => {
         const a = document.getElementById("messageList");
         a.scrollTop = a.scrollHeight;
   }
+}
+
+const subscribeToRead = (subscribeToMore, id) =>{
+  return subscribeToMore({
+    document: MESSAGE_READ,
+    variables: { id: id },
+    updateQuery: (prev, { subscriptionData }) => {
+      if (!subscriptionData.data) return prev;
+
+      console.log("messread subs",subscriptionData)
+      console.log("messread subs prev", prev)
+
+      return Object.assign({}, prev, {
+        message:{
+          isRead: true,
+          text: prev.message.text,
+          __typename: prev.message.__typename,
+        }
+      });
+
+    },
+    onError: (err)=>{
+      console.log('ERR-----',err)
+    },
+  })
 }
 
 ChatBody.propTypes = {

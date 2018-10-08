@@ -164,15 +164,7 @@ export const PRIVS_QUERY = gql`
         directs{
           id
           name
-          messages{
-            edges{
-              node{
-                id
-                userId
-              }
-            }
-          }
-          
+          unreadCount
         }
       }
     }
@@ -181,10 +173,12 @@ export const PRIVS_QUERY = gql`
 export const PRIV_QUERY = gql`
   query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       direct(id: $id ){
+          unreadCount
           messages(messageConnection: $messageConnection) {
               edges {
                   cursor
                   node {
+                    
                       isRead
                       id
                       userId
@@ -214,7 +208,6 @@ export const MESSAGE_SUBS = gql`
   subscription message($id: ID!){
     message(id: $id ){
           isRead
-          text
       }
   }
 `;
@@ -276,8 +269,10 @@ export const MESSAGE_CREATED = gql`
 `;
 
 export const MESSAGE_READ = gql`
-  subscription messageRead($id: String!){
-      messageRead(id: $id)
+  subscription messageRead($id: ID!){
+      messageRead(id: $id){
+        isRead
+      }
   }
 `;
 
