@@ -1,12 +1,16 @@
 const {
-  Group, UserGroup, Message, User,
+  Group, Message, User,
 } = require('../models');
 const GroupResolver = require('./group');
-const { getPageInfo, formWhere } = require('./chat');
+const { getPageInfo, formWhere, getDirectChats } = require('./chat');
 
 module.exports = {
   Direct: {
     name: async (direct, args, ctx) => {
+      if (direct.name && direct.name.indexOf('|') === -1) {
+        return direct.name;
+      }
+
       const anotherUserId = direct.code.split('|').filter(dId => dId !== ctx.user.id);
       const anotherUser = await User.findById(anotherUserId);
 
@@ -44,21 +48,12 @@ module.exports = {
     },
   },
   Query: {
-    directs: async (parent, args, ctx) => {
-      const { user } = ctx;
-
+    directs: async (parent, args, { user }) => {
       if (!user) {
         throw new Error('not authorized');
       }
-      const userGroups = await UserGroup.find({ userId: user.id });
-      const directs = await Group.find({
-        code: { $exists: true },
-        _id: {
-          $in: userGroups.map(ug => ug.groupId),
-        },
-      });
 
-      return directs;
+      return getDirectChats(user);
     },
     direct: async (parent, { id }) => Group.findOne({
       _id: id,
