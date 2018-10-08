@@ -113,6 +113,7 @@ export class MessagesList extends Component {
     }
               if(datas){
                 let n = 0;
+                let l = datas.length;
                 return(
                   <div>
                   {
@@ -128,14 +129,11 @@ export class MessagesList extends Component {
                       let messageText = text;
                       let read = node.isRead;
 
-                      console.log(node);
-
                       if(id === uid){
                         tr = 'me';
                         username = "Я";
                       }else{
-                        let k = i + 1;
-                        if(read === false && n === k ){
+                        if( n === l ){
                           let notread = messageRead_MUT(node.id);
                           qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
                             if(a && a.data){
