@@ -9,9 +9,7 @@ import Loading from '../Loading';
 import { MsgCheck, MsgDblcheck, MsgDblcheckAck } from '../Svg/index';
 import { qauf, _url } from '../../constants';
 
-
 var colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
-let subscrMes;
 
 const AddMesMut = ({ children }) => (
   <Mutation
@@ -21,16 +19,176 @@ const AddMesMut = ({ children }) => (
   </Mutation>
 );
 
-// const Header = () => (
-//   <Query query={getPageNameQuery}>
-//       {({ loading, error, data }) => {
-//           if (error) return <h1>Error...</h1>;
-//           if (loading || !data) return <h1>Loading...</h1>;
+const MessagesListData = (params) => {
+  console.log("params",params)
+  return(
+  <Query
+    query={params.query}
+    variables={{ id: `${params.id}` }}
+  >
+    {({ subscribeToMore, ...result }) =>{
+      return(
+      <MessagesList
+        priv={params.priv}
+        {...result}
 
-//           return <h1>{data.apolloClientDemo.currentPageName}</h1>
-//       }}
-//   </Query>
-// );
+        subscribeToNewMessages={() =>{
+          return subscribeToMore({
+            document: MESSAGE_CREATED,
+            variables: { id: params.id },
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data) return prev;
+              subscriptionData.data.messageAdded.from = {id:'new',username: "menog", __typename: "User"};
+              subscriptionData.data.messageAdded.createdAt = 'new';
+              subscriptionData.data.messageAdded.isRead = false;
+              const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
+              __typename: "MessageEdge" };
+              console.log("newFeedItem2",subscriptionData)
+
+              if(params.priv){
+                return Object.assign({}, prev, {
+                  direct: {
+                    messages:{
+                      edges: [...prev.direct.messages.edges, newFeedItem],
+                      __typename: "MessageConnection"
+                    },
+                    __typename: "Direct"
+                  }
+                });
+              }else{
+                return Object.assign({}, prev, {
+                  group: {
+                    messages:{
+                      edges: [...prev.direct.group.edges, newFeedItem],
+                      __typename: "MessageConnection"
+                    },
+                    __typename: "Group"
+                  }
+                });
+              }
+
+            },
+            onError: (err)=>{
+              console.log('ERR-----',err)
+            },
+          })
+        }
+
+        }
+      />
+    )}
+    }
+  </Query>
+)};
+
+export class MessagesList extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+    }
+
+  }
+
+  componentDidMount() {
+    this.props.subscribeToNewMessages();
+    toBottom();
+  }
+  componentDidUpdate(){
+    toBottom();
+  }
+
+  render(){
+    const { priv, data } = this.props;
+    let datas = '';
+    let uid = localStorage.getItem('userid');
+    let same = false;
+    let usid = "";
+
+    if(priv && data.direct && data.direct.messages && data.direct.messages.edges ){
+                datas = data.direct.messages.edges;
+    }else if(data.group && data.group.messages && data.group.messages.edges ){
+                datas = data.group.messages.edges;
+    }else{
+      return(<div className="mess">нет данных</div>)
+    }
+              if(datas){
+                let n = 0;
+                return(
+                  <div>
+                  {
+                    datas.map((e,i,a)=>{
+                      n++;
+                      let {node} = e;
+                      let tr = 'them';
+                      let createdAt = node.createdAt || "none";
+                      let text = node.text || "none";
+                      let id = node.userId || "none";
+                      let username = node.from.username || "none";
+                      let date = moment(createdAt).fromNow() || "none";
+                      let messageText = text;
+                      let read = node.isRead;
+
+                      console.log(node);
+
+                      if(id === uid){
+                        tr = 'me';
+                        username = "Я";
+                      }else{
+                        console.log("----------else--------------");
+                        if(read === false ){
+                          console.log("----------read--------------");
+                          let notread = messageRead_MUT(node.id);
+                          console.log('Message read', notread);
+                          qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
+                            if(a && a.data){
+                              console.log("Answer about read",a);
+                            }
+                          }).catch((e)=>{
+                            console.warn("Err read",e);
+                          });
+                        }
+                      }
+  
+                      usid === id ? same = true : same = false;
+                      usid = id;
+  
+                      return(
+                        <div className={'msg '+ tr} key={'chat-'+i} from={id}>
+                          <div className="msg-flex">
+                            {same ? ('') : (
+                              <div className="msg-user" style={{color: colorHash.hex(username)}}>
+                                {username}:</div>)}
+                            <blockquote className="msgs">
+                              <div className="text prewr">{messageText}</div>
+                              <div className="f-row">
+                                {id === uid && read === false ? (
+
+                                  <Query
+                                    query={MESSAGE_QUERY}
+                                    variables={{ id:node.id }}
+                                    >
+                                    {({ data, loading }) => (
+                                      
+                                      <div className="events">status: {node.id} {data.text}  {console.log('subs read data',data)}</div>
+                                    )}
+                                  </Query>
+                                ) : null }
+  
+                                <div className="msg-date">{date}</div>
+                              </div>
+  
+                            </blockquote>
+                          </div>
+                        </div>
+                      )
+                    })
+                  }
+                  </div>
+                )
+              }
+  }
+}
+
 
 class Fetch extends Component {
   constructor(props){
@@ -54,6 +212,10 @@ class Fetch extends Component {
     }
   }
 
+  componentWillMount(){
+
+  }
+
 
   render(){
     let { id, priv } = this.props;
@@ -63,150 +225,11 @@ class Fetch extends Component {
   
     priv ? _query = PRIV_QUERY : null;
   
-    console.log("----------- log1");
-
     return(
-        <Query query={_query} variables={{id: id }}>
-        {({ loading, error, data, refetch, subscribeToMore }) => {
-          
-            if(loading){
-              return (
-                <div style={{ paddingTop: 20, margin: "auto" }}>
-                  <Loading />
-                </div>
-              );
-            }
-            if(error){
-              return (
-                <div style={{ paddingTop: 20 }}>
-                  {error}
-                </div>
-              );
-              // return false;
-            }
-
-
-            const subscrMes = (ids)=>{
-              console.log("subscriptionData")
-              return subscribeToMore({ document: MESSAGE_CREATED, variables: {id: ids,},
-                
-                updateQuery: (previousResult, { subscriptionData }) => {
-
-                  console.log("subscriptionData")
-                  console.log('prev',previousResult)
-                  console.log(subscriptionData)
-
-                  let {messages} = this.state;
-
-
-                  console.log(messages)
-                  
-
-                  
-                  const newMessage = subscriptionData.data.messageAdded;
-
-                  console.log('newMessage',newMessage)
-                  let result = {
-                    __typename: 'MessageEdge',
-                    node: newMessage,
-                    cursor: Buffer.from(newMessage.id.toString()).toString('base64'),
-                  };
-                  console.log('result',result)
-                  let appendmessages = [...messages, result]
-                  console.log('appendmessages',appendmessages)
-                  // this.messUpdate(result)
-                  // return result;
-
-                  // return messages;
-                  this.fillMessages(appendmessages)
-
-                  // this.setState({
-                  //   messages: messages,
-                  // })
-                  
-                  return true;
-                  refetch();
-
-
-                  // const newMessage = subscriptionData.data.messageAdded;
-                  // let result = [...previousResult.group.messages.edges, {
-                  //   __typename: 'MessageEdge',
-                  //   node: newMessage,
-                  //   cursor: Buffer.from(newMessage.id.toString()).toString('base64'),
-                  // }];
-                  // this.messUpdate(result)
-                  // return result;
-
-
-                  // return update(previousResult, {
-                  //   group: {
-                  //     messages: {
-                  //       edges: {
-                  //         $set: [{
-                  //           __typename: 'MessageEdge',
-                  //           node: newMessage,
-                  //           cursor: Buffer.from(newMessage.id.toString()).toString('base64'),
-                  //         }],
-                  //       },
-                  //     },
-                  //   },
-                  // });
-                
-                },
-                onError: (err)=>{
-                  console.log(err)
-                },
-                
-                // updateQuery: () => {
-                //   refetch().then(()=>{
-                //     this.toBottom()
-                //   })
-                // },
-
-
-
-              });
-            };
-
-            subscrMes(id);
-
-
-            if(data){
-              let datas;
-              console.log(data)
-            
-              if(priv && data.direct && data.direct.messages && data.direct.messages.edges ){
-                datas = data.direct.messages.edges;
-              }else if(data.group && data.group.messages && data.group.messages.edges ){
-                datas = data.group.messages.edges;
-              }else{
-                  return(<div className="mess">нет данных</div>)
-                // return false;
-              }
-
-              if(datas) this.fillMessages(datas);
-
-              if(messages){
-                return(
-                  <div>
-                  {
-                    messages.map((e,i,a)=>{
-                      return(
-                        <div className="mess" key={'messages'+i}>{e.node.id}</div>
-                      )
-                    })
-                  }
-                  </div>
-                )
-              }
-            }
-        }}
-    
-      </Query>
-    )
+      <MessagesListData query={_query} id={id} priv={priv} />
+    );
   }
 }
-
 
 class ChatBody extends Component {
   constructor(props){
@@ -220,40 +243,29 @@ class ChatBody extends Component {
     }
     this.messageList = React.createRef();
     this.toBottom = this.toBottom.bind(this)
-    // this.fetch = this.fetch.bind(this)
   }
 
 
   componentDidMount(){
-    // console.log("----------- log0");
-    // this.fetch()
-    // setTimeout( this.toBottom, 500)
   }
 
   componentDidUpdate(){
-    this.toBottom()
   }
 
   toBottom(){
-    if(document.getElementById("messageList")){
-          const a = document.getElementById("messageList");
-          a.scrollTop = a.scrollHeight;
+    // if(document.getElementById("messageList")){
+    //       const a = document.getElementById("messageList");
+    //       a.scrollTop = a.scrollHeight;
 
-          const node = this.messageList.current;
-          node.scrollTop = node.scrollHeight;
-    }
+    //       const node = this.messageList.current;
+    //       node.scrollTop = node.scrollHeight;
+    // }
 
   }
 
   render() {
     let { id, name, priv, data } = this.props;
-    let { messages, loading } = this.state;
-    let uid = localStorage.getItem('userid');
-    let same = false;
-    let usid = "";
     let _query = GR_QUERY;
-
-    console.log(this.state)
 
     priv ? _query = PRIV_QUERY : null;
 
@@ -270,19 +282,7 @@ class ChatBody extends Component {
           </section>
         </header>
         <section id="messageList" ref={this.messageList} className="messages col1">
-
         <Fetch priv={priv} id={id} />
-
-        {/* {
-          messages.map((e,i,a)=>{
-            return(
-              <div className="mess">{e.node.id}</div>
-            )
-          })
-        } */}
-
-
-
         </section>
 
         <div className="rela col1" style={{textAlign: "center"}}>
@@ -298,7 +298,13 @@ class ChatBody extends Component {
       </div>
     );
   }
+}
 
+const toBottom = () => {
+  if(document.getElementById("messageList")){
+        const a = document.getElementById("messageList");
+        a.scrollTop = a.scrollHeight;
+  }
 }
 
 ChatBody.propTypes = {

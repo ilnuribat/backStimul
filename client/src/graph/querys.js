@@ -225,11 +225,11 @@ export const MESSAGEREAD_MUT = gql`
   }
 `;
 
-export const messageRead_MUT = ()=>(`
+export const messageRead_MUT = ()=> {return(`
 mutation {
   messageRead(id: $id )
 }
-`);
+`)};
 
 export const GR_QUERY = gql`
   query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){

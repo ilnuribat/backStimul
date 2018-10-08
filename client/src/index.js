@@ -16,7 +16,6 @@ import App from './App';
 import {_url} from './constants';
 import resolvers from './graph/resolvers';
 
-
 const httpLink = new HttpLink({
   uri: `http://${_url}/`,
 });
