@@ -226,11 +226,15 @@ class Private extends React.Component {
                       return(
                         <div>{
                           data.users.map((e,i,a)=>{
-                            if(e.id === localStorage.getItem('userid')) return true;
+                            let Iam;
+                            if(e.id === localStorage.getItem('userid')){
+                              Iam = ' - я';
+                              return <span style={{color: colorHash.hex(e.username)}}>{e.username}<span>{Iam}</span></span>;
+                            };
 
                             return(
                               <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>
-                                <span style={{color: colorHash.hex(e.username)}}>{e.username}</span>
+                                <span style={{color: colorHash.hex(e.username)}}>{e.username}<span>{Iam}</span></span>
                               </div>
                             )
                           })

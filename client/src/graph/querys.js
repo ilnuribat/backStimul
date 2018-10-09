@@ -81,8 +81,8 @@ export const getById = (id) => {
 
 
 export const meSet = gql`
-  mutation me($meid: String, $mename: String, $memail: String) {
-    me(meid: $meid, mename: $mename, memail: $memail) @client {
+  mutation meSet($meid: String, $mename: String, $memail: String) {
+    meSet(meid: $meid, mename: $mename, memail: $memail) @client {
       meid
       mename
       memail
@@ -90,7 +90,7 @@ export const meSet = gql`
   }
 `;
 export const meGet = gql`
-  query me{
+  query meGet{
       meid @client
       mename @client
       memail @client

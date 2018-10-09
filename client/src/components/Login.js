@@ -8,6 +8,8 @@ class Login extends Component {
     super(props);
     this.state = {
       email: '',
+      meid: '',
+      memail: '',
       login: false,
       loginerror: "",
     };
@@ -26,8 +28,6 @@ class Login extends Component {
   _confirm = async () => {
     const { email, password, login } = this.state;
     const { lookft } = this.props;
-
-    
 
     this.setState({loginerror: ''})
 
@@ -50,10 +50,23 @@ class Login extends Component {
       else if(result && result.data && result.data.login){
         const { jwt, username, id } = result.data.login;
 
-        if(!jwt || !username || !email) return( this.setState({loginerror: `ошибка! сервер не дал ответ`}) );
+        if(!jwt || !username) return( this.setState({loginerror: `ошибка! сервер не дал ответ`}) );
 
         this._saveUserData(jwt, username, id);
-        
+        // let { meSet } = this.props;
+
+        this.props.meSet({variables:{
+          meid: id,
+          mename: username,
+          memail: username,
+        }
+        });
+        this.setState({
+          meid: id,
+          mename: username,
+          memail: username,
+        });
+
       }else{
         this.setState({loginerror: `ошибка! Свистать всеХ на верХ!`})
 
@@ -67,13 +80,6 @@ class Login extends Component {
   }
 
   _saveUserData = (token, name, id) => {
-    let { meSet } = this.props;
-
-    meSet({
-      meid: id,
-      mename: name,
-      memail: name,
-    });
 
     localStorage.setItem('userid', id);
     localStorage.setItem('usermail', name);
@@ -82,10 +88,12 @@ class Login extends Component {
   }
 
   render() {
-    
+  
     const authToken = localStorage.getItem(AUTH_TOKEN);
-    const { loginerror } = this.state;
+    const { loginerror, meid, mename } = this.state;
     const { history, meGet, meSet } = this.props;
+
+    console.log("MeName",meGet.mename)
 
     return (
 
@@ -106,19 +114,19 @@ class Login extends Component {
               <div className="logo">
               </div>
 
-              <div className="mess">{ meGet.meid}</div>
-              <div className="mess">{ meGet.mename}</div>
-              <div className="mess">{ meGet.memail}</div>
+              <div className="mess">Мой id: { meid}</div>
+              <div className="mess">Моё имя: { mename}</div>
               
 
               <div
                 className="button"
                 role="presentation"
                 onClick={() => {
-                  meSet({
+                  this.props.meSet({variables:{
                     meid: "",
                     mename: "",
                     memail: "",
+                  }
                   });
 
                   localStorage.removeItem(AUTH_TOKEN)

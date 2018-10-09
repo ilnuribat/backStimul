@@ -20,7 +20,7 @@ class Private extends React.Component {
 
   render(){
 
-    let {getCountPriv} = this.props;
+    let { getCountPriv } = this.props;
 
     return(
       <div className="nav-button" name="private">

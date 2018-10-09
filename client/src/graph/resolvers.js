@@ -18,8 +18,9 @@ export default {
 
       return {userName, userId, __typename: 'selectUser' };
     },
-    me: (_, { meid, mename, memail },  { cache }) => {
-      cache.writeData({ data: { meid: meid, mename: mename, memail: memail, } });
+
+    meSet: (_, { meid, mename, memail },  { cache }) => {
+      cache.writeData({ data: { meid: meid, mename: mename, memail: memail } });
 
       return {meid, mename, memail, __typename: 'me' };
     },
