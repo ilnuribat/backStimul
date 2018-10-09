@@ -174,7 +174,6 @@ export class MessagesList extends Component {
                         {username}:</div>)}
                     <blockquote className="msgs">
                       <div className="text prewr">{messageText}</div>
-                      <div>{node.id}</div>
                       <div className="f-row">
                         { id === uid ? (
                           <div>
@@ -242,8 +241,6 @@ class Fetch extends Component {
 
   render(){
     let { id, priv } = this.props;
-    // let { messages } = this.state;
-
     let _query = GR_QUERY;
 
     priv ? _query = PRIV_QUERY : null;
@@ -331,9 +328,6 @@ const subscribeToRead = (subscribeToMore, id) =>{
     variables: { id: id },
     updateQuery: (prev, { subscriptionData }) => {
       if (!subscriptionData.data) return prev;
-
-      // console.warn("messread subs",subscriptionData)
-      // console.warn("messread subs prev", prev)
 
       return Object.assign({}, prev, {
         message:{
