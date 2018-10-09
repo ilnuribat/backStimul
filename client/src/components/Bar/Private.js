@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql, compose, Query  } from "react-apollo";
-import { getPrivateChat, setPrivateChat, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED } from '../../graph/querys';
+import { getPrivateChat, setPrivateChat, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED, cMutCountPrivates } from '../../graph/querys';
 import { qauf, _url } from '../../constants';
 import Loading from '../Loading';
 import ColorHash from 'color-hash';
@@ -233,6 +233,7 @@ class Private extends React.Component {
 
 
 export default compose(
+  graphql(cMutCountPrivates, { name: 'countPriv' }),
   graphql(getPrivateChat, { name: 'getchat' }),
   graphql(setPrivateChat, { name: 'setPrivate' }),
 )(Private);

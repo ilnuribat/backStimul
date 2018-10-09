@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { Mutation } from 'react-apollo';
 
 export const updTask = (...params) => {
   return (`mutation{
@@ -90,6 +91,22 @@ export const appendUser = gql`
   query appendUser {
     userName @client
     userId @client
+  }
+`;
+
+export const cGetCountPrivates = gql`
+  query countPrivates {
+    unreaded @client
+    chats @client
+  }
+`;
+
+export const cSetCountPrivates = gql`
+  mutation countPrivates($unreaded:Int, $chats: [String]){
+    countPrivates(unreaded: $unreaded, chats: $chats) @client{
+    unreaded 
+    chats
+    }
   }
 `;
 
