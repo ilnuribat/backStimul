@@ -44,12 +44,15 @@ const stateLink = withClientState({
   cache,
   resolvers,
   defaults: {
+    ureaded: 0,
+    chats: [],
     currentGroup: "",
     userName: "",
     userId: 0,
     groupName: "",
     id: "",
     name: "",
+    unr: 0,
   }
 });
 

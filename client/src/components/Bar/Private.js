@@ -1,9 +1,10 @@
 import React from 'react';
 import { graphql, compose, Query  } from "react-apollo";
-import { getPrivateChat, setPrivateChat, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED, cSetCountPrivates } from '../../graph/querys';
+import { getPrivateChat, setPrivateChat, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED, cSetCountPrivates, cSetChats, cGetChats } from '../../graph/querys';
 import { qauf, _url } from '../../constants';
 import Loading from '../Loading';
 import ColorHash from 'color-hash';
+import PropTypes from 'prop-types';
 
 var colorHash = new ColorHash({ saturation: 0.8, hue: 0.8 });
 
@@ -79,9 +80,9 @@ class Private extends React.Component {
 
 
   newPrivate(uid,name){
-    this.props.setPrivate({
-      variables: { uid: uid, name: name }
-    })
+    // this.props.setPrivate({
+    //   variables: { uid: uid, name: name }
+    // })
   }
 
   openPrivate(gid, name){
@@ -117,9 +118,8 @@ class Private extends React.Component {
 
           privates += e.unreadCount;
           
-          
           this.props.setCountPriv({
-            variables: { unreaded: privates, chats: directs }
+            variables: { unreaded: 50, chats: directs }
           });
 
 
@@ -171,10 +171,19 @@ class Private extends React.Component {
 
 
                   if(data && data.user && data.user.directs){
+                    let privs = 0;
+                    
 
                     return(
                       <div>{
                         data.user.directs.map((e,i,a)=>{
+
+                          privs = privs + e.unreadCount;
+                          this.props.setCountPriv({
+                            variables: { unr: privs }
+                          });
+
+
                           this.props.getchat.id !== e.id ? subscrMes(subscribeToMore,e.id, refetch) : null ;
 
                           return(
@@ -245,10 +254,17 @@ class Private extends React.Component {
 }
 
 
+// Private.propTypes = {
+//   setCountPriv: PropTypes.shape({
+//     unreaded: PropTypes.number,
+//     chats: PropTypes.array,
+//   }),
+// };
 
 export default compose(
   graphql(cSetCountPrivates, { name: 'setCountPriv' }),
+  graphql(cSetChats, { name: 'cSetChats' }),
+  graphql(cGetChats, { name: 'cGetChats' }),
   graphql(getPrivateChat, { name: 'getchat' }),
   graphql(setPrivateChat, { name: 'setPrivate' }),
 )(Private);
-

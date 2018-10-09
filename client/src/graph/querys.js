@@ -96,16 +96,14 @@ export const appendUser = gql`
 
 export const cGetCountPrivates = gql`
   query countPrivates {
-    unreaded @client
-    chats @client
+    unr @client
   }
 `;
 
 export const cSetCountPrivates = gql`
-  mutation countPrivates($unreaded:Int, $chats: [String]){
-    countPrivates(unreaded: $unreaded, chats: $chats) @client{
-    unreaded 
-    chats
+  mutation countPrivates($unr:Number){
+    countPrivates(unr: $unr) @client{
+      unr
     }
   }
 `;
@@ -131,6 +129,23 @@ export const getPrivateChat = gql`
   query private{
       id @client
       name @client
+      unr @client
+  }
+`;
+
+
+
+export const cGetChats = gql`
+  query chats{
+      chats
+  }
+`;
+
+export const cSetChats = gql`
+  mutation private($name: String!, $id: String!){
+    private(name: $name, id: $id) @client {
+      chats
+    }
   }
 `;
 
@@ -139,6 +154,7 @@ export const setPrivateChat = gql`
     private(name: $name, id: $id) @client {
       id
       name
+      unr
     }
   }
 `;
