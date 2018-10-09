@@ -5,7 +5,7 @@ import ColorHash from 'color-hash';
 import _ from 'lodash';
 import { qauf, _url } from '../constants'
 import 'animate.css';
-import { showCurrentGroup, user, group, selectUser, allUsers } from '../graph/querys';
+import { getPrivateChat, user, group, selectUser, allUsers } from '../graph/querys';
 import FirstLayout from './Layout';
 import ChatPrivate from './ChatPrivate';
 
@@ -27,8 +27,8 @@ class GroupList extends Component {
   }
 
   componentDidMount(){
-    const {showCurrentGroup} = this.props
-    let _grid = showCurrentGroup.currentGroup || localStorage.getItem('grid');
+    const {getPrivateChat} = this.props
+    let _grid = getPrivateChat.currentGroup || localStorage.getItem('grid');
 
     this.loadg()
     this.loadu(_grid)
@@ -47,14 +47,14 @@ class GroupList extends Component {
 
   allUserGet(){
     qauf(allUsers(), _url, localStorage.getItem('auth-token')).then(a=>{
-          if(a && a.data){
-            this.setState({
-              allusers: a.data.users
-            })
-          }
-        }).catch((e)=>{
-          console.warn(e);
-        });
+      if(a && a.data){
+        this.setState({
+          allusers: a.data.users
+        })
+      }
+    }).catch((e)=>{
+      console.warn(e);
+    });
   }
 
   loadg(){
@@ -91,69 +91,69 @@ class GroupList extends Component {
   userAdd(i){
 
     let q = () => {return(`mutation{
-      updateUsersGroup(group: {id: "${this.props.showCurrentGroup.currentGroup}", users: ["${i}"]} )
+      updateUsersGroup(group: {id: "${this.props.getPrivateChat.id}", users: ["${i}"]} )
     }`)} ;
 
     qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
     })
-    .then(()=>{
-      this.loadu(this.props.showCurrentGroup.currentGroup)
-    })
-    .catch((e)=>{
-      console.warn(e);
-    });
+      .then(()=>{
+        this.loadu(this.props.getPrivateChat.id)
+      })
+      .catch((e)=>{
+        console.warn(e);
+      });
   }
 
   render() {
     const {users, _grid, allusers} = this.state;
-    const {showCurrentGroup} = this.props;
+    const {getPrivateChat} = this.props;
 
     let onlyunicusers = _.differenceWith(allusers, users, _.isEqual);
 
 
-    if(showCurrentGroup.currentGroup !== _grid){
-      this.loadu(showCurrentGroup.currentGroup)
+    if(getPrivateChat.currentGroup !== _grid){
+      this.loadu(getPrivateChat.currentGroup)
     }
 
     return(
       <FirstLayout barstate="chat">
         <div className="f-container">
           <div className="f-column">
-          {
-            this.props.showCurrentGroup && this.props.showCurrentGroup.currentGroup ? <ChatPrivate name={this.props.showCurrentGroup.groupName} id={this.props.showCurrentGroup.currentGroup} priv={0} /> : (<div className="errorMessage">Выберите чат</div>)
-          }
+            {
+              this.props.getPrivateChat && this.props.getPrivateChat.id ? <ChatPrivate name={this.props.getPrivateChat.name} id={this.props.getPrivateChat.id} priv={0} /> : (<div className="errorMessage">Выберите чат</div>)
+            }
           </div>
           <div className="f-column">
 
-          {
-            this.props.showCurrentGroup && this.props.showCurrentGroup.currentGroup ? (
-              <div className="tab-roll">
-              <div className="header"><h4>Выберите пользователя</h4></div>
-              <div className="content">
-                <div className="content-scroll">
-                  {
-                    users.map(
-                      (e,i,a)=>{
-                        return(
-                          <div className="username" role="presentation" style={{color: colorHash.hex(e.username)}} key={'usr-'+i} onClick={()=>this.userSelect(e.username, e.id)}>
-                            {e.username}
-                            {' '}
-                            {localStorage.getItem('userid') === e.id ? (<span className="me"> - это я</span>) : '' }
-                            {' '}
-                          </div>
+            {
+              this.props.getPrivateChat && this.props.getPrivateChat.id ? (
+                <div className="tab-roll">
+                  <div className="header"><h4>Выберите пользователя</h4></div>
+                  <div className="content">
+                    <div className="content-scroll">
+                      {
+                        users.map(
+                          (e,i,a)=>{
+                            return(
+                              <div className="username" role="presentation" style={{color: colorHash.hex(e.username)}} key={'usr-'+i} onClick={()=>this.userSelect(e.username, e.id)}>
+                                {e.username}
+                                {' '}
+                                {localStorage.getItem('userid') === e.id ? (<span className="me"> - это я</span>) : '' }
+                                {' '}
+                              </div>
+                            )
+                          }
                         )
                       }
-                    )
-                  }
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            ): null
-          }
+              ): null
+            }
 
-              {
-                this.props.showCurrentGroup && this.props.showCurrentGroup.currentGroup ? (
-                  <div className="tab-roll">
+            {
+              this.props.getPrivateChat && this.props.getPrivateChat.id ? (
+                <div className="tab-roll">
                   <div className="header"><h4>Добавить пользователя</h4></div>
                   <div className="content">
                     <div className="content-scroll">
@@ -172,8 +172,8 @@ class GroupList extends Component {
                     </div>
                   </div>
                 </div>
-                ) : null
-              }
+              ) : null
+            }
           </div>
         </div>
       </FirstLayout>
@@ -183,13 +183,14 @@ class GroupList extends Component {
 
 
 GroupList.propTypes = {
-  showCurrentGroup: PropTypes.shape({
-    currentGroup: PropTypes.string
+  getPrivateChat: PropTypes.shape({
+    id: PropTypes.string,
+    name:  PropTypes.string,
   }).isRequired,
   selectUser: PropTypes.func.isRequired
 };
 
 export default compose(
-  graphql(showCurrentGroup, { name: 'showCurrentGroup' }),
+  graphql(getPrivateChat, { name: 'getPrivateChat' }),
   graphql(selectUser, { name: 'selectUser' }),
 )(GroupList);

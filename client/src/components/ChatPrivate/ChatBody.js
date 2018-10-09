@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ColorHash from 'color-hash';
 import moment from 'moment';
 import { Query, Mutation, Subscription, graphql, compose  } from "react-apollo";
-import { showCurrentGroup, ADD_MUT, getPrivateChat, GR_QUERY, PRIV_QUERY, MESSAGE_CREATED, MESSAGE_READ, MESSAGEREAD_MUT, messRead, MESSAGE_QUERY, messageRead_MUT } from '../../graph/querys';
+import { ADD_MUT, getPrivateChat, GR_QUERY, PRIV_QUERY, MESSAGE_CREATED, MESSAGE_READ, MESSAGEREAD_MUT, messRead, MESSAGE_QUERY, messageRead_MUT } from '../../graph/querys';
 import AddNew from './AddNew';
 import Loading from '../Loading';
 import { MsgCheck, MsgDblcheck, MsgDblcheckAck } from '../Svg/index';
@@ -71,7 +71,7 @@ const MessagesListData = (params) => {
 
             },
             onError: (err)=>{
-              console.log('ERR-----',err)
+              console.warn('ERR-----',err)
             },
           })
         };
@@ -97,11 +97,6 @@ export class MessagesList extends Component {
     this.state = {
     }
   }
-
-  componentDidMount(){
-    console.log("MOUNTED!",this.props)
-  }
-
   componentDidMount() {
     this.props.subscribeToNewMessages();
     toBottom();
@@ -160,7 +155,7 @@ export class MessagesList extends Component {
 
                   qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
                     if(a && a.data){
-                      console.log("Answer about read",a);
+                      console.warn("Answer about read",a);
                     }
                   }).catch((e)=>{
                     console.warn("Err read",e);
@@ -247,7 +242,7 @@ class Fetch extends Component {
 
   render(){
     let { id, priv } = this.props;
-    let { messages } = this.state;
+    // let { messages } = this.state;
 
     let _query = GR_QUERY;
 
@@ -337,8 +332,8 @@ const subscribeToRead = (subscribeToMore, id) =>{
     updateQuery: (prev, { subscriptionData }) => {
       if (!subscriptionData.data) return prev;
 
-      console.log("messread subs",subscriptionData)
-      console.log("messread subs prev", prev)
+      // console.warn("messread subs",subscriptionData)
+      // console.warn("messread subs prev", prev)
 
       return Object.assign({}, prev, {
         message:{
@@ -350,14 +345,14 @@ const subscribeToRead = (subscribeToMore, id) =>{
 
     },
     onError: (err)=>{
-      console.log('ERR-----',err)
+      console.warn('ERR-----',err)
     },
   })
 }
 
 ChatBody.propTypes = {
-  showCurrentGroup: PropTypes.shape({
-    currentGroup: PropTypes.string
+  getchat: PropTypes.shape({
+    id: PropTypes.string
   }).isRequired,
 };
 
@@ -370,7 +365,6 @@ ChatBody.defaultProps = {
 };
 
 export default compose(
-  graphql(showCurrentGroup, { name: 'showCurrentGroup' }),
   graphql(getPrivateChat, { name: 'getchat' }),
 )(ChatBody);
 
