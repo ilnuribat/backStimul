@@ -61,8 +61,8 @@ const prelink = ApolloLink.from([stateLink, httpLinkWithAuthToken]);
 const wsLink = new WebSocketLink({
   uri: `ws://${_url}/graphql`,
   options: {
-    // lazy: true,
-    reconnect: true,
+    lazy: true,
+    // reconnect: true,
     connectionParams() {
       return { Authorization: `Bearer ${localStorage.getItem('auth-token')}` };
     },

@@ -137,6 +137,9 @@ export class MessagesList extends Component {
             datas.map((e,i,a)=>{
               n++;
               let {node} = e;
+
+              console.log(e)
+
               let tr = 'them';
               let createdAt = node.createdAt || "none";
               let text = node.text || "none";
