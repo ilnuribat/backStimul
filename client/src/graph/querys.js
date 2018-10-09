@@ -78,6 +78,25 @@ export const getById = (id) => {
         }
         `)
 };
+
+
+export const meSet = gql`
+  mutation me($meid: String, $mename: String, $memail: String) {
+    me(meid: $meid, mename: $mename, memail: $memail) @client {
+      meid
+      mename
+      memail
+    }
+  }
+`;
+export const meGet = gql`
+  query me{
+      meid @client
+      mename @client
+      memail @client
+    }
+`;
+
 export const selectUser = gql`
   mutation selectUser($userName: String!, $userId: String!) {
     selectUser(userName: $userName, userId: $userId) @client {
@@ -292,6 +311,11 @@ export const MESSAGE_CREATED = gql`
       messageAdded(groupId: $id){
           id
           text
+          from{
+            id
+            username
+          }
+          createdAt
           userId
           isRead
       }

@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { graphql, compose  } from "react-apollo";
 import {quf, AUTH_TOKEN} from '../constants';
-
+import { meSet, meGet } from '../graph/querys';
 
 class Login extends Component {
   constructor(props) {
@@ -24,7 +25,9 @@ class Login extends Component {
 
   _confirm = async () => {
     const { email, password, login } = this.state;
-    const { lookft } = this.props
+    const { lookft } = this.props;
+
+    
 
     this.setState({loginerror: ''})
 
@@ -47,10 +50,12 @@ class Login extends Component {
       else if(result && result.data && result.data.login){
         const { jwt, username, id } = result.data.login;
 
-        if(!jwt || !username) return( this.setState({loginerror: `ошибка! сервер не дал ответ`}) )
-        this._saveUserData(jwt, username, id)
+        if(!jwt || !username || !email) return( this.setState({loginerror: `ошибка! сервер не дал ответ`}) );
+
+        this._saveUserData(jwt, username, id);
+        
       }else{
-        this.setState({loginerror: `ошибка! Свистать все на верх!`})
+        this.setState({loginerror: `ошибка! Свистать всеХ на верХ!`})
 
         return false;
       }
@@ -62,15 +67,25 @@ class Login extends Component {
   }
 
   _saveUserData = (token, name, id) => {
+    let { meSet } = this.props;
+
+    meSet({
+      meid: id,
+      mename: name,
+      memail: name,
+    });
+
     localStorage.setItem('userid', id);
+    localStorage.setItem('usermail', name);
     localStorage.setItem('username', name);
-    localStorage.setItem(AUTH_TOKEN, token)
+    localStorage.setItem(AUTH_TOKEN, token);
   }
 
   render() {
-    const authToken = localStorage.getItem(AUTH_TOKEN)
+    
+    const authToken = localStorage.getItem(AUTH_TOKEN);
     const { loginerror } = this.state;
-    const { history } = this.props
+    const { history, meGet, meSet } = this.props;
 
     return (
 
@@ -90,10 +105,22 @@ class Login extends Component {
             <div className="auth">
               <div className="logo">
               </div>
+
+              <div className="mess">{ meGet.meid}</div>
+              <div className="mess">{ meGet.mename}</div>
+              <div className="mess">{ meGet.memail}</div>
+              
+
               <div
                 className="button"
                 role="presentation"
                 onClick={() => {
+                  meSet({
+                    meid: "",
+                    mename: "",
+                    memail: "",
+                  });
+
                   localStorage.removeItem(AUTH_TOKEN)
                   localStorage.removeItem('username')
                   localStorage.removeItem('userid')
@@ -119,4 +146,7 @@ mutation{
 }
 `;
 
-export default Login;
+export default compose(
+  graphql(meSet, { name: 'meSet' }),
+  graphql(meGet, { name: 'meGet' }),
+)(Login);

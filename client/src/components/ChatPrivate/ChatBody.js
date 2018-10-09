@@ -39,9 +39,7 @@ const MessagesListData = (params) => {
             updateQuery: (prev, { subscriptionData }) => {
 
               if (!subscriptionData.data) return prev;
-              subscriptionData.data.messageAdded.from = {id: localStorage.getItem("userid"),username: localStorage.getItem("username"), __typename: "User"};
-              subscriptionData.data.messageAdded.createdAt = Date.now();
-              subscriptionData.data.messageAdded.isRead = false;
+              // subscriptionData.data.messageAdded.isRead = false;
               const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
                 __typename: "MessageEdge" };
 
@@ -97,6 +95,7 @@ export class MessagesList extends Component {
     this.state = {
     }
   }
+  
   componentDidMount() {
     this.props.subscribeToNewMessages();
     toBottom();
@@ -104,13 +103,14 @@ export class MessagesList extends Component {
   }
 
   componentDidUpdate(){
-    console.warn("UPDATE!")
+    console.warn("UPDATE!");
     if (ref1) ref1();
     // this.props.subscribeToNewMessages();
     toBottom();
   }
 
   render(){
+    if (ref1) ref1();
     const { priv, data, variables } = this.props;
 
     console.warn("our group is: ", variables.id )

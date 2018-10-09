@@ -53,6 +53,9 @@ const stateLink = withClientState({
     id: "",
     name: "",
     unr: 0,
+    meid: "",
+    mename: "",
+    memail: "",
   }
 });
 
@@ -62,7 +65,7 @@ const wsLink = new WebSocketLink({
   uri: `ws://${_url}/graphql`,
   options: {
     lazy: true,
-    // reconnect: true,
+    reconnect: true,
     connectionParams() {
       return { Authorization: `Bearer ${localStorage.getItem('auth-token')}` };
     },

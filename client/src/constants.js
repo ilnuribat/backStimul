@@ -57,5 +57,6 @@ export const grid = 8;
 export const borderRadius = 2;
 
 export const _url = process.env.URL || '185.168.187.103:8500' || 'localhost:8500';
+// export const _url = process.env.URL || '185.168.187.103:8500' || 'localhost:8500';
 
 export const AUTH_TOKEN = 'auth-token';
