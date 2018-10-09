@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql, compose, Query  } from "react-apollo";
-import { getPrivateChat, setPrivateChat, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED, cMutCountPrivates } from '../../graph/querys';
+import { getPrivateChat, setPrivateChat, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED, cSetCountPrivates } from '../../graph/querys';
 import { qauf, _url } from '../../constants';
 import Loading from '../Loading';
 import ColorHash from 'color-hash';
@@ -109,8 +109,22 @@ class Private extends React.Component {
   }
 
   allPrivates(){
-    if(this.state.directs){
-      this.state.directs.map((e,i,a)=>{
+    let {directs} = this.state;
+    if(directs){
+      let privates = 0;
+
+        directs.map((e,i,a)=>{
+
+          privates += e.unreadCount;
+          
+          
+          this.props.setCountPriv({
+            variables: { unreaded: privates, chats: directs }
+          });
+
+
+
+
         return(
           <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
             {e.name}
@@ -233,7 +247,7 @@ class Private extends React.Component {
 
 
 export default compose(
-  graphql(cMutCountPrivates, { name: 'countPriv' }),
+  graphql(cSetCountPrivates, { name: 'setCountPriv' }),
   graphql(getPrivateChat, { name: 'getchat' }),
   graphql(setPrivateChat, { name: 'setPrivate' }),
 )(Private);
