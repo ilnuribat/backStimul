@@ -62,7 +62,7 @@ module.exports = {
         ...message,
       });
 
-      await UserGroup.update({
+      await UserGroup.updateOne({
         userId: user.id,
         groupId: message.groupId,
       }, {
@@ -71,7 +71,7 @@ module.exports = {
         },
       });
 
-      await Group.update({
+      await Group.updateOne({
         _id: message.groupId,
       }, {
         $set: {
@@ -145,6 +145,7 @@ module.exports = {
       subscribe: withFilter(
         () => pubsub.asyncIterator([MESSAGED_ADDED]),
         async ({ messageAdded: { groupId: mGroupId } }, { groupId }, ctx) => {
+          console.log('this is only group');
           if (groupId) {
             return mGroupId.toString() === groupId;
           }
