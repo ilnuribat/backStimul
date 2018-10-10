@@ -38,7 +38,7 @@ async function updateLastCursor() {
       }
 
       console.log(lastMessage);
-      await models.UserGroup.update({ _id: userGroup._id }, {
+      await models.UserGroup.updateOne({ _id: userGroup._id }, {
         $set: { lastReadCursor: lastMessage._id }
       });
     }
