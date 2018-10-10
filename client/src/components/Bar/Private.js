@@ -78,8 +78,9 @@ class Private extends React.Component {
 
   openPrivate(gid, name){
     this.props.setPrivate({
-      variables: { id: gid, name: name }
+      variables: { id: gid, name: name, unr: 0 }
     })
+
   }
 
 
@@ -140,6 +141,7 @@ class Private extends React.Component {
 
 
                           this.props.getchat.id !== e.id ? subscrMes(subscribeToMore,e.id, refetch) : null ;
+                          console.warn (e.name, e.unreadCount)
 
                           return(
                             <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>

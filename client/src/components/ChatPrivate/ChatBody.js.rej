@@ -1,0 +1,88 @@
+diff a/client/src/components/ChatPrivate/ChatBody.js b/client/src/components/ChatPrivate/ChatBody.js	(rejected hunks)
+@@ -39,7 +39,9 @@
+             updateQuery: (prev, { subscriptionData }) => {
+ 
+               if (!subscriptionData.data) return prev;
+-              // subscriptionData.data.messageAdded.isRead = false;
++              subscriptionData.data.messageAdded.from = {id: localStorage.getItem("userid"),username: localStorage.getItem("username"), __typename: "User"};
++              subscriptionData.data.messageAdded.createdAt = Date.now();
++              subscriptionData.data.messageAdded.isRead = false;
+               const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
+                 __typename: "MessageEdge" };
+ 
+@@ -95,7 +97,6 @@
+     this.state = {
+     }
+   }
+-  
+   componentDidMount() {
+     this.props.subscribeToNewMessages();
+     toBottom();
+@@ -103,14 +104,13 @@
+   }
+ 
+   componentDidUpdate(){
+-    console.warn("UPDATE!");
++    console.warn("UPDATE!")
+     if (ref1) ref1();
+     // this.props.subscribeToNewMessages();
+     toBottom();
+   }
+ 
+   render(){
+-    if (ref1) ref1();
+     const { priv, data, variables } = this.props;
+ 
+     console.warn("our group is: ", variables.id )
+@@ -120,6 +120,7 @@
+     let same = false;
+     let usid = "";
+ 
++
+     if(priv && data.direct && data.direct.messages && data.direct.messages.edges ){
+       datas = data.direct.messages.edges;
+     }else if(data.group && data.group.messages && data.group.messages.edges ){
+@@ -137,9 +138,6 @@
+             datas.map((e,i,a)=>{
+               n++;
+               let {node} = e;
+-
+-              console.log(e)
+-
+               let tr = 'them';
+               let createdAt = node.createdAt || "none";
+               let text = node.text || "none";
+@@ -171,12 +169,14 @@
+ 
+               return(
+                 <div className={'msg '+ tr} key={'chat-'+i} from={id}>
++                  {node.userId} {node.from.username} {uid}
+                   <div className="msg-flex">
+                     {same ? ('') : (
+                       <div className="msg-user" style={{color: colorHash.hex(username)}}>
+                         {username}:</div>)}
+                     <blockquote className="msgs">
+                       <div className="text prewr">{messageText}</div>
++                      <div>{node.id}</div>
+                       <div className="f-row">
+                         { id === uid ? (
+                           <div>
+@@ -244,6 +244,8 @@
+ 
+   render(){
+     let { id, priv } = this.props;
++    // let { messages } = this.state;
++
+     let _query = GR_QUERY;
+ 
+     priv ? _query = PRIV_QUERY : null;
+@@ -332,6 +334,9 @@
+     updateQuery: (prev, { subscriptionData }) => {
+       if (!subscriptionData.data) return prev;
+ 
++      // console.warn("messread subs",subscriptionData)
++      // console.warn("messread subs prev", prev)
++
+       return Object.assign({}, prev, {
+         message:{
+           isRead: true,

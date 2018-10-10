@@ -52,6 +52,7 @@ class LeftNav extends Component {
                 data.user.directs.map((e,i)=>{
                   privs = privs + e.unreadCount;
                 })
+
                 this.props.cSetCountPrivates({
                   variables: { unr: privs }
                 });

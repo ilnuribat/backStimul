@@ -83,7 +83,7 @@ const link = split(
   prelink,
 );
 
-export const client = new ApolloClient({
+const client = new ApolloClient({
   link,
   cache
 })

@@ -39,9 +39,7 @@ const MessagesListData = (params) => {
             updateQuery: (prev, { subscriptionData }) => {
 
               if (!subscriptionData.data) return prev;
-              subscriptionData.data.messageAdded.from = {id: localStorage.getItem("userid"),username: localStorage.getItem("username"), __typename: "User"};
-              subscriptionData.data.messageAdded.createdAt = Date.now();
-              subscriptionData.data.messageAdded.isRead = false;
+              // subscriptionData.data.messageAdded.isRead = false;
               const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
                 __typename: "MessageEdge" };
 
@@ -97,6 +95,7 @@ export class MessagesList extends Component {
     this.state = {
     }
   }
+  
   componentDidMount() {
     this.props.subscribeToNewMessages();
     toBottom();
@@ -104,13 +103,14 @@ export class MessagesList extends Component {
   }
 
   componentDidUpdate(){
-    console.warn("UPDATE!")
+    console.warn("UPDATE!");
     if (ref1) ref1();
     // this.props.subscribeToNewMessages();
     toBottom();
   }
 
   render(){
+    if (ref1) ref1();
     const { priv, data, variables } = this.props;
 
     console.warn("our group is: ", variables.id )
@@ -119,7 +119,6 @@ export class MessagesList extends Component {
     let uid = localStorage.getItem('userid');
     let same = false;
     let usid = "";
-
 
     if(priv && data.direct && data.direct.messages && data.direct.messages.edges ){
       datas = data.direct.messages.edges;
@@ -138,6 +137,9 @@ export class MessagesList extends Component {
             datas.map((e,i,a)=>{
               n++;
               let {node} = e;
+
+              console.log(e)
+
               let tr = 'them';
               let createdAt = node.createdAt || "none";
               let text = node.text || "none";
@@ -169,14 +171,12 @@ export class MessagesList extends Component {
 
               return(
                 <div className={'msg '+ tr} key={'chat-'+i} from={id}>
-                  {node.userId} {node.from.username} {uid}
                   <div className="msg-flex">
                     {same ? ('') : (
                       <div className="msg-user" style={{color: colorHash.hex(username)}}>
                         {username}:</div>)}
                     <blockquote className="msgs">
                       <div className="text prewr">{messageText}</div>
-                      <div>{node.id}</div>
                       <div className="f-row">
                         { id === uid ? (
                           <div>
@@ -244,8 +244,6 @@ class Fetch extends Component {
 
   render(){
     let { id, priv } = this.props;
-    // let { messages } = this.state;
-
     let _query = GR_QUERY;
 
     priv ? _query = PRIV_QUERY : null;
@@ -333,9 +331,6 @@ const subscribeToRead = (subscribeToMore, id) =>{
     variables: { id: id },
     updateQuery: (prev, { subscriptionData }) => {
       if (!subscriptionData.data) return prev;
-
-      // console.warn("messread subs",subscriptionData)
-      // console.warn("messread subs prev", prev)
 
       return Object.assign({}, prev, {
         message:{
