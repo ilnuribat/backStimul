@@ -1,0 +1,12 @@
+type TaskStatus {
+  id: ID
+  name: String
+}
+
+type Glossary {
+  taskStatuses: [TaskStatus]
+}
+
+type Query {
+  glossary: Glossary
+}

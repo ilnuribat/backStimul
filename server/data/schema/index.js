@@ -11,4 +11,5 @@ module.exports = mergeTypes([
   getSchema('group'),
   getSchema('message'),
   getSchema('direct'),
+  getSchema('glossary'),
 ]);
