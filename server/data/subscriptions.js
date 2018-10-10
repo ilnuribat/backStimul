@@ -1,7 +1,5 @@
 const { $$asyncIterator } = require('iterall');
-const { PubSub } = require('apollo-server');
-
-const pubsub = new PubSub();
+const { pubsub } = require('./resolvers/chat');
 
 pubsub.asyncAuthIterator = (messages, authPromise) => {
   const asyncIterator = pubsub.asyncIterator(messages);
