@@ -10,6 +10,9 @@ const {
 
 module.exports = {
   Direct: {
+    async lastMessage({ id }) {
+      return Message.findOne({ groupId: id }).sort({ _id: -1 });
+    },
     name: async (direct, args, ctx) => {
       if (direct.code && direct.code.indexOf('|') === -1) {
         return direct.name;

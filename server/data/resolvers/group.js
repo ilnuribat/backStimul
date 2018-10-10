@@ -12,6 +12,9 @@ module.exports = {
     assignedTo(group) {
       return group.assignedTo ? group.assignedTo.toString() : null;
     },
+    async lastMessage({ id }) {
+      return Message.findOne({ groupId: id }).sort({ _id: -1 });
+    },
     async users(parent) {
       const { id } = parent;
       const usersGroup = await UserGroup.find({ groupId: id });

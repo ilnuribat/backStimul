@@ -6,6 +6,7 @@ type Group {
   unreadCount: Int
   status: Int
   assignedTo: ID
+  lastMessage: Message
 }
 
 input GroupInput {
