@@ -9,6 +9,7 @@ const schema = new Schema({
     default: () => new Date(),
   },
   createdAt_: Date,
+  isDirect: Boolean,
 });
 
 // schema.virtual('createdAt').get(function () {

@@ -57,8 +57,17 @@ module.exports = {
         throw new Error('forbidden');
       }
 
+      const group = await Group.findById(message.groupId);
+
+      if (!group) {
+        throw new Error('no such group');
+      }
+
+      const isDirect = !!group.code;
+
       const createdMessage = await Message.create({
         userId: user.id,
+        isDirect,
         ...message,
       });
 
@@ -145,7 +154,6 @@ module.exports = {
       subscribe: withFilter(
         () => pubsub.asyncIterator([MESSAGED_ADDED]),
         async ({ messageAdded: { groupId: mGroupId } }, { groupId }, ctx) => {
-          console.log('this is only group');
           if (groupId) {
             return mGroupId.toString() === groupId;
           }
