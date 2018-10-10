@@ -1,3 +1,4 @@
+require('dotenv').load();
 
 export const colors = {
   blue: {
@@ -21,7 +22,7 @@ export const colors = {
 };
 
 export const quf = (query) => {
-  return fetch(`http://${_uri}/`, {
+  return fetch(`http://${_url}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -36,7 +37,7 @@ export const quf = (query) => {
 };
 export const qauf = (query, uri, auth) => {
 
-  return fetch(`http://${uri}/`, {
+  return fetch(`http://${_url}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -55,10 +56,7 @@ export const grid = 8;
 
 export const borderRadius = 2;
 
-export const _fullurl = 'http://185.168.187.103:8500/';
-export const url = '185.168.187.103:8500/';
-export const _api = '185.168.187.103:4060';
-export const _url = '185.168.187.103:8500';
-export const _uri = '185.168.187.103:8500';
+export const _url = process.env.URL || '185.168.187.103:8500' || 'localhost:8500';
+// export const _url = process.env.URL || '185.168.187.103:8500' || 'localhost:8500';
 
 export const AUTH_TOKEN = 'auth-token';

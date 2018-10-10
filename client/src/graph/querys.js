@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { Mutation } from 'react-apollo';
 
 export const updTask = (...params) => {
   return (`mutation{
@@ -77,6 +78,25 @@ export const getById = (id) => {
         }
         `)
 };
+
+
+export const meSet = gql`
+  mutation meSet($meid: String, $mename: String, $memail: String) {
+    meSet(meid: $meid, mename: $mename, memail: $memail) @client {
+      meid
+      mename
+      memail
+    }
+  }
+`;
+export const meGet = gql`
+  query meGet{
+      meid @client
+      mename @client
+      memail @client
+    }
+`;
+
 export const selectUser = gql`
   mutation selectUser($userName: String!, $userId: String!) {
     selectUser(userName: $userName, userId: $userId) @client {
@@ -90,6 +110,20 @@ export const appendUser = gql`
   query appendUser {
     userName @client
     userId @client
+  }
+`;
+
+export const cGetCountPrivates = gql`
+  query countPrivates {
+    unr @client
+  }
+`;
+
+export const cSetCountPrivates = gql`
+  mutation countPrivates($unr:Number){
+    countPrivates(unr: $unr) @client{
+      unr
+    }
   }
 `;
 
@@ -114,6 +148,23 @@ export const getPrivateChat = gql`
   query private{
       id @client
       name @client
+      unr @client
+  }
+`;
+
+
+
+export const cGetChats = gql`
+  query chats{
+      chats
+  }
+`;
+
+export const cSetChats = gql`
+  mutation private($name: String!, $id: String!){
+    private(name: $name, id: $id) @client {
+      chats
+    }
   }
 `;
 
@@ -122,6 +173,7 @@ export const setPrivateChat = gql`
     private(name: $name, id: $id) @client {
       id
       name
+      unr
     }
   }
 `;
@@ -159,17 +211,10 @@ export const privates = () => `
 export const PRIVS_QUERY = gql`
     query{
       user{
-        id
         directs{
           id
           name
-          messages{
-            edges{
-              node{
-                id
-              }
-            }
-          }
+          unreadCount
         }
       }
     }
@@ -178,11 +223,15 @@ export const PRIVS_QUERY = gql`
 export const PRIV_QUERY = gql`
   query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       direct(id: $id ){
+          unreadCount
           messages(messageConnection: $messageConnection) {
               edges {
                   cursor
                   node {
+
+                      isRead
                       id
+                      userId
                       from {
                       id
                       username
@@ -195,10 +244,39 @@ export const PRIV_QUERY = gql`
       }
   }
 `;
+
+export const MESSAGE_QUERY = gql`
+  query message($id: ID!){
+    message(id: $id ){
+          isRead
+          text
+      }
+  }
+`;
+
+export const MESSAGE_SUBS = gql`
+  subscription message($id: ID!){
+    message(id: $id ){
+          isRead
+      }
+  }
+`;
+
+export const MESSAGEREAD_MUT = gql`
+  mutation message($id: ID!){
+    messageRead(id: $id )
+  }
+`;
+
+export const messageRead_MUT = (id)=> {return(`
+mutation {
+  messageRead(id: "${id}" )
+}
+`)};
+
 export const GR_QUERY = gql`
   query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       group(id: $id ){
-          id
           name
           users{
               id
@@ -208,7 +286,9 @@ export const GR_QUERY = gql`
               edges {
                   cursor
                   node {
+                      isRead
                       id
+                      userId
                       from {
                       id
                       username
@@ -232,11 +312,20 @@ export const MESSAGE_CREATED = gql`
           id
           text
           from{
-                  id
-              }
-              to{
-                  id
-              }
+            id
+            username
+          }
+          createdAt
+          userId
+          isRead
+      }
+  }
+`;
+
+export const MESSAGE_READ = gql`
+  subscription messageRead($id: ID!){
+      messageRead(id: $id){
+        isRead
       }
   }
 `;
@@ -261,4 +350,8 @@ mutation Add($id: String!, $text: String! ){
       }
     }
   }`;
+
+export const messRead = gql`{
+  id
+}`;
 

@@ -4,19 +4,19 @@ const connectToMongo = require('./connectDB');
 const { HTTP_PORT, JWT_SECRET } = require('./config');
 const { User } = require('./data/models');
 const { logger } = require('./logger');
-const schema = require('./data/schema');
+const typeDefs = require('./data/schema');
 const resolvers = require('./data/resolvers');
-const { Message } = require('./data/models');
 
 
 const server = new ApolloServer({
   resolvers,
-  typeDefs: schema,
+  typeDefs,
+  context: async (args) => {
+    const { req, connection } = args;
 
-  context: async ({ req = { body: {} } }) => {
-    const ctx = { };
+    const { context: ctx = {} } = connection || {};
 
-    if (!req.headers) {
+    if (ctx.user) {
       return ctx;
     }
 
@@ -26,18 +26,19 @@ const server = new ApolloServer({
       return ctx;
     }
 
-    let payload;
+    let jwtBody;
 
     try {
-      payload = jwt.verify(token, JWT_SECRET);
+      jwtBody = jwt.verify(token, JWT_SECRET);
     } catch (err) {
       logger.debug('invalid jwt');
 
       throw new Error('invalid jwt');
     }
 
-    const { id } = payload;
+    const { id } = jwtBody;
     const user = await User.findById(id);
+
 
     return {
       user,
@@ -47,7 +48,6 @@ const server = new ApolloServer({
   subscriptions: {
     async onConnect(connectionParams, websocket, context) {
       const [type = '', body] = connectionParams.Authorization.split(' ');
-
 
       if (type.toLowerCase() !== 'bearer') {
         throw new Error('its not bearer');
@@ -66,30 +66,11 @@ const server = new ApolloServer({
       }
 
       Object.assign(context, { user });
+
+      return context;
     },
   },
 });
-
-// /* eslint-disable */
-// async function migrate() {
-//   const cursor = await Message.findOne().cursor();
-//   let doc = await cursor.next();
-
-//   while (doc) {
-//     await doc.update({
-//       createdAt: doc.createdAt_ || doc.createdAt,
-//     });
-
-//     await doc.update({
-//       $unset: {
-//         createdAt_: '',
-//       },
-//     });
-
-//     doc = await cursor.next();
-//   }
-// }
-// /* eslint-enable */
 
 async function start() {
   await connectToMongo();

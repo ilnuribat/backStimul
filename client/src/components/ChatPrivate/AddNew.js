@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { graphql, compose  } from "react-apollo";
 import PropTypes from 'prop-types';
 import ColorHash from 'color-hash';
-import { selectUser, showCurrentGroup, appendUser, getPrivateChat } from '../../graph/querys';
+import { selectUser, appendUser, getPrivateChat } from '../../graph/querys';
 
 
 let colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
@@ -46,9 +46,9 @@ class AddNew extends Component {
 
   submitHandler = e => {
     e.preventDefault()
-    
+
     let { input } = this.state;
-    const { add, showCurrentGroup, appendUser, getchat } = this.props;
+    const { add, appendUser, getchat } = this.props;
     let inp = input[0];
 
     inp = inp.replace(/\s\s/g,'');
@@ -58,7 +58,7 @@ class AddNew extends Component {
     this.setState({
       input: [''],
     })
-    let gid = showCurrentGroup.currentGroup || getchat.id || localStorage.getItem('gid') || 1;
+    let gid =  getchat.id || localStorage.getItem('gid') || 1;
 
     let message = appendUser.userName?'@'+appendUser.userName + ' ' + inp:inp;
 
@@ -133,16 +133,12 @@ AddNew.propTypes = {
   appendUser: PropTypes.shape({
     userName: PropTypes.string
   }).isRequired,
-  showCurrentGroup: PropTypes.shape({
-    currentGroup: PropTypes.string
-  }).isRequired,
   getchat: PropTypes.shape({
     id: PropTypes.string
   }).isRequired,
 };
 
 export default compose(
-  graphql(showCurrentGroup, { name: 'showCurrentGroup' }),
   graphql(selectUser, { name: 'selectUser' }),
   graphql(appendUser, { name: 'appendUser' }),
   graphql(getPrivateChat, { name: 'getchat' }),

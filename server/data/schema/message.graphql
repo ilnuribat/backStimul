@@ -5,6 +5,8 @@ type Message {
   from: User
   to: Group
   userId: String
+  groupId: String
+  isRead: Boolean
 }
 
 type MessageConnection {
@@ -27,6 +29,11 @@ input MessageInput {
   text: String!
 }
 
+type MessageReadEvent {
+  id: ID!
+  isRead: Boolean
+}
+
 type Query {
   messages(groupId: String!): [Message]
   message(id: ID!): Message
@@ -34,8 +41,10 @@ type Query {
 
 type Mutation {
   createMessage(message: MessageInput): Message
+  messageRead(id: ID!): Boolean
 }
 
 type Subscription {
-  messageAdded(groupId: String!): Message
+  messageAdded(groupId: String): Message
+  messageRead(id: ID!): MessageReadEvent
 }
