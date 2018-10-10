@@ -1,12 +1,13 @@
 import React, { Component, Fragment } from 'react';
-import { graphql, compose } from "react-apollo";
+import { graphql, compose, Query } from "react-apollo";
 import PropTypes from 'prop-types';
 
 import Private from './Nav/Private';
 import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';
+import Loading from './Loading';
 
-import { getUnreadCount} from '../graph/querys';
+import { PRIVS_QUERY, cSetCountPrivates } from '../graph/querys';
 
 class LeftNav extends Component {
   constructor(props) {
@@ -20,16 +21,46 @@ class LeftNav extends Component {
   }
 
   render() {
-    const { getUnreadCount } = this.props;
+    // const { getUnreadCount } = this.props;
 
-    console.warn ("user: " , getUnreadCount.user)
+    // console.warn ("user: " , getUnreadCount.user)
 
     return (
       <Fragment>
         <nav className="left-nav">
           <Profile />
           <Groups />
-          <Private />
+          <Query query={PRIVS_QUERY}>
+            {({ loading, error, data, refetch, subscribeToMore }) => {
+              if (loading){
+                return (
+                  <div style={{ paddingTop: 20 }}>
+                    <Loading />
+                  </div>
+                );
+              }
+              if (error){
+                return (
+                  <div style={{ paddingTop: 20 }}>
+                    <Loading />
+                  </div>
+                );
+              }
+              if(data && data.user && data.user.directs){
+                let privs = 0;
+
+                data.user.directs.map((e,i)=>{
+                  privs = privs + e.unreadCount;
+                })
+                this.props.cSetCountPrivates({
+                  variables: { unr: privs }
+                });
+              }
+
+              return <Private />
+            }}
+          </Query>
+
         </nav>
       </Fragment>
     )
@@ -45,15 +76,13 @@ LeftNav.propTypes = {
       groups: PropTypes.array,
     }),
   }),
+  cSetCountPrivates: PropTypes.func
 };
 
 
 export default compose(
-  graphql(getUnreadCount, { name: 'getUnreadCount' }),
+  graphql(cSetCountPrivates, { name: 'cSetCountPrivates' }),
 )(LeftNav);
-
-
-
 
 
 // {/* <div className="nav-button" name="users" onClick={() => { this.props.lstate('users') }}>

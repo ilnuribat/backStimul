@@ -23,7 +23,7 @@ class Private extends React.Component {
 
     const { getCountPriv } = this.props;
 
-    console.warn (getCountPriv.unr)
+    // console.warn (getCountPriv.unr)
 
     return(
       <div className="nav-button" name="private">
