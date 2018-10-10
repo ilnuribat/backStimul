@@ -1,12 +1,10 @@
-const { PubSub, withFilter } = require('apollo-server');
+const { withFilter } = require('apollo-server');
 const moment = require('moment');
 const {
   Message, User, Group, UserGroup,
 } = require('../models');
+const { MESSAGE_READ, pubsub, MESSAGED_ADDED } = require('./chat');
 
-const pubsub = new PubSub();
-const MESSAGED_ADDED = 'MESSAGED_ADDED';
-const MESSAGE_READ = 'MESSAGE_READ';
 
 module.exports = {
   Message: {

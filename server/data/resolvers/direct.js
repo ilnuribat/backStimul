@@ -1,8 +1,12 @@
+const { withFilter } = require('apollo-server');
 const {
   Group, Message, User,
 } = require('../models');
 const GroupResolver = require('./group');
-const { getPageInfo, formWhere, getDirectChats } = require('./chat');
+const {
+  getPageInfo, formWhere, getDirectChats, pubsub, MESSAGED_ADDED,
+} = require('./chat');
+
 
 module.exports = {
   Direct: {

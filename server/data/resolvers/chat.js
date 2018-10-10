@@ -1,6 +1,11 @@
+const { PubSub } = require('apollo-server');
 const {
   Message, Group, UserGroup, User,
 } = require('../models');
+
+const pubsub = new PubSub();
+const MESSAGED_ADDED = 'MESSAGED_ADDED';
+const MESSAGE_READ = 'MESSAGE_READ';
 
 function formWhere({ id, before, after }) {
   let idCond;
@@ -103,4 +108,7 @@ module.exports = {
   getPageInfo,
   formWhere,
   getDirectChats,
+  pubsub,
+  MESSAGED_ADDED,
+  MESSAGE_READ,
 };
