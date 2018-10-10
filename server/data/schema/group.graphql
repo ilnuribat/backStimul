@@ -4,12 +4,14 @@ type Group {
   users: [User]
   messages(messageConnection: ConnectionInput): MessageConnection
   unreadCount: Int
+  status: Int
 }
 
 input GroupInput {
   id: ID
   name: String
   userIds: [String]
+  status: Int
 }
 
 input UsersGroupInput {
@@ -34,7 +36,5 @@ type Mutation {
   createGroup(group: GroupInput): Group
   updateGroup(id: ID, group: GroupInput): Boolean
   deleteGroup(id: ID!): Boolean
-  joinGroup(id: ID): Boolean
-  leaveGroup(id: ID): Boolean
   updateUsersGroup(group: UsersGroupInput): Boolean
 }

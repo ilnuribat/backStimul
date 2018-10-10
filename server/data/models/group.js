@@ -7,6 +7,7 @@ const schema = new Schema({
     // unique: true,
   },
   lastMessageAt: Date,
+  status: Number,
 });
 
 schema.virtual('id').get(function () {
