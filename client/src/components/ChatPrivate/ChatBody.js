@@ -103,7 +103,7 @@ export class MessagesList extends Component {
   }
 
   componentDidUpdate(){
-    console.warn("UPDATE!");
+    // console.warn("UPDATE!");
     if (ref1) ref1();
     // this.props.subscribeToNewMessages();
     toBottom();
@@ -113,7 +113,7 @@ export class MessagesList extends Component {
     if (ref1) ref1();
     const { priv, data, variables } = this.props;
 
-    console.warn("our group is: ", variables.id )
+    // console.warn("our group is: ", variables.id )
 
     let datas = '';
     let uid = localStorage.getItem('userid');
@@ -158,7 +158,7 @@ export class MessagesList extends Component {
 
                   qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
                     if(a && a.data){
-                      console.warn("Answer about read",a);
+                      // console.warn("Answer about read",a);
                     }
                   }).catch((e)=>{
                     console.warn("Err read",e);
@@ -190,7 +190,9 @@ export class MessagesList extends Component {
                                   ref1 = refetch;
 
                                   return(
-                                    <div className="events">{data.message && data.message.isRead ? <MsgDblcheckAck /> : <MsgDblcheck />}  {console.log('subs read data',data)}</div>
+                                    <div className="events">{data.message && data.message.isRead ? <MsgDblcheckAck /> : <MsgDblcheck />}  {
+                                      // console.warn('subs read data',data)
+                                    }</div>
                                   )}
                                 }
                               </Query>
@@ -236,11 +238,6 @@ class Fetch extends Component {
       })
     }
   }
-
-  componentWillMount(){
-
-  }
-
 
   render(){
     let { id, priv } = this.props;

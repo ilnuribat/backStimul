@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { graphql, compose, Query } from "react-apollo";
+import { graphql, compose, Query, Subscription } from "react-apollo";
 import PropTypes from 'prop-types';
 
 import Private from './Nav/Private';
@@ -7,7 +7,7 @@ import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';
 import Loading from './Loading';
 
-import { PRIVS_QUERY2, cSetCountPrivates } from '../graph/querys';
+import { PRIVS_QUERY, cSetCountPrivates, ALL_MESSAGE_CREATED } from '../graph/querys';
 
 class LeftNav extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class LeftNav extends Component {
         <nav className="left-nav">
           <Profile />
           <Groups />
-          <Query query={PRIVS_QUERY2}>
+          <Query query={PRIVS_QUERY}>
             {({ loading, error, data, refetch, subscribeToMore }) => {
               if (loading){
                 return (
@@ -53,10 +53,14 @@ class LeftNav extends Component {
                   privs = privs + e.unreadCount;
                 })
 
+
                 this.props.cSetCountPrivates({
                   variables: { unr: privs }
                 });
               }
+
+              // subscrMes(subscribeToMore, refetch)
+              subscrMes()
 
               return <Private />
             }}
@@ -67,6 +71,36 @@ class LeftNav extends Component {
     )
   }
 }
+
+// const subscrMes = (subscribeToMore, refetch)=>{
+//   return subscribeToMore({ document: ALL_MESSAGE_CREATED,
+//     updateQuery: (prev, { subscriptionData }) => {
+//       if (!subscriptionData.data) return prev;
+
+//       console.warn("previ is", prev)
+//       console.warn("new is", subscriptionData.data)
+
+//       return Object.assign({}, prev, {
+//         message:{
+//           isRead: true,
+//           text: prev.message.text,
+//           __typename: prev.message.__typename,
+//         }
+//       });
+
+//     },
+//   });
+// };
+
+const subscrMes = ()=> {
+  <Subscription
+    subscription = {ALL_MESSAGE_CREATED}>
+    {({ data }) => {
+      console.warn("asasas", data)
+    }}
+  </Subscription>
+}
+
 
 LeftNav.propTypes = {
   getUnreadCount: PropTypes.shape({

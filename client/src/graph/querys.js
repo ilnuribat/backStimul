@@ -152,6 +152,14 @@ export const getPrivateChat = gql`
   }
 `;
 
+export const getPrivateChat2 = gql`
+  query private{
+      id @client
+      name @client
+      unr @client
+  }
+`;
+
 
 
 export const cGetChats = gql`
@@ -220,16 +228,6 @@ export const PRIVS_QUERY = gql`
     }
 `;
 
-
-export const PRIVS_QUERY2 = gql`
-    query{
-      user{
-        directs{
-          id
-        }
-      }
-    }
-`;
 
 export const PRIV_QUERY = gql`
   query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
@@ -328,6 +326,23 @@ export const MESSAGE_CREATED = gql`
           }
           createdAt
           userId
+          isRead
+      }
+  }
+`;
+
+export const ALL_MESSAGE_CREATED = gql`
+  subscription {
+      messageAdded{
+          id
+          text
+          from{
+            id
+            username
+          }
+          createdAt
+          userId
+          groupId
           isRead
       }
   }
