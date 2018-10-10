@@ -1487,8 +1487,10 @@ margin-left: 1em;
 }
 
 
+.tab-roll {
+  flex: 1;
+}
 .tab-roll .content{
-  min-height: 200px;
   background: rgba(44, 63, 81, 0.288);
   margin:5px;
 }
@@ -1515,6 +1517,9 @@ margin-left: 1em;
 }
 textarea{
   /* border:0 none transparent; */
+  background: rgba(255, 255, 255, 0.151);
+  color:#fff;
+  border:0 none transparent; 
   margin:0;
   height:60px;
   width:100%;
@@ -1611,9 +1616,11 @@ html,body{
   height: 100%;
   background: #1B2126;
 }
+
 .noBtn svg{
   fill: #1fc55f;
 }
+
 .noBtn{
   background: transparent;
   padding: 0;
@@ -1623,14 +1630,17 @@ html,body{
   box-shadow: 0 0 0 transparent;
   border:0 transparent;
 }
+
 textarea{
   height: auto;
 }
+
 .prewr{
   position: relative;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
+
 .msgs svg{
   width:20px;
   height:20px;
@@ -1642,4 +1652,87 @@ textarea{
   justify-content: center;
   justify-self: center;
   justify-items: center;
+}
+
+.content-aft-nav{
+  margin:0 0 0 60px;
+  padding:10px 10px 10px 10px;
+  color:#fff;
+}
+
+.columns-wrapper{
+  display: flex;
+  flex-direction: row;
+  max-width:100%;
+  min-width: 300px;
+  padding:0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 100%;
+}
+
+.columns-wrapper > div{
+  flex:1;
+  height: auto;
+  min-width:280px;
+  max-width: 280px;
+  width:280px;
+}
+
+.columns-wrapper > div{
+  flex:1;
+  height: auto;
+}
+.column-content > div{
+  transition: all 2s ease-in-out;
+}
+
+.root, body, html{
+  overflow: hidden;
+}
+
+.left-nav{
+}
+body, html, root { min-width: 300px;
+  width:100%;
+}
+.column-content > .task{
+  background: #3657835e;
+}
+.column-content > .task > .lastMessage{
+  text-align: left;
+  padding:5px;
+  max-height: 30px;
+  overflow: hidden;
+  background: #dadada1c;
+}
+.head-link{
+  color: #e0e0e0;
+  font-weight: 700;
+  background: rgba(27, 33, 38, 0.253);
+  padding:5px;
+  text-align: left;
+}
+
+@media screen {
+  body, html { min-width: 300px;
+  width:100%;
+  }
+}
+select{
+  display: block;
+  width:100%;
+  margin:5px auto 5px;
+  padding: 5px;
+  color:#FFF;
+  background: #1B2126;
+  border:0 none transparent;
+}
+select option{
+  padding: 5px;
+  background: #1B2126;
+  border:0 none transparent;
+}
+.overWrap{
+  padding: 10px;
 }

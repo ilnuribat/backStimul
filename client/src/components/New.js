@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import { graphql, compose  } from "react-apollo";
+import { graphql, compose, Query  } from "react-apollo";
 import PropTypes from 'prop-types';
 import ColorHash from 'color-hash';
 import _ from 'lodash';
 import { qauf, _url } from '../constants'
 import 'animate.css';
-import { getPrivateChat, user, group, selectUser, allUsers } from '../graph/querys';
+import { getPrivateChat, user, group, selectUser, allUsers, GroupBid, glossaryStatus, groupMut } from '../graph/querys';
 import FirstLayout from './Layout';
 import ChatPrivate from './ChatPrivate';
+import Loading from './Loading';
 
 
 var colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
@@ -18,21 +19,35 @@ class GroupList extends Component {
     this.state = {
       users: [],
       allusers: [],
-
+      status: [],
+      input: "",
+      groupName: "",
+      groupId: "",
+      groupInfo: {},
     }
+
     this.loadg = this.loadg.bind(this)
     this.loadu = this.loadu.bind(this)
     this.allUserGet = this.allUserGet.bind(this)
     this.userAdd = this.userAdd.bind(this)
+    this.glossStatus = this.glossStatus.bind(this)
+    this.onStatSelected = this.onStatSelected.bind(this)
+    this.inputChange = this.inputChange.bind(this)
   }
 
   componentDidMount(){
     const {getPrivateChat} = this.props
-    let _grid = getPrivateChat.currentGroup || localStorage.getItem('grid');
+    let _grid = getPrivateChat.id || localStorage.getItem('grid');
+
+    this.setState({
+      groupName: getPrivateChat.name,
+      groupId: getPrivateChat.id,
+    })
 
     this.loadg()
     this.loadu(_grid)
     this.allUserGet()
+    this.glossStatus()
   }
 
   changeState(a){
@@ -72,7 +87,12 @@ class GroupList extends Component {
 
     qauf(group(g), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data.group.users && a.data.group.users.length !== users.length){
+
         this.changeGrUsers(a.data.group.users);
+        this.setState({
+          groupName: a.data.group.name,
+          groupInfo: a.data.group,
+        })
       }
     }).catch((e)=>{
       console.warn(e);
@@ -104,15 +124,59 @@ class GroupList extends Component {
       });
   }
 
+  glossStatus(){
+
+    qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
+
+      this.setState({
+        status: a.data.glossary.taskStatuses
+      });
+      console.log(a)
+    })
+      .catch((e)=>{
+        console.warn(e);
+      });
+  }
+  onStatSelected(e){
+
+    console.log(e.target.value)
+
+    qauf(groupMut(this.props.getPrivateChat.id, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
+      console.log(a)
+    })
+    .catch((e)=>{
+      console.warn(e);
+    });
+
+  }
+  inputChange(e){
+    let a = this.state.groupName;
+    let b = e.target.value;
+    this.setState({
+      groupName: b,
+    })
+
+    // console.log(e.target.value)
+    // qauf(groupMut(this.props.getPrivateChat.id, `name: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
+    //   console.log(a)
+    // })
+    // .catch((e)=>{
+    //   console.warn(e);
+    // });
+
+  }
+
   render() {
-    const {users, _grid, allusers} = this.state;
+    const {users, _grid, allusers, groupName, groupInfo} = this.state;
     const {getPrivateChat} = this.props;
 
     let onlyunicusers = _.differenceWith(allusers, users, _.isEqual);
 
+    console.log("groupName",groupInfo)
 
-    if(getPrivateChat.currentGroup !== _grid){
-      this.loadu(getPrivateChat.currentGroup)
+
+    if(getPrivateChat.id !== _grid){
+      this.loadu(getPrivateChat.id)
     }
 
     return(
@@ -135,12 +199,9 @@ class GroupList extends Component {
                         users.map(
                           (e,i,a)=>{
                             return(
-                              <div className="username" role="presentation" style={{color: colorHash.hex(e.username)}} key={'usr-'+i} onClick={()=>this.userSelect(e.username, e.id)}>
+                              <option name={e.id} value={e.id}>{e.username}
                                 {e.username}
-                                {' '}
-                                {localStorage.getItem('userid') === e.id ? (<span className="me"> - это я</span>) : '' }
-                                {' '}
-                              </div>
+                              </option>
                             )
                           }
                         )
@@ -169,6 +230,72 @@ class GroupList extends Component {
                           )
                         }) : ("Нет юзеров")
                       }
+                    </div>
+                  </div>
+                </div>
+              ) : null
+            }
+            {
+              this.props.getPrivateChat && this.props.getPrivateChat.id ? (
+                <div className="tab-roll">
+                  <div className="header"><h4>Редактировать</h4></div>
+                  <div className="content">
+                    <div className="content-scroll">
+                      <div className="overWrap">
+                                <div>
+                                  <label htmlFor="grname">Изменить название</label>
+                                  <input name="grname" type="text" value={groupName} onChange={this.inputChange}/>
+                                </div>
+                                {groupInfo.endDate}
+
+
+
+
+                                <div>
+                                  <select name="status" onChange={this.onStatSelected}>
+                                    {
+                                      users.map(
+                                        (e,i,a)=>{
+                                          return(
+                                            <div className="username" role="presentation" style={{color: colorHash.hex(e.username)}} key={'usr-'+i} onClick={()=>this.userSelect(e.username, e.id)}>
+                                              {e.username}
+                                              {' '}
+                                              {localStorage.getItem('userid') === e.id ? (<span className="me"> - это я</span>) : '' }
+                                              {' '}
+                                            </div>
+                                          )
+                                        }
+                                      )
+                                    }
+                                  </select>
+                                </div>
+                                {groupInfo.assignedTo}
+                                <div>
+                                  <label htmlFor="status">Изменить статус</label>
+                                  <select name="status" onChange={this.onStatSelected}>
+                                    {
+                                      this.state.status.map((e,i)=>{
+                                        return(
+                                          <option key={"status"+e.id} value={e.id}>
+                                            {e.name}
+                                          </option>
+                                        )
+                                      })
+                                    }
+                                  </select>
+                                </div>
+                              </div>
+                      {/* <Query query={GroupBid} variables={{id: this.props.getPrivateChat.id}} >
+                        {({ loading, error, data }) => {
+                          if (loading) return <Loading />;
+                          if (error) return `Error! ${error.message}`;
+
+                          console.log(data)
+
+                          return (
+                          );
+                        }}
+                      </Query> */}
                     </div>
                   </div>
                 </div>

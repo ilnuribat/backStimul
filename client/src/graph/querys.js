@@ -46,6 +46,12 @@ query{
   }
 `;
 
+export const groupMut = (gid,params) =>`
+  mutation{
+    updateGroup(id: "${gid}", group: {${params}})
+  }
+`;
+
 export const getPriority = () => `{
     glossary{
         priorities{
@@ -128,27 +134,12 @@ export const cSetCountPrivates = gql`
 `;
 
 
-export const showCurrentGroup = gql`
-  query showCurrentGroup {
-    currentGroup @client
-    groupName @client
-  }
-`;
-
-export const changeGroup = gql`
-  mutation changeGroup($currentGroup: String!, $groupName: String!) {
-    changeGroup(currentGroup: $currentGroup, groupName: $groupName) @client {
-      currentGroup
-      groupName
-    }
-  }
-`;
-
 export const getPrivateChat = gql`
   query private{
       id @client
       name @client
       unr @client
+      priv @client
   }
 `;
 
@@ -161,8 +152,8 @@ export const cGetChats = gql`
 `;
 
 export const cSetChats = gql`
-  mutation private($name: String!, $id: String!){
-    private(name: $name, id: $id) @client {
+  mutation privates($name: String!, $id: String!){
+    privates(name: $name, id: $id) @client {
       chats
     }
   }
@@ -174,6 +165,7 @@ export const setPrivateChat = gql`
       id
       name
       unr
+      priv
     }
   }
 `;
@@ -215,6 +207,29 @@ export const PRIVS_QUERY = gql`
           id
           name
           unreadCount
+        }
+      }
+    }
+`;
+
+export const TASKS_QUERY = gql`
+    query{
+      user{
+        groups{
+          id
+          name
+          unreadCount
+          status
+          assignedTo
+          endDate
+          lastMessage{
+            id
+            text
+            from{
+              id
+              username
+            }
+          }
         }
       }
     }
@@ -337,6 +352,17 @@ export const SUBS_GR = (id) => `
   }
 `;
 
+export const glossaryStatus = () => `
+  {
+    glossary{
+      taskStatuses{
+        id
+        name
+      }
+    }
+}
+`;
+
 export const ADD_MUT = gql`
 mutation Add($id: String!, $text: String! ){
     createMessage(message:{groupId: $id, text: $text}){
@@ -355,3 +381,13 @@ export const messRead = gql`{
   id
 }`;
 
+export const GroupBid = gql`
+query group($id: ID!){
+    group( id: $id ){
+      name
+      status
+      endDate
+      assignedTo
+    }
+  }
+`;

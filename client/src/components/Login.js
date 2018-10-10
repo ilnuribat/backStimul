@@ -114,8 +114,8 @@ class Login extends Component {
               <div className="logo">
               </div>
 
-              <div className="mess">Мой id: { meid}</div>
-              <div className="mess">Моё имя: { mename}</div>
+              <div className="mess">Мой id: { meGet.meid}</div>
+              <div className="mess">Моё имя: { meGet.mename}</div>
               
 
               <div

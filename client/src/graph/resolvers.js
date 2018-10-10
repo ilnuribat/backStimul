@@ -25,10 +25,10 @@ export default {
       return {meid, mename, memail, __typename: 'me' };
     },
 
-    private: (_, { id, name, unr },  { cache }) => {
-      cache.writeData({ data: { id: id, name: name, unr: unr } });
+    private: (_, { id, name, unr=0, priv=false },  { cache }) => {
+      cache.writeData({ data: { id: id, name: name, unr: unr, priv: priv } });
 
-      return {id, name, __typename: 'chat' };
+      return {id, name, unr, priv, __typename: 'chat' };
     },
   },
   Query: {

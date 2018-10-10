@@ -3,6 +3,7 @@ import React, { Component, Fragment } from 'react';
 import Private from './Nav/Private';
 import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';
+import Board from './Nav/Board';
 
 
 
@@ -94,6 +95,7 @@ class LeftNav extends Component {
           <Profile />
           <Groups />
           <Private />
+          <Board />
         </nav>
       </Fragment>
     )

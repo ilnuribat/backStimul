@@ -53,6 +53,7 @@ const stateLink = withClientState({
     id: "",
     name: "",
     unr: 0,
+    priv: 0,
     meid: "",
     mename: "",
     memail: "",

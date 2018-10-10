@@ -5,6 +5,7 @@ import LeftNav from './components/LeftNav';
 import Login from './components/Login';
 import Profile from './components/Profile';
 import New from './components/New';
+import aBoard from './components/aBoard';
 import Private from './components/Private';
 import { AUTH_TOKEN } from './constants';
 
@@ -97,6 +98,7 @@ class App extends Component {
           <Fragment>
             <LeftNav lstate={this._lbarstate} />
             <Switch>
+              <Route exact path="/aboard" component={aBoard} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/" render={(props) => <New {...props} />} />
               <Route exact path="/profile" component={Profile} />
