@@ -8,6 +8,7 @@ const schema = new Schema({
   },
   lastMessageAt: Date,
   status: Number,
+  assignedTo: Schema.Types.ObjectId,
 });
 
 schema.virtual('id').get(function () {

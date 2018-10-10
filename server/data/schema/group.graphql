@@ -5,6 +5,7 @@ type Group {
   messages(messageConnection: ConnectionInput): MessageConnection
   unreadCount: Int
   status: Int
+  assignedTo: ID
 }
 
 input GroupInput {
@@ -12,6 +13,7 @@ input GroupInput {
   name: String
   userIds: [String]
   status: Int
+  assignedTo: ID
 }
 
 input UsersGroupInput {

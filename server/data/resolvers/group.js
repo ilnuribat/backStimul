@@ -9,6 +9,9 @@ const { getPageInfo, formWhere } = require('./chat');
 
 module.exports = {
   Group: {
+    assignedTo(group) {
+      return group.assignedTo ? group.assignedTo.toString() : null;
+    },
     async users(parent) {
       const { id } = parent;
       const usersGroup = await UserGroup.find({ groupId: id });
