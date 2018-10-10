@@ -7,6 +7,7 @@ type Group {
   status: Int
   assignedTo: ID
   lastMessage: Message
+  endDate: String
 }
 
 input GroupInput {
@@ -15,6 +16,7 @@ input GroupInput {
   userIds: [String]
   status: Int
   assignedTo: ID
+  endDate: String
 }
 
 input UsersGroupInput {

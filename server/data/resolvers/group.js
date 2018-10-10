@@ -1,4 +1,5 @@
 const { Types: { ObjectId } } = require('mongoose');
+const moment = require('moment');
 const {
   Group,
   UserGroup,
@@ -75,6 +76,7 @@ module.exports = {
         },
       }).count();
     },
+    endDate: ({ endDate }) => (endDate ? moment(endDate).format() : null),
   },
   Query: {
     groups: () => Group.find({ code: null }),
