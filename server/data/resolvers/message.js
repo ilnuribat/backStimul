@@ -124,7 +124,7 @@ module.exports = {
       // Если мой курсор был старее всех остальных
       // значит все сообщения в этом отрезке должны быть прочитаны.
       if (myOldCursor.lastReadCursor < lastAnotherReadCursor.lastReadCursor) {
-        const endCursor = lastAnotherReadCursor.lastAnotherReadCursor < message._id
+        const endCursor = lastAnotherReadCursor.lastReadCursor < message._id
           ? lastAnotherReadCursor.lastReadCursor
           : message._id;
         const messages = await Message.find({
