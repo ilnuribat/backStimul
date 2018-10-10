@@ -72,7 +72,7 @@ module.exports = {
         id: foundUser.id,
         token,
         jwt: token,
-        username: 'test',
+        username: email,
       };
     },
     async signup(_, { user }) {

@@ -22,6 +22,7 @@ module.exports = {
     },
     createdAt: message => moment(message.createdAt).format(),
     userId: message => message.userId.toString(),
+    groupId: message => message.groupId.toString(),
     isRead: async (message) => {
       if (message.isRead !== undefined) {
         return message.isRead;
@@ -143,7 +144,22 @@ module.exports = {
     messageAdded: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([MESSAGED_ADDED]),
-        ({ messageAdded: { groupId: mGroupId } }, { groupId }) => mGroupId.toString() === groupId,
+        async ({ messageAdded: { groupId: mGroupId } }, { groupId }, ctx) => {
+          if (groupId) {
+            return mGroupId.toString() === groupId;
+          }
+
+          const userGroup = await UserGroup.findOne({
+            groupId: mGroupId,
+            userId: ctx.user.id,
+          });
+
+          if (userGroup) {
+            return true;
+          }
+
+          return false;
+        },
       ),
     },
     messageRead: {
