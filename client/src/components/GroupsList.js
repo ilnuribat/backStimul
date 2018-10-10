@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo';
-import { changeGroup, showCurrentGroup, createGroup, user } from '../graph/querys';
+import PropTypes from 'prop-types';
+import { setPrivateChat, getPrivateChat, createGroup, user } from '../graph/querys';
 import { qauf, _url } from '../constants'
 import 'animate.css';
 
@@ -22,11 +23,11 @@ class GroupList extends Component {
       newGrName: '',
     }
 
-      this.changeGroup = this.changeGroup.bind(this);
-      this.AddGroupInputs = this.AddGroupInputs.bind(this);
-      this.inputChange = this.inputChange.bind(this);
-      this.CreateGroup = this.CreateGroup.bind(this);
-      this.fetcher = this.fetcher.bind(this);
+    this.changeGroup = this.changeGroup.bind(this);
+    this.AddGroupInputs = this.AddGroupInputs.bind(this);
+    this.inputChange = this.inputChange.bind(this);
+    this.CreateGroup = this.CreateGroup.bind(this);
+    this.fetcher = this.fetcher.bind(this);
 
   }
 
@@ -62,8 +63,8 @@ class GroupList extends Component {
       grid: i,
       grnm: n,
     })
-    this.props.changeGroup ({
-      variables: { currentGroup: i, groupName: n }
+    this.props.setPrivateChat ({
+      variables: { id: i, name: n }
     })
   }
 
@@ -76,6 +77,7 @@ class GroupList extends Component {
   inputChange(e){
     let val = e.target.value;
     let input = [];
+
     input.push(val);
     this.setState({
       newGrName: val,
@@ -88,7 +90,7 @@ class GroupList extends Component {
     this.setState({
       addGroupInputs: false,
     })
-    let { newGrName, newGrUsers, input } = this.state;
+    let { newGrName } = this.state;
     let params = `{name:"${newGrName}"}`;
 
     qauf(createGroup(params), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -109,35 +111,35 @@ class GroupList extends Component {
   }
 
   render() {
-	  let {grl, grid, gid, addGroupInputs, newGrName} = this.state;
 
+    let {grl, grid, addGroupInputs} = this.state;
 
     return (
       <div>
         <h3>Задачи</h3>
-      <div className='list-container'>
+        <div className='list-container'>
 
           {grl.map((e,i)=>{
             return(
-              <div key={"gr"+i} className={grid == e.id || this.props.showCurrentGroup.currentGroup == e.id ? 'active '+`list animated fadeIn` : `list animated fadeIn`} onClick={()=>{this.changeGroup(e.id, e.name)}} >{e.name}</div>
+              <div key={"gr"+i} className={grid == e.id || this.props.getPrivateChat.id == e.id ? 'active '+`list animated fadeIn` : `list animated fadeIn`} onClick={()=>{this.changeGroup(e.id, e.name)}} >{e.name}</div>
             )
-            
+
           }) }
 
           {
-          addGroupInputs?(
-          <div className="list animated fadeInLeft" style={{textAlign: "center"}} >
-            <h3>Создание новой группы</h3>
-            <input type="text" value={this.state.newGrName} onChange={this.inputChange} placeholder="Название группы" />
-            <input type="submit" value="Создать" onClick={this.CreateGroup} />
-          </div>
-          ):(
-          <div className="list animated fadeIn" style={{textAlign: "center"}} onClick={this.AddGroupInputs} >Добавить новую</div>
-          )
+            addGroupInputs?(
+              <div className="list animated fadeInLeft" style={{textAlign: "center"}} >
+                <h3>Создание новой группы</h3>
+                <input type="text" value={this.state.newGrName} onChange={this.inputChange} placeholder="Название группы" />
+                <input type="submit" value="Создать" onClick={this.CreateGroup} />
+              </div>
+            ):(
+              <div className="list animated fadeIn" style={{textAlign: "center"}} onClick={this.AddGroupInputs} >Добавить новую</div>
+            )
 
-          }          
-          
-          </div>
+          }
+
+        </div>
       </div>
 
     )
@@ -145,7 +147,17 @@ class GroupList extends Component {
 }
 
 
+GroupList.propTypes = {
+  getPrivateChat: PropTypes.shape({
+    id: PropTypes.string
+  }).isRequired,
+  setPrivateChat: PropTypes.shape({
+    id: PropTypes.string
+  }).isRequired,
+};
+
+
 export default compose(
-  graphql(changeGroup, { name: 'changeGroup' }),
-  graphql(showCurrentGroup, { name: 'showCurrentGroup' }),
+  graphql(setPrivateChat, { name: 'setPrivateChat' }),
+  graphql(getPrivateChat, { name: 'getPrivateChat' }),
 )(GroupList);

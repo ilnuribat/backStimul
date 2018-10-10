@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo';
 import { PropTypes } from 'prop-types';
-import { changeGroup, showCurrentGroup, createGroup, user } from '../../graph/querys';
+import { setPrivateChat, getPrivateChat, createGroup, user } from '../../graph/querys';
 import { qauf, _url } from '../../constants'
 import 'animate.css';
 
@@ -29,15 +29,15 @@ class Tasks extends Component {
   }
 
   changeGroup = (i,n) => {
-    const {changeGroup} = this.props
+    const {setPrivateChat} = this.props
 
     localStorage.setItem('grid',i);
     localStorage.setItem('grnm',n);
     this.setState({
       grid: i,
     })
-    changeGroup ({
-      variables: { currentGroup: i, groupName: n }
+    setPrivateChat ({
+      variables: { id: i, name: n }
     })
   }
 
@@ -87,11 +87,13 @@ class Tasks extends Component {
     })
     const { newGrName } = this.state;
     let params = `{name:"${newGrName}"}`;
+
     qauf(createGroup(params), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){
         this.fetcher()
       }
     }).catch((e)=>{
+
       console.warn(e);
     });
 
@@ -106,7 +108,7 @@ class Tasks extends Component {
   render() {
 
     const {grl, grid, addGroupInputs, newGrName} = this.state;
-    const { showCurrentGroup } = this.props;
+    const { getPrivateChat } = this.props;
 
     return (
       <div>
@@ -115,7 +117,7 @@ class Tasks extends Component {
 
           {grl.map((e,i)=>{
             return(
-              <div key={"gr"+i} role="presentation" className={grid === e.id || showCurrentGroup.currentGroup === e.id ? 'active list animated fadeIn' : 'list animated fadeIn'} onClick={()=>{this.changeGroup(e.id, e.name)}}>{e.name}</div>
+              <div key={"gr"+i} role="presentation" className={grid === e.id || getPrivateChat.id === e.id ? 'active list animated fadeIn' : 'list animated fadeIn'} onClick={()=>{this.changeGroup(e.id, e.name)}}>{e.name}</div>
             )
           }) }
           {
@@ -136,10 +138,10 @@ class Tasks extends Component {
 }
 
 Tasks.propTypes = {
-  showCurrentGroup: PropTypes.shape({
-    currentGroup: PropTypes.string
+  getPrivateChat: PropTypes.shape({
+    id: PropTypes.string
   }).isRequired,
-  changeGroup: PropTypes.func.isRequired,
+  setPrivateChat: PropTypes.func.isRequired,
   chgr: PropTypes.func,
 };
 
@@ -148,6 +150,6 @@ Tasks.defaultProps = {
 };
 
 export default compose(
-  graphql(changeGroup, { name: 'changeGroup' }),
-  graphql(showCurrentGroup, { name: 'showCurrentGroup' }),
+  graphql(setPrivateChat, { name: 'setPrivateChat' }),
+  graphql(getPrivateChat, { name: 'getPrivateChat' }),
 )(Tasks);

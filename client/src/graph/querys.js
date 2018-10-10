@@ -78,6 +78,25 @@ export const getById = (id) => {
         }
         `)
 };
+
+
+export const meSet = gql`
+  mutation meSet($meid: String, $mename: String, $memail: String) {
+    meSet(meid: $meid, mename: $mename, memail: $memail) @client {
+      meid
+      mename
+      memail
+    }
+  }
+`;
+export const meGet = gql`
+  query meGet{
+      meid @client
+      mename @client
+      memail @client
+    }
+`;
+
 export const selectUser = gql`
   mutation selectUser($userName: String!, $userId: String!) {
     selectUser(userName: $userName, userId: $userId) @client {
@@ -91,6 +110,20 @@ export const appendUser = gql`
   query appendUser {
     userName @client
     userId @client
+  }
+`;
+
+export const cGetCountPrivates = gql`
+  query countPrivates {
+    unr @client
+  }
+`;
+
+export const cSetCountPrivates = gql`
+  mutation countPrivates($unr:Number){
+    countPrivates(unr: $unr) @client{
+      unr
+    }
   }
 `;
 
@@ -115,6 +148,23 @@ export const getPrivateChat = gql`
   query private{
       id @client
       name @client
+      unr @client
+  }
+`;
+
+
+
+export const cGetChats = gql`
+  query chats{
+      chats
+  }
+`;
+
+export const cSetChats = gql`
+  mutation private($name: String!, $id: String!){
+    private(name: $name, id: $id) @client {
+      chats
+    }
   }
 `;
 
@@ -123,6 +173,7 @@ export const setPrivateChat = gql`
     private(name: $name, id: $id) @client {
       id
       name
+      unr
     }
   }
 `;
@@ -160,7 +211,6 @@ export const privates = () => `
 export const PRIVS_QUERY = gql`
     query{
       user{
-        id
         directs{
           id
           name
@@ -178,7 +228,7 @@ export const PRIV_QUERY = gql`
               edges {
                   cursor
                   node {
-                    
+
                       isRead
                       id
                       userId
@@ -227,7 +277,6 @@ mutation {
 export const GR_QUERY = gql`
   query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       group(id: $id ){
-          id
           name
           users{
               id
@@ -262,6 +311,11 @@ export const MESSAGE_CREATED = gql`
       messageAdded(groupId: $id){
           id
           text
+          from{
+            id
+            username
+          }
+          createdAt
           userId
           isRead
       }

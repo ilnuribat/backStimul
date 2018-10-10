@@ -44,12 +44,18 @@ const stateLink = withClientState({
   cache,
   resolvers,
   defaults: {
+    ureaded: 0,
+    chats: [],
     currentGroup: "",
     userName: "",
     userId: 0,
     groupName: "",
     id: "",
     name: "",
+    unr: 0,
+    meid: "",
+    mename: "",
+    memail: "",
   }
 });
 
@@ -58,7 +64,7 @@ const prelink = ApolloLink.from([stateLink, httpLinkWithAuthToken]);
 const wsLink = new WebSocketLink({
   uri: `ws://${_url}/graphql`,
   options: {
-    // lazy: true,
+    lazy: true,
     reconnect: true,
     connectionParams() {
       return { Authorization: `Bearer ${localStorage.getItem('auth-token')}` };
@@ -77,7 +83,7 @@ const link = split(
   prelink,
 );
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   link,
   cache
 })

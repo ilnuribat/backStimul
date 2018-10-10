@@ -35,6 +35,10 @@ class Private extends Component {
 
   }
 
+  componentWillUpdate(){
+
+  }
+
   setStateProps(props){
     this.setState({
       getchat: props,
@@ -49,7 +53,7 @@ class Private extends Component {
         <div className="f-container">
         <div className="f-column" style={{color: ""}}>
           {
-            this.props.getchat && this.props.getchat.id ? <ChatPrivate name={this.props.getchat.name} id={this.props.getchat.id} priv={1} /> : (<div className="errorMessage">Выберите чат</div>)
+            this.props.getchat && this.props.getchat.id ? <ChatPrivate key={this.props.getchat.id} name={this.props.getchat.name} id={this.props.getchat.id} priv={1} /> : (<div className="errorMessage">Выберите чат</div>)
           }
         </div>
         <div className="f-column">
