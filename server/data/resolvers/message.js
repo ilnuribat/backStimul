@@ -55,7 +55,9 @@ module.exports = {
         groupId: message.groupId,
       });
 
-      if (!userGroup) { throw new Error('forbidden'); }
+      if (!userGroup) {
+        throw new Error('forbidden');
+      }
 
       const createdMessage = await Message.create({
         userId: user.id,
