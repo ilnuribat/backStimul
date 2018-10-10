@@ -355,3 +355,20 @@ export const messRead = gql`{
   id
 }`;
 
+
+
+
+export const getUnreadCount = gql`{
+    user {
+      id
+      email
+      directs {
+        id
+        unreadCount
+      }
+      groups {
+        id
+        unreadCount
+      }
+    }
+}`;
