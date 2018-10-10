@@ -7,7 +7,7 @@ import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';
 import Loading from './Loading';
 
-import { PRIVS_QUERY, cSetCountPrivates } from '../graph/querys';
+import { PRIVS_QUERY2, cSetCountPrivates } from '../graph/querys';
 
 class LeftNav extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class LeftNav extends Component {
         <nav className="left-nav">
           <Profile />
           <Groups />
-          <Query query={PRIVS_QUERY}>
+          <Query query={PRIVS_QUERY2}>
             {({ loading, error, data, refetch, subscribeToMore }) => {
               if (loading){
                 return (

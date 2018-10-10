@@ -77,12 +77,13 @@ class Private extends React.Component {
 
 
   openPrivate(gid, name){
+    console.warn (gid, name)
+
     this.props.setPrivate({
       variables: { id: gid, name: name, unr: 0 }
     })
-
+    ref1();
   }
-
 
   CreateNewGroup(uid){
 
@@ -98,6 +99,8 @@ class Private extends React.Component {
   }
 
   render(){
+
+
     return (
       <div className="f-column-l">
         <div className="tab-roll">

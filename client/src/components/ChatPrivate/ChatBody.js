@@ -95,7 +95,7 @@ export class MessagesList extends Component {
     this.state = {
     }
   }
-  
+
   componentDidMount() {
     this.props.subscribeToNewMessages();
     toBottom();
@@ -138,7 +138,7 @@ export class MessagesList extends Component {
               n++;
               let {node} = e;
 
-              console.log(e)
+              // console.log(e)
 
               let tr = 'them';
               let createdAt = node.createdAt || "none";

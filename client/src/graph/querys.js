@@ -220,6 +220,17 @@ export const PRIVS_QUERY = gql`
     }
 `;
 
+
+export const PRIVS_QUERY2 = gql`
+    query{
+      user{
+        directs{
+          id
+        }
+      }
+    }
+`;
+
 export const PRIV_QUERY = gql`
   query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       direct(id: $id ){
