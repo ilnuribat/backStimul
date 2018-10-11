@@ -8,7 +8,7 @@ const {
   Message,
 } = require('../models');
 const {
-  getPageInfo, formWhere, pubsub, TASK_UPDATED,
+  getPageInfo, formWhere, pubsub, TASK_UPDATED, USER_TASK_UPDATED,
 } = require('./chat');
 
 
@@ -145,6 +145,12 @@ module.exports = {
         return false;
       }
 
+      const fullUsers = await User.find({
+        _id: {
+          $in: users,
+        },
+      });
+
       if (!group.delete) {
         try {
           const lastMessage = await Message.findOne({ groupId });
@@ -155,6 +161,17 @@ module.exports = {
             lastReadCursor: lastMessage ? lastMessage._id : ObjectId.createFromTime(0),
           })));
 
+          fullUsers.map(u => pubsub.publish(USER_TASK_UPDATED, {
+            userTaskUpdated: {
+              user: {
+                id: u.id,
+                username: u.username,
+                email: u.email,
+              },
+              action: 'INVITED',
+            },
+          }));
+
           return true;
         } catch (err) {
           return false;
@@ -162,6 +179,17 @@ module.exports = {
       }
 
       const res = await UserGroup.deleteMany({ userId: { $in: users }, groupId: foundGroup.id });
+
+      fullUsers.map(u => pubsub.publish(USER_TASK_UPDATED, {
+        userTaskUpdated: {
+          user: {
+            id: u.id,
+            username: u.username,
+            email: u.email,
+          },
+          action: 'KICKED',
+        },
+      }));
 
       return !!res.n;
     },
@@ -171,6 +199,12 @@ module.exports = {
       subscribe: withFilter(
         () => pubsub.asyncIterator([TASK_UPDATED]),
         ({ taskUpdated: { _id: mId } }, { id }) => mId.toString() === id,
+      ),
+    },
+    userTaskUpdated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([USER_TASK_UPDATED]),
+        () => true,
       ),
     },
   },

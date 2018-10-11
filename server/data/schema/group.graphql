@@ -32,6 +32,22 @@ input ConnectionInput {
   before: String
 }
 
+enum UserTaskActionEnum{
+  INVITED
+  KICKED
+}
+
+type UserTaskRole {
+  id: ID
+  username: String
+  email: String
+}
+
+type UserTaskAction {
+  action: UserTaskActionEnum
+  user: UserTaskRole
+}
+
 type Query {
   groups: [Group]
   group(id: ID!): Group
@@ -46,4 +62,5 @@ type Mutation {
 
 type Subscription {
   taskUpdated(id: ID!): Group
+  userTaskUpdated(id: ID!): UserTaskAction
 }
