@@ -140,10 +140,15 @@ module.exports = {
       }
 
       const { users } = group;
-      const lastMessage = await Message.findOne({ groupId });
 
-      if (!group.delete && Array.isArray(users) && users.length) {
+      if (!Array.isArray(users) || !users.length) {
+        return false;
+      }
+
+      if (!group.delete) {
         try {
+          const lastMessage = await Message.findOne({ groupId });
+
           await UserGroup.insertMany(users.map(u => ({
             userId: u,
             groupId: foundGroup.id,
@@ -156,13 +161,10 @@ module.exports = {
         }
       }
 
-      if (group.delete && Array.isArray(users) && users.length) {
-        const res = await UserGroup.deleteMany({ userId: { $in: users }, groupId: foundGroup.id });
 
-        return !!res.n;
-      }
+      const res = await UserGroup.deleteMany({ userId: { $in: users }, groupId: foundGroup.id });
 
-      return false;
+      return !!res.n;
     },
     directMessage: async (parent, { id }, { user }) => {
       const dUser = await User.findById(id);
