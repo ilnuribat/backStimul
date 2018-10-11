@@ -209,7 +209,7 @@ module.exports = {
     taskUpdated: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([TASK_UPDATED]),
-        () => true,
+        ({ taskUpdated: { _id: mId } }, { id }) => mId.toString() === id,
       ),
     },
   },
