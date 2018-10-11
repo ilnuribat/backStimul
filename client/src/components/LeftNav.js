@@ -25,7 +25,7 @@ class LeftNav extends Component {
         // ... call updateQuery to integrate the new comment
         // into the existing list of comments
         client.query({query:cGetCountPrivates}).then(result => {
-          console.warn("now unreaded is:", result.data.unr +1 )
+          // console.warn("now unreaded is:", result.data.unr +1 )
           const unr = result.data.unr +1
 
           client.mutate({
@@ -33,11 +33,13 @@ class LeftNav extends Component {
             variables: {
               unr: unr
             },
-            // update: ({ data: { createTodo } }) => {}
+            // update: ({ data }) => { console.warn("DATA IS" ,data)}
+          }).then(result => {
+            if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
           })
 
         });
-        console.warn("new private message", data)
+        // console.warn("new private message", data)
       },
       error(err) { console.error('err', err); },
     });
