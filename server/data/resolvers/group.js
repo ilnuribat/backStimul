@@ -1,12 +1,16 @@
 const { Types: { ObjectId } } = require('mongoose');
 const moment = require('moment');
+const { withFilter } = require('apollo-server');
 const {
   Group,
   UserGroup,
   User,
   Message,
 } = require('../models');
-const { getPageInfo, formWhere } = require('./chat');
+const {
+  getPageInfo, formWhere, pubsub, TASK_UPDATED,
+} = require('./chat');
+
 
 module.exports = {
   Group: {
@@ -114,6 +118,12 @@ module.exports = {
 
       const res = await foundGroup.update(group);
 
+      if (res.nModified) {
+        const updatedGroup = await Group.findById(groupId);
+
+        pubsub.publish(TASK_UPDATED, { taskUpdated: updatedGroup });
+      }
+
       return res.nModified;
     },
     deleteGroup: async (parent, { id }) => {
@@ -193,6 +203,14 @@ module.exports = {
       }
 
       return group;
+    },
+  },
+  Subscription: {
+    taskUpdated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([TASK_UPDATED]),
+        () => true,
+      ),
     },
   },
 };

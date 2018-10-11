@@ -43,3 +43,7 @@ type Mutation {
   deleteGroup(id: ID!): Boolean
   updateUsersGroup(group: UsersGroupInput): Boolean
 }
+
+type Subscription {
+  taskUpdated(id: ID!): Group
+}

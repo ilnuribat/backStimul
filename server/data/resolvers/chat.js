@@ -6,6 +6,7 @@ const {
 const pubsub = new PubSub();
 const MESSAGE_ADDED = 'MESSAGE_ADDED';
 const MESSAGE_READ = 'MESSAGE_READ';
+const TASK_UPDATED = 'TASK_UPDATED';
 
 function formWhere({ id, before, after }) {
   let idCond;
@@ -111,4 +112,5 @@ module.exports = {
   pubsub,
   MESSAGE_ADDED,
   MESSAGE_READ,
+  TASK_UPDATED,
 };
