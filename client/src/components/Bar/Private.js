@@ -1,6 +1,7 @@
 import React from 'react';
 import { graphql, compose, Query  } from "react-apollo";
 import ColorHash from 'color-hash';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { getPrivateChat, setPrivateChat, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED, cSetCountPrivates, cSetChats, cGetChats } from '../../graph/querys';
 import { qauf, _url } from '../../constants';
@@ -22,71 +23,31 @@ const subscrMes = (subscribeToMore,idu, refetch)=>{
   });
 };
 
-// const subsToGroup = (id) => {
-//   return (
-//     <Query query={MESSAGE_CREATED} variables={{ id:id }}>
-//       {({ loading, error, data, refetch, subscribeToMore }) => {
-//         ref1 = refetch;
-//         if (loading){
-//           return (
-//             <div style={{ paddingTop: 20 }}>
-//               No Data
-//             </div>
-//           );
-//         }
-//         if (error) {
-//           return (
-//             <div style={{ paddingTop: 20 }}>
-//               Error: {error.toString()}
-//             </div>
-//           )
-//         }
-//         if (data) {
-
-//         }
-
-//       }}
-
-
-//     </Query>
-//   )
-// };
-
-
 class Private extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      users: [
-        {id:"1",username:"Юзерь Ван"},
-        {id:"2",username:"Юзерь Пач"},
-        {id:"3",username:"Юзерь Ман"},
-        {id:"4",username:"Юзерь 4"},
-        {id:"5",username:"Юзерь 5"},
+    // this.state = {
+    //   chats:[],
+    //   uid:'',
+    //   gid:'',
+    //   directs: '',
+    // }
 
-      ],
-      chats:[],
-      uid:'',
-      gid:'',
-      directs: '',
-    }
-
-    this.openPrivate = this.openPrivate.bind(this);
-    this.CreateNewGroup = this.CreateNewGroup.bind(this);
+    // this.openPrivate = this.openPrivate.bind(this);
+    // this.CreateNewGroup = this.CreateNewGroup.bind(this);
   }
 
 
   openPrivate(gid, name){
     console.warn (gid, name)
 
-    this.props.setPrivate({
-      variables: { id: gid, name: name, unr: 0 }
+    this.props.setPrivateChat({
+      variables: { id: gid, name: name }
     })
     ref1();
   }
 
   CreateNewGroup(uid){
-
     let params = `"${uid}"`;
 
     qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -98,8 +59,20 @@ class Private extends React.Component {
     });
   }
 
+  shouldComponentUpdate(nextProp, nextState) {
+    // Use lodash is Equal
+    console.warn(nextProp, this.props);
+    console.warn("ALL", _.isEqual(nextProp, this.props));
+    console.warn("getPrivateChat", _.isEqual(nextProp.getPrivateChat, this.props.getPrivateChat));
+    console.warn("getPrivateChats", nextProp.getPrivateChat, this.props.getPrivateChat);
+
+    if (!_.isEqual(nextProp.getPrivateChat.id, this.props.getPrivateChat.id)) return true
+    else return false
+  }
+
   render(){
 
+    console.warn ("REFRESH!!")
 
     return (
       <div className="f-column-l">
@@ -128,7 +101,6 @@ class Private extends React.Component {
                     );
                   }
 
-
                   if(data && data.user && data.user.directs){
                     let privs = 0;
 
@@ -143,13 +115,13 @@ class Private extends React.Component {
                           });
 
 
-                          this.props.getchat.id !== e.id ? subscrMes(subscribeToMore,e.id, refetch) : null ;
+                          this.props.getPrivateChat.id !== e.id ? subscrMes(subscribeToMore,e.id, refetch) : null ;
                           console.warn (e.name, e.unreadCount)
 
                           return(
                             <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
                               {e.name}
-                              {e.unreadCount && this.props.getchat.id !== e.id  ? (<span className="small-ruond-info">{e.unreadCount}</span>) : null}
+                              {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="small-ruond-info">{e.unreadCount}</span>) : null}
                             </div>
                           )
                         })
@@ -231,6 +203,6 @@ export default compose(
   graphql(cSetCountPrivates, { name: 'setCountPriv' }),
   graphql(cSetChats, { name: 'cSetChats' }),
   graphql(cGetChats, { name: 'cGetChats' }),
-  graphql(getPrivateChat, { name: 'getchat' }),
-  graphql(setPrivateChat, { name: 'setPrivate' }),
+  graphql(getPrivateChat, { name: 'getPrivateChat' }),
+  graphql(setPrivateChat, { name: 'setPrivateChat' }),
 )(Private);

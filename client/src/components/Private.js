@@ -31,6 +31,7 @@ class Private extends Component {
   componentDidMount(){
 
     let {getchat} = this.props;
+
     this.setStateProps(getchat)
 
   }
@@ -51,34 +52,34 @@ class Private extends Component {
     return(
       <FirstLayout barstate="private">
         <div className="f-container">
-        <div className="f-column" style={{color: ""}}>
-          {
-            this.props.getchat && this.props.getchat.id ? <ChatPrivate key={this.props.getchat.id} name={this.props.getchat.name} id={this.props.getchat.id} priv={1} /> : (<div className="errorMessage">Выберите чат</div>)
-          }
-        </div>
-        <div className="f-column">
-                  <div className="tab-roll">
-                  <div className="header"><h4>_</h4></div>
-                    <div className="content">
-                    <div className="content-scroll">
-                      {
+          <div className="f-column" style={{color: ""}}>
+            {
+              this.props.getchat && this.props.getchat.id ? <ChatPrivate key={this.props.getchat.id} name={this.props.getchat.name} id={this.props.getchat.id} priv={1} /> : (<div className="errorMessage">Выберите чат</div>)
+            }
+          </div>
+          <div className="f-column">
+            <div className="tab-roll">
+              <div className="header"><h4>_</h4></div>
+              <div className="content">
+                <div className="content-scroll">
+                  {
 
-                      }
-                    </div>
-                    </div>
-                  </div>
-                  
-                  <div className="tab-roll">
-                  <div className="header"><h4>_</h4></div>
-                    <div className="content">
-                    <div className="content-scroll">
-                      {
-                        
-                      }
-                    </div>
-                    </div>
-                  </div>
-        </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div className="tab-roll">
+              <div className="header"><h4>_</h4></div>
+              <div className="content">
+                <div className="content-scroll">
+                  {
+
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </FirstLayout>
 

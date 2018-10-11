@@ -16,6 +16,7 @@ class LeftNav extends Component {
     }
   }
 
+  //Подпись на все сообщения, адресованные тебе
   subscribe = (client) => {
     // call the "subscribe" method on Apollo Client
     this.subscriptionObserver = client.subscribe({
@@ -24,9 +25,11 @@ class LeftNav extends Component {
       next(data) {
         // ... call updateQuery to integrate the new comment
         // into the existing list of comments
+        //читаем все непрочитанные группы
         client.query({query:cGetCountPrivates}).then(result => {
           // console.warn("now unreaded is:", result.data.unr +1 )
           const unr = result.data.unr +1
+          //пишем суумму всех непрочитанных приватов
 
           client.mutate({
             mutation: cSetCountPrivates,

@@ -177,11 +177,10 @@ export const cSetChats = gql`
 `;
 
 export const setPrivateChat = gql`
-  mutation private($name: String!, $id: String!, $unr: Number){
-    private(name: $name, id: $id, unr: $unr) @client {
+  mutation private($name: String!, $id: String!){
+    private(name: $name, id: $id) @client {
       id
       name
-      unr
     }
   }
 `;
@@ -399,6 +398,10 @@ export const getUnreadCount = () => `
     {
       user{
         directs{
+          id
+          unreadCount
+        }
+        groups {
           id
           unreadCount
         }

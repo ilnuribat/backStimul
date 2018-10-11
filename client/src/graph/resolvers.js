@@ -25,8 +25,8 @@ export default {
       return {meid, mename, memail, __typename: 'me' };
     },
 
-    private: (_, { id, name, unr },  { cache }) => {
-      cache.writeData({ data: { id: id, name: name, unr: unr } });
+    private: (_, { id, name },  { cache }) => {
+      cache.writeData({ data: { id: id, name: name } });
 
       return {id, name, __typename: 'chat' };
     },
