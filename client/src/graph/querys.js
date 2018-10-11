@@ -381,7 +381,7 @@ export const messRead = gql`{
   id
 }`;
 
-export const getUnreadCount = gql`{
+export const getUnreadCount2 = gql`{
     user {
       directs {
         id
@@ -393,3 +393,16 @@ export const getUnreadCount = gql`{
       }
     }
 }`;
+
+
+export const getUnreadCount = () => `
+    {
+      user{
+        directs{
+          id
+          unreadCount
+        }
+      }
+    }
+`;
+

@@ -1,119 +1,92 @@
-import React, { Component, Fragment } from 'react';
-import { graphql, compose, Query, Subscription } from "react-apollo";
+import React, { Component } from 'react';
+import { graphql, compose } from "react-apollo";
 import PropTypes from 'prop-types';
-
 import Private from './Nav/Private';
 import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';
-import Loading from './Loading';
-
-import { PRIVS_QUERY, cSetCountPrivates, ALL_MESSAGE_CREATED } from '../graph/querys';
+// import Loading from './Loading';
+import { qauf, _url } from '../constants';
+import { getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED } from '../graph/querys';
 
 class LeftNav extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isHidden: true,
+      isRunOnce: false,
     }
   }
 
-  hidePanel = () => {
+  subscribe = (client) => {
+    // call the "subscribe" method on Apollo Client
+    this.subscriptionObserver = client.subscribe({
+      query: ALL_MESSAGE_CREATED,
+    }).subscribe({
+      next(data) {
+        // ... call updateQuery to integrate the new comment
+        // into the existing list of comments
+        client.query({query:cGetCountPrivates}).then(result => {
+          console.warn("now unreaded is:", result.data.unr +1 )
+          const unr = result.data.unr +1
+
+          client.mutate({
+            mutation: cSetCountPrivates,
+            variables: {
+              unr: unr
+            },
+            // update: ({ data: { createTodo } }) => {}
+          })
+
+        });
+        console.warn("new private message", data)
+      },
+      error(err) { console.error('err', err); },
+    });
+  }
+
+
+  queryCounterDirects () {
+    qauf(getUnreadCount(), _url, localStorage.getItem('auth-token')).then(a=>{
+      if(a && a.data && a.data.user && a.data.user.directs){
+        let privs = 0;
+
+        a.data.user.directs.map((e)=>{
+          privs = privs + e.unreadCount;
+        })
+
+        this.props.cSetCountPrivates({
+          variables: { unr: privs }
+        });
+
+      }
+    }).catch((e)=>{
+      console.warn(e);
+    });
+  }
+
+  componentDidMount (){
+    if (!this.isRunOnce) {
+      this.queryCounterDirects()
+      this.subscribe(this.props.client)
+      this.setState({isRunOnce : true});
+    }
   }
 
   render() {
-    // const { getUnreadCount } = this.props;
-
-    // console.warn ("user: " , getUnreadCount.user)
 
     return (
-      <Fragment>
-        <nav className="left-nav">
-          <Profile />
-          <Groups />
-          <Query query={PRIVS_QUERY}>
-            {({ loading, error, data, refetch, subscribeToMore }) => {
-              if (loading){
-                return (
-                  <div style={{ paddingTop: 20 }}>
-                    <Loading />
-                  </div>
-                );
-              }
-              if (error){
-                return (
-                  <div style={{ paddingTop: 20 }}>
-                    <Loading />
-                  </div>
-                );
-              }
-              if(data && data.user && data.user.directs){
-                let privs = 0;
-
-                data.user.directs.map((e,i)=>{
-                  privs = privs + e.unreadCount;
-                })
-
-
-                this.props.cSetCountPrivates({
-                  variables: { unr: privs }
-                });
-              }
-
-              // subscrMes(subscribeToMore, refetch)
-              subscrMes()
-
-              return <Private />
-            }}
-          </Query>
-
-        </nav>
-      </Fragment>
+      <nav className="left-nav">
+        <Profile />
+        <Groups />
+        <Private />
+      </nav>
     )
   }
 }
 
-// const subscrMes = (subscribeToMore, refetch)=>{
-//   return subscribeToMore({ document: ALL_MESSAGE_CREATED,
-//     updateQuery: (prev, { subscriptionData }) => {
-//       if (!subscriptionData.data) return prev;
-
-//       console.warn("previ is", prev)
-//       console.warn("new is", subscriptionData.data)
-
-//       return Object.assign({}, prev, {
-//         message:{
-//           isRead: true,
-//           text: prev.message.text,
-//           __typename: prev.message.__typename,
-//         }
-//       });
-
-//     },
-//   });
-// };
-
-const subscrMes = ()=> {
-  <Subscription
-    subscription = {ALL_MESSAGE_CREATED}>
-    {({ data }) => {
-      console.warn("asasas", data)
-    }}
-  </Subscription>
-}
-
-
 LeftNav.propTypes = {
-  getUnreadCount: PropTypes.shape({
-    user: PropTypes.shape({
-      id: PropTypes.string,
-      email: PropTypes.string,
-      directs: PropTypes.array,
-      groups: PropTypes.array,
-    }),
-  }),
-  cSetCountPrivates: PropTypes.func
+  cSetCountPrivates: PropTypes.func.isRequired,
+  client: PropTypes.object.isRequired
 };
-
 
 export default compose(
   graphql(cSetCountPrivates, { name: 'cSetCountPrivates' }),
