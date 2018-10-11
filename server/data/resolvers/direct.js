@@ -1,10 +1,9 @@
-const { withFilter } = require('apollo-server');
 const {
   Group, Message, User,
 } = require('../models');
 const GroupResolver = require('./group');
 const {
-  getPageInfo, formWhere, getDirectChats, pubsub, MESSAGED_ADDED,
+  getPageInfo, formWhere, getDirectChats,
 } = require('./chat');
 
 
@@ -68,13 +67,5 @@ module.exports = {
         $exists: true,
       },
     }),
-  },
-  Subscription: {
-    messageAdded: {
-      subscribe: withFilter(
-        () => pubsub.asyncIterator([MESSAGED_ADDED]),
-        ({ messageAdded: { groupId: mGroupId } }, { groupId }) => mGroupId.toString() === groupId,
-      ),
-    },
   },
 };

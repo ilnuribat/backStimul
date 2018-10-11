@@ -3,7 +3,7 @@ const moment = require('moment');
 const {
   Message, User, Group, UserGroup,
 } = require('../models');
-const { MESSAGE_READ, pubsub, MESSAGED_ADDED } = require('./chat');
+const { MESSAGE_READ, pubsub, MESSAGE_ADDED } = require('./chat');
 
 
 module.exports = {
@@ -88,7 +88,7 @@ module.exports = {
         },
       });
 
-      pubsub.publish(MESSAGED_ADDED, { messageAdded: createdMessage });
+      pubsub.publish(MESSAGE_ADDED, { messageAdded: createdMessage });
 
       return createdMessage;
     },
@@ -152,7 +152,7 @@ module.exports = {
   Subscription: {
     messageAdded: {
       subscribe: withFilter(
-        () => pubsub.asyncIterator([MESSAGED_ADDED]),
+        () => pubsub.asyncIterator([MESSAGE_ADDED]),
         async ({ messageAdded: { groupId: mGroupId } }, { groupId }, ctx) => {
           if (groupId) {
             return mGroupId.toString() === groupId;

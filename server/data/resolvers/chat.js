@@ -4,7 +4,7 @@ const {
 } = require('../models');
 
 const pubsub = new PubSub();
-const MESSAGED_ADDED = 'MESSAGED_ADDED';
+const MESSAGE_ADDED = 'MESSAGE_ADDED';
 const MESSAGE_READ = 'MESSAGE_READ';
 
 function formWhere({ id, before, after }) {
@@ -109,6 +109,6 @@ module.exports = {
   formWhere,
   getDirectChats,
   pubsub,
-  MESSAGED_ADDED,
+  MESSAGE_ADDED,
   MESSAGE_READ,
 };
