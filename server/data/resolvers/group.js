@@ -161,50 +161,9 @@ module.exports = {
         }
       }
 
-
       const res = await UserGroup.deleteMany({ userId: { $in: users }, groupId: foundGroup.id });
 
       return !!res.n;
-    },
-    directMessage: async (parent, { id }, { user }) => {
-      const dUser = await User.findById(id);
-
-      if (!dUser) {
-        throw new Error('no user found with such id');
-      }
-      const ids = [user.id, dUser.id].sort();
-
-      // try to create such group
-      let group;
-
-      try {
-        group = await Group.create({
-          name: ids.join(', '),
-          code: ids.join('|'),
-        });
-      } catch (err) {
-        if (err.errmsg && err.errmsg.indexOf('duplicate key error') > -1) {
-          group = await Group.findOne({ code: ids.join('|') });
-        }
-      }
-
-      try {
-        await UserGroup.insertMany([{
-          userId: user.id,
-          groupId: group.id,
-          lastReadCursor: ObjectId.createFromTime(0),
-        }, {
-          userId: dUser.id,
-          groupId: group.id,
-          lastReadCursor: ObjectId.createFromTime(0),
-        }]);
-      } catch (err) {
-        if (err.errmsg && err.errmsg.indexOf('duplicate key error')) {
-          return group;
-        }
-      }
-
-      return group;
     },
   },
   Subscription: {
