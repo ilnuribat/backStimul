@@ -11,7 +11,6 @@ async function cleanUserGroups() {
     const group = await models.Group.findById(userGroup.groupId);
     
     if (!group) {
-      console.log('usergroup to delete');
       await models.UserGroup.deleteOne({ _id: userGroup._id });
     }
     userGroup = await cursor.next();
@@ -29,7 +28,6 @@ async function updateLastCursor() {
 
   while (userGroup) {
     if (!userGroup.lastReadCursor) {
-      console.log('init lastReadCursor');
       const lastMessage = await models.Message.findOne({ groupId: userGroup.groupId }).sort({ _id: -1 });
 
       if (!lastMessage) {
@@ -37,7 +35,6 @@ async function updateLastCursor() {
         continue;
       }
 
-      console.log(lastMessage);
       await models.UserGroup.updateOne({ _id: userGroup._id }, {
         $set: { lastReadCursor: lastMessage._id }
       });
