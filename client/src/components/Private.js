@@ -4,7 +4,6 @@ import { graphql, compose  } from "react-apollo";
 import FirstLayout from './Layout';
 import ChatPrivate from './ChatPrivate';
 import { getPrivateChat } from '../graph/querys';
-import { _url } from '../constants'
 
 class Private extends Component {
   constructor(props) {

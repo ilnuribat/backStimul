@@ -11,8 +11,6 @@ import Loading from '../Loading';
 var colorHash = new ColorHash({ saturation: 0.8, hue: 0.8 });
 
 let ref1;
-// let ref2;
-// let gref;
 
 const subscrMes = (subscribeToMore,idu, refetch)=>{
   return subscribeToMore({ document: MESSAGE_CREATED, variables: {id: idu,},
@@ -24,28 +22,15 @@ const subscrMes = (subscribeToMore,idu, refetch)=>{
 };
 
 class Private extends React.Component {
-  constructor(props) {
-    super(props)
-    // this.state = {
-    //   chats:[],
-    //   uid:'',
-    //   gid:'',
-    //   directs: '',
-    // }
-
-    // this.openPrivate = this.openPrivate.bind(this);
-    // this.CreateNewGroup = this.CreateNewGroup.bind(this);
-  }
-
-
   openPrivate(gid, name){
-    console.warn (gid, name)
+    // console.warn (gid, name)
 
     this.props.setPrivateChat({
       variables: { id: gid, name: name }
     })
     ref1();
   }
+
 
   CreateNewGroup(uid){
     let params = `"${uid}"`;
@@ -59,20 +44,17 @@ class Private extends React.Component {
     });
   }
 
-  shouldComponentUpdate(nextProp, nextState) {
-    // Use lodash is Equal
-    console.warn(nextProp, this.props);
-    console.warn("ALL", _.isEqual(nextProp, this.props));
-    console.warn("getPrivateChat", _.isEqual(nextProp.getPrivateChat, this.props.getPrivateChat));
-    console.warn("getPrivateChats", nextProp.getPrivateChat, this.props.getPrivateChat);
-
+  shouldComponentUpdate(nextProp) {
+    // Use lodash is Equal nextProp, nextState
+    // console.warn("getPrivateChat", _.isEqual(nextProp.getPrivateChat, this.props.getPrivateChat));
+    // console.warn("getPrivateChats", nextProp.getPrivateChat, this.props.getPrivateChat);
     if (!_.isEqual(nextProp.getPrivateChat.id, this.props.getPrivateChat.id)) return true
     else return false
   }
 
   render(){
 
-    console.warn ("REFRESH!!")
+    // console.warn ("REFRESH!!")
 
     return (
       <div className="f-column-l">
@@ -107,16 +89,17 @@ class Private extends React.Component {
 
                     return(
                       <div>{
-                        data.user.directs.map((e,i,a)=>{
-
-                          privs = privs + e.unreadCount;
-                          this.props.setCountPriv({
-                            variables: { unr: privs }
-                          });
-
-
-                          this.props.getPrivateChat.id !== e.id ? subscrMes(subscribeToMore,e.id, refetch) : null ;
-                          console.warn (e.name, e.unreadCount)
+                        data.user.directs.map((e,i, a)=>{
+                          //Если не открытый чат
+                          if (this.props.getPrivateChat.id !== e.id ) {
+                            privs = privs + e.unreadCount;
+                            subscrMes(subscribeToMore, e.id, refetch)
+                          }
+                          if (i === a.length-1) {
+                            this.props.cSetCountPrivates({
+                              variables: { unr: privs }
+                            });
+                          }
 
                           return(
                             <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
@@ -127,11 +110,14 @@ class Private extends React.Component {
                         })
                       }</div>
                     )
+
                   }else{
                     return(
                       <div className="errorMessage" >Нет данных</div>
                     )
+
                   }
+
                 }}
               </Query>
             </div>
@@ -157,7 +143,7 @@ class Private extends React.Component {
                     if(data && data.users){
                       return(
                         <div>{
-                          data.users.map((e,i,a)=>{
+                          data.users.map((e,i)=>{
                             let Iam;
 
                             if(e.id === localStorage.getItem('userid')){
@@ -192,15 +178,18 @@ class Private extends React.Component {
 }
 
 
-// Private.propTypes = {
-//   setCountPriv: PropTypes.shape({
-//     unreaded: PropTypes.number,
-//     chats: PropTypes.array,
-//   }),
-// };
+Private.propTypes = {
+  setCountPriv: PropTypes.shape({
+    unreaded: PropTypes.number,
+    chats: PropTypes.array,
+  }),
+  cSetCountPrivates: PropTypes.func.isRequired,
+  getPrivateChat: PropTypes.object.isRequired,
+  setPrivateChat: PropTypes.func.isRequired
+};
 
 export default compose(
-  graphql(cSetCountPrivates, { name: 'setCountPriv' }),
+  graphql(cSetCountPrivates, { name: 'cSetCountPrivates' }),
   graphql(cSetChats, { name: 'cSetChats' }),
   graphql(cGetChats, { name: 'cGetChats' }),
   graphql(getPrivateChat, { name: 'getPrivateChat' }),

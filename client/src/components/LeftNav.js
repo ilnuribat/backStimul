@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { graphql, compose } from "react-apollo";
+// import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Private from './Nav/Private';
 import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';
+
 // import Loading from './Loading';
 import { qauf, _url } from '../constants';
 import { getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED } from '../graph/querys';
@@ -16,6 +18,18 @@ class LeftNav extends Component {
     }
   }
 
+  // shouldComponentUpdate(nextProp, nextState) {
+  //   // Use lodash is Equal
+  //   console.warn(nextProp, this.props);
+  //   console.warn("ALL", _.isEqual(nextProp, this.props));
+  //   console.warn("getPrivateChat", _.isEqual(nextProp.cSetCountPrivates, this.props.cSetCountPrivates));
+  //   console.warn("getPrivateChat", nextProp.cSetCountPrivates, this.props.cSetCountPrivates);
+
+  //   return true;
+
+  // }
+
+
   //Подпись на все сообщения, адресованные тебе
   subscribe = (client) => {
     // call the "subscribe" method on Apollo Client
@@ -25,23 +39,25 @@ class LeftNav extends Component {
       next(data) {
         // ... call updateQuery to integrate the new comment
         // into the existing list of comments
-        //читаем все непрочитанные группы
-        client.query({query:cGetCountPrivates}).then(result => {
-          // console.warn("now unreaded is:", result.data.unr +1 )
-          const unr = result.data.unr +1
-          //пишем суумму всех непрочитанных приватов
+        //проверяем  от кого пришла мессага
+        if (data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
+          //читаем все непрочитанные группы
+          client.query({query:cGetCountPrivates}).then(result => {
+            const unr = result.data.unr +1
+            //пишем суумму всех непрочитанных приватов
 
-          client.mutate({
-            mutation: cSetCountPrivates,
-            variables: {
-              unr: unr
-            },
-            // update: ({ data }) => { console.warn("DATA IS" ,data)}
-          }).then(result => {
-            if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
-          })
+            client.mutate({
+              mutation: cSetCountPrivates,
+              variables: {
+                unr: unr
+              },
+              // update: ({ data }) => { console.warn("DATA IS" ,data)}
+            }).then(result => {
+              if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
+            })
 
-        });
+          });
+        }
         // console.warn("new private message", data)
       },
       error(err) { console.error('err', err); },
@@ -54,8 +70,10 @@ class LeftNav extends Component {
       if(a && a.data && a.data.user && a.data.user.directs){
         let privs = 0;
 
-        a.data.user.directs.map((e)=>{
-          privs = privs + e.unreadCount;
+        a.data.user.directs.map((e) => {
+          privs = privs + e.unreadCount
+
+          return null
         })
 
         this.props.cSetCountPrivates({
