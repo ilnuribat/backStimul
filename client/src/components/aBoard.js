@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { graphql, compose, Query  } from "react-apollo";
-import { TASKS_QUERY, getPrivateChat, setPrivateChat } from '../graph/querys';
-import { Redirect } from 'react-router-dom';
+import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus } from '../graph/querys';
 import { qauf, _url } from '../constants';
 import _ from 'lodash';
 import 'animate.css';
-import New from './New';
-
 
 let r;
 
@@ -27,7 +24,7 @@ const Column = ({...props})=>{
                 </Link>  
                 
                 <div className="small">{e.id}</div>
-                <div className="lastMessage">{e.lastMessage.from.username}: {e.lastMessage.text}</div>
+                {e.lastMessage ? (<div className="lastMessage">{e.lastMessage.from.username}: {e.lastMessage.text}</div>) : null }
               </div>
             )
           })
@@ -51,21 +48,6 @@ const DataQuery = ({...props})=>{
       }}
     </Query>
   )
-
-  // return(
-  //     <Query query={props.query} variables={props.vars}>
-  //       {({ loading, error, data }) => {
-  //         if (loading) return "Loading...";
-  //         if (error) return `Error! ${error.message}`;
-
-  //         console.log(data);
-
-  //         return (
-  //           true
-  //         );
-  //       }}
-  //     </Query>
-  //   )
 };
 
 
@@ -76,6 +58,7 @@ class Board extends Component {
     super(props);
     this.state = {
       input: [],
+      status: [],
       columns: [
         "Null",
         "Новые",
@@ -87,6 +70,7 @@ class Board extends Component {
 
     this.daTa = this.daTa.bind(this)
     this.selectTask = this.selectTask.bind(this)
+    this.glossStatus = this.glossStatus.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
@@ -103,6 +87,9 @@ class Board extends Component {
   }
 
   componentDidMount(){
+    this.glossStatus();
+    
+    
 
     this.props.setChat({
       variables: {
@@ -115,6 +102,19 @@ class Board extends Component {
 
   }
 
+  glossStatus(){
+
+    qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
+      this.setState({
+        status: ["",...a.data.glossary.taskStatuses]
+      });
+      console.log(a)
+    })
+      .catch((e)=>{
+        console.warn(e);
+      });
+  }
+
   
 
   render(){
@@ -123,7 +123,7 @@ class Board extends Component {
       r();
     }
 
-    let { daTa } = this.state;
+    let { daTa, status } = this.state;
     let { getChat } = this.props;
     let cols = [[],[],[],[],[],[],[]];
     
@@ -154,11 +154,14 @@ class Board extends Component {
 
             return(
               <div className="content-aft-nav columns-wrapper">
-                <Column key={this.state.columns[1]} name={this.state.columns[1]} tasks={cols[1]} selectTask={this.selectTask} />
-                <Column key={this.state.columns[2]} name={this.state.columns[2]} tasks={cols[2]} selectTask={this.selectTask} />
-                <Column key={this.state.columns[3]} name={this.state.columns[3]} tasks={cols[3]} selectTask={this.selectTask} />
-                <Column key={this.state.columns[4]} name={this.state.columns[4]} tasks={cols[4]} selectTask={this.selectTask} />
-                <Column key={this.state.columns[5]} name={this.state.columns[5]} tasks={cols[5]} selectTask={this.selectTask} />
+                {
+                  status.map((e,i)=>{
+                    if(!e.name){
+                      return true;
+                    }
+                    return <Column key={"column"+e.id} name={e.name} tasks={cols[i]} selectTask={this.selectTask} />
+                  })
+                }
               </div>
             )
           }

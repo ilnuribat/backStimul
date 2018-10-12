@@ -37,11 +37,15 @@ query{
 export const group = (gid) => `
 query{
   group(id: "${gid}"){
+    id
     name
     users{
       id
       username
     }
+    endDate
+    assignedTo
+    status
   }
   }
 `;
@@ -51,6 +55,7 @@ export const groupMut = (gid,params) =>`
     updateGroup(id: "${gid}", group: {${params}})
   }
 `;
+
 
 export const getPriority = () => `{
     glossary{
