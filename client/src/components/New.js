@@ -93,7 +93,7 @@ class ChangerForm extends React.Component {
     if(type === "date" && value){
       value = value.replace(/T.*$/gi, "");
       defaultText = defaultText.replace(/T.*$/gi, "");
-   }
+    }
 
     if(edit){
       if(select){
