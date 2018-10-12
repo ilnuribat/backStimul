@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import 'animate.css';
 import { graphql, compose  } from "react-apollo";
+import PropTypes from 'prop-types';
 import FirstLayout from './Layout';
 import ChatPrivate from './ChatPrivate';
 import { getPrivateChat, setPrivateChat } from '../graph/querys';
@@ -35,7 +36,7 @@ class Private extends Component {
   }
 
   componentWillUnmount(){
-    console.warn("UMount")
+    // console.warn("UMount")
     this.props.setPrivateChat({
       variables: { id: "", name: "" }
     })
@@ -87,6 +88,11 @@ class Private extends Component {
     );
   }
 }
+
+Private.propTypes = {
+  setPrivateChat: PropTypes.func.isRequired,
+  getchat: PropTypes.object.isRequired
+};
 
 
 export default compose(
