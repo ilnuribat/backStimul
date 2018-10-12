@@ -152,16 +152,6 @@ export const getPrivateChat = gql`
   }
 `;
 
-export const getPrivateChat2 = gql`
-  query private{
-      id @client
-      name @client
-      unr @client
-  }
-`;
-
-
-
 export const cGetChats = gql`
   query chats{
       chats
@@ -181,6 +171,27 @@ export const setPrivateChat = gql`
     private(name: $name, id: $id) @client {
       id
       name
+    }
+  }
+`;
+
+export const getlastMessageCache = gql`
+  query getlastMessageCache{
+      lastMessage @client {
+        groupId
+        id
+        text
+      }
+      id @client
+  }
+`;
+
+export const lastMessageCache = gql`
+  mutation lastMessageCache($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
+    lastMessageCache(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
+      lastMessage
+      lastMessageId
+      lastMessageGroupId
     }
   }
 `;

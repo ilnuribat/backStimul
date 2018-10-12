@@ -19,6 +19,13 @@ export default {
       return {userName, userId, __typename: 'selectUser' };
     },
 
+    lastMessageCache: (_, { lastMessage, lastMessageId, lastMessageGroupId },  { cache }) => {
+
+      cache.writeData({ data: { lastMessage: {text: lastMessage, id: lastMessageId, groupId: lastMessageGroupId, __typename: 'lastMessageCache' } }});
+
+      return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'lastMessageCache' };
+    },
+
     meSet: (_, { meid, mename, memail },  { cache }) => {
       cache.writeData({ data: { meid: meid, mename: mename, memail: memail } });
 

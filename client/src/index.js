@@ -56,6 +56,12 @@ const stateLink = withClientState({
     meid: "",
     mename: "",
     memail: "",
+    lastMessage: {
+      groupId: "",
+      id: "",
+      text: "",
+      __typename: "lastMessageCache"
+    }
   }
 });
 

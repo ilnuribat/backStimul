@@ -3,7 +3,7 @@ import 'animate.css';
 import { graphql, compose  } from "react-apollo";
 import FirstLayout from './Layout';
 import ChatPrivate from './ChatPrivate';
-import { getPrivateChat } from '../graph/querys';
+import { getPrivateChat, setPrivateChat } from '../graph/querys';
 
 class Private extends Component {
   constructor(props) {
@@ -32,11 +32,13 @@ class Private extends Component {
     let {getchat} = this.props;
 
     this.setStateProps(getchat)
-
   }
 
-  componentWillUpdate(){
-
+  componentWillUnmount(){
+    console.warn("UMount")
+    this.props.setPrivateChat({
+      variables: { id: "", name: "" }
+    })
   }
 
   setStateProps(props){
@@ -89,4 +91,5 @@ class Private extends Component {
 
 export default compose(
   graphql(getPrivateChat, { name: 'getchat' }),
+  graphql(setPrivateChat, { name: 'setPrivateChat' }),
 )(Private);

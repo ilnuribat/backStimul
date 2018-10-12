@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { graphql, compose } from "react-apollo";
-// import _ from 'lodash';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Private from './Nav/Private';
 import Groups from './Nav/Groups';
@@ -8,7 +8,7 @@ import Profile from './Nav/Profile';
 
 // import Loading from './Loading';
 import { qauf, _url } from '../constants';
-import { getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED } from '../graph/querys';
+import { getlastMessageCache, lastMessageCache, getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED } from '../graph/querys';
 
 class LeftNav extends Component {
   constructor(props) {
@@ -39,25 +39,43 @@ class LeftNav extends Component {
       next(data) {
         // ... call updateQuery to integrate the new comment
         // into the existing list of comments
-        //проверяем  от кого пришла мессага
-        if (data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
-          //читаем все непрочитанные группы
-          client.query({query:cGetCountPrivates}).then(result => {
-            const unr = result.data.unr +1
-            //пишем суумму всех непрочитанных приватов
+        let equalGroupMessage
+        //пишем мессагу в кэш
 
-            client.mutate({
-              mutation: cSetCountPrivates,
-              variables: {
-                unr: unr
-              },
-              // update: ({ data }) => { console.warn("DATA IS" ,data)}
-            }).then(result => {
-              if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
-            })
+        client.mutate({
+          mutation: lastMessageCache,
+          variables: {
+            lastMessage: data.data.messageAdded.text,
+            lastMessageId: data.data.messageAdded.id,
+            lastMessageGroupId: data.data.messageAdded.groupId
+          },
+          // update: ({ data }) => { console.warn("DATA IS" ,data)}
+        }).then(result => {
+          if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
+          //проверяем на совпадение группы мессаги и текущего привата
+          client.query({query:getlastMessageCache}).then(result => {
+            equalGroupMessage = _.isEqual(result.data.lastMessage.groupId, result.data.id)
+            if (!equalGroupMessage && data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
+              //если не совпадают, читаем все непрочитанные приваты
+              client.query({query:cGetCountPrivates}).then(result => {
+                const unr = result.data.unr +1
+                //пишем суумму всех непрочитанных приватов
 
-          });
-        }
+                client.mutate({
+                  mutation: cSetCountPrivates,
+                  variables: {
+                    unr: unr
+                  },
+                  // update: ({ data }) => { console.warn("DATA IS" ,data)}
+                }).then(result => {
+                  if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
+                })
+
+              });
+            }
+
+          })
+        })
         // console.warn("new private message", data)
       },
       error(err) { console.error('err', err); },
