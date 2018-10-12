@@ -1,55 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { graphql, compose, Query  } from "react-apollo";
-import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus } from '../graph/querys';
-import { qauf, _url } from '../constants';
 import _ from 'lodash';
 import 'animate.css';
+import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus } from '../graph/querys';
+import { qauf, _url } from '../constants';
+import Column from './BoardParts/Column';
+import DataQuery from './BoardParts/DataQuery';
 
 let r;
-
-const Column = ({...props})=>{
-  return(
-    <div className="column animated fadeIn">
-      <div className="column-name">{props.name}</div>
-      <div className="column-content">
-        {
-          props.tasks.map((e,i)=>{
-            let obj = {id: e.id, name: e.name }
-
-            return(
-              <div key={e.id} className="task animated fadeIn">
-                <Link to="/">
-                  <div className="head-link" onClick={()=>props.selectTask(obj)} data-id={e.id} taskid={e.id}>{e.name}</div>
-                </Link>  
-                
-                <div className="small">{e.id}</div>
-                {e.lastMessage ? (<div className="lastMessage">{e.lastMessage.from.username}: {e.lastMessage.text}</div>) : null }
-              </div>
-            )
-          })
-        }
-      </div>
-    </div>
-  )
-};
-
-const DataQuery = ({...props})=>{
-  return(
-    <Query query={props.query} variables={props.vars}>
-      {({ loading, error, data }) => {
-      // if (loading) return "Loading...";
-      // if (error) return `Error! ${error.message}`;
-
-        console.log(data);
-
-        return data.user.groups;
-
-      }}
-    </Query>
-  )
-};
-
 
 
 class Board extends Component {

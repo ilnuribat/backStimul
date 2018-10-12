@@ -1,15 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
-import ColorHash from 'color-hash';
 import moment from 'moment';
 import { Query, Mutation, Subscription, graphql, compose  } from "react-apollo";
 import { ADD_MUT, getPrivateChat, GR_QUERY, PRIV_QUERY, MESSAGE_CREATED, MESSAGE_READ, MESSAGEREAD_MUT, messRead, MESSAGE_QUERY, messageRead_MUT } from '../../graph/querys';
 import AddNew from './AddNew';
 import Loading from '../Loading';
 import { MsgCheck, MsgDblcheck, MsgDblcheckAck } from '../Svg/index';
-import { qauf, _url } from '../../constants';
+import { qauf, _url, colorHash } from '../../constants';
 
-var colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
 let ref1;
 
 const AddMesMut = ({ children }) => (

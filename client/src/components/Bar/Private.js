@@ -1,16 +1,11 @@
 import React from 'react';
 import { graphql, compose, Query  } from "react-apollo";
 import { getPrivateChat, setPrivateChat, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED, cSetCountPrivates, cSetChats, cGetChats } from '../../graph/querys';
-import { qauf, _url } from '../../constants';
+import { qauf, _url, colorHash } from '../../constants';
 import Loading from '../Loading';
-import ColorHash from 'color-hash';
 import PropTypes from 'prop-types';
 
-var colorHash = new ColorHash({ saturation: 0.8, hue: 0.8 });
-
 let ref1;
-// let ref2;
-// let gref;
 
 const subscrMes = (subscribeToMore,idu, refetch)=>{
   return subscribeToMore({ document: MESSAGE_CREATED, variables: {id: idu,},

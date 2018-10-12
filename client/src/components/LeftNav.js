@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-
 import Private from './Nav/Private';
 import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';

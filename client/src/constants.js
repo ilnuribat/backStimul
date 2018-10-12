@@ -1,4 +1,7 @@
+import ColorHash from 'color-hash';
 require('dotenv').load();
+
+export const colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
 
 export const colors = {
   blue: {
