@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { getPrivateChat, setPrivateChat, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED, cSetCountPrivates, cSetChats, cGetChats } from '../../graph/querys';
 import { qauf, _url, colorHash } from '../../constants';
 import Loading from '../Loading';
-import PropTypes from 'prop-types';
 
 
 let ref1;

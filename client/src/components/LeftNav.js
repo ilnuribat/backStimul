@@ -30,7 +30,6 @@ class LeftNav extends Component {
         <nav className="left-nav">
           <Profile />
           <Groups />
-          <Private />
           <Board />
           <Query query={PRIVS_QUERY}>
             {({ loading, error, data, refetch, subscribeToMore }) => {
