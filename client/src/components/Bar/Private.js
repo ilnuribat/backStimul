@@ -1,9 +1,12 @@
 import React from 'react';
 import { graphql, compose, Query  } from "react-apollo";
+import ColorHash from 'color-hash';
+import PropTypes from 'prop-types';
 import { getPrivateChat, setPrivateChat, createDirect, PRIVS_QUERY, USERS_QUERY, MESSAGE_CREATED, cSetCountPrivates, cSetChats, cGetChats } from '../../graph/querys';
 import { qauf, _url, colorHash } from '../../constants';
 import Loading from '../Loading';
 import PropTypes from 'prop-types';
+
 
 let ref1;
 
@@ -65,29 +68,21 @@ class Private extends React.Component {
       directs: '',
     }
 
-    this.newPrivate = this.newPrivate.bind(this);
     this.openPrivate = this.openPrivate.bind(this);
     this.CreateNewGroup = this.CreateNewGroup.bind(this);
-    this.fetcher = this.fetcher.bind(this);
-    this.allPrivates = this.allPrivates.bind(this);
-
   }
 
-
-  newPrivate(uid,name){
-    // this.props.setPrivate({
-    //   variables: { uid: uid, name: name }
-    // })
-  }
 
   openPrivate(gid, name){
+    console.warn (gid, name)
+
     this.props.setPrivate({
-      variables: { id: gid, name: name }
+      variables: { id: gid, name: name, unr: 0 }
     })
+    ref1();
   }
 
-
-  CreateNewGroup(uid, name){
+  CreateNewGroup(uid){
 
     let params = `"${uid}"`;
 
@@ -100,42 +95,8 @@ class Private extends React.Component {
     });
   }
 
-  fetcher(){
-
-  }
-
-  allPrivates(){
-    let {directs} = this.state;
-    if(directs){
-      let privates = 0;
-
-        directs.map((e,i,a)=>{
-
-          privates += e.unreadCount;
-          
-          this.props.setCountPriv({
-            variables: { unreaded: 50, chats: directs }
-          });
-
-
-
-
-        return(
-          <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
-            {e.name}
-            {e.messages && e.messages.edges.length ? (<span className="small-ruond-info">{e.messages.edges.length}</span>) : null}
-          </div>
-        )
-      })
-    }
-  }
-
-
-  componentDidMount(){
-
-  }
-
   render(){
+
 
     return (
       <div className="f-column-l">
@@ -167,7 +128,7 @@ class Private extends React.Component {
 
                   if(data && data.user && data.user.directs){
                     let privs = 0;
-                    
+
 
                     return(
                       <div>{
@@ -180,6 +141,7 @@ class Private extends React.Component {
 
 
                           this.props.getchat.id !== e.id ? subscrMes(subscribeToMore,e.id, refetch) : null ;
+                          console.warn (e.name, e.unreadCount)
 
                           return(
                             <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
@@ -192,7 +154,7 @@ class Private extends React.Component {
                     )
                   }else{
                     return(
-                      <div className="errorMessage">Нет данных</div>
+                      <div className="errorMessage" >Нет данных</div>
                     )
                   }
                 }}
@@ -222,10 +184,12 @@ class Private extends React.Component {
                         <div>{
                           data.users.map((e,i,a)=>{
                             let Iam;
+
                             if(e.id === localStorage.getItem('userid')){
                               Iam = ' - я';
-                              return <span style={{color: colorHash.hex(e.username)}}>{e.username}<span>{Iam}</span></span>;
-                            };
+
+                              return <span style={{color: colorHash.hex(e.username)}}  key={'usersspan-'+i} >{e.username}<span>{Iam}</span></span>;
+                            }
 
                             return(
                               <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>

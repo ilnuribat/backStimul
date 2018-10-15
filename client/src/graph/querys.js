@@ -148,6 +148,14 @@ export const getPrivateChat = gql`
   }
 `;
 
+export const getPrivateChat2 = gql`
+  query private{
+      id @client
+      name @client
+      unr @client
+  }
+`;
+
 
 
 export const cGetChats = gql`
@@ -165,8 +173,8 @@ export const cSetChats = gql`
 `;
 
 export const setPrivateChat = gql`
-  mutation private($name: String!, $id: String!){
-    private(name: $name, id: $id) @client {
+  mutation private($name: String!, $id: String!, $unr: Number){
+    private(name: $name, id: $id, unr: $unr) @client {
       id
       name
       unr
@@ -342,6 +350,23 @@ export const MESSAGE_CREATED = gql`
   }
 `;
 
+export const ALL_MESSAGE_CREATED = gql`
+  subscription {
+      messageAdded{
+          id
+          text
+          from{
+            id
+            username
+          }
+          createdAt
+          userId
+          groupId
+          isRead
+      }
+  }
+`;
+
 export const MESSAGE_READ = gql`
   subscription messageRead($id: ID!){
       messageRead(id: $id){
@@ -396,3 +421,16 @@ query group($id: ID!){
     }
   }
 `;
+
+export const getUnreadCount = gql`{
+    user {
+      directs {
+        id
+        unreadCount
+      }
+      groups {
+        id
+        unreadCount
+      }
+    }
+}`;
