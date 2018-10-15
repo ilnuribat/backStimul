@@ -1870,3 +1870,9 @@ select option{
 .assignedTo .userCloud{
 
 }
+.endDate{
+  padding: 10px;
+}
+.endDate-red{
+  color: #C62828;
+}

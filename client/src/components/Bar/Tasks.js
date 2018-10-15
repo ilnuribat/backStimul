@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo';
 import { PropTypes } from 'prop-types';
-import { setPrivateChat, getPrivateChat, createGroup, user } from '../../graph/querys';
+import { setPrivateChat, getPrivateChat, createGroup, user, getCUser } from '../../graph/querys';
 import { qauf, _url } from '../../constants'
 import 'animate.css';
 
@@ -108,14 +108,16 @@ class Tasks extends Component {
   render() {
 
     const {grl, grid, addGroupInputs, newGrName} = this.state;
-    const { getPrivateChat } = this.props;
+    const { getPrivateChat, getCUser } = this.props;
 
     return (
       <div>
         <h3>Задачи</h3>
         <div className='list-container'>
 
-          {grl.map((e,i)=>{
+          
+
+          {getCUser && getCUser.user && getCUser.user.groups.map((e,i)=>{
             return(
               <div key={"gr"+i} role="presentation" className={grid === e.id || getPrivateChat.id === e.id ? 'active list animated fadeIn' : 'list animated fadeIn'} onClick={()=>{this.changeGroup(e.id, e.name)}}>{e.name}</div>
             )
@@ -152,4 +154,5 @@ Tasks.defaultProps = {
 export default compose(
   graphql(setPrivateChat, { name: 'setPrivateChat' }),
   graphql(getPrivateChat, { name: 'getPrivateChat' }),
+  graphql(getCUser, { name: 'getCUser' }),
 )(Tasks);

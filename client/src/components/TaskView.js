@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { qauf, _url, colorHash } from '../constants';
 import 'animate.css';
-import { getPrivateChat, user, group, selectUser, allUsers, glossaryStatus, groupMut } from '../graph/querys';
+import { getPrivateChat, user, group, selectUser, allUsers, glossaryStatus, groupMut, getCUser } from '../graph/querys';
 import FirstLayout from './Layout';
 import ChatPrivate from './ChatPrivate';
 import Loading from './Loading';
@@ -181,7 +181,7 @@ class GroupList extends Component {
 
   render() {
     const {users, _grid, allusers, groupName, groupInfo, modal, status} = this.state;
-    const {getPrivateChat} = this.props;
+    const {getPrivateChat, getCUser} = this.props;
 
     let onlyunicusers = _.differenceWith(allusers, users, _.isEqual);
 
@@ -301,4 +301,5 @@ GroupList.propTypes = {
 export default compose(
   graphql(getPrivateChat, { name: 'getPrivateChat' }),
   graphql(selectUser, { name: 'selectUser' }),
+  graphql(getCUser, { name: 'getCUser' }),
 )(GroupList);

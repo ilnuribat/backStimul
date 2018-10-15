@@ -67,7 +67,7 @@ class Board extends Component {
       this.setState({
         status: ["",...a.data.glossary.taskStatuses]
       });
-      console.log(a)
+      // console.log(a)
     })
       .catch((e)=>{
         console.warn(e);
@@ -78,7 +78,7 @@ class Board extends Component {
 
   render(){
 
-    console.log("GET C USER _____",this.props.getCUser)
+    // console.log("GET C USER _____",this.props.getCUser)
 
     if(r){
       r();
@@ -94,7 +94,7 @@ class Board extends Component {
 
     let arr = getCUser.user.groups;
 
-    console.log("ARR ___ ", arr);
+    // console.log("ARR ___ ", arr);
 
 
     arr = _.sortBy(arr, 'unreadCount');

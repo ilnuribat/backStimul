@@ -8,7 +8,13 @@ const Column = ({...props})=>{
       <div className="column-content">
         {
           props.tasks.map((e)=>{
-            let obj = {id: e.id, name: e.name }
+            let obj = {id: e.id, name: e.name };
+            let time = "";
+            if(e.endDate){
+              time = e.endDate;
+              time = time.replace(/T.*$/gi, "");
+            }
+            
 
             return(
               <div key={e.id} className="task animated fadeIn">
@@ -17,6 +23,7 @@ const Column = ({...props})=>{
                 </Link>  
                 
                 <div className="small">{e.id}</div>
+                <div className="endDate">Дата завершения: {time ? (<span className="endDate-red">{time}</span>) : "Не указано" }</div>
                 <div className="assignedTo"><span className="messageCloud">Ответственный:</span><span className="userCloud">
                   {e.assignedTo ? e.assignedTo : "не назначен" }
                 </span></div>

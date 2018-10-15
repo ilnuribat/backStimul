@@ -73,7 +73,7 @@ class LeftNav extends Component {
             {({ loading, error, data, refetch, subscribeToMore }) => {
               if (loading){
                 return (
-                  <div style={{ paddingTop: 20 }}>
+                  <div style={{ paddingTop: 20, margin: "auto"}}>
                     <Loading />
                   </div>
                 );
@@ -91,16 +91,59 @@ class LeftNav extends Component {
                 console.log("tasks",data);
 
                 data.user.groups.map((e,i)=>{
-                  return(
-                    <Subscription
-                      subscription = {taskUpdated} variables={{id: e.id}}>
-                      {({ data }) => {
-                        console.warn("tasks", data)
-                      }}
-                    </Subscription>
-                  )
+                  let id = e.id;
+            // return(
+            //         <Subscription
+            //           subscription = {taskUpdated} variables={{id: id}}>
+            //           {({ data, error }) => {
+            //             if(error){
+            //               console.log(error)
+            //             }
+            //             console.warn("tasks____", data);
+            //             return data;
+            //           }}
+            //         </Subscription>
+            //       )
+
+                  let subs = () =>{
+                    subscribeToMore({
+                      document: taskUpdated,
+                      variables: { id: id },
+                      updateQuery: (prev, { subscriptionData }) => {
+                        if (!subscriptionData.data) return prev;
+                        const newFeedItem = subscriptionData.data.commentAdded;
+          
+                          console.log(prev);
+                          console.log(subscriptionData);
+                          refetch();
+
+                        return true;
+
+                        return Object.assign({}, prev, {
+                          user: {
+                            groups: [newFeedItem, ...prev.entry.comments]
+                          }
+                        });
+                      }
+                    });
+                  };
+
+                  subs();
+
+
+                  // subscribeToMore();
+                  // return(
+                  //   <Subscription
+                  //     subscription = {taskUpdated} variables={{id}}>
+                  //     {({ data }) => {
+                  //       console.warn("tasks____", data);
+                  //       return data;
+                  //     }}
+                  //   </Subscription>
+                  // )
                 });
 
+                return true;
 
 
               }

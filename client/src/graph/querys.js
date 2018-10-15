@@ -436,14 +436,23 @@ export const getUnreadCount = gql`{
 }`;
 
 export const taskUpdated = gql`
-subscription taskUpdated($id: String!){
+subscription taskUpdated($id: ID!){
   taskUpdated(id: $id){
     name
-    users
+    users{
+      id
+      username
+    }
     unreadCount
     status
     assignedTo
-    lastMessage
+    lastMessage{
+          from{
+            id
+            username
+          }
+          text
+        }
     endDate
   }
 }`;
