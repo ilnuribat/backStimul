@@ -434,3 +434,37 @@ export const getUnreadCount = gql`{
       }
     }
 }`;
+
+export const taskUpdated = gql`
+subscription taskUpdated($id: String!){
+  taskUpdated(id: $id){
+    name
+    users
+    unreadCount
+    status
+    assignedTo
+    lastMessage
+    endDate
+  }
+}`;
+
+export const getCUser = gql`
+query getCUser{
+    user @client{
+      groups{
+        id
+        name
+        unreadCount
+        status
+        assignedTo
+        lastMessage{
+          from{
+            id
+            username
+          }
+          text
+        }
+        endDate
+      }
+    }
+}`;

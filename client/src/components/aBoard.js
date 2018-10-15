@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { graphql, compose, Query  } from "react-apollo";
 import _ from 'lodash';
 import 'animate.css';
-import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus } from '../graph/querys';
+import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus, getCUser } from '../graph/querys';
 import { qauf, _url } from '../constants';
 import Column from './BoardParts/Column';
 import DataQuery from './BoardParts/DataQuery';
+import Loading from './Loading';
 
 let r;
 
@@ -77,55 +78,88 @@ class Board extends Component {
 
   render(){
 
+    console.log("GET C USER _____",this.props.getCUser)
+
     if(r){
       r();
     }
 
     let { daTa, status } = this.state;
-    let { getChat } = this.props;
+    let { getChat, getCUser } = this.props;
     let cols = [[],[],[],[],[],[],[]];
-    
+
+    if(getCUser.loading) return <Loading />;
+    if(!getCUser.user) return <Loading />;
+    if(!getCUser.user.groups) return <Loading />;
+
+    let arr = getCUser.user.groups;
+
+    console.log("ARR ___ ", arr);
+
+
+    arr = _.sortBy(arr, 'unreadCount');
+  
+    _.forEach(arr, (result)=>{
+      if(!result.status){
+        cols[1].push(result);
+      }
+      if(result.status){
+        cols[result.status].push(result);
+      }
+    });
 
     return(
-      <Query query={TASKS_QUERY}>
-        {({ loading, error, data, refetch }) => {
-          r = refetch;
-          if (loading) return "Loading...";
-          if (error) return `Error! ${error.message}`;
-          if(data && data.user && data.user.groups){
-  
-            console.log(data.user.groups);
-            let arr = data.user.groups;
-  
-            arr = _.sortBy(arr, 'unreadCount');
-  
-            // let i = 1;
-  
-            _.forEach(arr, (result)=>{
-              if(!result.status){
-                cols[1].push(result);
-              }
-              if(result.status){
-                cols[result.status].push(result);
-              }
-            });
-
-            return(
-              <div className="content-aft-nav columns-wrapper">
-                {
-                  status.map((e,i)=>{
-                    if(!e.name){
-                      return true;
-                    }
-                    return <Column key={"column"+e.id} name={e.name} tasks={cols[i]} selectTask={this.selectTask} />
-                  })
-                }
-              </div>
-            )
-          }
-        }}
-      </Query>
+      <div className="content-aft-nav columns-wrapper">
+        {
+          status.map((e,i)=>{
+            if(!e.name){
+              return true;
+            }
+            return <Column key={"column"+e.id} name={e.name} tasks={cols[i]} selectTask={this.selectTask} />
+          })
+        }
+      </div>
     )
+
+      // <Query query={TASKS_QUERY}>
+      //   {({ loading, error, data, refetch }) => {
+      //     r = refetch;
+      //     if (loading) return "Loading...";
+      //     if (error) return `Error! ${error.message}`;
+      //     if(data && data.user && data.user.groups){
+  
+      //       console.log(data.user.groups);
+      //       let arr = data.user.groups;
+  
+      //       arr = _.sortBy(arr, 'unreadCount');
+  
+      //       // let i = 1;
+  
+      //       _.forEach(arr, (result)=>{
+      //         if(!result.status){
+      //           cols[1].push(result);
+      //         }
+      //         if(result.status){
+      //           cols[result.status].push(result);
+      //         }
+      //       });
+
+      //       return(
+      //         <div className="content-aft-nav columns-wrapper">
+      //           {
+      //             status.map((e,i)=>{
+      //               if(!e.name){
+      //                 return true;
+      //               }
+      //               return <Column key={"column"+e.id} name={e.name} tasks={cols[i]} selectTask={this.selectTask} />
+      //             })
+      //           }
+      //         </div>
+      //       )
+      //     }
+      //   }}
+      // </Query>
+    
   }
 
   
@@ -134,4 +168,5 @@ class Board extends Component {
 export default compose(
   graphql(getPrivateChat, { name: 'getChat' }),
   graphql(setPrivateChat, { name: 'setChat' }),
+  graphql(getCUser, { name: 'getCUser' }),
 )(Board);

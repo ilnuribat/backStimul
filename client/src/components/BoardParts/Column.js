@@ -17,8 +17,14 @@ const Column = ({...props})=>{
                 </Link>  
                 
                 <div className="small">{e.id}</div>
-                {e.lastMessage ? (<div className="lastMessage">{e.lastMessage.from.username}: {e.lastMessage.text}</div>) : null }
-              </div>
+                <div className="assignedTo"><span className="messageCloud">Ответственный:</span><span className="userCloud">
+                  {e.assignedTo ? e.assignedTo : "не назначен" }
+                </span></div>
+                  {e.lastMessage ? (<div className="lastMessage">
+                    <span className="userCloud">{e.lastMessage.from.username}:</span>
+                    <span className="messageCloud">{e.lastMessage.text}</span></div>) : null 
+                  }
+                </div>
             )
           })
         }

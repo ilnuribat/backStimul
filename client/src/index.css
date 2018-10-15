@@ -1740,9 +1740,12 @@ body, html, root { min-width: 300px;
   background: #3657835e;
 }
 .column-content > .task > .lastMessage{
+  margin:5px auto;
   text-align: left;
-  padding:5px;
-  max-height: 30px;
+  padding:10px;
+  max-height: 100px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden;
   background: #dadada1c;
 }
@@ -1842,4 +1845,28 @@ select option{
   padding:10px 10px;
   background: rgba(8, 183, 206, 0.171);
   margin:5px 0;
+}
+
+.userCloud{
+  display: inline-block;
+  background: #1fc55f;
+  border-radius: 3px;
+  padding:5px;
+  overflow: hidden;
+}
+.messageCloud{
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  border-radius: 3px;
+  padding:5px;
+  /* background: #0099cc4f; */
+}
+.assignedTo{
+  margin: 5px auto;
+  background: rgba(27, 33, 38, 0.404);
+}
+.assignedTo .userCloud{
+
 }

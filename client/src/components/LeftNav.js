@@ -7,7 +7,7 @@ import Board from './Nav/Board';
 import PropTypes from 'prop-types';
 import Loading from './Loading';
 
-import { PRIVS_QUERY, cSetCountPrivates, ALL_MESSAGE_CREATED } from '../graph/querys';
+import { PRIVS_QUERY, cSetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY } from '../graph/querys';
 
 class LeftNav extends Component {
   constructor(props) {
@@ -67,6 +67,65 @@ class LeftNav extends Component {
             }}
           </Query>
 
+
+
+          <Query query={TASKS_QUERY} >
+            {({ loading, error, data, refetch, subscribeToMore }) => {
+              if (loading){
+                return (
+                  <div style={{ paddingTop: 20 }}>
+                    <Loading />
+                  </div>
+                );
+              }
+              if (error){
+                return (
+                  <div style={{ paddingTop: 20 }}>
+                    <Loading />
+                  </div>
+                );
+              }
+
+              if(data){
+
+                console.log("tasks",data);
+
+                data.user.groups.map((e,i)=>{
+                  return(
+                    <Subscription
+                      subscription = {taskUpdated} variables={{id: e.id}}>
+                      {({ data }) => {
+                        console.warn("tasks", data)
+                      }}
+                    </Subscription>
+                  )
+                });
+
+
+
+              }
+
+
+
+              // if(data && data.user && data.user.directs){
+              //   let privs = 0;
+
+              //   data.user.directs.map((e,i)=>{
+              //     privs = privs + e.unreadCount;
+              //   })
+
+
+              //   this.props.cSetCountPrivates({
+              //     variables: { unr: privs }
+              //   });
+              // }
+
+
+
+              return true;
+            }}
+          </Query>
+
         </nav>
       </Fragment>
     )
@@ -98,6 +157,15 @@ const subscrMes = ()=> {
     subscription = {ALL_MESSAGE_CREATED}>
     {({ data }) => {
       console.warn("asasas", data)
+    }}
+  </Subscription>
+}
+
+const subscrTasks = (id)=> {
+  <Subscription
+    subscription = {taskUpdated} variables={id}>
+    {({ data }) => {
+      console.warn("tasks", data)
     }}
   </Subscription>
 }
