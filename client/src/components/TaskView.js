@@ -13,6 +13,34 @@ import ChangerForm from './TaskParts/ChangerForm';
 
 let usernameAss, statusName;
 
+let subsUser = (id,subscribeToMore, refetch) =>{
+  console.log("Subs User started")
+
+  return subscribeToMore({
+    document: userTaskUpdated,
+    variables: { id: id },
+    updateQuery: (prev, { subscriptionData }) => {
+      if (!subscriptionData.data) return prev;
+      const newFeedItem = subscriptionData.data.commentAdded;
+
+        console.log("SUBSCRIBE USERS IN WORK");
+        console.log(prev);
+        console.log(subscriptionData);
+        refetch().then(()=>{
+          console.log("SUBSCRIBE USERS IN WORK");
+        });
+
+      // return true;
+
+      // return Object.assign({}, prev, {
+      //   user: {
+      //     groups: [newFeedItem, ...prev.entry.comments]
+      //   }
+      // });
+    }
+  });
+};
+
 class GroupList extends Component {
   constructor(props) {
     super(props)
@@ -207,17 +235,24 @@ class GroupList extends Component {
     })
   }
 
-  userAdd(i){
+  userAdd(i,add){
 
     // let q = () => {return(`
     //   mutation{
     //     updateGroup(id: "${this.props.getPrivateChat.id}", group: {userIds:["${i}"]})
     //   }
     //   `)} ;
+    let q;
 
-    let q = () => {return(`mutation{
-      updateUsersGroup(group: {id: "${this.props.getPrivateChat.id}", users: ["${i}"]} )
-    }`)} ;
+    if(add){
+      q = () => {return(`mutation{
+        updateUsersGroup(group: {id: "${this.props.getPrivateChat.id}", delete: false, users: ["${i}"]} )
+      }`)} ;
+    }else{
+      q = () => {return(`mutation{
+        updateUsersGroup(group: {id: "${this.props.getPrivateChat.id}", delete: true, users: ["${i}"]} )
+      }`)} ;
+    }
 
     qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
       console.log("Answer updUsrGr",a)
@@ -445,6 +480,9 @@ class GroupList extends Component {
                             );
                           }
 
+
+                          subsUser(getPrivateChat.id, subscribeToMore, refetch);
+
                           if(data){
                             // console.log("users in group",data.group.users);
                             // return <div>allUsers</div>
@@ -452,11 +490,14 @@ class GroupList extends Component {
                               data.group.users.map(
                                 (e,i)=>{
                                   return(
-                                    <div className="username" role="presentation" style={{color: colorHash.hex(e.username)}} key={'usr-'+i} onClick={()=>this.userSelect(e.username, e.id)}>
-                                      {e.username}
-                                      {' '}
-                                      {localStorage.getItem('userid') === e.id ? (<span className="me"> - это я</span>) : '' }
-                                      {' '}
+                                    <div className="username" role="presentation" key={'usr-'+i} >
+                                      <div className="name" style={{color: colorHash.hex(e.username)}} >{e.username}{localStorage.getItem('userid') === e.id ? (<span className="me"> - это я</span>) : '' }</div>
+                                      <div className="hoverTrigger">
+                                        <div className="hover">
+                                          <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
+                                          <div className="btn v2" onClick={()=>this.userAdd(e.id)}>Удалить {e.username}</div>
+                                        </div>
+                                      </div>
                                     </div>
                                   )
                                 }
@@ -466,33 +507,9 @@ class GroupList extends Component {
                             
                             // return true;
                           }
-                          let subs = (id) =>{
-                            subscribeToMore({
-                              document: userTaskUpdated,
-                              variables: { id: id },
-                              updateQuery: (prev, { subscriptionData }) => {
-                                if (!subscriptionData.data) return prev;
-                                const newFeedItem = subscriptionData.data.commentAdded;
-                  
-                                  console.log("SUBSCRIBE USERS IN WORK");
-                                  console.log(prev);
-                                  console.log(subscriptionData);
-                                  refetch().then(()=>{
-                                    console.log("SUBSCRIBE USERS IN WORK");
-                                  });
 
-                                return true;
 
-                                return Object.assign({}, prev, {
-                                  user: {
-                                    groups: [newFeedItem, ...prev.entry.comments]
-                                  }
-                                });
-                              }
-                            });
-                          };
-
-                          subs(getPrivateChat.id);
+                          
 
                         return true;
                         }}
@@ -526,7 +543,7 @@ class GroupList extends Component {
                       {
                         onlyunicusers && onlyunicusers.length > 0 ? onlyunicusers.map((e,i)=>{
                           return(
-                            <div className="username" role="presentation" style={{color: colorHash.hex(e.username)}} key={'usr-'+i} onClick={()=>this.userAdd(e.id)}>
+                            <div className="username" role="presentation" style={{color: colorHash.hex(e.username)}} key={'usr-'+i} onClick={()=>this.userAdd(e.id, 1)}>
                               {e.username}
                               {' '}
                               {localStorage.getItem('userid') === e.id ? (<span className="me"> - это я</span>) : null }
@@ -580,6 +597,7 @@ class GroupList extends Component {
     );
   }
 }
+
 
 
 GroupList.propTypes = {

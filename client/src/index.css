@@ -1884,3 +1884,82 @@ select option{
 .endDate-red{
   color: #C62828;
 }
+
+.username{
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+.username:hover {
+  z-index: 9;
+}
+.username > .hover{
+  /* transition: all 0.5s ease;
+  display: none;
+  position: absolute;
+  top:0;
+  right:0;
+  width:auto;
+  height: 0;
+  background: transparent;
+  overflow: hidden; */
+}
+.username:hover > .hover{
+  /* padding: 5px;
+  display: inline-block;
+  height: auto;
+  right: 5px;
+  top:5px;
+  background: rgba(27, 33, 38, 0.575);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05); */
+}
+.btn.v2{
+  width:auto;
+  max-width: 100%;
+  display: block;
+  background: rgb(44, 57, 70);
+  padding: 8px 5px;
+  margin:2px auto;
+  text-align: center;
+  border-radius: 5px;
+}
+.btn.v2:hover{
+  color: #fff;
+}
+.username .name{
+  flex: 1;
+  display: block;
+  position: relative;
+  margin-right:5px;
+}
+.username .hoverTrigger{
+  width:24px;
+  height:24px;
+  display: block;
+  position: relative;
+  background: rgba(18, 25, 31, 0.774);
+  border-radius: 3px;
+  border:3px solid #1B2126;
+}
+.username .hoverTrigger .hover{
+  transition: all 0.5s ease;
+  display: none;
+  position: absolute;
+  top:0;
+  right:0;
+  width:0;
+  height: 0;
+  background: transparent;
+  overflow: hidden;
+}
+.username .hoverTrigger:hover .hover{
+  padding: 5px;
+  display: inline-block;
+  width:auto;
+  min-width:160px;
+  height: auto;
+  right: 5px;
+  top:5px;
+  background: rgba(27, 33, 38, 0.575);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05); 
+}
