@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
+import { Subscription } from 'react-apollo';
 
 export const updTask = (...params) => {
   return (`mutation{
@@ -44,7 +45,10 @@ query{
       username
     }
     endDate
-    assignedTo
+    assignedTo{
+      id
+      username
+    }
     status
   }
   }
@@ -229,21 +233,27 @@ export const TASKS_QUERY = gql`
     query{
       user{
         groups{
+        id
+        name
+        users{
           id
-          name
-          unreadCount
-          status
-          assignedTo
-          endDate
-          lastMessage{
-            id
-            text
-            from{
-              id
-              username
-            }
-          }
+          username
         }
+        unreadCount
+        status
+        assignedTo{
+          id
+          username
+        }
+        lastMessage{
+          from{
+            id
+            username
+          }
+          text
+        }
+        endDate
+      }
       }
     }
 `;
@@ -417,7 +427,10 @@ query group($id: ID!){
       name
       status
       endDate
-      assignedTo
+      assignedTo{
+        id
+        username
+      }
     }
   }
 `;
@@ -438,23 +451,27 @@ export const getUnreadCount = gql`{
 export const taskUpdated = gql`
 subscription taskUpdated($id: ID!){
   taskUpdated(id: $id){
-    name
-    users{
-      id
-      username
-    }
-    unreadCount
-    status
-    assignedTo
-    lastMessage{
+        id
+        name
+        users{
+          id
+          username
+        }
+        unreadCount
+        status
+        assignedTo{
+          id
+          username
+        }
+        lastMessage{
           from{
             id
             username
           }
           text
         }
-    endDate
-  }
+        endDate
+      }
 }`;
 
 export const getCUser = gql`
@@ -463,9 +480,16 @@ query getCUser{
       groups{
         id
         name
+        users{
+          id
+          username
+        }
         unreadCount
         status
-        assignedTo
+        assignedTo{
+          id
+          username
+        }
         lastMessage{
           from{
             id
@@ -477,3 +501,27 @@ query getCUser{
       }
     }
 }`;
+
+
+export const GRU_QUERY = gql`
+  query group($id: ID!){
+      group(id: $id ){
+          users{
+              id
+              username
+          }
+      }
+  }
+`;
+
+export const userTaskUpdated = gql`
+  subscription userTaskUpdated($id: ID!){
+    userTaskUpdated(id: $id){
+          action
+          user{
+              id
+              username
+          }
+      }
+  }
+`;

@@ -169,7 +169,7 @@ class Tasks extends Component {
               }
 
               return(
-                <div className="colName">
+                <div className="colName" key={"col"+e.id}>
                   <div className="colHead">{e.name}</div>
 
                   {cols[i].map((e,i)=>{
