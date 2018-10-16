@@ -363,11 +363,11 @@ margin-left:50px;
   flex-direction: column;
   height: 100%;
 }
-input[type="text"],button, textarea{
+input[type="text"],input[type="password"],button, textarea{
   margin:5px auto;
   padding:5px;
 }
-input[type="text"]{
+input[type="text"],input[type="password"]{
   background: transparent;
   display: inline-block;
   width: 100%;
@@ -393,6 +393,10 @@ input:focus, textarea:focus{
   outline:0 none transparent;
   border:0 none transparent;
   border-bottom: 3px solid #0099cc;
+}
+
+.auth input{
+  display: block;
 }
 
 .button,button, input[type="submit"]{
@@ -610,7 +614,9 @@ height:100%;
   margin:2px;
   padding:20px;
 }
-.taskModule .inner input[type="text"]{
+.taskModule .inner input[type="text"],
+.taskModule .inner input[type="password"]
+{
 width:200px;
 min-width:200px;
 height:30px;
@@ -1423,7 +1429,9 @@ form div{
 form>.textarea-wrapper{
   flex:2;
 }
-form input[type="text"]{
+form input[type="text"],
+form input[type="password"]
+{
   width:200px;
   text-align: center;
 }
