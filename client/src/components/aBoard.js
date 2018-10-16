@@ -108,6 +108,10 @@ class Board extends Component {
       }
     });
 
+
+    console.log(status)
+    console.log(cols)
+
     return(
       <div className="content-aft-nav columns-wrapper">
         {

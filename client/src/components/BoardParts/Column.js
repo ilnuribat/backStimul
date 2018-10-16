@@ -25,7 +25,7 @@ const Column = ({...props})=>{
                 <div className="small">{e.id}</div>
                 <div className="endDate">Дата завершения: {time ? (<span className="endDate-red">{time}</span>) : "Не указано" }</div>
                 <div className="assignedTo"><span className="messageCloud">Ответственный:</span><span className="userCloud">
-                  {e.assignedTo ? e.assignedTo : "не назначен" }
+                  {e.assignedTo ? e.assignedTo.username : "не назначен" }
                 </span></div>
                   {e.lastMessage ? (<div className="lastMessage">
                     <span className="userCloud">{e.lastMessage.from.username}:</span>
