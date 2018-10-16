@@ -88,6 +88,14 @@ class GroupList extends Component {
       let thisUsers;
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
 
+      this.setState({
+        groupInfo: thisUsers,
+      });
+
+
+      console.log(this.state.groupInfo)
+      console.log(thisUsers)
+
       if(thisUsers && thisUsers.users && users){
         var result1 = isArrayEqual(
           thisUsers.users,
@@ -176,6 +184,10 @@ class GroupList extends Component {
       let groups = getCUser.user.groups;
       let thisGrId = getPrivateChat.id || _grid;
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
+
+      this.setState({
+        groupInfo: thisUsers,
+      })
 
       if(thisUsers && thisUsers.users && users){
         var result1 = isArrayEqual(
@@ -310,7 +322,7 @@ class GroupList extends Component {
 
   componentDidUpdate(){
     const {getPrivateChat, getCUser} = this.props;
-    const { users } = this.state;
+    const { users, groupInfo } = this.state;
     let _grid = getPrivateChat.id || localStorage.getItem('grid');
 
     if(getCUser.user  && getCUser.user.groups){
@@ -318,6 +330,25 @@ class GroupList extends Component {
       let thisGrId = getPrivateChat.id || _grid;
       let thisUsers;
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
+      
+
+
+  
+        
+      
+
+      console.log("___________________i1",groupInfo)
+      console.log("___________________i2",thisUsers)
+
+      if(JSON.stringify(groupInfo) !== JSON.stringify(thisUsers)){
+        this.setState({
+          groupInfo: thisUsers,
+        });
+      }
+
+
+
+
 
       if(thisUsers && thisUsers.users && users){
         var result1 = isArrayEqual(
@@ -581,10 +612,14 @@ class GroupList extends Component {
                 }), 'name')
                 }
 
-                <ChangerForm id={getPrivateChat.id} defaults={groupName} name={"Название"} change={"name"} string={1} />
+                {
+                  console.log("GROUPINFO _______________________-",groupInfo)
+                }
+
+                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.name} name={"Название"} change={"name"} string={1} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
-                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.assignedTo} name={"Ответсвенный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={usernameAss ? usernameAss : {name: "Не назначен"} } />
+                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответсвенный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
 
               </div>
             </div>

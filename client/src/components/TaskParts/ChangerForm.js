@@ -14,10 +14,10 @@ class ChangerForm extends React.Component {
   componentDidMount(){
     let {defaults} = this.props;
 
-    this.setState({
-      value: defaults
-    });
-  
+      this.setState({
+        value: defaults
+      });
+
   }
 
   handleChange(event) {

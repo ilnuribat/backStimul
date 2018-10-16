@@ -377,6 +377,7 @@ input[type="text"],input[type="password"]{
   padding:4px 8px;
   border:0 none transparent;
   border-bottom: 1px solid #0099cc;
+  border-bottom: 1px solid #e7af18;
   box-sizing: border-box;
   text-align: left !important;
 }
@@ -417,9 +418,10 @@ input:focus, textarea:focus{
 .button, input[type="submit"]{
   display: inline-block;
   padding:8px 20px;
-  height: 40px;
+  /* height: 40px; */
   margin:5px;
   background: #3dadd393;
+  background: #e7af18;
 }
 label{
   margin:5px 0;
@@ -863,8 +865,21 @@ svg:hover{
   fill: rgb(8, 206, 107);
 }
 .errorMessage{
-  background: #08B6CE;
+  background: rgb(206, 15, 8);
   padding:10px;
+}
+.errorMessage:before{
+  display: inline;
+  /* width:28px; */
+  height: ;
+  content: "!";
+  color: rgb(206, 15, 8);
+  background: rgb(143, 10, 5);
+  padding:5px 10px;
+  margin:5px;
+  overflow: hidden;
+  text-align: center;
+  border-radius: 5px;
 }
 .card{
   position: relative;
@@ -1201,6 +1216,7 @@ width:100px;
 .list{
   padding:10px;
   background: #08B6CE;
+  background: #6281ab73;
   margin:5px;
   cursor:pointer;
   width:100%;
