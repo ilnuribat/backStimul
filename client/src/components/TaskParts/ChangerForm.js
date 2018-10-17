@@ -21,13 +21,19 @@ class ChangerForm extends React.Component {
   }
 
   handleChange(event) {
+    
     this.setState({value: event.target.value});
   }
 
   handleSubmit(event) {
 
+    
+    event.preventDefault();
     let { change, id, string, defaults } = this.props;
     let { value, edit } = this.state;
+
+    if( value === "no") return false;
+
     let cap = "";
 
     if(typeof defaults === "string" || string){
@@ -36,7 +42,7 @@ class ChangerForm extends React.Component {
     this.setState({edit: !edit})
     const A = groupMut(id, `${change}: ${cap}${value}${cap}`);
     
-    event.preventDefault();
+    
     if(!id){
       alert('Не передан наиважнейший параметр!');
       return false;
@@ -67,14 +73,14 @@ class ChangerForm extends React.Component {
               {name}:
               <div>
                 <select name="select" onChange={this.handleChange} value={value}>
-                  {!value ? (<option>Не выбрано</option>) : null }
+                  {!value ? (<option value="no">Не выбрано</option>) : null }
                   {
                     options.map((e,i)=>{
                       let nameval;
                       nameval = e.name || e.username || "...";
 
                       return(
-                        <option key={"option-"+e.id} value={e.id}>
+                        <option key={"option-"+e.id} value={e && e.id ? e.id : "no"}>
                           {nameval}
                         </option>
                       )
