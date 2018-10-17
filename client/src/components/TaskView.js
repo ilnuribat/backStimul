@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { qauf, _url, colorHash } from '../constants';
 import 'animate.css';
-import { getPrivateChat, user, group, selectUser, allUsers, glossaryStatus, groupMut, getCUser, GRU_QUERY, userTaskUpdated } from '../graph/querys';
+import { getPrivateChat, user, group, selectUser, allUsers, glossaryStatus, groupMut, getCUser, GRU_QUERY, userTaskUpdated, tempObj } from '../graph/querys';
 import FirstLayout from './Layout';
 import ChatPrivate from './ChatPrivate';
 import Loading from './Loading';
@@ -14,20 +14,13 @@ import ChangerForm from './TaskParts/ChangerForm';
 let usernameAss, statusName;
 
 let subsUser = (id,subscribeToMore, refetch) =>{
-  console.log("Subs User started")
-
   return subscribeToMore({
     document: userTaskUpdated,
     variables: { id: id },
     updateQuery: (prev, { subscriptionData }) => {
       if (!subscriptionData.data) return prev;
       const newFeedItem = subscriptionData.data.commentAdded;
-
-        console.log("SUBSCRIBE USERS IN WORK");
-        console.log(prev);
-        console.log(subscriptionData);
         refetch().then(()=>{
-          console.log("SUBSCRIBE USERS IN WORK");
         });
 
       // return true;
@@ -92,10 +85,6 @@ class GroupList extends Component {
         groupInfo: thisUsers,
       });
 
-
-      console.log(this.state.groupInfo)
-      console.log(thisUsers)
-
       if(thisUsers && thisUsers.users && users){
         var result1 = isArrayEqual(
           thisUsers.users,
@@ -103,24 +92,15 @@ class GroupList extends Component {
         );
 
         if( result1 ){
-          console.log("equal",result1);
-          
+          return false;
          }else{
           this.setState({
             users: [...thisUsers.users],
           });
-          console.log("need update");
-          console.log("need", groups);
-          console.log("need", thisUsers);
-          console.log("need", users);
           
         }
       }else{
-        console.log("need update");
-        console.log("need", thisUsers);
-        this.setState({
-          users: [...thisUsers.users],
-        });
+        return false;
       }
     }
 
@@ -140,13 +120,8 @@ class GroupList extends Component {
     });
   }
 
-
-
-
-
-
-
   changeState(a){
+    return false;
   }
 
   changeGrUsers(a){
@@ -169,7 +144,6 @@ class GroupList extends Component {
 
     const {users, _grid } = this.state;
     const {getPrivateChat, getCUser} = this.props;
-
     let thisUsers;
 
     if(_grid !== g ){
@@ -196,17 +170,10 @@ class GroupList extends Component {
         );
 
         if( result1 ){
-          console.log("equal",result1);
-          
          }else{
           // this.setState({
           //   users: [...thisUsers.users],
           // });
-          console.log("need update");
-          console.log("need", groups);
-          console.log("need", thisUsers);
-          console.log("need", users);
-          
         }
       }
     }
@@ -283,8 +250,6 @@ class GroupList extends Component {
       this.setState({
         status: [" ",...a.data.glossary.taskStatuses]
       });
-      console.log(a)
-      console.log(this.state.status)
     })
       .catch((e)=>{
         console.warn(e);
@@ -331,24 +296,11 @@ class GroupList extends Component {
       let thisUsers;
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
       
-
-
-  
-        
-      
-
-      console.log("___________________i1",groupInfo)
-      console.log("___________________i2",thisUsers)
-
       if(JSON.stringify(groupInfo) !== JSON.stringify(thisUsers)){
         this.setState({
           groupInfo: thisUsers,
         });
       }
-
-
-
-
 
       if(thisUsers && thisUsers.users && users){
         var result1 = isArrayEqual(
@@ -357,24 +309,12 @@ class GroupList extends Component {
         );
 
         if( result1 ){
-          console.log("equal",result1);
-          
          }else{
           this.setState({
             users: [...thisUsers.users],
           });
-          console.log("need update");
-          console.log("need", groups);
-          console.log("need", thisUsers);
-          console.log("need", users);
-          
         }
       }else{
-        console.log("need update");
-        console.log("need", thisUsers);
-        this.setState({
-          users: [...thisUsers.users],
-        });
       }
     }
 
@@ -604,7 +544,7 @@ class GroupList extends Component {
         </div>
 
         {modal ? (
-          <Modal header="Редактирование Задачи" body="Текст" close={()=>{ this.setState({modal: !modal})}}>
+          <Modal header="Редактирование Задачи" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
             <div className="overWrap">
               <div>
                 {  statusName = _.result(_.find(status, (obj)=> {
@@ -612,14 +552,10 @@ class GroupList extends Component {
                 }), 'name')
                 }
 
-                {
-                  console.log("GROUPINFO _______________________-",groupInfo)
-                }
-
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.name} name={"Название"} change={"name"} string={1} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
-                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответсвенный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
+                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответсвенный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
 
               </div>
             </div>
@@ -647,6 +583,7 @@ export default compose(
   graphql(getPrivateChat, { name: 'getPrivateChat' }),
   graphql(selectUser, { name: 'selectUser' }),
   graphql(getCUser, { name: 'getCUser' }),
+  graphql(tempObj, { name: 'tempObj' }),
 )(GroupList);
 
 const isArrayEqual = (x, y) => {

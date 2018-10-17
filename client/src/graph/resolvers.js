@@ -1,6 +1,12 @@
 export default {
 
   Mutation: {
+    tempObj: (_, { tempObj },  { cache }) => {
+      cache.writeData({ data: { tempObj: tempObj, } });
+
+      return {tempObj, __typename: 'tempObj' };
+    },
+
     changeGroup: (_, { currentGroup, groupName = 'noname' },  { cache }) => {
       cache.writeData({ data: { currentGroup: currentGroup, groupName: groupName } });
 

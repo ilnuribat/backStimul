@@ -525,3 +525,17 @@ export const userTaskUpdated = gql`
       }
   }
 `;
+
+export const tempObj = gql`
+  mutation tempObj($tempObj: String!){
+    tempObj (tempObj: $tempObj) @client{
+      tempObj
+    }
+  }
+`;
+
+export const tempObjGet = gql`
+  query tempObjGet{
+        tempObj @client
+      }
+`;

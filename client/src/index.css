@@ -1763,6 +1763,12 @@ body, html, root { min-width: 300px;
 .column-content > .task{
   background: #3657835e;
 }
+
+.task .small{
+  color: #2e4865;
+}
+
+
 .column-content > .task > .lastMessage{
   margin:5px auto;
   text-align: left;
