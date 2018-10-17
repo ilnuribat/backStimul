@@ -539,3 +539,17 @@ export const tempObjGet = gql`
         tempObj @client
       }
 `;
+
+export const getRefGroups = gql`
+  query Ref{
+    ref @client
+  }
+`;
+
+export const setRefGroups = gql`
+  mutation Ref($ref: String){
+    ref(ref: $ref) @client{
+      ref
+    }
+  }
+`;

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo';
 import { PropTypes } from 'prop-types';
-import { setPrivateChat, getPrivateChat, createGroup, user, getCUser, glossaryStatus } from '../../graph/querys';
-import { qauf, _url } from '../../constants';
 import _ from 'lodash';
 import 'animate.css';
+import { setPrivateChat, getPrivateChat, createGroup, user, getCUser, glossaryStatus, setRefGroups } from '../../graph/querys';
+import { qauf, _url } from '../../constants';
 import Loading from '../Loading';
 
 class Tasks extends Component {
@@ -226,4 +226,5 @@ export default compose(
   graphql(setPrivateChat, { name: 'setPrivateChat' }),
   graphql(getPrivateChat, { name: 'getPrivateChat' }),
   graphql(getCUser, { name: 'getCUser' }),
+  graphql(setRefGroups, { name: 'setRefGroups' }),
 )(Tasks);

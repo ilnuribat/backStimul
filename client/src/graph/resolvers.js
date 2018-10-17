@@ -1,11 +1,17 @@
 export default {
 
   Mutation: {
-    tempObj: (_, { tempObj },  { cache }) => {
-      cache.writeData({ data: { tempObj: tempObj, } });
+    // ref: (_, { ref },  { cache }) => {
+    //   cache.writeData({ data: { ref: ref, } });
 
-      return {tempObj, __typename: 'tempObj' };
-    },
+    //   return {ref, __typename: 'ref' };
+    // },
+
+    // tempObj: (_, { tempObj },  { cache }) => {
+    //   cache.writeData({ data: { tempObj: tempObj, } });
+
+    //   return {tempObj, __typename: 'tempObj' };
+    // },
 
     changeGroup: (_, { currentGroup, groupName = 'noname' },  { cache }) => {
       cache.writeData({ data: { currentGroup: currentGroup, groupName: groupName } });

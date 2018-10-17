@@ -58,6 +58,7 @@ const stateLink = withClientState({
     mename: "",
     memail: "",
     tempObj: {},
+    ref: false,
   }
 });
 
