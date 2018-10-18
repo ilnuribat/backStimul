@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { graphql, compose, Query, Subscription } from "react-apollo";
+import PropTypes from 'prop-types';
 import Private from './Nav/Private';
 import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';
 import Board from './Nav/Board';
-import PropTypes from 'prop-types';
+import Board from './Nav/Map';
+
 import Loading from './Loading';
 
 import { PRIVS_QUERY, cSetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY } from '../graph/querys';
