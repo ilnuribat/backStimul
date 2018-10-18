@@ -5,7 +5,7 @@ import Private from './Nav/Private';
 import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';
 import Board from './Nav/Board';
-import Board from './Nav/Map';
+import Map from './Nav/Map';
 
 import Loading from './Loading';
 
@@ -33,6 +33,7 @@ class LeftNav extends Component {
           <Profile />
           <Groups />
           <Board />
+          <Map />
           <Query query={PRIVS_QUERY}>
             {({ loading, error, data, refetch, subscribeToMore }) => {
               if (loading){
