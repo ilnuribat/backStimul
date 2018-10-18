@@ -12,7 +12,7 @@ import {Redirect} from "react-router-dom";
 import Indicator from "./Indicator";
 import newdata from "./Objects";
 import b from "./buttons.css";
-import s from "./LeafletMap.css";
+import  "./LeafletMap.css";
  
 const { BaseLayer, Overlay } = LayersControl;
 
@@ -101,13 +101,12 @@ const Panel = ({ type, name, click, clickDetail })  => {
   return (
     newdata.map((post) =>
       post.type == type ?
-        <Marker key={post.id} position={post.coordinates} icon={ddd}> 
+        <Marker key={post.id} position={post.coordinates} icon={SwitchIcon(name, post.status)}> 
           <Popup >
-            <div className={s.modal} >
-              <div className={s.photo}><img src={post.photo} alt="fdd" className={s.photo} /></div>
+            <div className="modal" >
+              <div className="photo"><img src={post.photo} alt="fdd" className="photo" /></div>
               <br/>
               <ul>
-                <div className={s.red}>dddd</div>
                 <li>Тип объекта: {name}</li>
                 <li>Название объекта: {post.name}</li>
                 <li>Руководитель: {post.owner}</li>
@@ -119,7 +118,7 @@ const Panel = ({ type, name, click, clickDetail })  => {
                 </span>
                 </li>
               </ul>
-              <div className={s.bigButton}>
+              <div className="bigButton">
                 <NavLink index={post.id} onClick1={clickDetail} btnColor={b.btnBlue}>Детальная информация</NavLink>
               </div>
               {/* <NavLink index={post.id} onClick1={clickDetail}>Детальная информация</NavLink> */}
@@ -151,65 +150,65 @@ class NavLink extends React.Component {
 
 
 
-// const SwitchIcon = (name, status)   => {
-//   let value;
+const SwitchIcon = (name, status)   => {
+  let value;
 
-//   switch (name) {
-//   case "Образовательное учреждение":
-//     switch (status) {
-//     case 2: 
-//       value = s.schoolYellow;
-//       break;
-//     case 3:
-//       value = s.schoolRed;
-//       break;
-//     default:
-//       value = s.schoolBlue;
-//     }
-//     break;
-//   case "Здравоохранение":
-//     switch (status) {
-//     case 2: 
-//       value = s.healthYellow;
-//       break;
-//     case 3:
-//       value = s.healthRed;
-//       break;
-//     default:
-//       value = s.healthBlue;
-//     }
-//     break;
-//   case "Культура":
-//     switch (status) {
-//     case 2: 
-//       value = s.cultureYellow;
-//       break;
-//     case 3:
-//       value = s.cultureRed;
-//       break;
-//     default:
-//       value = s.cultureBlue;
-//     }
-//     break;
-//   case "Спорт":
-//     switch (status) {
-//     case 2: 
-//       value = s.sportYellow;
-//       break;
-//     case 3:
-//       value = s.sportRed;
-//       break;
-//     default:
-//       value = s.sportBlue;
-//     }
-//     break;
-//   default:
-//     value = s.iconBlue;
-//   }
+  switch (name) {
+  case "Образовательное учреждение":
+    switch (status) {
+    case 2: 
+      value = "schoolYellow";
+      break;
+    case 3:
+      value = "schoolRed";
+      break;
+    default:
+      value = "schoolBlue";
+    }
+    break;
+  case "Здравоохранение":
+    switch (status) {
+    case 2: 
+      value = "healthYellow";
+      break;
+    case 3:
+      value = "healthRed";
+      break;
+    default:
+      value = "healthBlue";
+    }
+    break;
+  case "Культура":
+    switch (status) {
+    case 2: 
+      value = "cultureYellow";
+      break;
+    case 3:
+      value = "cultureRed";
+      break;
+    default:
+      value = "cultureBlue";
+    }
+    break;
+  case "Спорт":
+    switch (status) {
+    case 2: 
+      value = "sportYellow";
+      break;
+    case 3:
+      value = "sportRed";
+      break;
+    default:
+      value = "sportBlue";
+    }
+    break;
+  default:
+    value = "iconBlue";
+  }
 
-//   return divIcon({
-//     className: value,
-//     iconSize: [50, 50],
-//   });
-// };
+  return divIcon({
+    className: value,
+    iconSize: [50, 50],
+  });
+};
 
