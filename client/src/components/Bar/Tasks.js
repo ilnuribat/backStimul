@@ -6,6 +6,7 @@ import 'animate.css';
 import { setPrivateChat, getPrivateChat, createGroup, user, getCUser, glossaryStatus, setRefGroups, getRefGroups } from '../../graph/querys';
 import { qauf, _url } from '../../constants';
 import Loading from '../Loading';
+import '../new.css';
 
 class Tasks extends Component {
   constructor(props) {
