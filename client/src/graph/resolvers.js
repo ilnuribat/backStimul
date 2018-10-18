@@ -1,11 +1,12 @@
 export default {
 
   Mutation: {
-    // ref: (_, { ref },  { cache }) => {
-    //   cache.writeData({ data: { ref: ref, } });
 
-    //   return {ref, __typename: 'ref' };
-    // },
+    ref: (_, { ref },  { cache }) => {
+      cache.writeData({ data: { ref: ref, } });
+
+      return {ref, __typename: 'ref' };
+    },
 
     // tempObj: (_, { tempObj },  { cache }) => {
     //   cache.writeData({ data: { tempObj: tempObj, } });

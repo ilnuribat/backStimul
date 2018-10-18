@@ -7,7 +7,8 @@ import Board from './Nav/Board';
 import PropTypes from 'prop-types';
 import Loading from './Loading';
 
-import { PRIVS_QUERY, cSetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY } from '../graph/querys';
+import { PRIVS_QUERY, cSetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups } from '../graph/querys';
+let refUser;
 
 class LeftNav extends Component {
   constructor(props) {
@@ -18,6 +19,34 @@ class LeftNav extends Component {
   }
 
   hidePanel = () => {
+  }
+
+  shouldComponentUpdate(nextProps,nextState){
+
+    if(nextProps.getRefGroups.ref){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  componentDidUpdate(){
+
+    console.log("Update Nav")
+
+    let {getRefGroups, setRefGroups} = this.props;
+
+    if(!!getRefGroups.ref && !!refUser){
+
+      refUser().then(()=>{
+        setRefGroups({
+          ref: false,
+        })
+      })
+
+
+      
+    }
   }
 
   render() {
@@ -110,6 +139,7 @@ class LeftNav extends Component {
                       document: taskUpdated,
                       variables: { id: id },
                       updateQuery: (prev, { subscriptionData }) => {
+                        refUser = refetch;
                         if (!subscriptionData.data) return prev;
                         const newFeedItem = subscriptionData.data.commentAdded;
           
@@ -229,5 +259,7 @@ LeftNav.propTypes = {
 
 export default compose(
   graphql(cSetCountPrivates, { name: 'cSetCountPrivates' }),
+  graphql(getRefGroups, { name: 'getRefGroups' }),
+  graphql(setRefGroups, { name: 'setRefGroups' }),
 )(LeftNav);
 
