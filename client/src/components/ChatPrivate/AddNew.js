@@ -31,7 +31,11 @@ class AddNew extends Component {
   }
 
   componentWillReceiveProps() {
-    this.focusTextInput();
+    // this.focusTextInput();
+  }
+
+  componentDidUpdate(){
+    // this.focusTextInput();
   }
 
   onKeyDown(e){

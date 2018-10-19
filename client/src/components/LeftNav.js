@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { graphql, compose, Query, Subscription } from "react-apollo";
+import readline from 'readline';
+// import Autocomplete from 'react-autocomplete';
 import Private from './Nav/Private';
 import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';
@@ -8,7 +10,36 @@ import PropTypes from 'prop-types';
 import Loading from './Loading';
 
 import { PRIVS_QUERY, cSetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups } from '../graph/querys';
+
+
 let refUser;
+
+
+// function completer(line) {
+//   var currAddedDir = (line.indexOf('/') != - 1) ? line.substring(0, line.lastIndexOf('/') + 1) : '';
+//   var currAddingDir = line.substr(line.lastIndexOf('/') + 1);
+//   var path = __dirname + '/' + currAddedDir;
+//   var completions = fs.readdirSync(path);
+//   var hits = completions.filter(function(c) { return c.indexOf(currAddingDir) === 0});
+
+//   var strike = [];
+//   if (hits.length === 1) strike.push(currAddedPath + hits[0] + '/');
+
+//   return (strike.length) ? [strike, line] : [hits.length ? hits : completions, line];
+// }
+
+// var rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+//   completer: completer
+// });
+
+// rl.question('whatever', function(answer) {
+//   // Do what ever
+// });
+
+
+
 
 class LeftNav extends Component {
   constructor(props) {

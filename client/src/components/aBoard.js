@@ -10,7 +10,6 @@ import Loading from './Loading';
 
 let r;
 
-
 class Board extends Component {
 
   constructor(props) {
@@ -67,7 +66,6 @@ class Board extends Component {
       this.setState({
         status: ["",...a.data.glossary.taskStatuses]
       });
-      // console.log(a)
     })
       .catch((e)=>{
         console.warn(e);
@@ -78,14 +76,12 @@ class Board extends Component {
 
   render(){
 
-    // console.log("GET C USER _____",this.props.getCUser)
-
     if(r){
       r();
     }
 
-    let { daTa, status } = this.state;
-    let { getChat, getCUser } = this.props;
+    let { status } = this.state;
+    let { getCUser } = this.props;
     let cols = [[],[],[],[],[],[],[]];
 
     if(getCUser.loading) return <Loading />;
@@ -93,9 +89,6 @@ class Board extends Component {
     if(!getCUser.user.groups) return <Loading />;
 
     let arr = getCUser.user.groups;
-
-    // console.log("ARR ___ ", arr);
-
 
     arr = _.sortBy(arr, 'unreadCount');
   
@@ -107,10 +100,6 @@ class Board extends Component {
         cols[result.status].push(result);
       }
     });
-
-
-    console.log(status)
-    console.log(cols)
 
     return(
       <div className="content-aft-nav columns-wrapper">

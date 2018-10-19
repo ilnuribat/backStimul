@@ -301,6 +301,7 @@ class ChatBody extends Component {
           <AddMesMut>
             {(add) => (
               <AddNew
+                key={id}
                 add={({ id, text }) => add({ variables: { id: `${id}`, text } })}
                 toBottom={()=>{this.toBottom();}}
               />

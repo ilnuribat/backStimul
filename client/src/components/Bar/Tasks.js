@@ -205,9 +205,6 @@ class Tasks extends Component {
                     <button onClick={()=>{this.setState({addGroupInputs: !this.state.addGroupInputs,})}}>отмена</button>
                   </div>
                 ) :(
-
-
-                  
                   <div className="list animated fadeIn" role="presentation" style={{textAlign: "center"}} onClick={()=>{this.setState({addGroupInputs: !this.state.addGroupInputs,})}}>Добавить новую</div>
                 )
               }

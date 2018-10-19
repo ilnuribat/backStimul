@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { graphql, compose, Query  } from "react-apollo";
 import PropTypes from 'prop-types';
+// import Autocomplete from 'react-toolbox/lib/autocomplete';
+// import belle from 'belle';
 import _ from 'lodash';
 import { qauf, _url, colorHash } from '../constants';
 import 'animate.css';
@@ -10,6 +12,91 @@ import ChatPrivate from './ChatPrivate';
 import Loading from './Loading';
 import Modal from './TaskParts/Modal';
 import ChangerForm from './TaskParts/ChangerForm';
+
+const countriesArray = ['Spain', 'England', 'USA', 'Thailand', 'Tongo', 'Slovenia', 'Россия', 'Москва'];
+const countriesObject = {'ES-es': 'Spain', 'TH-th': 'Thailand', 'EN-gb': 'England', 'EN-en': 'USA'};
+
+// class AutocompleteTest extends React.Component {
+//   state = {
+//     simple: 'Spain',
+//     multiple: ['ES-es', 'TH-th']
+//   };
+
+//   handleSimpleChange = (value) => {
+//     this.setState({simple: value});
+//   };
+
+//   handleMultipleChange = (value) => {
+//     this.setState({multiple: value});
+//   };
+
+//   render () {
+//     return (
+//       <div>
+//         <Autocomplete
+//           direction="down"
+//           onChange={this.handleMultipleChange}
+//           label="Choose countries"
+//           source={countriesObject}
+//           value={this.state.multiple}
+//         />
+
+//         <Autocomplete
+//           direction="down"
+//           label="Choose a country"
+//           hint="You can only choose one..."
+//           multiple={false}
+//           onChange={this.handleSimpleChange}
+//           source={countriesArray}
+//           value={this.state.simple}
+//         />
+//       </div>
+//     );
+//   }
+// }
+
+// class AutocompleteUser extends React.Component {
+//   state = {
+//     users: [],
+//     usersSel: [],
+//   };
+
+//   componentDidMount(){
+//     let users = [];
+//     this.props.users.map((e,i)=>{
+//       users.push(e.username);
+//     })
+
+//     this.setState({ users: users })
+//   }
+//   componentDidUpdate(){
+//     // let users = [];
+//     // this.props.users.map((e,i)=>{
+//     //   users.push(e.username);
+//     // })
+
+//     // this.setState({ users: users })
+//   }
+
+//   handleMultipleChange = (value) => {
+//     this.setState({usersSel: value});
+//   };
+
+//   render () {
+//     return (
+//       <div>
+//         <Autocomplete
+//           direction="down"
+//           onChange={this.handleMultipleChange}
+//           label="Пользователи"
+//           source={this.state.users}
+//           value={this.state.usersSel}
+//         />
+//       </div>
+//     );
+//   }
+// }
+
 
 let usernameAss, statusName;
 
@@ -47,7 +134,10 @@ class GroupList extends Component {
       groupInfo: {},
       modal: false,
       inputSaver: {},
+      newUser: "",
     }
+
+
 
     // this.loadg = this.loadg.bind(this);
     // this.loadu = this.loadu.bind(this);
@@ -57,6 +147,7 @@ class GroupList extends Component {
     this.onStatSelected = this.onStatSelected.bind(this);
     this.inputChange = this.inputChange.bind(this);
     this.inputSave = this.inputSave.bind(this);
+    this.newUser = this.newUser.bind(this);
   }
 
   componentDidMount(){
@@ -108,6 +199,8 @@ class GroupList extends Component {
 
   }
 
+
+
   allUserGet(){
     qauf(allUsers(), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){
@@ -129,6 +222,17 @@ class GroupList extends Component {
       users: [...a],
     })
   }
+
+  newUser(e){
+
+    console.log(e.target)
+
+    this.setState({
+      newUser: e.target.value,
+    })
+  }
+
+
 
   // loadg(){
   //   qauf(user(localStorage.getItem('userid')), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -216,32 +320,51 @@ class GroupList extends Component {
 
   userAdd(i,add){
 
-    // let q = () => {return(`
-    //   mutation{
-    //     updateGroup(id: "${this.props.getPrivateChat.id}", group: {userIds:["${i}"]})
-    //   }
-    //   `)} ;
+    let {allusers} = this.state;
     let q;
+    let dels = true;
+    let userId = "";
+    let id = i || this.state.newUser;
 
     if(add){
-      q = () => {return(`mutation{
-        updateUsersGroup(group: {id: "${this.props.getPrivateChat.id}", delete: false, users: ["${i}"]} )
-      }`)} ;
+      dels = false;
+      let user = _.find(allusers, (obj)=> { return obj.username === id; });
+
+      if(user){
+        console.log(user);
+        userId = user.id;
+
+      }else{
+        
+        console.warn("Неправильный юзер");
+      }
     }else{
-      q = () => {return(`mutation{
-        updateUsersGroup(group: {id: "${this.props.getPrivateChat.id}", delete: true, users: ["${i}"]} )
-      }`)} ;
+      userId = id;
     }
 
-    qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.log("Answer updUsrGr",a)
-    })
-      .then(()=>{
-        // this.loadu(this.props.getPrivateChat.id)
+    
+    q = () => {return(`mutation{
+      updateUsersGroup(group: {id: "${this.props.getPrivateChat.id}", delete: ${dels}, users: ["${userId}"]} )
+    }`)} ;
+
+    let a = q();
+    console.log(a);
+    
+    // return true;
+    if(typeof q === "function"){
+      qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
+        console.log("Answer updUsrGr",a)
       })
-      .catch((e)=>{
-        console.warn(e);
-      });
+        .then(()=>{
+          // this.loadu(this.props.getPrivateChat.id)
+        })
+        .catch((e)=>{
+          console.warn(e);
+        });
+    }else{
+      return false;
+    }
+
   }
 
   glossStatus(){
@@ -286,6 +409,11 @@ class GroupList extends Component {
   }
 
   componentDidUpdate(){
+    
+    // this.focusInput = () => {
+    //   if (this.Input) this.Input.focus();
+    // };
+
     const {getPrivateChat, getCUser} = this.props;
     const { users, groupInfo } = this.state;
     let _grid = getPrivateChat.id || localStorage.getItem('grid');
@@ -416,7 +544,7 @@ class GroupList extends Component {
     //   console.log("USERS",thisUsers.users);
     //   onlyunicusers = _.differenceWith(allusers, thisUsers.users, _.isEqual);
     // }
-    onlyunicusers = _.differenceWith(allusers, users, _.isEqual);
+    
     
     return(
       <FirstLayout barstate="chat">
@@ -431,9 +559,10 @@ class GroupList extends Component {
             {
               this.props.getPrivateChat && this.props.getPrivateChat.id ? (
                 <div className="tab-roll">
-                  <div className="header"><h4>Выберите пользователя</h4></div>
+                  <div className="header"><h4>Пользователи</h4></div>
                   <div className="content">
                     <div className="content-scroll">
+                    
                     <Query query={GRU_QUERY} variables={{ id: getPrivateChat.id }} >
                         {({ loading, error, data, refetch, subscribeToMore }) => {
                           if (loading){
@@ -455,9 +584,12 @@ class GroupList extends Component {
                           subsUser(getPrivateChat.id, subscribeToMore, refetch);
 
                           if(data){
-                            // console.log("users in group",data.group.users);
-                            // return <div>allUsers</div>
+                            let usrs = data.group.users;
+
+                              onlyunicusers = _.differenceWith(allusers, usrs, _.isEqual);
+                            
                             return(
+
                               data.group.users.map(
                                 (e,i)=>{
                                   return(
@@ -478,9 +610,6 @@ class GroupList extends Component {
                             
                             // return true;
                           }
-
-
-                          
 
                         return true;
                         }}
@@ -511,7 +640,37 @@ class GroupList extends Component {
                   <div className="header"><h4>Добавить пользователя</h4></div>
                   <div className="content">
                     <div className="content-scroll">
-                      {
+                      <div>
+
+                        <input list="users" autoComplete="on" onChange={this.newUser} />
+                        {
+                          this.state.newUser ? (
+                            <div className="button" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить {this.state.newUser}</div>
+                          ): null
+                        }
+
+                        <datalist id="users">
+                        {
+                          onlyunicusers && onlyunicusers.length > 0 ? onlyunicusers.map((e,i)=>{
+                            return(
+                              <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                            )
+                          }) : allusers.map((e,i)=>{
+                            return(
+                              <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                            )
+                          })
+                        }
+                        
+                        <option>Москва</option>
+                        <option>Моська</option>
+                        <option>Питер</option>
+                        <option>Васька</option>
+                        </datalist>
+                      </div>
+
+
+                      {/* {
                         onlyunicusers && onlyunicusers.length > 0 ? onlyunicusers.map((e,i)=>{
                           return(
                             <div className="username" role="presentation" style={{color: colorHash.hex(e.username)}} key={'usr-'+i} onClick={()=>this.userAdd(e.id, 1)}>
@@ -522,7 +681,7 @@ class GroupList extends Component {
                             </div>
                           )
                         }) : ("Нет юзеров")
-                      }
+                      } */}
                     </div>
                   </div>
                 </div>
