@@ -7649,6 +7649,11 @@ react-is@^16.3.2:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.5.2.tgz#e2a7b7c3f5d48062eb769fcb123505eb928722e3"
   integrity sha512-hSl7E6l25GTjNEZATqZIuWOgSnpXb3kD0DVCujmg46K5zLxsbiKaaT6VO9slkSBDPZfYs30lwfJwbOFOnoEnKQ==
 
+react-leaflet-search@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/react-leaflet-search/-/react-leaflet-search-0.5.1.tgz#1f0b7bde1362af022837d436042eaf04d77a899f"
+  integrity sha512-Yzbc8sr8+khH5eF1xeHzeuPuwGgFi72qz8G8zErmr0N8J+NyY4aviDemyX161EH/7CMeJAFZ0bpT/A7Wn0OoPw==
+
 react-leaflet@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-2.1.0.tgz#96f01ebceebad8a0043c3edadbe631279d4ba740"

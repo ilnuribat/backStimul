@@ -48,6 +48,7 @@
     "react-dom": "16.4.2",
     "react-emotion": "^9.2.8",
     "react-leaflet": "^2.1.0",
+    "react-leaflet-search": "^0.5.1",
     "react-modal": "3.5.1",
     "react-router": "^4.3.1",
     "react-router-dom": "4.3.1",

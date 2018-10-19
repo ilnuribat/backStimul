@@ -9,6 +9,7 @@ import {
 } from "react-leaflet";
 import { divIcon } from "leaflet";
 import {Redirect} from "react-router-dom";
+import { ReactLeafletSearch } from 'react-leaflet-search'
 import Indicator from "./Indicator";
 import newdata from "./Objects";
 import b from "./buttons.css";
@@ -28,6 +29,19 @@ export default class LeafletMap extends PureComponent {
       redirect: false,
       redirectDetail: false,
     };
+
+    customPopup(SearchInfo) {
+      return(
+        <Popup>
+          <div>
+            <p>I am a custom popUp</p>
+            <p>latitude and longitude from search component: {SearchInfo.latLng.toString().replace(',',' , ')}</p>
+            <p>Info from search component: {SearchInfo.info}</p>
+          </div>
+        </Popup>
+      );
+    }
+    s
     handleTabChange = (index) => {
       // console.warn("clicked!", index);
       this.setState({redirect: true});
@@ -84,7 +98,30 @@ export default class LeafletMap extends PureComponent {
                 <Panel type="4" name="Спорт"  click={this.handleTabChange} clickDetail={this.handleTabDetail}/>
               </LayerGroup>
             </Overlay>
+            <ReactLeafletSearch
+              position="topleft"
+
+              showMarker={true}
+              zoom={5}
+              showPopup={true}
+              popUp={this.customPopup}
+              closeResultsOnClick={true}
+              openSearchOnLoad={true}
+              // // these searchbounds would limit results to only Turkey.
+              // searchBounds = {
+              //   [
+              //     [33.100745405144245, 46.48315429687501],
+              //     [44.55916341529184, 24.510498046875]
+              //   ]
+              // }
+              // providerOptions={{region: 'tr'}}
+
+              // default provider OpenStreetMap
+              // provider="BingMap"
+              // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
+            />
           </LayersControl>
+
         </Map>
       );
     }
