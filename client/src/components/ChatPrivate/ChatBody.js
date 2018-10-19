@@ -173,7 +173,8 @@ export class MessagesList extends Component {
                     {same ? ('') : (
                       <div className="msg-user" style={{color: colorHash.hex(username)}}>
                         {username}:</div>)}
-                    <blockquote className="msgs">
+                    <blockquote className={"msgs"}>
+
                       <div className="text prewr">{messageText}</div>
                       <div className="f-row">
                         { id === uid ? (
