@@ -443,7 +443,7 @@ query group($id: ID!){
   }
 `;
 
-export const getUnreadCount = gql`{
+export const getUnreadCount2 = gql`{
     user {
       directs {
         id
@@ -455,6 +455,22 @@ export const getUnreadCount = gql`{
       }
     }
 }`;
+
+
+export const getUnreadCount = () => `
+    {
+      user{
+        directs{
+          id
+          unreadCount
+        }
+        groups {
+          id
+          unreadCount
+        }
+      }
+    }
+`;
 
 export const taskUpdated = gql`
 subscription taskUpdated($id: ID!){
