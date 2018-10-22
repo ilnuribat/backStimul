@@ -84,7 +84,9 @@ body {
   height: 20px;
 }
 
-
+a,a:hover,a:active,a:visited{
+  text-decoration: none;
+}
 
 h1,h2,h3,h4{
   padding:5px 10px;
@@ -254,7 +256,7 @@ nav .indic.g{
 }
 
 .task{
-  cursor: pointer;
+  /* cursor: pointer; */
   display:block;
   width:100%;
   overflow: hidden;
@@ -694,7 +696,7 @@ select{
 }
 
 svg{
-  cursor:pointer;
+  /* cursor:pointer; */
   /* border-radius:999em; */
   width:48px;
   height: 48px;
@@ -785,7 +787,7 @@ svg:hover{
   width:80px;
   text-align: center;
   border-radius: 3px;
-  cursor:pointer;
+  /* cursor:pointer; */
 }
 .card .open, .card button{
   width:200px;
@@ -801,7 +803,7 @@ svg:hover{
   text-align: center;
 }
 .card{
-  cursor:pointer;
+  /* cursor:pointer; */
 }
 .add{
   text-align: center;
@@ -964,7 +966,7 @@ width:100px;
   min-width: 280px;
   min-height:220px;
   padding:10px;
-  cursor:pointer;
+  /* cursor:pointer; */
   color:#FFF;
   overflow: hidden;
 
@@ -1239,7 +1241,7 @@ width:100px;
   /* background: #6281ab73; */
   /* background: #5a616b70; */
   margin:5px;
-  cursor:pointer;
+  /* cursor:pointer; */
   width:100%;
   transition: all 0.5s ease-in-out;
   margin:5px auto;
@@ -1665,7 +1667,7 @@ textarea{
   text-align: left;
   margin: 5px auto;
   position: relative;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 .user-private:hover{
   background: #6daec48e;
@@ -1705,7 +1707,7 @@ textarea{
   padding:10px;
   background: #1B2126;
   margin:5px auto;
-  cursor:pointer;
+  /* cursor:pointer; */
   height:48px;
   overflow: hidden;
 }
@@ -1831,12 +1833,14 @@ body, html, root { min-width: 300px;
   overflow: hidden;
   background: #dadada1c;
 }
+
 .head-link{
   color: #e0e0e0;
   font-weight: 700;
   background: rgba(27, 33, 38, 0.253);
   padding:5px;
   text-align: left;
+  text-decoration: none;
 }
 
 @media screen {
