@@ -758,9 +758,12 @@ svg:hover{
   font-size:70%;
   display:block;
 }
+
+/* 
 .column:nth-child(2){
   background: ;
 }
+
 .column:nth-child(2) .task{
   background: #2C3F51;
 }
@@ -770,7 +773,11 @@ svg:hover{
 .column:nth-child(2) .task[data-priority="3"] .priority{background: ;}
 .column:nth-child(2) .task[data-priority="4"] .priority{background: rgba(243, 227, 9, 0.486);}
 .column:nth-child(2) .task[data-priority="5"] .priority{background: rgba(192, 243, 9, 0.541);}
-.column:nth-child(2) .task[data-priority="6"] .priority{background: rgba(9, 243, 134, 0.438);}
+.column:nth-child(2) .task[data-priority="6"] .priority{background: rgba(9, 243, 134, 0.438);} */
+
+
+
+
 .task .open, .card .open, .card button{
   border:0px none;
   background: rgb(52, 107, 151);
