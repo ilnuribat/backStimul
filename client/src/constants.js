@@ -1,5 +1,4 @@
 import ColorHash from 'color-hash';
-require('dotenv').load();
 
 export const colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
 
@@ -59,7 +58,7 @@ export const grid = 8;
 
 export const borderRadius = 2;
 
-export const _url = process.env.URL || '185.168.187.103:8500' || 'localhost:8500';
+export const _url = process.env.REACT_APP_ENDPOINT || '185.168.187.103:8500';
 // export const _url = process.env.URL || '185.168.187.103:8500' || 'localhost:8500';
 
 export const AUTH_TOKEN = 'auth-token';

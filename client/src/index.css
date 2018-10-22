@@ -267,6 +267,7 @@ nav .indic.g{
   margin:5px auto;
   color:#333;
 }
+
 .task.create{
   height:auto;
   background: #36516ebb;
@@ -495,6 +496,8 @@ input[type="date"]{
   color:#E3FBFF;
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.2);
 }
+
+
 .column-create{
 /* text-align: center;
 border-radius: 5px;
@@ -1790,7 +1793,7 @@ textarea{
   height: auto;
 }
 .column-content > div{
-  transition: all 2s ease-in-out;
+  /* transition: all 2s ease-in-out; */
 }
 
 .root, body, html{
@@ -2094,3 +2097,9 @@ input[type="submit"]:hover{
 }
 
 /********SUBMIT**********/
+
+/*********TASK*/
+.task:hover{
+  background: rgb(47, 102, 104);
+}
+/*********TASK*/
