@@ -1255,7 +1255,11 @@ width:100px;
   width:100%;
   bottom:0;
 } */
-
+.schoolRed {
+  background: url('/icons/school_red.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
 .nBoard-cont, .main-container{
   overflow: hidden;
   display: flex;

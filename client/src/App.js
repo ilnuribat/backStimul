@@ -7,6 +7,7 @@ import Profile from './components/Profile';
 import TaskView from './components/TaskView';
 import aBoard from './components/aBoard';
 import Private from './components/Private';
+import Map from './components/Map/LeafletMapBuild';
 import { AUTH_TOKEN } from './constants';
 
 
@@ -100,6 +101,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/aboard" component={aBoard} />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/map" component={Map} />
               <Route exact path="/" render={(props) => <TaskView {...props} />} />
               <Route exact path="/profile" component={Profile} />
               <Route exact path="/private" render={(props) => <Private {...props} />} />

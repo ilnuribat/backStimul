@@ -1,12 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import { graphql, compose, Query, Subscription } from "react-apollo";
-import readline from 'readline';
+// import readline from 'readline';
 // import Autocomplete from 'react-autocomplete';
+import PropTypes from 'prop-types';
 import Private from './Nav/Private';
 import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';
 import Board from './Nav/Board';
-import PropTypes from 'prop-types';
+import Map from './Nav/Map';
+
 import Loading from './Loading';
 
 import { PRIVS_QUERY, cSetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups } from '../graph/querys';
@@ -76,7 +78,7 @@ class LeftNav extends Component {
       })
 
 
-      
+
     }
   }
 
@@ -91,6 +93,7 @@ class LeftNav extends Component {
           <Profile />
           <Groups />
           <Board />
+          <Map />
           <Query query={PRIVS_QUERY}>
             {({ loading, error, data, refetch, subscribeToMore }) => {
               if (loading){
@@ -173,7 +176,7 @@ class LeftNav extends Component {
                         refUser = refetch;
                         if (!subscriptionData.data) return prev;
                         const newFeedItem = subscriptionData.data.commentAdded;
-          
+
                           console.log(prev);
                           console.log(subscriptionData);
                           refetch();
