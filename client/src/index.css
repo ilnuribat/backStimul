@@ -1993,11 +1993,12 @@ select option{
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05); */
 }
 .btn.v2{
+  height:auto;
   width:auto;
   max-width: 100%;
   display: block;
   background: rgb(44, 57, 70);
-  padding: 8px 5px;
+  padding: 14px 5px;
   margin:2px auto;
   text-align: center;
   border-radius: 5px;
@@ -2017,7 +2018,7 @@ select option{
   display: block;
   position: relative;
   background: rgba(18, 25, 31, 0.774);
-  border-radius: 3px;
+  border-radius: 999em;
   border:3px solid #1B2126;
 }
 .username .hoverTrigger .hover{
