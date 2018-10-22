@@ -59,6 +59,12 @@ const stateLink = withClientState({
     memail: "",
     tempObj: {},
     ref: false,
+    lastMessage: {
+      groupId: "",
+      id: "",
+      text: "",
+      __typename: "lastMessageCache"
+    }
   }
 });
 
@@ -91,11 +97,12 @@ const client = new ApolloClient({
   cache
 })
 
+export default client;
 
 ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
-      <App />
+      <App client={client} />
     </ApolloProvider>
   </BrowserRouter>,
   document.getElementById('root'),

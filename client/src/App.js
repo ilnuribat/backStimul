@@ -97,7 +97,7 @@ class App extends Component {
           <Login lookft={this.lookft} />
         ) : (
           <Fragment>
-            <LeftNav lstate={this._lbarstate} />
+            <LeftNav lstate={this._lbarstate} client={this.props.client} />
             <Switch>
               <Route exact path="/aboard" component={aBoard} />
               <Route exact path="/login" component={Login} />

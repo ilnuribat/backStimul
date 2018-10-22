@@ -32,16 +32,23 @@ export default {
       return {userName, userId, __typename: 'selectUser' };
     },
 
+    lastMessageCache: (_, { lastMessage, lastMessageId, lastMessageGroupId },  { cache }) => {
+
+      cache.writeData({ data: { lastMessage: {text: lastMessage, id: lastMessageId, groupId: lastMessageGroupId, __typename: 'lastMessageCache' } }});
+
+      return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'lastMessageCache' };
+    },
+
     meSet: (_, { meid, mename, memail },  { cache }) => {
       cache.writeData({ data: { meid: meid, mename: mename, memail: memail } });
 
       return {meid, mename, memail, __typename: 'me' };
     },
 
-    private: (_, { id, name, unr=0, priv=false },  { cache }) => {
-      cache.writeData({ data: { id: id, name: name, unr: unr, priv: priv } });
+    private: (_, { id, name },  { cache }) => {
+      cache.writeData({ data: { id: id, name: name } });
 
-      return {id, name, unr, priv, __typename: 'chat' };
+      return {id, name, __typename: 'chat' };
     },
   },
   Query: {

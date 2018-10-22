@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Query, Mutation, Subscription, graphql, compose  } from "react-apollo";
-import { ADD_MUT, getPrivateChat, GR_QUERY, PRIV_QUERY, MESSAGE_CREATED, MESSAGE_READ, MESSAGEREAD_MUT, messRead, MESSAGE_QUERY, messageRead_MUT } from '../../graph/querys';
+import { Query, Mutation, graphql, compose  } from "react-apollo";
+import { ADD_MUT, getPrivateChat, GR_QUERY, PRIV_QUERY, MESSAGE_CREATED, MESSAGE_READ, MESSAGE_QUERY, messageRead_MUT } from '../../graph/querys';
 import AddNew from './AddNew';
-import Loading from '../Loading';
-import { MsgCheck, MsgDblcheck, MsgDblcheckAck } from '../Svg/index';
+// import Loading from '../Loading';
+import { MsgDblcheck, MsgDblcheckAck } from '../Svg/index';
 import { qauf, _url, colorHash } from '../../constants';
 
 let ref1;
@@ -46,8 +46,9 @@ const MessagesListData = (params) => {
                   direct: {
                     messages:{
                       edges: [...prev.direct.messages.edges, newFeedItem],
-                      __typename: "MessageConnection"
+                      __typename: "MessageConnection",
                     },
+                    unreadCount: 0,
                     __typename: "Direct"
                   }
                 });
@@ -109,7 +110,7 @@ export class MessagesList extends Component {
 
   render(){
     if (ref1) ref1();
-    const { priv, data, variables } = this.props;
+    const { priv, data, } = this.props;
 
     // console.warn("our group is: ", variables.id )
 
@@ -231,7 +232,7 @@ class Fetch extends Component {
   }
 
   fillMessages(datas){
-    if(datas && datas != this.state.messages){
+    if(datas && datas !== this.state.messages){
       this.setState({
         messages: datas,
       })
@@ -242,7 +243,9 @@ class Fetch extends Component {
     let { id, priv } = this.props;
     let _query = GR_QUERY;
 
-    priv ? _query = PRIV_QUERY : null;
+    if (priv) {
+      _query = PRIV_QUERY
+    }
 
     return(
       <MessagesListData query={_query} id={id} priv={priv} {...this.props} />
@@ -277,10 +280,10 @@ class ChatBody extends Component {
   }
 
   render() {
-    let { id, name, priv, data } = this.props;
-    let _query = GR_QUERY;
+    let { id, name, priv } = this.props;
+    // let _query = GR_QUERY;
 
-    priv ? _query = PRIV_QUERY : null;
+    // priv ? _query = PRIV_QUERY : null;
 
     return (
       <div className="nChat flexbox2">

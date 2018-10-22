@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
-import { Subscription } from 'react-apollo';
+// import { Mutation } from 'react-apollo';
 
 export const updTask = (...params) => {
   return (`mutation{
@@ -152,16 +151,6 @@ export const getPrivateChat = gql`
   }
 `;
 
-export const getPrivateChat2 = gql`
-  query private{
-      id @client
-      name @client
-      unr @client
-  }
-`;
-
-
-
 export const cGetChats = gql`
   query chats{
       chats
@@ -177,12 +166,31 @@ export const cSetChats = gql`
 `;
 
 export const setPrivateChat = gql`
-  mutation private($name: String!, $id: String!, $unr: Number){
-    private(name: $name, id: $id, unr: $unr) @client {
+  mutation private($name: String!, $id: String!){
+    private(name: $name, id: $id) @client {
       id
       name
-      unr
-      priv
+    }
+  }
+`;
+
+export const getlastMessageCache = gql`
+  query getlastMessageCache{
+      lastMessage @client {
+        groupId
+        id
+        text
+      }
+      id @client
+  }
+`;
+
+export const lastMessageCache = gql`
+  mutation lastMessageCache($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
+    lastMessageCache(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
+      lastMessage
+      lastMessageId
+      lastMessageGroupId
     }
   }
 `;
