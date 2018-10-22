@@ -1,0 +1,75 @@
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    height: 39px;
+    font-family: "ProximaNova-Bold", sans-serif;
+    transition: .5s ease-in-out;
+    position: relative;
+    border: none;
+    cursor: pointer;
+    text-decoration: none !important;
+}
+
+.third_btns {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+
+.third_btns .btn {
+      width: 31% !important;
+      margin-top: 0 !important;
+  }
+
+.btnLink {
+    justify-content: center;
+    align-items: center;
+    text-decoration: none !important;
+    color: white;
+    font-family: "ProximaNova-Bold", sans-serif;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+    transition: .5s ease-in-out;
+}
+
+.btnGreen {
+    width: 119px;
+    background-color: #1bb934;
+
+}
+
+.btnGreen:hover {
+    background-color: #fff;
+    color: #1bb934;
+}
+
+.btnDark {
+    background-color: #374488;
+}
+
+.btnDark:hover {
+    background-color: #fff;
+    color: #374488;
+}
+
+.btnBlue {
+    background-color: #3e4eb7;
+}
+
+.btnBlue:hover {
+    background-color: #fff;
+    color: #3e4eb7;
+}
+
+.btn_abs {
+    position: absolute;
+    bottom: 40px;
+    left: 30px;
+    width: calc(100% - 60px);
+}

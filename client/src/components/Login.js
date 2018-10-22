@@ -88,12 +88,13 @@ class Login extends Component {
   }
 
   render() {
-  
+
     const authToken = localStorage.getItem(AUTH_TOKEN);
     const { loginerror, meid, mename } = this.state;
-    const { history, meGet, meSet } = this.props;
+    // const { history, meGet, meSet } = this.props;
+    const { history } = this.props;
 
-    console.log("MeName",meGet.mename)
+    // console.warn("MeName",meGet.mename)
 
     return (
 
@@ -114,9 +115,9 @@ class Login extends Component {
               <div className="logo">
               </div>
 
-              <div className="mess">Мой id: { meid}</div>
-              <div className="mess">Моё имя: { mename}</div>
-              
+              <div className="mess">Мой id: { meGet.meid}</div>
+              <div className="mess">Моё имя: { meGet.mename}</div>
+
 
               <div
                 className="button"

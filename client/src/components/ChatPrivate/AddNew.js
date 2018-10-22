@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import { graphql, compose  } from "react-apollo";
 import PropTypes from 'prop-types';
-import ColorHash from 'color-hash';
+import { colorHash } from '../../constants'; 
 import { selectUser, appendUser, getPrivateChat } from '../../graph/querys';
-
-
-let colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
 
 class AddNew extends Component {
   constructor(props){
@@ -34,7 +31,11 @@ class AddNew extends Component {
   }
 
   componentWillReceiveProps() {
-    this.focusTextInput();
+    // this.focusTextInput();
+  }
+
+  componentDidUpdate(){
+    // this.focusTextInput();
   }
 
   onKeyDown(e){

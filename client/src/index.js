@@ -53,9 +53,18 @@ const stateLink = withClientState({
     id: "",
     name: "",
     unr: 0,
+    priv: 0,
     meid: "",
     mename: "",
     memail: "",
+    tempObj: {},
+    ref: false,
+    lastMessage: {
+      groupId: "",
+      id: "",
+      text: "",
+      __typename: "lastMessageCache"
+    }
   }
 });
 
@@ -83,16 +92,17 @@ const link = split(
   prelink,
 );
 
-export const client = new ApolloClient({
+const client = new ApolloClient({
   link,
   cache
 })
 
+export default client;
 
 ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
-      <App />
+      <App client={client} />
     </ApolloProvider>
   </BrowserRouter>,
   document.getElementById('root'),

@@ -1,15 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
-import ColorHash from 'color-hash';
 import moment from 'moment';
-import { Query, Mutation, Subscription, graphql, compose  } from "react-apollo";
-import { ADD_MUT, getPrivateChat, GR_QUERY, PRIV_QUERY, MESSAGE_CREATED, MESSAGE_READ, MESSAGEREAD_MUT, messRead, MESSAGE_QUERY, messageRead_MUT } from '../../graph/querys';
+import { Query, Mutation, graphql, compose  } from "react-apollo";
+import { ADD_MUT, getPrivateChat, GR_QUERY, PRIV_QUERY, MESSAGE_CREATED, MESSAGE_READ, MESSAGE_QUERY, messageRead_MUT } from '../../graph/querys';
 import AddNew from './AddNew';
-import Loading from '../Loading';
-import { MsgCheck, MsgDblcheck, MsgDblcheckAck } from '../Svg/index';
-import { qauf, _url } from '../../constants';
+// import Loading from '../Loading';
+import { MsgDblcheck, MsgDblcheckAck } from '../Svg/index';
+import { qauf, _url, colorHash } from '../../constants';
 
-var colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
 let ref1;
 
 const AddMesMut = ({ children }) => (
@@ -48,8 +46,9 @@ const MessagesListData = (params) => {
                   direct: {
                     messages:{
                       edges: [...prev.direct.messages.edges, newFeedItem],
-                      __typename: "MessageConnection"
+                      __typename: "MessageConnection",
                     },
+                    unreadCount: 0,
                     __typename: "Direct"
                   }
                 });
@@ -95,7 +94,7 @@ export class MessagesList extends Component {
     this.state = {
     }
   }
-  
+
   componentDidMount() {
     this.props.subscribeToNewMessages();
     toBottom();
@@ -103,7 +102,7 @@ export class MessagesList extends Component {
   }
 
   componentDidUpdate(){
-    console.warn("UPDATE!");
+    // console.warn("UPDATE!");
     if (ref1) ref1();
     // this.props.subscribeToNewMessages();
     toBottom();
@@ -111,9 +110,9 @@ export class MessagesList extends Component {
 
   render(){
     if (ref1) ref1();
-    const { priv, data, variables } = this.props;
+    const { priv, data, } = this.props;
 
-    console.warn("our group is: ", variables.id )
+    // console.warn("our group is: ", variables.id )
 
     let datas = '';
     let uid = localStorage.getItem('userid');
@@ -138,7 +137,7 @@ export class MessagesList extends Component {
               n++;
               let {node} = e;
 
-              console.log(e)
+              // console.log(e)
 
               let tr = 'them';
               let createdAt = node.createdAt || "none";
@@ -158,7 +157,7 @@ export class MessagesList extends Component {
 
                   qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
                     if(a && a.data){
-                      console.warn("Answer about read",a);
+                      // console.warn("Answer about read",a);
                     }
                   }).catch((e)=>{
                     console.warn("Err read",e);
@@ -175,7 +174,8 @@ export class MessagesList extends Component {
                     {same ? ('') : (
                       <div className="msg-user" style={{color: colorHash.hex(username)}}>
                         {username}:</div>)}
-                    <blockquote className="msgs">
+                    <blockquote className={"msgs"}>
+
                       <div className="text prewr">{messageText}</div>
                       <div className="f-row">
                         { id === uid ? (
@@ -190,7 +190,9 @@ export class MessagesList extends Component {
                                   ref1 = refetch;
 
                                   return(
-                                    <div className="events">{data.message && data.message.isRead ? <MsgDblcheckAck /> : <MsgDblcheck />}  {console.log('subs read data',data)}</div>
+                                    <div className="events">{data.message && data.message.isRead ? <MsgDblcheckAck /> : <MsgDblcheck />}  {
+                                      // console.warn('subs read data',data)
+                                    }</div>
                                   )}
                                 }
                               </Query>
@@ -230,23 +232,20 @@ class Fetch extends Component {
   }
 
   fillMessages(datas){
-    if(datas && datas != this.state.messages){
+    if(datas && datas !== this.state.messages){
       this.setState({
         messages: datas,
       })
     }
   }
 
-  componentWillMount(){
-
-  }
-
-
   render(){
     let { id, priv } = this.props;
     let _query = GR_QUERY;
 
-    priv ? _query = PRIV_QUERY : null;
+    if (priv) {
+      _query = PRIV_QUERY
+    }
 
     return(
       <MessagesListData query={_query} id={id} priv={priv} {...this.props} />
@@ -281,10 +280,10 @@ class ChatBody extends Component {
   }
 
   render() {
-    let { id, name, priv, data } = this.props;
-    let _query = GR_QUERY;
+    let { id, name, priv } = this.props;
+    // let _query = GR_QUERY;
 
-    priv ? _query = PRIV_QUERY : null;
+    // priv ? _query = PRIV_QUERY : null;
 
     return (
       <div className="nChat flexbox2">
@@ -306,6 +305,7 @@ class ChatBody extends Component {
           <AddMesMut>
             {(add) => (
               <AddNew
+                key={id}
                 add={({ id, text }) => add({ variables: { id: `${id}`, text } })}
                 toBottom={()=>{this.toBottom();}}
               />

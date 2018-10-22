@@ -4,8 +4,10 @@ import { withRouter } from 'react-router';
 import LeftNav from './components/LeftNav';
 import Login from './components/Login';
 import Profile from './components/Profile';
-import New from './components/New';
+import TaskView from './components/TaskView';
+import aBoard from './components/aBoard';
 import Private from './components/Private';
+import Map from './components/Map/LeafletMapBuild';
 import { AUTH_TOKEN } from './constants';
 
 
@@ -95,10 +97,12 @@ class App extends Component {
           <Login lookft={this.lookft} />
         ) : (
           <Fragment>
-            <LeftNav lstate={this._lbarstate} />
+            <LeftNav lstate={this._lbarstate} client={this.props.client} />
             <Switch>
+              <Route exact path="/aboard" component={aBoard} />
               <Route exact path="/login" component={Login} />
-              <Route exact path="/" render={(props) => <New {...props} />} />
+              <Route exact path="/map" component={Map} />
+              <Route exact path="/" render={(props) => <TaskView {...props} />} />
               <Route exact path="/profile" component={Profile} />
               <Route exact path="/private" render={(props) => <Private {...props} />} />
             </Switch>
