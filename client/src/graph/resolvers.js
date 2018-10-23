@@ -45,6 +45,12 @@ export default {
       return {meid, mename, memail, __typename: 'me' };
     },
 
+    setTemp: (_, { tempObj },  { cache }) => {
+      cache.writeData({ data: { tempObj: tempObj } });
+
+      return {tempObj, __typename: 'tempObj' };
+    },
+
     private: (_, { id, name },  { cache }) => {
       cache.writeData({ data: { id: id, name: name } });
 

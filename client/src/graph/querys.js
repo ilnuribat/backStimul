@@ -577,3 +577,16 @@ export const setRefGroups = gql`
     }
   }
 `;
+
+export const setTemp = gql`
+  mutation setTemp($temp: String){
+    tempObj(tempObj: $temp) @client{
+      tempObj
+    }
+  }
+`;
+export const getTemp = gql`
+  query getTemp{
+        tempObj @client
+      }
+`;

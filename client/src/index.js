@@ -38,7 +38,7 @@ const middlewareLink = setContext((req, previousContext) => {
 
 const httpLinkWithAuthToken = middlewareLink.concat(httpLink);
 
-const cache = new InMemoryCache();
+export const cache = new InMemoryCache();
 
 const stateLink = withClientState({
   cache,
@@ -57,7 +57,7 @@ const stateLink = withClientState({
     meid: "",
     mename: "",
     memail: "",
-    tempObj: {},
+    tempObj: [],
     ref: false,
     lastMessage: {
       groupId: "",
