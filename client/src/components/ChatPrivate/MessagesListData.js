@@ -1,79 +1,83 @@
-import React, { Component } from "react";
+import React from "react";
+import PropTypes from 'prop-types';
 import { Query} from "react-apollo";
-import { MESSAGE_CREATED } from '../../graph/querys';
+// import { MESSAGE_CREATED } from '../../graph/querys';
 import MessagesList from './MessagesList';
 
-export default class MessagesListData extends Component {
-  constructor(props){
-    super(props)
-  }
+const MessagesListData = ({ query, id, priv }) => (
 
-  render() {
-    return(
-      <Query
-        query={this.props.query}
-        variables={{ id: `${this.props.id}` }}
-      >
-        {({ subscribeToMore, refetch, ...result }) =>{
+  <Query
+    query={query}
+    variables={{ id: `${id}` }}
+  >
+    {({ data }) =>{
+      // {({ loading, error, refetch, data }) =>{
 
-          const subs = (id) =>{
-            return subscribeToMore({
-              document: MESSAGE_CREATED,
-              variables: { id: id },
+      // console.warn(data)
+      // refetch()
 
-              updateQuery: (prev, { subscriptionData }) => {
+      // const subs = (id) =>{
+      //   return subscribeToMore({
+      //     document: MESSAGE_CREATED,
+      //     variables: { id: id },
 
-                if (!subscriptionData.data) return prev;
-                // subscriptionData.data.messageAdded.isRead = false;
-                const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
-                  __typename: "MessageEdge" };
+      //     updateQuery: (prev, { subscriptionData }) => {
 
-                if(this.props.priv){
-                  const aaa  = Object.assign({}, prev, {
-                    direct: {
-                      messages:{
-                        edges: [...prev.direct.messages.edges, newFeedItem],
-                        __typename: "MessageConnection",
-                      },
-                      unreadCount: 0,
-                      __typename: "Direct"
-                    }
-                  });
+      //       if (!subscriptionData.data) return prev;
+      //       // subscriptionData.data.messageAdded.isRead = false;
+      //       const newFeedItem = {cursor: subscriptionData.data.messageAdded.id, node: subscriptionData.data.messageAdded,
+      //         __typename: "MessageEdge" };
 
-                  return aaa
-                }else{
-                  return Object.assign({}, prev, {
-                    group: {
-                      messages:{
-                        edges: [...prev.group.messages.edges, newFeedItem],
-                        __typename: "MessageConnection"
-                      },
-                      __typename: "Group"
-                    }
-                  });
-                }
+      //       if(this.props.priv){
+      //         const aaa  = Object.assign({}, prev, {
+      //           direct: {
+      //             messages:{
+      //               edges: [...prev.direct.messages.edges, newFeedItem],
+      //               __typename: "MessageConnection",
+      //             },
+      //             unreadCount: 0,
+      //             __typename: "Direct"
+      //           }
+      //         });
 
-              },
-              onError: (err)=>{
-                console.warn('ERR-----',err)
-              },
-            })
-          };
+      //         return aaa
+      //       }else{
+      //         return Object.assign({}, prev, {
+      //           group: {
+      //             messages:{
+      //               edges: [...prev.group.messages.edges, newFeedItem],
+      //               __typename: "MessageConnection"
+      //             },
+      //             __typename: "Group"
+      //           }
+      //         });
+      //       }
 
-          return(
-            <MessagesList
-              key={this.props.id}
-              priv={this.props.priv}
-              {...result}
+      //     },
+      //     onError: (err)=>{
+      //       console.warn('ERR-----',err)
+      //     },
+      //   })
+      // };
 
-              subscribeToNewMessages={() =>subs(this.props.id)
+      return(
+        <MessagesList
+          key={id}
+          priv={priv}
+          data = {data}
 
-              }
-            />
-          )}
-        }
-      </Query>
-    )}
-}
+          // subscribeToNewMessages={() =>subs(this.props.id)}
+        />
+      )}
+    }
+  </Query>
+)
 
+MessagesListData.propTypes = {
+  id:PropTypes.string.isRequired,
+  priv: PropTypes.number.isRequired,
+  query:PropTypes.object.isRequired,
 
+};
+
+export default MessagesListData

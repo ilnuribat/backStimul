@@ -57,7 +57,10 @@ const stateLink = withClientState({
     meid: "",
     mename: "",
     memail: "",
-    tempObj: {},
+    tempObj: {
+      id: "",
+      __typename: "tempObj"
+    },
     ref: false,
     lastMessage: {
       groupId: "",

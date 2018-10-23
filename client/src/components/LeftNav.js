@@ -10,7 +10,7 @@ import Map from './Nav/Map';
 
 import Loading from './Loading';
 import { qauf, _url } from '../constants';
-import { getlastMessageCache, lastMessageCache, getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups } from '../graph/querys';
+import { messagesListUpdate, getlastMessageCache, lastMessageCache, getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups } from '../graph/querys';
 
 let refUser;
 
@@ -68,13 +68,21 @@ class LeftNav extends Component {
 
           })
         })
-        // console.warn("new private message", data)
+        //Пишем в кеш (если он есть конечно) нужной группы полученную мессагу
+        client.mutate({
+          mutation: messagesListUpdate,
+          variables: {
+            lastMessage: data.data.messageAdded.text,
+            lastMessageId: data.data.messageAdded.id,
+            lastMessageGroupId: data.data.messageAdded.groupId
+          },
+        })
       },
       error(err) { console.error('err', err); },
     });
   }
 
-  shouldComponentUpdate(nextProps,nextState){
+  shouldComponentUpdate(nextProps){
 
     if(nextProps.getRefGroups.ref){
       return true;
@@ -85,7 +93,7 @@ class LeftNav extends Component {
 
   componentDidUpdate(){
 
-    console.log("Update Nav")
+    // console.warn("Update Nav")
 
     let {getRefGroups, setRefGroups} = this.props;
 
@@ -156,9 +164,9 @@ class LeftNav extends Component {
 
               if(data){
 
-                console.log("tasks",data);
+                // console.warn("tasks",data);
 
-                data.user.groups.map((e,i)=>{
+                data.user.groups.map((e)=>{
                   let id = e.id;
                   // return(
                   //         <Subscription
@@ -180,7 +188,7 @@ class LeftNav extends Component {
                       updateQuery: (prev, { subscriptionData }) => {
                         refUser = refetch;
                         if (!subscriptionData.data) return prev;
-                        const newFeedItem = subscriptionData.data.commentAdded;
+                        // const newFeedItem = subscriptionData.data.commentAdded;
 
                         console.warn(prev);
                         console.warn(subscriptionData);
@@ -210,6 +218,7 @@ class LeftNav extends Component {
                   //     }}
                   //   </Subscription>
                   // )
+                  return true;
                 });
 
                 return true;
@@ -256,7 +265,11 @@ class LeftNav extends Component {
 
 LeftNav.propTypes = {
   cSetCountPrivates: PropTypes.func.isRequired,
-  client: PropTypes.object.isRequired
+  setRefGroups: PropTypes.func.isRequired,
+  client: PropTypes.object.isRequired,
+  getRefGroups: PropTypes.shape({
+    ref: PropTypes.bool
+  }).isRequired,
 };
 
 export default compose(

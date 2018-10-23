@@ -14,7 +14,7 @@ import Indicator from "./Indicator";
 import newdata from "./Objects";
 import b from "./buttons.css";
 import  "./LeafletMap.css";
- 
+
 const { BaseLayer, Overlay } = LayersControl;
 
 const styleLeaf = {
@@ -59,7 +59,7 @@ export default class LeafletMap extends PureComponent {
       }
       if (this.state.redirectDetail) {
         return <Redirect push to="/build_info" />;
-      }        
+      }
       const center = [55.797, 38.43];
 
       return (
@@ -92,7 +92,7 @@ export default class LeafletMap extends PureComponent {
               <LayerGroup >
                 <Panel type="3" name="Культура"  click={this.handleTabChange} clickDetail={this.handleTabDetail}/>
               </LayerGroup>
-            </Overlay>                                                            
+            </Overlay>
             <Overlay checked name="Спорт">
               <LayerGroup >
                 <Panel type="4" name="Спорт"  click={this.handleTabChange} clickDetail={this.handleTabDetail}/>
@@ -102,7 +102,7 @@ export default class LeafletMap extends PureComponent {
               position="topleft"
 
               showMarker={true}
-              zoom={5}
+              zoom={15}
               showPopup={true}
               popUp={this.customPopup}
               closeResultsOnClick={true}
@@ -114,7 +114,7 @@ export default class LeafletMap extends PureComponent {
               //     [44.55916341529184, 24.510498046875]
               //   ]
               // }
-              // providerOptions={{region: 'tr'}}
+              providerOptions={{region: 'ru'}}
 
               // default provider OpenStreetMap
               // provider="BingMap"
@@ -128,17 +128,17 @@ export default class LeafletMap extends PureComponent {
 }
 
 
-const ddd = divIcon({
-  className: "schoolRed",
-  iconSize: [50, 50],
-});
+// const ddd = divIcon({
+//   className: "schoolRed",
+//   iconSize: [50, 50],
+// });
 
 
 const Panel = ({ type, name, click, clickDetail })  => {
   return (
     newdata.map((post) =>
-      post.type == type ?
-        <Marker key={post.id} position={post.coordinates} icon={SwitchIcon(name, post.status)}> 
+      post.type === type ?
+        <Marker key={post.id} position={post.coordinates} icon={SwitchIcon(name, post.status)}>
           <Popup >
             <div className="modal" >
               <div className="photo"><img src={post.photo} alt="fdd" className="photo" /></div>
@@ -193,7 +193,7 @@ const SwitchIcon = (name, status)   => {
   switch (name) {
   case "Образовательное учреждение":
     switch (status) {
-    case 2: 
+    case 2:
       value = "schoolYellow";
       break;
     case 3:
@@ -205,7 +205,7 @@ const SwitchIcon = (name, status)   => {
     break;
   case "Здравоохранение":
     switch (status) {
-    case 2: 
+    case 2:
       value = "healthYellow";
       break;
     case 3:
@@ -217,7 +217,7 @@ const SwitchIcon = (name, status)   => {
     break;
   case "Культура":
     switch (status) {
-    case 2: 
+    case 2:
       value = "cultureYellow";
       break;
     case 3:
@@ -229,7 +229,7 @@ const SwitchIcon = (name, status)   => {
     break;
   case "Спорт":
     switch (status) {
-    case 2: 
+    case 2:
       value = "sportYellow";
       break;
     case 3:

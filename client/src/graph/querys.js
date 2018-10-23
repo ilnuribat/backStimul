@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-// import { Mutation } from 'react-apollo';
 
 export const updTask = (...params) => {
   return (`mutation{
@@ -574,6 +573,18 @@ export const setRefGroups = gql`
   mutation Ref($ref: String){
     ref(ref: $ref) @client{
       ref
+    }
+  }
+`;
+
+
+
+export const messagesListUpdate = gql`
+  mutation messagesListUpdate($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
+    messagesListUpdate(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
+      lastMessage
+      lastMessageId
+      lastMessageGroupId
     }
   }
 `;

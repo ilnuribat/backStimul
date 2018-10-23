@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import moment from 'moment';
-import { Query, compose  } from "react-apollo";
+import PropTypes from 'prop-types';
+import { Query } from "react-apollo";
 
 import { MsgDblcheck, MsgDblcheckAck } from '../Svg/index';
 import { qauf, _url, colorHash } from '../../constants';
@@ -39,14 +40,9 @@ const subscribeToRead = (subscribeToMore, id) =>{
 }
 
 export default class MessagesList extends Component {
-  constructor(props){
-    super(props)
-    this.state = {
-    }
-  }
 
   componentDidMount() {
-    this.props.subscribeToNewMessages();
+    // this.props.subscribeToNewMessages();
     toBottom();
     if (ref1) ref1();
   }
@@ -60,7 +56,7 @@ export default class MessagesList extends Component {
 
   render(){
     if (ref1) ref1();
-    const { priv, data, } = this.props;
+    const { priv, data } = this.props;
 
     // console.warn("our group is: ", variables.id )
 
@@ -135,8 +131,11 @@ export default class MessagesList extends Component {
                                 query={MESSAGE_QUERY}
                                 variables={{ id:node.id }}
                               >
-                                {({ data, loading, subscribeToMore, refetch }) => {
+                                {({ data, subscribeToMore, refetch }) => {
                                   subscribeToRead(subscribeToMore, node.id);
+                                  // console.log("subscribeToMore_______________________________");
+                                  // console.log(subscribeToMore);
+
                                   ref1 = refetch;
 
                                   return(
@@ -165,3 +164,9 @@ export default class MessagesList extends Component {
     }
   }
 }
+
+
+MessagesList.propTypes = {
+  priv: PropTypes.number.isRequired,
+  data:PropTypes.object.isRequired,
+};

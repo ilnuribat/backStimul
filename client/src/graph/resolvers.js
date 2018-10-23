@@ -1,3 +1,5 @@
+import gql from 'graphql-tag';
+
 export default {
 
   Mutation: {
@@ -49,6 +51,53 @@ export default {
       cache.writeData({ data: { id: id, name: name } });
 
       return {id, name, __typename: 'chat' };
+    },
+    messagesListUpdate: (_, {lastMessage, lastMessageId, lastMessageGroupId},  { cache }) => {
+
+      const query = gql`
+        query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
+          direct(id: $id ) @client {
+            messages(messageConnection: $messageConnection) {
+              edges {
+                cursor
+                node {
+                  id
+                  text
+                }
+              }
+            }
+            __typename
+          }
+        # id @client
+        }
+      `;
+
+      const previousState = cache.readQuery({ query, variables: {"id": lastMessageGroupId}});
+
+      // console.warn("lastMessage is", lastMessage)
+      // console.warn("prevstate is", previousState)
+
+      const newFeedItem = {cursor: lastMessageId, node: {id: lastMessageId, text: lastMessage,  __typename: "Message"},
+        __typename: "MessageEdge" };
+
+      const data = {
+        direct: {
+          messages:{
+            edges: [...previousState.direct.messages.edges, newFeedItem],
+            __typename: "MessageConnection",
+          },
+          __typename: "Direct"
+        }
+      };
+
+      cache.writeQuery({
+        query,
+        data,
+        variables: {"id": lastMessageGroupId}
+      });
+
+
+      return {lastMessage,lastMessageId, lastMessageGroupId, __typename: 'Direct' };
     },
   },
   Query: {
