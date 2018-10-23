@@ -21,6 +21,7 @@ const subscribeToRead = (subscribeToMore, id) =>{
   return subscribeToMore({
     document: MESSAGE_READ,
     variables: { id: id },
+    shouldResubscribe: false,
     updateQuery: (prev, { subscriptionData }) => {
       if (!subscriptionData.data) return prev;
 
@@ -132,7 +133,8 @@ export default class MessagesList extends Component {
                                 variables={{ id:node.id }}
                               >
                                 {({ data, subscribeToMore, refetch }) => {
-                                  subscribeToRead(subscribeToMore, node.id);
+                                  console.warn("subs", subscribeToMore)
+                                  console.warn(subscribeToRead(subscribeToMore, node.id));
                                   // console.log("subscribeToMore_______________________________");
                                   // console.log(subscribeToMore);
 
