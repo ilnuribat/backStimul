@@ -42,13 +42,6 @@ class LeftBar extends Component {
   }
 
   render() {
-
-    const cache2 = new InMemoryCache();
-
-    console.log("cache")
-    console.log(cache)
-    console.log(cache2)
-
     return(
       <div className="left-bar">
         {

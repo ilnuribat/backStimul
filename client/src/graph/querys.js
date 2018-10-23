@@ -579,8 +579,8 @@ export const setRefGroups = gql`
 `;
 
 export const setTemp = gql`
-  mutation setTemp($temp: String){
-    tempObj(tempObj: $temp) @client{
+  mutation setTemp($tempObj: String){
+    setTemp(tempObj: $tempObj) @client{
       tempObj
     }
   }

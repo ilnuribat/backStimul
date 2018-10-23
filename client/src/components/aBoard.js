@@ -7,6 +7,8 @@ import { qauf, _url } from '../constants';
 import Column from './BoardParts/Column';
 import DataQuery from './BoardParts/DataQuery';
 import Loading from './Loading';
+// import anime from 'animejs';
+
 
 let r;
 
@@ -45,17 +47,8 @@ class Board extends Component {
   }
 
   componentDidMount(){
-
-        
-    this.props.setTemp({
-      tempObj: ["String"],
-    })
-
-
+    
     this.glossStatus();
-    
-    
-
     this.props.setChat({
       variables: {
         id: "",
@@ -79,8 +72,6 @@ class Board extends Component {
       });
   }
 
-  
-
   render(){
 
     if(r){
@@ -91,10 +82,6 @@ class Board extends Component {
     let { getCUser, getTemp } = this.props;
     let cols = [[],[],[],[],[],[],[]];
    
-
-
-    console.log(getTemp)
-
     if(getCUser.loading) return <Loading />;
     if(!getCUser.user) return <Loading />;
     if(!getCUser.user.groups) return <Loading />;
@@ -112,8 +99,11 @@ class Board extends Component {
       }
     });
 
+    
+
     return(
-      <div className="content-aft-nav columns-wrapper">
+      <div id="anim" className="content-aft-nav columns-wrapper">
+
         {
           status.map((e,i)=>{
             if(!e.name){

@@ -103,9 +103,9 @@ class Login extends Component {
           <div className="auth">
             <div className="logo">
             </div>
-            <input type="text" placeholder="Email" onChange={(e) => { this.setState({ loginerror: "", email: e.target.value }) }} />
-            <input type="password" placeholder="Пароль" onKeyDown={this.onKeyDown} onChange={(e) => { this.setState({ loginerror: "", password: e.target.value }) }} />
-            <div className="button" role="presentation" onClick={() => { this._confirm() }}>Войти</div>
+            <div><input type="text" placeholder="Email" onChange={(e) => { this.setState({ loginerror: "", email: e.target.value }) }} /></div>
+            <div><input type="password" placeholder="Пароль" onKeyDown={this.onKeyDown} onChange={(e) => { this.setState({ loginerror: "", password: e.target.value }) }} /></div>
+            <div><div className="button" role="presentation" onClick={() => { this._confirm() }}>Войти</div></div>
             {
               loginerror ? (<div className="errorMessage">{loginerror}</div>) : ('')
             }
