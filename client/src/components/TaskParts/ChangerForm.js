@@ -68,6 +68,7 @@ class ChangerForm extends React.Component {
     if(edit){
       if(select){
         return (
+          <div className="padded">
           <form onSubmit={this.handleSubmit}>
             <label>
               {name}:
@@ -93,11 +94,13 @@ class ChangerForm extends React.Component {
               </div>
             </label>
           </form>
+          </div>
         );
       }else{
 
 
         return (
+          <div className="padded">
           <form onSubmit={this.handleSubmit}>
             <label>
               {name}:
@@ -108,6 +111,7 @@ class ChangerForm extends React.Component {
               </div>
             </label>
           </form>
+          </div>
         );
       }
 

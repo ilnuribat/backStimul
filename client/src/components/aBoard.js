@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { graphql, compose, Query  } from "react-apollo";
 import _ from 'lodash';
 import 'animate.css';
-import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus, getCUser } from '../graph/querys';
+import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus, getCUser, setTemp, getTemp } from '../graph/querys';
 import { qauf, _url } from '../constants';
 import Column from './BoardParts/Column';
 import DataQuery from './BoardParts/DataQuery';
 import Loading from './Loading';
+// import anime from 'animejs';
+
 
 let r;
 
@@ -45,10 +47,8 @@ class Board extends Component {
   }
 
   componentDidMount(){
+    
     this.glossStatus();
-    
-    
-
     this.props.setChat({
       variables: {
         id: "",
@@ -72,8 +72,6 @@ class Board extends Component {
       });
   }
 
-  
-
   render(){
 
     if(r){
@@ -81,9 +79,9 @@ class Board extends Component {
     }
 
     let { status } = this.state;
-    let { getCUser } = this.props;
+    let { getCUser, getTemp } = this.props;
     let cols = [[],[],[],[],[],[],[]];
-
+   
     if(getCUser.loading) return <Loading />;
     if(!getCUser.user) return <Loading />;
     if(!getCUser.user.groups) return <Loading />;
@@ -101,8 +99,11 @@ class Board extends Component {
       }
     });
 
+    
+
     return(
-      <div className="content-aft-nav columns-wrapper">
+      <div id="anim" className="content-aft-nav columns-wrapper">
+
         {
           status.map((e,i)=>{
             if(!e.name){
@@ -162,4 +163,6 @@ export default compose(
   graphql(getPrivateChat, { name: 'getChat' }),
   graphql(setPrivateChat, { name: 'setChat' }),
   graphql(getCUser, { name: 'getCUser' }),
+  graphql(setTemp, { name: 'setTemp' }),
+  graphql(getTemp, { name: 'getTemp' }),
 )(Board);

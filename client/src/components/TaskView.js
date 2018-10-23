@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { qauf, _url, colorHash } from '../constants';
 import 'animate.css';
-import { getPrivateChat, user, group, selectUser, allUsers, glossaryStatus, groupMut, getCUser, GRU_QUERY, userTaskUpdated, tempObj } from '../graph/querys';
+import { getPrivateChat, user, group, selectUser, allUsers, glossaryStatus, groupMut, getCUser, GRU_QUERY, userTaskUpdated, tempObj, setTemp, getTemp } from '../graph/querys';
 import FirstLayout from './Layout';
 import ChatPrivate from './ChatPrivate';
 import Loading from './Loading';
@@ -151,6 +151,18 @@ class GroupList extends Component {
   }
 
   componentDidMount(){
+
+    let obj = {name:'name'};
+    let arr = [].push(obj);
+
+    this.props.setTemp({
+      variables:{
+        tempObj:  {stingh: "sa"},
+        // tempObj: [{name: "New anme",str: "String", __typename: "str",}],
+      }
+    })
+
+
     const {getPrivateChat, getCUser} = this.props;
     const { users } = this.state;
     let _grid = getPrivateChat.id || localStorage.getItem('grid');
@@ -225,7 +237,7 @@ class GroupList extends Component {
 
   newUser(e){
 
-    console.log(e.target)
+    // console.log(e.target)
 
     this.setState({
       newUser: e.target.value,
@@ -331,7 +343,7 @@ class GroupList extends Component {
       let user = _.find(allusers, (obj)=> { return obj.username === id; });
 
       if(user){
-        console.log(user);
+        // console.log(user);
         userId = user.id;
 
       }else{
@@ -348,12 +360,12 @@ class GroupList extends Component {
     }`)} ;
 
     let a = q();
-    console.log(a);
+    // console.log(a);
     
     // return true;
     if(typeof q === "function"){
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
-        console.log("Answer updUsrGr",a)
+        // console.log("Answer updUsrGr",a)
       })
         .then(()=>{
           // this.loadu(this.props.getPrivateChat.id)
@@ -382,7 +394,7 @@ class GroupList extends Component {
   onStatSelected(e){
 
     qauf(groupMut(this.props.getPrivateChat.id, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.log(a)
+      // console.log(a)
     })
       .catch((e)=>{
         console.warn(e);
@@ -393,7 +405,7 @@ class GroupList extends Component {
   onUserSelected(e){
 
     qauf(groupMut(this.props.getPrivateChat.id, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.log(a)
+      // console.log(a)
     })
       .catch((e)=>{
         console.warn(e);
@@ -524,10 +536,13 @@ class GroupList extends Component {
 
   render() {
     const {users, _grid, allusers, groupName, groupInfo, modal, status} = this.state;
-    const {getPrivateChat, getCUser} = this.props;
+    const {getPrivateChat, getCUser, getTemp} = this.props;
 
     // let thisUsers;
     let onlyunicusers;
+
+
+    console.log(getTemp.tempObj);
 
     // if(!getCUser.user || !getCUser.user.groups) return true;
 
@@ -642,7 +657,7 @@ class GroupList extends Component {
                     <div className="content-scroll">
                       <div>
 
-                        <input list="users" autoComplete="on" onChange={this.newUser} />
+                        <input type="list" list="users" autoComplete="on" onChange={this.newUser} />
                         {
                           this.state.newUser ? (
                             <div className="button" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить {this.state.newUser}</div>
@@ -743,6 +758,8 @@ export default compose(
   graphql(selectUser, { name: 'selectUser' }),
   graphql(getCUser, { name: 'getCUser' }),
   graphql(tempObj, { name: 'tempObj' }),
+  graphql(setTemp, { name: 'setTemp' }),
+  graphql(getTemp, { name: 'getTemp' }),
 )(GroupList);
 
 const isArrayEqual = (x, y) => {

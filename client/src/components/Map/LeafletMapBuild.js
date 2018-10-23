@@ -18,9 +18,9 @@ import  "./LeafletMap.css";
 const { BaseLayer, Overlay } = LayersControl;
 
 const styleLeaf = {
+  margin: "0 0 0 50px",
   height: "100vh",
-  width: "90%",
-  margin: "0 auto",
+  width: "auto",
 };
 
 

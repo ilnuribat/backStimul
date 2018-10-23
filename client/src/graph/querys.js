@@ -588,3 +588,16 @@ export const messagesListUpdate = gql`
     }
   }
 `;
+
+export const setTemp = gql`
+  mutation setTemp($tempObj: String){
+    setTemp(tempObj: $tempObj) @client{
+      tempObj
+    }
+  }
+`;
+export const getTemp = gql`
+  query getTemp{
+        tempObj @client
+      }
+`;

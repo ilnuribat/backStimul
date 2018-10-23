@@ -92,9 +92,6 @@ class LeftNav extends Component {
   }
 
   componentDidUpdate(){
-
-    // console.warn("Update Nav")
-
     let {getRefGroups, setRefGroups} = this.props;
 
     if(!!getRefGroups.ref && !!refUser){
@@ -163,9 +160,6 @@ class LeftNav extends Component {
               }
 
               if(data){
-
-                // console.warn("tasks",data);
-
                 data.user.groups.map((e)=>{
                   let id = e.id;
                   // return(

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { Fire, Favor, Private, Tasks } from './Bar';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import {cache} from '../index'
 
 class LeftBar extends Component {
   constructor(props) {
