@@ -2,10 +2,10 @@ const { ApolloServer } = require('apollo-server');
 const jwt = require('jsonwebtoken');
 const connectToMongo = require('./connectDB');
 const { HTTP_PORT, JWT_SECRET } = require('./config');
-const { User } = require('./data/models');
+const { User } = require('./src/models');
 const { logger } = require('./logger');
-const typeDefs = require('./data/schema');
-const resolvers = require('./data/resolvers');
+const typeDefs = require('./src/schema');
+const resolvers = require('./src/resolvers');
 
 
 const server = new ApolloServer({
