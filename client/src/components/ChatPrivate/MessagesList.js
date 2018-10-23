@@ -7,8 +7,6 @@ import { MsgDblcheck, MsgDblcheckAck } from '../Svg/index';
 import { qauf, _url, colorHash } from '../../constants';
 import { MESSAGE_READ, MESSAGE_QUERY, messageRead_MUT } from '../../graph/querys';
 
-let ref1;
-
 const toBottom = () => {
   if(document.getElementById("messageList")){
     const a = document.getElementById("messageList");
@@ -45,18 +43,15 @@ export default class MessagesList extends Component {
   componentDidMount() {
     // this.props.subscribeToNewMessages();
     toBottom();
-    if (ref1) ref1();
   }
 
   componentDidUpdate(){
     // console.warn("UPDATE!");
-    if (ref1) ref1();
     // this.props.subscribeToNewMessages();
     toBottom();
   }
 
   render(){
-    if (ref1) ref1();
     const { priv, data } = this.props;
 
     // console.warn("our group is: ", variables.id )
@@ -80,7 +75,7 @@ export default class MessagesList extends Component {
       return(
         <div>
           {
-            datas.map((e,i,a)=>{
+            datas.map((e,i)=>{
               n++;
               let {node} = e;
 
@@ -132,13 +127,11 @@ export default class MessagesList extends Component {
                                 query={MESSAGE_QUERY}
                                 variables={{ id:node.id }}
                               >
-                                {({ data, subscribeToMore, refetch }) => {
-                                  console.warn("subs", subscribeToMore)
-                                  console.warn(subscribeToRead(subscribeToMore, node.id));
+                                {({ data, subscribeToMore }) => {
+                                  // console.warn("subs", subscribeToMore)
+                                  subscribeToRead(subscribeToMore, node.id)
                                   // console.log("subscribeToMore_______________________________");
                                   // console.log(subscribeToMore);
-
-                                  ref1 = refetch;
 
                                   return(
                                     <div className="events">{data.message && data.message.isRead ? <MsgDblcheckAck /> : <MsgDblcheck />}  {

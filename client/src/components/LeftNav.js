@@ -10,7 +10,7 @@ import Map from './Nav/Map';
 
 import Loading from './Loading';
 import { qauf, _url } from '../constants';
-import { messagesListUpdate, getlastMessageCache, lastMessageCache, getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups } from '../graph/querys';
+import { messagesListGroupUpdate, messagesListDirectUpdate, getlastMessageCache, lastMessageCache, getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups } from '../graph/querys';
 
 let refUser;
 
@@ -33,6 +33,8 @@ class LeftNav extends Component {
         // into the existing list of comments
         let equalGroupMessage
         //пишем мессагу в кэш
+
+        console.warn(data)
 
         client.mutate({
           mutation: lastMessageCache,
@@ -68,13 +70,14 @@ class LeftNav extends Component {
 
           })
         })
+
         //Пишем в кеш (если он есть конечно) нужной группы полученную мессагу
         client.mutate({
-          mutation: messagesListUpdate,
+          mutation: data.data.messageAdded.isDirect ? messagesListDirectUpdate : messagesListGroupUpdate,
           variables: {
             lastMessage: data.data.messageAdded.text,
             lastMessageId: data.data.messageAdded.id,
-            lastMessageGroupId: data.data.messageAdded.groupId
+            lastMessageGroupId: data.data.messageAdded.groupId,
           },
         })
       },

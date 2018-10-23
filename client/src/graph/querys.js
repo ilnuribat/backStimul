@@ -380,6 +380,7 @@ export const ALL_MESSAGE_CREATED = gql`
           userId
           groupId
           isRead
+          isDirect
       }
   }
 `;
@@ -579,9 +580,20 @@ export const setRefGroups = gql`
 
 
 
-export const messagesListUpdate = gql`
-  mutation messagesListUpdate($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
-    messagesListUpdate(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
+export const messagesListDirectUpdate = gql`
+  mutation messagesListDirectUpdate($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
+    messagesListDirectUpdate(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
+      lastMessage
+      lastMessageId
+      lastMessageGroupId
+    }
+  }
+`;
+
+
+export const messagesListGroupUpdate = gql`
+  mutation messagesListGroupUpdate($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
+    messagesListGroupUpdate(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
       lastMessage
       lastMessageId
       lastMessageGroupId

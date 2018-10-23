@@ -200,7 +200,7 @@ class GroupList extends Component {
           this.setState({
             users: [...thisUsers.users],
           });
-          
+
         }
       }else{
         return false;
@@ -268,7 +268,7 @@ class GroupList extends Component {
       });
     }
 
-    
+
 
     if(getCUser.user  && getCUser.user.groups){
       let groups = getCUser.user.groups;
@@ -347,21 +347,21 @@ class GroupList extends Component {
         userId = user.id;
 
       }else{
-        
+
         console.warn("Неправильный юзер");
       }
     }else{
       userId = id;
     }
 
-    
+
     q = () => {return(`mutation{
       updateUsersGroup(group: {id: "${this.props.getPrivateChat.id}", delete: ${dels}, users: ["${userId}"]} )
     }`)} ;
 
     let a = q();
     // console.log(a);
-    
+
     // return true;
     if(typeof q === "function"){
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -421,7 +421,7 @@ class GroupList extends Component {
   }
 
   componentDidUpdate(){
-    
+
     // this.focusInput = () => {
     //   if (this.Input) this.Input.focus();
     // };
@@ -435,7 +435,7 @@ class GroupList extends Component {
       let thisGrId = getPrivateChat.id || _grid;
       let thisUsers;
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
-      
+
       if(JSON.stringify(groupInfo) !== JSON.stringify(thisUsers)){
         this.setState({
           groupInfo: thisUsers,
@@ -484,9 +484,9 @@ class GroupList extends Component {
     //     if( result1 ){
     //       console.log("USERS 1",thisUsers.users);
     //       console.log("USERS 2",users);
-  
+
     //       console.log("result -----",result1);
-  
+
     //       // this.changeGrUsers(thisUsers.users);
     //       // onlyunicusers = _.differenceWith(allusers, thisUsers.users, _.isEqual);
     //      }else{
@@ -496,7 +496,7 @@ class GroupList extends Component {
     //         users: [...thisUsers.users],
     //       })
     //       console.log("need update");
-          
+
     //     }
     //   }
 
@@ -524,7 +524,7 @@ class GroupList extends Component {
 
     // console.log("____GROUPS",groups, );
     // console.log("____GROUPS ID",getPrivateChat.id, thisGrId);
-    
+
 
     // thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
 
@@ -542,7 +542,7 @@ class GroupList extends Component {
     let onlyunicusers;
 
 
-    console.log(getTemp.tempObj);
+    // console.log(getTemp.tempObj);
 
     // if(!getCUser.user || !getCUser.user.groups) return true;
 
@@ -551,7 +551,7 @@ class GroupList extends Component {
 
     // console.log("____GROUPS",groups, );
     // console.log("____GROUPS ID",getPrivateChat.id, thisGrId);
-    
+
 
     // thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
 
@@ -559,8 +559,8 @@ class GroupList extends Component {
     //   console.log("USERS",thisUsers.users);
     //   onlyunicusers = _.differenceWith(allusers, thisUsers.users, _.isEqual);
     // }
-    
-    
+
+
     return(
       <FirstLayout barstate="chat">
         <div className="f-container">
@@ -577,7 +577,7 @@ class GroupList extends Component {
                   <div className="header"><h4>Пользователи</h4></div>
                   <div className="content">
                     <div className="content-scroll">
-                    
+
                     <Query query={GRU_QUERY} variables={{ id: getPrivateChat.id }} >
                         {({ loading, error, data, refetch, subscribeToMore }) => {
                           if (loading){
@@ -602,7 +602,7 @@ class GroupList extends Component {
                             let usrs = data.group.users;
 
                               onlyunicusers = _.differenceWith(allusers, usrs, _.isEqual);
-                            
+
                             return(
 
                               data.group.users.map(
@@ -622,7 +622,7 @@ class GroupList extends Component {
                               )
                             )
 
-                            
+
                             // return true;
                           }
 
@@ -676,7 +676,7 @@ class GroupList extends Component {
                             )
                           })
                         }
-                        
+
                         <option>Москва</option>
                         <option>Моська</option>
                         <option>Питер</option>
