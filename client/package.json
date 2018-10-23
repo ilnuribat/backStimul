@@ -13,7 +13,7 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-react": "^7.11.1",
-    "react-scripts": "1.1.5",
+    "react-scripts": "^1.1.5",
     "uglify-js": "^3.4.9",
     "uglifyify": "^5.0.1"
   },
