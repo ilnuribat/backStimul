@@ -65,7 +65,12 @@ DECLARE
 BEGIN
   v_ShortNameTemplate := UPPER(COALESCE(c_WildChar || REPLACE(TRIM(a_ShortName), c_BlankChar, c_WildChar) || c_WildChar, c_WildChar));
   v_FormalNameTemplate := UPPER(c_WildChar || REPLACE(TRIM(a_FormalName), c_BlankChar, c_WildChar) || c_WildChar);
-  IF a_ParentFormalName IS NULL AND a_ParentShortName IS NULL AND a_GrandParentFormalName IS NULL AND a_GrandParentShortName IS NULL THEN
+  IF
+			a_ParentFormalName IS NULL 
+			AND a_ParentShortName IS NULL 
+			AND a_GrandParentFormalName IS NULL 
+			AND a_GrandParentShortName IS NULL 
+		THEN
     RETURN QUERY
     SELECT
       cfa.AOGUID,
@@ -98,82 +103,84 @@ BEGIN
           ELSE
             0
     	END
-    AND UPPER(cfa.FORMALNAME) LIKE v_FormalNameTemplate
-    AND UPPER(cfa.ShortName) LIKE v_ShortNameTemplate
-  ORDER BY
-    cfa.AOLevel,
-    cfa.ShortName,
-    cfa.FORMALNAME;
-  ELSIF a_ParentFormalName IS NOT NULL
-    AND a_GrandParentFormalName IS NULL
-    AND a_GrandParentShortName IS NULL THEN
+    	AND UPPER(cfa.FORMALNAME) LIKE v_FormalNameTemplate
+    	AND UPPER(cfa.ShortName) LIKE v_ShortNameTemplate
+  	ORDER BY
+			cfa.AOLevel,
+			cfa.ShortName,
+			cfa.FORMALNAME;
+  ELSIF 
+			a_ParentFormalName IS NOT NULL
+			AND a_GrandParentFormalName IS NULL
+			AND a_GrandParentShortName IS NULL
+		THEN
     	v_ParentShortNameTemplate := UPPER(COALESCE(c_WildChar || REPLACE(TRIM(a_ParentShortName), c_BlankChar, c_WildChar) || c_WildChar, c_WildChar));
     	v_ParentFormalNameTemplate := UPPER(c_WildChar || REPLACE(TRIM(a_ParentFormalName), c_BlankChar, c_WildChar) || c_WildChar);
     	v_FormalNameTemplate := COALESCE(v_FormalNameTemplate, c_WildChar);
-    RETURN QUERY
-    SELECT
-      cfa.AOGUID,
-      cfa.AOLevel,
-      fsfn_AddressObjects_TreeActualName (cfa.AOGUID),
-      cfa.ShortName,
-      cfa.FORMALNAME,
-      cfa.currstatus,
-      pfa.ShortName,
-      pfa.FORMALNAME,
-      NULL::VARCHAR,
-      NULL::VARCHAR
-    FROM
-      "fias_AddressObjects" pfa
-    INNER JOIN "fias_AddressObjects" cfa ON pfa.AOGUID = cfa.ParentGUID
-    WHERE
-      cfa.currstatus = CASE WHEN 0 < ALL (
-          SELECT
-            iao.currstatus
-          FROM
-            "fias_AddressObjects" iao
-          WHERE
-            cfa.aoguid = iao.aoguid) THEN
-          (
-            SELECT
-              MAX(iao.currstatus)
-            FROM
-              "fias_AddressObjects" iao
-            WHERE
-              cfa.aoguid = iao.aoguid)
-          ELSE
-            0
-    END
-    AND pfa.currstatus = CASE WHEN 0 < ALL (
-        SELECT
-          iao.currstatus
-        FROM
-          "fias_AddressObjects" iao
-        WHERE
-          pfa.aoguid = iao.aoguid) THEN
-        (
-          SELECT
-            MAX(iao.currstatus)
-          FROM
-            "fias_AddressObjects" iao
-          WHERE
-            pfa.aoguid = iao.aoguid)
-        ELSE
-          0
-  END
-  AND UPPER(pfa.FORMALNAME)
-  LIKE v_ParentFormalNameTemplate
-  AND UPPER(pfa.ShortName)
-  LIKE v_ParentShortNameTemplate
-  AND UPPER(cfa.FORMALNAME)
-  LIKE v_FormalNameTemplate
-  AND UPPER(cfa.ShortName)
-  LIKE v_ShortNameTemplate
-ORDER BY
-  pfa.ShortName,
-  pfa.FORMALNAME,
-  cfa.AOLevel,
-  cfa.ShortName,
-  cfa.FORMALNAME;
+			RETURN QUERY
+			SELECT
+				cfa.AOGUID,
+				cfa.AOLevel,
+				fsfn_AddressObjects_TreeActualName (cfa.AOGUID),
+				cfa.ShortName,
+				cfa.FORMALNAME,
+				cfa.currstatus,
+				pfa.ShortName,
+				pfa.FORMALNAME,
+				NULL::VARCHAR,
+				NULL::VARCHAR
+			FROM
+				"fias_AddressObjects" pfa
+			INNER JOIN "fias_AddressObjects" cfa ON pfa.AOGUID = cfa.ParentGUID
+			WHERE
+				cfa.currstatus = CASE WHEN 0 < ALL (
+						SELECT
+							iao.currstatus
+						FROM
+							"fias_AddressObjects" iao
+						WHERE
+							cfa.aoguid = iao.aoguid) THEN
+						(
+							SELECT
+								MAX(iao.currstatus)
+							FROM
+								"fias_AddressObjects" iao
+							WHERE
+								cfa.aoguid = iao.aoguid)
+						ELSE
+							0
+				END
+				AND pfa.currstatus = CASE WHEN 0 < ALL (
+					SELECT
+						iao.currstatus
+					FROM
+						"fias_AddressObjects" iao
+					WHERE
+						pfa.aoguid = iao.aoguid) THEN
+					(
+						SELECT
+							MAX(iao.currstatus)
+						FROM
+							"fias_AddressObjects" iao
+						WHERE
+							pfa.aoguid = iao.aoguid)
+					ELSE
+						0
+				END
+				AND UPPER(pfa.FORMALNAME)
+					LIKE v_ParentFormalNameTemplate
+				AND UPPER(pfa.ShortName)
+					LIKE v_ParentShortNameTemplate
+				AND UPPER(cfa.FORMALNAME)
+					LIKE v_FormalNameTemplate
+				AND UPPER(cfa.ShortName)
+					LIKE v_ShortNameTemplate
+			ORDER BY
+				pfa.ShortName,
+				pfa.FORMALNAME,
+				cfa.AOLevel,
+				cfa.ShortName,
+				cfa.FORMALNAME;
   ELSE
     v_GrandParentShortNameTemplate := UPPER(COALESCE(c_WildChar || REPLACE(TRIM(a_GrandParentShortName), c_BlankChar, c_WildChar) || c_WildChar, c_WildChar));
     v_GrandParentFormalNameTemplate := UPPER(c_WildChar || REPLACE(TRIM(a_GrandParentFormalName), c_BlankChar, c_WildChar) || c_WildChar);
@@ -213,61 +220,61 @@ ORDER BY
               cfa.aoguid = iao.aoguid)
           ELSE
             0
-    END
-    AND pfa.currstatus = CASE WHEN 0 < ALL (
-        SELECT
-          iao.currstatus
-        FROM
-          "fias_AddressObjects" iao
-        WHERE
-          pfa.aoguid = iao.aoguid) THEN
-        (
-          SELECT
-            MAX(iao.currstatus)
-          FROM
-            "fias_AddressObjects" iao
-          WHERE
-            pfa.aoguid = iao.aoguid)
-        ELSE
-          0
-  END
-  AND gpfa.currstatus = CASE WHEN 0 < ALL (
-      SELECT
-        iao.currstatus
-      FROM
-        "fias_AddressObjects" iao
-      WHERE
-        gpfa.aoguid = iao.aoguid) THEN
-      (
-        SELECT
-          MAX(iao.currstatus)
-        FROM
-          "fias_AddressObjects" iao
-        WHERE
-          gpfa.aoguid = iao.aoguid)
-      ELSE
-        0
-END
-AND UPPER(gpfa.FORMALNAME)
-LIKE v_GrandParentFormalNameTemplate
-AND UPPER(gpfa.ShortName)
-LIKE v_GrandParentShortNameTemplate
-AND UPPER(pfa.FORMALNAME)
-LIKE v_ParentFormalNameTemplate
-AND UPPER(pfa.ShortName)
-LIKE v_ParentShortNameTemplate
-AND UPPER(cfa.FORMALNAME)
-LIKE v_FormalNameTemplate
-AND UPPER(cfa.ShortName)
-LIKE v_ShortNameTemplate
-ORDER BY
-  gpfa.ShortName,
-  gpfa.FORMALNAME,
-  pfa.ShortName,
-  pfa.FORMALNAME,
-  cfa.AOLevel,
-  cfa.ShortName,
-  cfa.FORMALNAME;
+    		END
+			AND pfa.currstatus = CASE WHEN 0 < ALL (
+				SELECT
+					iao.currstatus
+				FROM
+					"fias_AddressObjects" iao
+				WHERE
+					pfa.aoguid = iao.aoguid) THEN
+				(
+					SELECT
+						MAX(iao.currstatus)
+					FROM
+						"fias_AddressObjects" iao
+					WHERE
+						pfa.aoguid = iao.aoguid)
+				ELSE
+					0
+			END
+			AND gpfa.currstatus = CASE WHEN 0 < ALL (
+				SELECT
+					iao.currstatus
+				FROM
+					"fias_AddressObjects" iao
+				WHERE
+					gpfa.aoguid = iao.aoguid) THEN
+				(
+					SELECT
+						MAX(iao.currstatus)
+					FROM
+						"fias_AddressObjects" iao
+					WHERE
+						gpfa.aoguid = iao.aoguid)
+				ELSE
+					0
+			END
+			AND UPPER(gpfa.FORMALNAME)
+				LIKE v_GrandParentFormalNameTemplate
+			AND UPPER(gpfa.ShortName)
+				LIKE v_GrandParentShortNameTemplate
+			AND UPPER(pfa.FORMALNAME)
+				LIKE v_ParentFormalNameTemplate
+			AND UPPER(pfa.ShortName)
+				LIKE v_ParentShortNameTemplate
+			AND UPPER(cfa.FORMALNAME)
+				LIKE v_FormalNameTemplate
+			AND UPPER(cfa.ShortName)
+				LIKE v_ShortNameTemplate
+		ORDER BY
+			gpfa.ShortName,
+			gpfa.FORMALNAME,
+			pfa.ShortName,
+			pfa.FORMALNAME,
+			cfa.AOLevel,
+			cfa.ShortName,
+			cfa.FORMALNAME;
   END IF;
 END;
 $BODY$
