@@ -1536,11 +1536,6 @@ select option{
 
 
 
-.padded{
-  padding:10px 10px;
-  background: rgba(8, 183, 206, 0.171);
-  margin:5px 0;
-}
 
 .userCloud{
   display: inline-block;
