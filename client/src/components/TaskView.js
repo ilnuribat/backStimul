@@ -642,7 +642,7 @@ class GroupList extends Component {
                     <div className="content-scroll">
                       <div>
 
-                        <input list="users" autoComplete="on" onChange={this.newUser} />
+                        <input type="list" list="users" autoComplete="on" onChange={this.newUser} />
                         {
                           this.state.newUser ? (
                             <div className="button" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить {this.state.newUser}</div>
