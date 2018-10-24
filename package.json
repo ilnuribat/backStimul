@@ -19,7 +19,8 @@
   "nodemonConfig": {
     "ignore": [
       "dev/*",
-      "node_modules/*"
+			"node_modules/*",
+			"client"
     ]
   },
   "devDependencies": {
