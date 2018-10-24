@@ -837,24 +837,8 @@ class GroupList extends Component {
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
-                <div className="content-scroll">
-                  <input type="list" list="addresses" autoComplete="on" onChange={this.newAddress} />
-                  {
-                    this.state.newAddress.length > 15 ? (
-                      <div className="button" onClick={()=>this.addressAdd(this.state.newAddress)}>Добавить адрес</div>
-                    ): null
-                  }
-                  <datalist id="addresses">
-                    {this.state.addressList.map((e,i)=>(
-                      <option key={'addr' + i} >{e.value}</option>
-                    ))}
-                  </datalist>
-                  {/* <select value={this.state.value} onChange={this.handleChange}>
-                    {this.state.addressList.map((e,i)=>(
-                      <option key={'addr' + i} streetid={e.street_fias_id}>{e.value}</option>
-                    ))}
-                  </select> */}
-                </div>
+                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.address && groupInfo.address.value ? groupInfo.assignedTo.value : null } name={"Адресс"} change={"address"} type={"list"} string={1} select={1} options={users} defaultText={groupInfo.address && groupInfo.address.value ? {name: groupInfo.address.value}  : {name: "Не указан"} } newAddress={this.newAddress} newAddressValue={this.state.newAddress} daDataReqName={this.daDataReqName} addressList={this.state.addressList} addressAdd={this.addressAdd}/>
+
               </div>
             </div>
           </ Modal>

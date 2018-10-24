@@ -96,8 +96,23 @@ class ChangerForm extends React.Component {
             </form>
           </div>
         );
-      }else{
-
+      }
+      else if(type === "list"){
+        <div className="padded">
+        <input type="list" list="addresses" autoComplete="on" onChange={this.props.newAddress} />
+        {
+          this.props.newAddressValue.length > 15 ? (
+            <div className="button" onClick={()=>this.addressAdd(this.props.newAddressValue)}>Добавить адрес</div>
+          ): null
+        }
+        <datalist id="addresses">
+          {this.props.addressList.map((e,i)=>(
+            <option key={'addr' + i} >{e.value}</option>
+          ))}
+        </datalist>
+      </div>
+      }
+      else{
 
         return (
           <div className="padded">
