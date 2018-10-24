@@ -14,6 +14,7 @@ const schema = new Schema({
     value: String,
     geoLat: String,
     geoLon: String,
+    coordinates: [String],
   },
 });
 

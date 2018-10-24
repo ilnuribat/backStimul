@@ -15,12 +15,14 @@ type Address {
 	geoLat: String
 	geoLon: String
 	value: String
+  coordinates: [String]
 }
 
 input AddressInput {
   geoLat: String
 	geoLon: String
 	value: String
+  coordinates: [String]
 }
 
 input GroupInput {
