@@ -264,6 +264,7 @@ export const TASKS_QUERY = gql`
           geoLat
           geoLon
           value
+          address
         }
       }
       }
@@ -504,6 +505,7 @@ subscription taskUpdated($id: ID!){
           geoLat
           geoLon
           value
+          coordinates
         }
       }
 }`;
@@ -536,6 +538,7 @@ query getCUser{
           geoLat
           geoLon
           value
+          coordinates
         }
       }
     }

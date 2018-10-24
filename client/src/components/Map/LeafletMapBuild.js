@@ -41,7 +41,8 @@ export default class LeafletMap extends PureComponent {
         </Popup>
       );
     }
-    s
+
+
     handleTabChange = (index) => {
       // console.warn("clicked!", index);
       this.setState({redirect: true});
@@ -128,16 +129,16 @@ export default class LeafletMap extends PureComponent {
 }
 
 
-// const ddd = divIcon({
-//   className: "schoolRed",
-//   iconSize: [50, 50],
-// });
+const ddd = divIcon({
+  className: "schoolRed",
+  iconSize: [50, 50],
+});
 
 
 const Panel = ({ type, name, click, clickDetail })  => {
   return (
     newdata.map((post) =>
-      post.type === type ?
+      post.type == type ?
         <Marker key={post.id} position={post.coordinates} icon={SwitchIcon(name, post.status)}>
           <Popup >
             <div className="modal" >
