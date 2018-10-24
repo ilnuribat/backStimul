@@ -260,6 +260,11 @@ export const TASKS_QUERY = gql`
           text
         }
         endDate
+        address {
+          geoLat
+          geoLon
+          value
+        }
       }
       }
     }
@@ -495,6 +500,11 @@ subscription taskUpdated($id: ID!){
           text
         }
         endDate
+        address{
+          geoLat
+          geoLon
+          value
+        }
       }
 }`;
 
@@ -522,6 +532,11 @@ query getCUser{
           text
         }
         endDate
+        address{
+          geoLat
+          geoLon
+          value
+        }
       }
     }
 }`;

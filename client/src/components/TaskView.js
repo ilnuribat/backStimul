@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 // import Autocomplete from 'react-toolbox/lib/autocomplete';
 // import belle from 'belle';
 import _ from 'lodash';
+import axios from 'axios';
 import { qauf, _url, colorHash } from '../constants';
 import 'animate.css';
 import { getPrivateChat, user, group, selectUser, allUsers, glossaryStatus, groupMut, getCUser, GRU_QUERY, userTaskUpdated, tempObj, setTemp, getTemp } from '../graph/querys';
@@ -107,8 +108,9 @@ let subsUser = (id,subscribeToMore, refetch) =>{
     updateQuery: (prev, { subscriptionData }) => {
       if (!subscriptionData.data) return prev;
       const newFeedItem = subscriptionData.data.commentAdded;
-        refetch().then(()=>{
-        });
+
+      refetch().then(()=>{
+      });
 
       // return true;
 
@@ -135,6 +137,8 @@ class GroupList extends Component {
       modal: false,
       inputSaver: {},
       newUser: "",
+      newAddress: "",
+      addressList: [],
     }
 
 
@@ -148,6 +152,8 @@ class GroupList extends Component {
     this.inputChange = this.inputChange.bind(this);
     this.inputSave = this.inputSave.bind(this);
     this.newUser = this.newUser.bind(this);
+    this.newAddress = this.newAddress.bind(this);
+    this.addressAdd = this.addressAdd.bind(this);
   }
 
   componentDidMount(){
@@ -182,6 +188,7 @@ class GroupList extends Component {
       let groups = getCUser.user.groups;
       let thisGrId = getPrivateChat.id || _grid;
       let thisUsers;
+
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
 
       this.setState({
@@ -196,7 +203,7 @@ class GroupList extends Component {
 
         if( result1 ){
           return false;
-         }else{
+        }else{
           this.setState({
             users: [...thisUsers.users],
           });
@@ -210,8 +217,6 @@ class GroupList extends Component {
 
 
   }
-
-
 
   allUserGet(){
     qauf(allUsers(), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -236,14 +241,19 @@ class GroupList extends Component {
   }
 
   newUser(e){
-
     // console.log(e.target)
-
     this.setState({
       newUser: e.target.value,
     })
   }
 
+
+  newAddress(e){
+    this.setState({
+      newAddress: e.target.value,
+    })
+    this.daDataReqName(e.target.value)
+  }
 
 
   // loadg(){
@@ -255,6 +265,51 @@ class GroupList extends Component {
   //     console.warn(e);
   //   });
   // }
+
+  async daDataReqId (id) {
+    const res = await axios(
+      'https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/address',
+
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83"
+        },
+        data: {
+          "query": id
+        }
+      })
+
+    return res.data.suggestions[0].data;
+  }
+
+  daDataReqName (name) {
+    axios(
+      'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83"
+        },
+        data: {
+          "query": name,
+          "count": 5
+        }
+      })
+      .then(response => {
+        this.setState({
+          addressList: response.data.suggestions,
+        })
+      })
+    // console.warn("aaa", this.state.addressList)
+
+    // .then(response => response.json())
+    // .then(data => console.warn(data));
+  }
 
   loadu(g){
 
@@ -273,25 +328,26 @@ class GroupList extends Component {
     if(getCUser.user  && getCUser.user.groups){
       let groups = getCUser.user.groups;
       let thisGrId = getPrivateChat.id || _grid;
+
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
 
       this.setState({
         groupInfo: thisUsers,
       })
 
-      if(thisUsers && thisUsers.users && users){
-        var result1 = isArrayEqual(
-          thisUsers.users,
-          users
-        );
+      // if(thisUsers && thisUsers.users && users){
+      //   var result1 = isArrayEqual(
+      //     thisUsers.users,
+      //     users
+      //   );
 
-        if( result1 ){
-         }else{
-          // this.setState({
-          //   users: [...thisUsers.users],
-          // });
-        }
-      }
+      //   if( result1 ){
+      //   }else{
+      //     // this.setState({
+      //     //   users: [...thisUsers.users],
+      //     // });
+      //   }
+      // }
     }
 
     // console.log("____GROUPS",groups, );
@@ -379,6 +435,46 @@ class GroupList extends Component {
 
   }
 
+
+  addressAdd(address){
+    // console.warn(address)
+    let addressInsideData = false
+    let streetId = ""
+
+    this.state.addressList.map((e)=>{
+      if (e.value === address) {
+        addressInsideData = true
+        streetId = e.data.street_fias_id
+      }
+    })
+
+    if (!addressInsideData || streetId === "") {
+      console.warn("НЕТ КООРДИНАТ!!!!!!")
+      console.warn(addressInsideData, streetId)
+    } else {
+      this.daDataReqId(streetId).then(data => {
+        console.warn(data)
+        let param = `address:{
+          geoLat: "${data.geo_lat}",
+          geoLon: "${data.geo_lon}",
+          value: "${address}"
+        }`;
+        const A = groupMut(this.props.getPrivateChat.id, `${param}`);
+
+        qauf(A, _url, localStorage.getItem('auth-token')).then(a=>{
+          console.warn(a)
+        })
+          .catch((e)=>{
+            console.warn(e);
+          });
+
+        console.warn(param)
+      }
+      )
+    }
+  }
+
+
   glossStatus(){
 
     qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -434,6 +530,7 @@ class GroupList extends Component {
       let groups = getCUser.user.groups;
       let thisGrId = getPrivateChat.id || _grid;
       let thisUsers;
+
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
 
       if(JSON.stringify(groupInfo) !== JSON.stringify(thisUsers)){
@@ -443,6 +540,15 @@ class GroupList extends Component {
       }
 
       if(thisUsers && thisUsers.users && users){
+        // if (isArrayEqual(
+        //   thisUsers.users,
+        //   users
+        // )) {
+        //   this.setState({
+        //     users: [...thisUsers.users],
+        //   });
+        // }
+
         var result1 = isArrayEqual(
           thisUsers.users,
           users
@@ -456,9 +562,10 @@ class GroupList extends Component {
         }
       }else{
       }
+
+
+
     }
-
-
 
     // const {users, _grid } = this.state;
     // const {getPrivateChat, getCUser} = this.props;
@@ -506,33 +613,33 @@ class GroupList extends Component {
     // console.log("____GROUPS ID",getPrivateChat.id, thisGrId);
   }
 
-  usersSelector(){
+  // usersSelector(){
 
 
-    // this.changeGrUsers(a.data.group.users);
+  // this.changeGrUsers(a.data.group.users);
 
-    // const {users, _grid, allusers, groupName, groupInfo, modal, status} = this.state;
-    // const {getPrivateChat, getCUser} = this.props;
+  // const {users, _grid, allusers, groupName, groupInfo, modal, status} = this.state;
+  // const {getPrivateChat, getCUser} = this.props;
 
-    // let thisUsers;
-    // let onlyunicusers;
+  // let thisUsers;
+  // let onlyunicusers;
 
-    // if(!getCUser.user || !getCUser.user.groups) return true;
+  // if(!getCUser.user || !getCUser.user.groups) return true;
 
-    // let groups = getCUser.user.groups;
-    // let thisGrId = getPrivateChat.id || _grid;
+  // let groups = getCUser.user.groups;
+  // let thisGrId = getPrivateChat.id || _grid;
 
-    // console.log("____GROUPS",groups, );
-    // console.log("____GROUPS ID",getPrivateChat.id, thisGrId);
+  // console.log("____GROUPS",groups, );
+  // console.log("____GROUPS ID",getPrivateChat.id, thisGrId);
 
 
-    // thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
+  // thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
 
-    // if( thisUsers && thisUsers.users){
-    //   console.log("USERS",thisUsers.users);
-    //   onlyunicusers = _.differenceWith(allusers, thisUsers.users, _.isEqual);
-    // }
-  }
+  // if( thisUsers && thisUsers.users){
+  //   console.log("USERS",thisUsers.users);
+  //   onlyunicusers = _.differenceWith(allusers, thisUsers.users, _.isEqual);
+  // }
+  // }
 
   render() {
     const {users, _grid, allusers, groupName, groupInfo, modal, status} = this.state;
@@ -578,7 +685,7 @@ class GroupList extends Component {
                   <div className="content">
                     <div className="content-scroll">
 
-                    <Query query={GRU_QUERY} variables={{ id: getPrivateChat.id }} >
+                      <Query query={GRU_QUERY} variables={{ id: getPrivateChat.id }} >
                         {({ loading, error, data, refetch, subscribeToMore }) => {
                           if (loading){
                             return (
@@ -601,7 +708,7 @@ class GroupList extends Component {
                           if(data){
                             let usrs = data.group.users;
 
-                              onlyunicusers = _.differenceWith(allusers, usrs, _.isEqual);
+                            onlyunicusers = _.differenceWith(allusers, usrs, _.isEqual);
 
                             return(
 
@@ -626,7 +733,7 @@ class GroupList extends Component {
                             // return true;
                           }
 
-                        return true;
+                          return true;
                         }}
                       </Query>
                       {
@@ -665,22 +772,22 @@ class GroupList extends Component {
                         }
 
                         <datalist id="users">
-                        {
-                          onlyunicusers && onlyunicusers.length > 0 ? onlyunicusers.map((e,i)=>{
-                            return(
-                              <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                            )
-                          }) : allusers.map((e,i)=>{
-                            return(
-                              <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                            )
-                          })
-                        }
+                          {
+                            onlyunicusers && onlyunicusers.length > 0 ? onlyunicusers.map((e,i)=>{
+                              return(
+                                <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                              )
+                            }) : allusers.map((e,i)=>{
+                              return(
+                                <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                              )
+                            })
+                          }
 
-                        <option>Москва</option>
-                        <option>Моська</option>
-                        <option>Питер</option>
-                        <option>Васька</option>
+                          <option>Москва</option>
+                          <option>Моська</option>
+                          <option>Питер</option>
+                          <option>Васька</option>
                         </datalist>
                       </div>
 
@@ -729,8 +836,25 @@ class GroupList extends Component {
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.name} name={"Название"} change={"name"} string={1} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
-                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответсвенный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
-
+                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
+                <div className="content-scroll">
+                  <input type="list" list="addresses" autoComplete="on" onChange={this.newAddress} />
+                  {
+                    this.state.newAddress.length > 15 ? (
+                      <div className="button" onClick={()=>this.addressAdd(this.state.newAddress)}>Добавить адрес</div>
+                    ): null
+                  }
+                  <datalist id="addresses">
+                    {this.state.addressList.map((e,i)=>(
+                      <option key={'addr' + i} >{e.value}</option>
+                    ))}
+                  </datalist>
+                  {/* <select value={this.state.value} onChange={this.handleChange}>
+                    {this.state.addressList.map((e,i)=>(
+                      <option key={'addr' + i} streetid={e.street_fias_id}>{e.value}</option>
+                    ))}
+                  </select> */}
+                </div>
               </div>
             </div>
           </ Modal>

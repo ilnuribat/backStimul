@@ -14,20 +14,20 @@ class ChangerForm extends React.Component {
   componentDidMount(){
     let {defaults} = this.props;
 
-      this.setState({
-        value: defaults
-      });
+    this.setState({
+      value: defaults
+    });
 
   }
 
   handleChange(event) {
-    
+
     this.setState({value: event.target.value});
   }
 
   handleSubmit(event) {
 
-    
+
     event.preventDefault();
     let { change, id, string, defaults } = this.props;
     let { value, edit } = this.state;
@@ -41,13 +41,13 @@ class ChangerForm extends React.Component {
     }
     this.setState({edit: !edit})
     const A = groupMut(id, `${change}: ${cap}${value}${cap}`);
-    
-    
+
+
     if(!id){
       alert('Не передан наиважнейший параметр!');
       return false;
     }
-    
+
     qauf(A, _url, localStorage.getItem('auth-token')).then(a=>{
       console.log(a)
     })
@@ -69,31 +69,31 @@ class ChangerForm extends React.Component {
       if(select){
         return (
           <div className="padded">
-          <form onSubmit={this.handleSubmit}>
-            <label>
-              {name}:
-              <div>
-                <select name="select" onChange={this.handleChange} value={value}>
-                  {!value ? (<option value="no">Не выбрано</option>) : null }
-                  {
-                    options.map((e,i)=>{
-                      let nameval;
-                      nameval = e.name || e.username || "...";
+            <form onSubmit={this.handleSubmit}>
+              <label>
+                {name}:
+                <div>
+                  <select name="select" onChange={this.handleChange} value={value}>
+                    {!value ? (<option value="no">Не выбрано</option>) : null }
+                    {
+                      options.map((e,i)=>{
+                        let nameval;
+                        nameval = e.name || e.username || "...";
 
-                      return(
-                        <option key={"option-"+e.id} value={e && e.id ? e.id : "no"}>
-                          {nameval}
-                        </option>
-                      )
-                    })
-                  }
-                </select>
+                        return(
+                          <option key={"option-"+e.id} value={e && e.id ? e.id : "no"}>
+                            {nameval}
+                          </option>
+                        )
+                      })
+                    }
+                  </select>
 
-                <input type="submit" value="Сохранить" />
-                <div className="btn" onClick={()=>{this.setState({edit: !edit})}}>Отмена</div>
-              </div>
-            </label>
-          </form>
+                  <input type="submit" value="Сохранить" />
+                  <div className="btn" onClick={()=>{this.setState({edit: !edit})}}>Отмена</div>
+                </div>
+              </label>
+            </form>
           </div>
         );
       }else{
@@ -101,16 +101,16 @@ class ChangerForm extends React.Component {
 
         return (
           <div className="padded">
-          <form onSubmit={this.handleSubmit}>
-            <label>
-              {name}:
-              <div>
-                <input type={type ? type : "text" } value={ value } placeholder={name} onChange={this.handleChange} />
-                <input type="submit" value="Сохранить" />
-                <div className="btn" onClick={()=>{this.setState({edit: !edit})}}>Отмена</div>
-              </div>
-            </label>
-          </form>
+            <form onSubmit={this.handleSubmit}>
+              <label>
+                {name}:
+                <div>
+                  <input type={type ? type : "text" } value={ value } placeholder={name} onChange={this.handleChange} />
+                  <input type="submit" value="Сохранить" />
+                  <div className="btn" onClick={()=>{this.setState({edit: !edit})}}>Отмена</div>
+                </div>
+              </label>
+            </form>
           </div>
         );
       }
