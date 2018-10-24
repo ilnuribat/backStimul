@@ -10,7 +10,13 @@ const schema = new Schema({
   status: Number,
   assignedTo: Schema.Types.ObjectId,
   endDate: Date,
+  address: {
+    value: String,
+    geoLat: String,
+    geoLon: String,
+  },
 });
+
 
 schema.virtual('id').get(function () {
   return this._id.toString();
