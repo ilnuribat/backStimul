@@ -264,7 +264,7 @@ export const TASKS_QUERY = gql`
           geoLat
           geoLon
           value
-          address
+          coordinates
         }
       }
       }
