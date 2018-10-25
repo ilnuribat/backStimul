@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { graphql, compose } from "react-apollo";
 import PropTypes from 'prop-types';
-import { cGetCountPrivates } from '../../graph/querys';
+import { cGetCountPrivates, setActUrl, getActUrl  } from '../../graph/querys';
 
 class Private extends React.Component {
   constructor(props) {
@@ -19,14 +19,20 @@ class Private extends React.Component {
 
   }
 
-  render(){
+  setActUrl(e){
+    this.props.setActive({
+      variables: {
+        ActUrl: e,
+      }
+    });
+  }
 
-    const { getCountPriv } = this.props;
 
-    // console.warn (getCountPriv.unr)
+render(){
+    const { getCountPriv, Active } = this.props;
 
     return(
-      <div className="nav-button" name="private">
+      <div className={ Active.ActUrl && Active.ActUrl == 'private' ? "nav-button active" : "nav-button" } name="private" onClick={()=>this.setActUrl('private')}>
         <Link
           className="link dim black b f6 f5-ns dib mr3"
           to="/private"
@@ -50,5 +56,7 @@ Private.propTypes = {
 };
 
 export default compose(
+  graphql(getActUrl, { name: 'Active' }),
+  graphql(setActUrl, { name: 'setActive' }),
   graphql(cGetCountPrivates, { name: 'getCountPriv' }),
 )(Private);
