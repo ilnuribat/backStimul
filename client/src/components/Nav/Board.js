@@ -1,13 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { setActUrl, getActUrl } from '../../graph/querys';
+import { graphql, compose } from "react-apollo";
 
-const Board = () =>{
+const Board = (...props) =>{
+
+  console.log("props")
+  console.log(props)
+  console.log(props[0].Active.ActUrl)
+
   return(
-    <div className="nav-button" name="root">
+    <div className="nav-button" name="aboard">
       <Link
         className="link dim black b f6 f5-ns dib mr3"
         to="/aboard"
-        title="Root"
+        title="aboard"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
           <path d="M0 0h24v24H0z" fill="none"/>
@@ -18,4 +25,8 @@ const Board = () =>{
   )
 }
 
-export default Board;
+
+export default compose(
+  graphql(setActUrl, { name: 'Active' }),
+  graphql(getActUrl, { name: 'Active' }),
+)(Board);

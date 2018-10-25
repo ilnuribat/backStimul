@@ -115,9 +115,8 @@ class Login extends Component {
               <div className="logo">
               </div>
 
-              <div className="mess">Мой id: { meGet.meid}</div>
-              <div className="mess">Моё имя: { meGet.mename}</div>
-
+              <div className="mess">Вы вошли как: { localStorage.getItem('username') }</div>
+              <div className="mess">Ваш id: { localStorage.getItem('userid') }</div>
 
               <div
                 className="button"
