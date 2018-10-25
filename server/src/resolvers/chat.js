@@ -9,6 +9,23 @@ const MESSAGE_READ = 'MESSAGE_READ';
 const TASK_UPDATED = 'TASK_UPDATED';
 const USER_TASK_UPDATED = 'USER_TASK_UPDATED';
 
+const TASK_STATUSES = [{
+  id: 1,
+  name: 'Новое',
+}, {
+  id: 2,
+  name: 'Не назначенное',
+}, {
+  id: 3,
+  name: 'В работе',
+}, {
+  id: 4,
+  name: 'На согласовании',
+}, {
+  id: 5,
+  name: 'Завершенное',
+}];
+
 function formWhere({ id, before, after }) {
   let idCond;
 
@@ -115,4 +132,5 @@ module.exports = {
   MESSAGE_READ,
   TASK_UPDATED,
   USER_TASK_UPDATED,
+  TASK_STATUSES,
 };

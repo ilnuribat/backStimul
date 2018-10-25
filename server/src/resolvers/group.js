@@ -8,9 +8,8 @@ const {
   Message,
 } = require('../models');
 const {
-  getPageInfo, formWhere, pubsub, TASK_UPDATED, USER_TASK_UPDATED,
+  getPageInfo, formWhere, pubsub, TASK_UPDATED, USER_TASK_UPDATED, TASK_STATUSES,
 } = require('./chat');
-
 
 module.exports = {
   Group: {
@@ -92,7 +91,9 @@ module.exports = {
   },
   Mutation: {
     createGroup: async (parent, { group }, { user }) => {
-      const created = await Group.create(group);
+      const created = await Group.create(Object.assign({
+        status: TASK_STATUSES[0].id,
+      }, group));
 
       await UserGroup.create({
         userId: user.id,
