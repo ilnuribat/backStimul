@@ -1541,7 +1541,7 @@ select option{
 
 .userCloud{
   display: inline-block;
-  background: #1fc55f;
+  background: #158b42dc;
   border-radius: 3px;
   padding:5px;
   overflow: hidden;
@@ -1557,7 +1557,6 @@ select option{
 }
 .assignedTo{
   margin: 5px auto;
-  background: rgba(27, 33, 38, 0.404);
 }
 .assignedTo .userCloud{
 

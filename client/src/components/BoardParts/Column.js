@@ -10,6 +10,7 @@ const Column = ({...props})=>{
           props.tasks.map((e)=>{
             let obj = {id: e.id, name: e.name };
             let time = "";
+
             if(e.endDate){
               time = e.endDate;
               time = time.replace(/T.*$/gi, "");
@@ -18,20 +19,38 @@ const Column = ({...props})=>{
 
             return(
               <div key={e.id} className="task animated fadeIn">
-                <Link to="/">
-                  <div className="head-link" onClick={()=>props.selectTask(obj)} data-id={e.id} taskid={e.id}>{e.name}</div>
-                </Link>  
-                
+                <div className="taskHead head-link" onClick={()=>props.selectTask(obj)} data-id={e.id} taskid={e.id}>{e.name}</div>
                 <div className="small">{e.id}</div>
-                <div className="endDate">Дата завершения: {time ? (<span className="endDate-red">{time}</span>) : "Не указано" }</div>
-                <div className="assignedTo"><span className="messageCloud">Ответственный:</span><span className="userCloud">
-                  {e.assignedTo ? e.assignedTo.username : "не назначен" }
-                </span></div>
-                  {e.lastMessage ? (<div className="lastMessage">
-                    <span className="userCloud">{e.lastMessage.from.username}:</span>
-                    <span className="messageCloud">{e.lastMessage.text}</span></div>) : null 
-                  }
+
+
+                <div className="pWrapper">
+                  <div className="mini">Дата завершения:</div>
+                  <div className="cntr">{time ? (<span className="endDate-red">{time}</span>) : "Не указано" }</div>
+                   
                 </div>
+                <div className="pWrapper">
+                  <div className="assignedTo"><div className="mini">Ответственный:</div><div className="userCloud">
+                    {e.assignedTo ? e.assignedTo.username : "не назначен" }
+                  </div>
+                  </div>
+                </div>
+                  
+                {e.lastMessage ? (
+                  <div className="pWrapper">
+                    <div className="mini">Последнее сообщение:</div>
+                    <div className="lastMessage">
+                      <span className="userCloud">{e.lastMessage.from.username}:</span>
+                      <span className="messageCloud">{e.lastMessage.text}</span></div>
+                  </div>
+                ) : null 
+                }
+                  
+                <div className="pWrapper">
+                  <Link to="/">
+                    <div className="button" onClick={()=>props.selectTask(obj)} >Открыть</div>
+                  </Link>
+                </div>
+              </div>
             )
           })
         }
