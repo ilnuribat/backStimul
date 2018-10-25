@@ -61,7 +61,9 @@
 .modal .close:hover svg{
   fill: #ff3217;
 }
-
+.main-container .modal{
+  background: #16353693;
+}
 
 .padded{
   padding:10px 10px;
