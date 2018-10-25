@@ -126,3 +126,31 @@
   overflow: hidden;
   background: #dadada1c;
 }
+.pWrapper{
+  display: block;
+  text-align: left;
+  margin:0 auto;
+  padding:5px 5px;
+}
+.pWrapper .button{
+  
+}
+
+.column .taskHead{
+  background: #333;
+  padding: 10px;
+}
+
+.pWrapper:nth-child(even){
+  background: rgba(47, 59, 70, 0.452);
+}
+.pWrapper:nth-child(odd){
+  background: rgba(20, 29, 37, 0);
+}
+.mini{
+  font-size: 12px;
+}
+.cntr{
+  text-align: center;
+  padding: 4px;
+}
