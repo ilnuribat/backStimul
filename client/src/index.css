@@ -1698,3 +1698,11 @@ button.bg{
 a:active svg,.nav-button.active svg{
   fill: #ff9100;
 }
+
+.dim{
+  opacity: 1 !important;
+  transition: all 0ms !important;
+}
+.a{
+  outline: 0px none transparent !important;
+}
