@@ -7,10 +7,10 @@
   display: block;
   width:auto;
   min-width:300px;
-  max-width: 600px;
+  max-width: 90%;
   background: #365964;
   margin:auto auto;
-  padding:10px;
+  padding:40px 20px;
   overflow: hidden;
   min-height: 200px;
   box-shadow: 2px 5px 12px 0 rgba(11, 28, 43, 0.8)

@@ -727,7 +727,7 @@ class GroupList extends Component {
         </div>
 
         {modal ? (
-          <Modal header="Редактирование Задачи" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
+          <Modal header="Подробная информация" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
             <div className="overWrap">
               <div>
                 {  statusName = _.result(_.find(status, (obj)=> {
