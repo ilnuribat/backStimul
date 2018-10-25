@@ -185,6 +185,8 @@ select
   display: inline-block;
   width:260px;
   height:35px;
+  color:#FFF;
+  font-size: 16px;
 }
 ::-webkit-input-placeholder { /* Chrome */
   color: rgb(233, 233, 233);
