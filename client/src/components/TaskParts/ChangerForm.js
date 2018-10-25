@@ -151,7 +151,7 @@ class ChangerForm extends React.Component {
         return(
           <div className="padded">
             <div className="geo">{this.state.geo}</div>
-            <input type="list" list="addresses" autoComplete="on" onChange={this.newAddress} placeholder="Введите новый адрес, город или улицу" />
+            <input type="list" list="addresses" autoComplete="on" value={value} onChange={this.newAddress} placeholder="Введите новый адрес, город или улицу" />
             {
               value && value.length > 15 ? (
                 <div className="button" onClick={()=>{this.props.addressAdd(value, addressList); this.setState({edit: !edit})}}>Добавить адрес</div>
