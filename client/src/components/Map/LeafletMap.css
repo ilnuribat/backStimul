@@ -20,6 +20,9 @@
 }
 
 
+form div {
+  text-align: left;
+}
 
 .red {
     background-color: red;
@@ -69,93 +72,63 @@
     width: 20px;
 }
 
-.sportRed {
-    background: url('/icons/sport-red.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-.sportYellow {
-    background: url('/icons/sport-yellow.png');
+.pinBlue {
+    background: url('/icons/pinBlue.png');
     background-size: contain;
     background-repeat: no-repeat;
 }
 
 
-.sportBlue {
-    background: url('/icons/sport-blue.png');
+.pinBlueDark {
+    background: url('/icons/pinBlueDark.png');
     background-size: contain;
     background-repeat: no-repeat;
 }
 
-.healthRed {
-    background: url('/icons/health-red.png');
+.pinBlueGrey {
+    background: url('/icons/pinBlueGrey.png');
     background-size: contain;
     background-repeat: no-repeat;
 }
 
-.healthYellow {
-    background: url('/icons/health-yellow.png');
+.pinGreen {
+    background: url('/icons/pinGreen.png');
     background-size: contain;
     background-repeat: no-repeat;
 }
 
-
-.healthBlue {
-    background: url('/icons/health-blue.png');
+.pinGreenDark {
+    background: url('/icons/pinGreenDark.png');
     background-size: contain;
     background-repeat: no-repeat;
 }
 
-.cultureRed {
-    background: url('/icons/culture-red.png');
+.pinPurp {
+    background: url('/icons/pinPurp.png');
     background-size: contain;
     background-repeat: no-repeat;
 }
 
-.cultureYellow {
-    background: url('/icons/culture-yellow.png');
+.pinPurpDark {
+    background: url('/icons/pinPurpDark.png');
     background-size: contain;
     background-repeat: no-repeat;
 }
 
-
-.cultureBlue {
-    background: url('/icons/culture-blue.png');
+.pinRed {
+    background: url('/icons/pinRed.png');
     background-size: contain;
     background-repeat: no-repeat;
 }
 
-.schoolRed {
-    background: url('/icons/school_red.png');
+.pinRedDark {
+    background: url('/icons/pinRedDark.png');
     background-size: contain;
     background-repeat: no-repeat;
 }
 
-.schoolYellow {
-    background: url('/icons/school_yellow.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-.schoolBlue {
-    background: url('/icons/school_blue.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-
-
-.iconBlue {
-    background: url('/icons/icon_blue.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-
-
-.emergencyRed {
-    background: url('/icons/emergency_red.png');
+.pinYellow {
+    background: url('/icons/pinYellow.png');
     background-size: contain;
     background-repeat: no-repeat;
 }

@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { Component, Fragment } from "react";
 import {
   LayerGroup,
   LayersControl,
@@ -7,9 +7,12 @@ import {
   Popup,
   TileLayer
 } from "react-leaflet";
+import { graphql, compose } from "react-apollo";
 import { divIcon } from "leaflet";
+import PropTypes from 'prop-types';
 import {Redirect} from "react-router-dom";
 import { ReactLeafletSearch } from 'react-leaflet-search'
+import { getCUser, setPrivateChat } from '../../graph/querys';
 import Indicator from "./Indicator";
 import newdata from "./Objects";
 import b from "./buttons.css";
@@ -21,13 +24,14 @@ const styleLeaf = {
   margin: "0 0 0 50px",
   height: "100vh",
   width: "auto",
+
+
 };
 
 
-export default class LeafletMap extends PureComponent {
+class LeafletMap extends Component {
     state = {
       redirect: false,
-      redirectDetail: false,
     };
 
     customPopup(SearchInfo) {
@@ -42,32 +46,36 @@ export default class LeafletMap extends PureComponent {
       );
     }
 
-
-    handleTabChange = (index) => {
-      // console.warn("clicked!", index);
+    handleTabChange = (index, name) => {
+      console.warn("clicked!", index, name);
+      this.props.setPrivateChat({
+        variables: {
+          id: index,
+          name: name,
+          priv: false,
+          unr: 0,
+        }
+      });
       this.setState({redirect: true});
-    }
-
-    handleTabDetail = (index) => {
-      // console.warn("clicked!", index);
-      this.setState({redirectDetail: true});
     }
 
 
     render() {
+      const { getCUser } = this.props;
+
+      // console.warn (getCUser.user)
+
       if (this.state.redirect) {
-        return <Redirect push to="/build_analytics" />;
+        return <Redirect push to="/" />;
       }
-      if (this.state.redirectDetail) {
-        return <Redirect push to="/build_info" />;
-      }
-      const center = [55.797, 38.43];
+
+      const center = [55.797, 37.43];
 
       return (
-        <Map center={center} zoom={15} style={styleLeaf} >
+        <Map center={center} zoom={8} style={styleLeaf} >
 
           <LayersControl position="topright" >
-            <BaseLayer  checked name="Цветная карта">
+            <BaseLayer  checked name="Цветная карта" >
               <TileLayer
                 attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -79,26 +87,41 @@ export default class LeafletMap extends PureComponent {
                 url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
               />
             </BaseLayer>
-            <Overlay checked name="Образовательное учреждение">
-              <LayerGroup >
-                <Panel type="1" name="Образовательное учреждение" click={this.handleTabChange} clickDetail={this.handleTabDetail}/>
-              </LayerGroup>
-            </Overlay>
-            <Overlay checked name="Здравоохранение">
-              <LayerGroup >
-                <Panel type="2" name="Здравоохранение" click={this.handleTabChange} clickDetail={this.handleTabDetail}/>
-              </LayerGroup>
-            </Overlay>
-            <Overlay checked name="Культура">
-              <LayerGroup >
-                <Panel type="3" name="Культура"  click={this.handleTabChange} clickDetail={this.handleTabDetail}/>
-              </LayerGroup>
-            </Overlay>
-            <Overlay checked name="Спорт">
-              <LayerGroup >
-                <Panel type="4" name="Спорт"  click={this.handleTabChange} clickDetail={this.handleTabDetail}/>
-              </LayerGroup>
-            </Overlay>
+            {
+              getCUser.user ? (
+                <Overlay checked name="Задачи новые" >
+                  <LayerGroup >
+                    <Panel type="1" name="Задача новая" data={getCUser} click={this.handleTabChange} />
+                  </LayerGroup>
+                </Overlay>) : null }
+            {
+              getCUser.user ? (
+                <Overlay checked name="Задачи неназначенные">
+                  <LayerGroup >
+                    <Panel type="2" name="Задача неназначенная" data={getCUser} click={this.handleTabChange} />
+                  </LayerGroup>
+                </Overlay>) : null }
+            {
+              getCUser.user ? (
+                <Overlay checked name="Задачи в работе">
+                  <LayerGroup >
+                    <Panel type="3" name="Задача в работе"  data={getCUser} click={this.handleTabChange} />
+                  </LayerGroup>
+                </Overlay>) : null }
+            {
+              getCUser.user ? (
+                <Overlay checked name="Задачи на согласовании">
+                  <LayerGroup >
+                    <Panel type="4" name="Задача на согласовании"  data={getCUser} click={this.handleTabChange} />
+                  </LayerGroup>
+                </Overlay>) : null }
+            {
+              getCUser.user ? (
+                <Overlay checked name="Задачи завершенные">
+                  <LayerGroup >
+                    <Panel type="5" name="Задача завершенная"  data={getCUser} click={this.handleTabChange} />
+                  </LayerGroup>
+                </Overlay>) : null }
             <ReactLeafletSearch
               position="topleft"
 
@@ -129,41 +152,30 @@ export default class LeafletMap extends PureComponent {
 }
 
 
-const ddd = divIcon({
-  className: "schoolRed",
-  iconSize: [50, 50],
-});
+// const ddd = divIcon({
+//   className: "schoolRed",
+//   iconSize: [50, 50],
+// });
 
 
-const Panel = ({ type, name, click, clickDetail })  => {
+const Panel = ({ data, type, name, click })  => {
+  console.warn(data.user.groups)
+
   return (
-    newdata.map((post) =>
-      post.type == type ?
-        <Marker key={post.id} position={post.coordinates} icon={SwitchIcon(name, post.status)}>
+    data.user.groups.map((post) =>
+      post.status == type && post.address.coordinates.length >0 ?
+        <Marker key={post.id} position={post.address.coordinates} icon={SwitchIcon(post.status)}>
           <Popup >
             <div className="modal" >
-              <div className="photo"><img src={post.photo} alt="fdd" className="photo" /></div>
-              <br/>
               <ul>
                 <li>Тип объекта: {name}</li>
                 <li>Название объекта: {post.name}</li>
-                <li>Руководитель: {post.owner}</li>
-                <li>Адрес: {post.address}</li>
-                <li>Статус:<span  style={{"verticalAlign": "-4px"}}>
-                  <span  style={{ "marginLeft":"2%"}}><Indicator tittle="По основному виду деятельности" stroke={(post.status === 3  ? "#ed4d31" : (post.status === 2 ? "#efa900" : "#7fb800"))} /></span>
-                  <span  style={{ "marginLeft":"2%"}}><Indicator tittle="Качество управления" stroke={(post.status1 === 3  ? "#ed4d31" : (post.status1 === 2 ? "#efa900" : "#7fb800"))} /></span>
-                  <span  style={{ "marginLeft":"2%"}}><Indicator tittle="Оценка деятельности" stroke={(post.status2 === 3  ? "#ed4d31" : (post.status2 === 2 ? "#efa900" : "#7fb800"))} /></span>
-                </span>
-                </li>
+                <li>Адрес объекта: {post.address.value}</li>
+                <li>Ответственный: {post.assignedTo ? post.assignedTo.username : null}</li>
+                <li>Последнее сообщение от {post.lastMessage ? post.lastMessage.from.username : null} : {post.lastMessage ? post.lastMessage.text : null}</li>
               </ul>
-              <div className="bigButton">
-                <NavLink index={post.id} onClick1={clickDetail} btnColor={b.btnBlue}>Детальная информация</NavLink>
-              </div>
-              {/* <NavLink index={post.id} onClick1={clickDetail}>Детальная информация</NavLink> */}
-              <div className={`modal-footer ${b.third_btns}`}>
-                <NavLink index={post.id} onClick1={click} btnColor={b.btnGreen}>Аналитика</NavLink><span> </span>
-                <button type="button" className={b.btn + " " + b.btnDark}>Датчики/Счетчики</button>
-                <button type="button" className={b.btn + " " + b.btnDark}>KPI</button>
+              <div className="btn">
+                <NavLink index={post.id} name={post.name} onClick1={click} btnColor={b.btnBlue}>Детальная информация</NavLink>
               </div>
             </div>
           </Popup>
@@ -177,7 +189,7 @@ const Panel = ({ type, name, click, clickDetail })  => {
 
 class NavLink extends React.Component {
     handleClick = () => {
-      this.props.onClick1(this.props.index);
+      this.props.onClick1(this.props.index, this.props.name);
     }
     render() {
       return (
@@ -188,60 +200,24 @@ class NavLink extends React.Component {
 
 
 
-const SwitchIcon = (name, status)   => {
+const SwitchIcon = (status)   => {
   let value;
 
-  switch (name) {
-  case "Образовательное учреждение":
-    switch (status) {
-    case 2:
-      value = "schoolYellow";
-      break;
-    case 3:
-      value = "schoolRed";
-      break;
-    default:
-      value = "schoolBlue";
-    }
+  switch (status) {
+  case 1:
+    value = "pinRed";
     break;
-  case "Здравоохранение":
-    switch (status) {
-    case 2:
-      value = "healthYellow";
-      break;
-    case 3:
-      value = "healthRed";
-      break;
-    default:
-      value = "healthBlue";
-    }
+  case 2:
+    value = "pinYellow";
     break;
-  case "Культура":
-    switch (status) {
-    case 2:
-      value = "cultureYellow";
-      break;
-    case 3:
-      value = "cultureRed";
-      break;
-    default:
-      value = "cultureBlue";
-    }
+  case 3:
+    value = "pinPurp";
     break;
-  case "Спорт":
-    switch (status) {
-    case 2:
-      value = "sportYellow";
-      break;
-    case 3:
-      value = "sportRed";
-      break;
-    default:
-      value = "sportBlue";
-    }
+  case 4:
+    value = "pinBlue";
     break;
   default:
-    value = "iconBlue";
+    value = "pinGreen";
   }
 
   return divIcon({
@@ -250,3 +226,14 @@ const SwitchIcon = (name, status)   => {
   });
 };
 
+
+LeafletMap.propTypes = {
+  getCUser: PropTypes.object.isRequired,
+  setPrivateChat: PropTypes.func.isRequired
+};
+
+
+export default compose(
+  graphql(getCUser, { name: 'getCUser' }),
+  graphql(setPrivateChat, { name: 'setPrivateChat' }),
+)(LeafletMap);

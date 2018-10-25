@@ -309,7 +309,7 @@ html,body{
   /* background:#1B2126; */
   /* background:#36393f; */
   margin-left:290px;
-  color:#fafafa;  
+  color:#fafafa;
 }
 .main-container.full{
 margin-left:50px;
@@ -500,7 +500,7 @@ height:100%;
 .taskModule .inner .comments{
   border:1px solid #1B2126;
   max-height:50% ;
-  
+
 }
 .taskModule .inner .comments .inn .scroller{
   display: block;
@@ -587,14 +587,14 @@ svg:hover{
   border-radius: 5px;
   margin:5px auto;
   padding:20px;
-  color:#1B2126; 
+  color:#1B2126;
 }
 .left-bar-inner.fire .scroller .firetes{
   background: rgb(233, 98, 98);
   border-radius: 5px;
   margin:5px auto;
   padding:20px;
-  color:#1B2126; 
+  color:#1B2126;
 }
 .left-bar-inner.favor .scroller,.left-bar-inner.fire .scroller{
   padding:10px;
@@ -666,7 +666,7 @@ svg:hover{
 }
 .card .hover{
   display: none;
-  
+
 }
 .card:hover .delete{
   display: block;
@@ -795,7 +795,7 @@ width:100px;
   background: #08B6CE;
   clear: both;
   float: none;
-  
+
 } */
 
 .svg-add{
@@ -908,7 +908,7 @@ width:100px;
 }
 
 .chmessage .from-user{
-  
+
   font-size: 10px;
   padding:5px;
 }
@@ -919,7 +919,7 @@ width:100px;
   width:auto;
   max-width:80%;
   min-width:20%;
-  border-radius: 10px; 
+  border-radius: 10px;
   padding: 10px;
   background: #08B6CE;
   align-self: flex-start;
@@ -1145,7 +1145,7 @@ width:100px;
   padding:0 10px;
   height:40px;
   overflow: hidden;
-  
+
 }
 .chat-header{
   /* background: #2C3F51; */
@@ -1263,7 +1263,7 @@ blockquote {
   top: 0;
   right: -1em;
   right: -0.7em;
-  
+
 }
 
 .msg.them blockquote {
@@ -1329,7 +1329,7 @@ textarea{
   /* border:0 none transparent; */
   background: rgba(255, 255, 255, 0.151);
   color:#fff;
-  border:0 none transparent; 
+  border:0 none transparent;
   margin:0;
   height:60px;
   width:100%;
@@ -1644,7 +1644,7 @@ select option{
   right: 5px;
   top:5px;
   background: rgba(27, 33, 38, 0.575);
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05); 
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
 }
 .rela{
   position: relative;
