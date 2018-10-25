@@ -321,61 +321,71 @@ class GroupList extends Component {
 
     return res.data.suggestions[0].data;
   }
+
+  async daDataReqIdPaid (address) {
+    const res = await axios(
+      'https://dadata.ru/api/v2/clean/address',
+
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83",
+          // "X-Secret" : "53298fa2e7d1762e0e329388eb3fd66ae4a3312a"
+        },
+        data: [address]
+      })
+
+    return res.data.suggestions[0].data;
+  }
+
   addressAdd(address, addressList){
     // console.warn(address)
-    let addressInsideData = false
-    let streetId = "";
+    // let addressInsideData = false
+    // let streetId = "";
 
-    console.log("addressList---")
-    console.log(addressList)
-    console.log("address-------")
-    console.log(address)
+    // addressList && addressList.map((e)=>{
+    //   if (e.value === address) {
+    //     addressInsideData = true
+    //     streetId = e.data.street_fias_id
+    //   }
+    // })
+    // if (!addressInsideData || streetId === "" || !streetId) {
+    //   console.warn("НЕТ КООРДИНАТ!!!!!!")
+    //   console.warn(addressInsideData, streetId)
+    // } else {
+    //   this.daDataReqId(address).then(data => {
+    //     console.warn(data)
+    //     let param = `address:{
+    //       geoLat: "${data.geo_lat}",
+    //       geoLon: "${data.geo_lon}",
+    //       value: "${address}",
+    //       coordinates: ["${data.geo_lat}","${data.geo_lon}"]
+    //     }`;
+    //     const A = groupMut(this.props.getPrivateChat.id, `${param}`);
 
-    addressList && addressList.map((e)=>{
-      if (e.value === address) {
+    //     qauf(A, _url, localStorage.getItem('auth-token')).then(a=>{
+    //       console.warn(a)
+    //     })
+    //       .catch((e)=>{
+    //         console.warn(e);
+    //       });
 
-        console.log("e.value")
-        console.log(e.value)
-        console.log("address compare")
-        console.log(address)
+    //     console.warn(param)
+    //   }
+    //   )
+    // }
 
-        addressInsideData = true
-        streetId = e.data.street_fias_id
-      }else{
+    let param = `address: "${address}"`;
+    const A = groupMut(this.props.getPrivateChat.id, `${param}`);
 
-        console.log("e.value")
-        console.log(e.value)
-        console.log("address compare")
-        console.log(address)
-
-      }
+    qauf(A, _url, localStorage.getItem('auth-token')).then(a=>{
+      console.warn(a)
     })
-
-    if (!addressInsideData || streetId === "") {
-      console.warn("НЕТ КООРДИНАТ!!!!!!")
-      console.warn(addressInsideData, streetId)
-    } else {
-      this.daDataReqId(streetId).then(data => {
-        console.warn(data)
-        let param = `address:{
-          geoLat: "${data.geo_lat}",
-          geoLon: "${data.geo_lon}",
-          value: "${address}",
-          coordinates: ["${data.geo_lat}","${data.geo_lon}"]
-        }`;
-        const A = groupMut(this.props.getPrivateChat.id, `${param}`);
-
-        qauf(A, _url, localStorage.getItem('auth-token')).then(a=>{
-          console.warn(a)
-        })
-          .catch((e)=>{
-            console.warn(e);
-          });
-
-        console.warn(param)
-      }
-      )
-    }
+      .catch((e)=>{
+        console.warn(e);
+      });
   }
 
 
@@ -459,7 +469,7 @@ class GroupList extends Component {
         );
 
         if( result1 ){
-         }else{
+        }else{
           this.setState({
             users: [...thisUsers.users],
           });

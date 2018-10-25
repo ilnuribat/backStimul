@@ -24,6 +24,17 @@ form div {
   text-align: left;
 }
 
+
+.userCloud2{
+  background: #158b42dc;
+  overflow: hidden;
+}
+
+.msgCloud{
+  background: blue;
+  overflow: hidden;
+}
+
 .red {
     background-color: red;
     color: blue

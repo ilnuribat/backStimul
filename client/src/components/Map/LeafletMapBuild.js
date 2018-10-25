@@ -29,6 +29,18 @@ const styleLeaf = {
 };
 
 
+function latRad(lat) {
+  var sin = Math.sin(lat * Math.PI / 180);
+  var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+
+  return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+}
+
+function zoom(mapPx, worldPx, fraction) {
+  return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+}
+
+
 class LeafletMap extends Component {
     state = {
       redirect: false,
@@ -47,7 +59,7 @@ class LeafletMap extends Component {
     }
 
     handleTabChange = (index, name) => {
-      console.warn("clicked!", index, name);
+      // console.warn("clicked!", index, name);
       this.props.setPrivateChat({
         variables: {
           id: index,
@@ -59,17 +71,57 @@ class LeafletMap extends Component {
       this.setState({redirect: true});
     }
 
+    // componentDidMount() {
+    //   console.warn(this.refs.leaflet.leafletElement.getBounds() )
+    // }
 
     render() {
       const { getCUser } = this.props;
+      let centerLon = 37.43
+      let centerLat = 55.797
 
-      // console.warn (getCUser.user)
+      if (getCUser.user) {
+        let minLat = 100.00
+        let maxLat = 0.00
+        let minLon = 100.00
+        let maxLon = 0.00
 
+        getCUser.user.groups.map((post) => {
+
+          // console.warn(post)
+          minLat > parseFloat(post.address.coordinates[0]) ? minLat = parseFloat(post.address.coordinates[0]) : null
+          maxLat < parseFloat(post.address.coordinates[0]) ? maxLat = parseFloat(post.address.coordinates[0]) : null
+          minLon > parseFloat(post.address.coordinates[1]) ? minLon = parseFloat(post.address.coordinates[1]) : null
+          maxLon < parseFloat(post.address.coordinates[1]) ? maxLon = parseFloat(post.address.coordinates[1]) : null
+        })
+
+        // console.warn(minLat, maxLat, minLon, maxLon)
+        centerLon = (minLon + maxLon)/2
+        centerLat = (minLat + maxLat)/2
+
+        // let WORLD_DIM = { height: 256, width: 256 };
+        // let ZOOM_MAX = 21;
+
+        // let ne = bounds.getNorthEast();
+        // var sw = bounds.getSouthWest();
+
+        // var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+
+        // var lngDiff = ne.lng() - sw.lng();
+        // var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+        // var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+        // var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+        // return Math.min(latZoom, lngZoom, ZOOM_MAX);
+
+
+      }
       if (this.state.redirect) {
         return <Redirect push to="/" />;
       }
 
-      const center = [55.797, 37.43];
+      const center = [centerLat, centerLon];
 
       return (
         <Map center={center} zoom={8} style={styleLeaf} >
@@ -213,7 +265,7 @@ class LeafletMap extends Component {
 
 
 const Panel = ({ data, type, name, click })  => {
-  console.warn(data.user.groups)
+  // console.warn(data.user.groups)
 
   return (
     data.user.groups.map((post) =>
@@ -225,8 +277,8 @@ const Panel = ({ data, type, name, click })  => {
                 <li>Тип объекта: {name}</li>
                 <li>Название объекта: {post.name}</li>
                 <li>Адрес объекта: {post.address.value}</li>
-                <li>Ответственный: {post.assignedTo ? post.assignedTo.username : null}</li>
-                <li>Последнее сообщение от {post.lastMessage ? post.lastMessage.from.username : null} : {post.lastMessage ? post.lastMessage.text : null}</li>
+                <li>Ответственный: <span className="userCloud2">{post.assignedTo ? post.assignedTo.username : null}</span></li>
+                <li>Последнее сообщение от <span className="userCloud2">{post.lastMessage ? post.lastMessage.from.username : null} </span>: <span className="msgCloud">{post.lastMessage ? post.lastMessage.text : null}</span></li>
               </ul>
               <div className="btn">
                 <NavLink index={post.id} name={post.name} onClick1={click} btnColor={b.btnBlue}>Детальная информация</NavLink>
