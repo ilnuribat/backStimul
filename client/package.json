@@ -31,6 +31,7 @@
     "apollo-link-ws": "^1.0.8",
     "apollo-utilities": "^1.0.21",
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "belle": "^4.0.0",
     "buffer": "^5.2.1",
     "color-hash": "^1.0.3",

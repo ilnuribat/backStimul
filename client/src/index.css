@@ -1254,6 +1254,8 @@ blockquote {
   display: block;
   background: #fff;
   border-radius: 3px;
+  width:auto;
+  max-width: 140px;
 }
 
 .msg.me blockquote::after {

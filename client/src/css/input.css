@@ -186,3 +186,17 @@ select
   width:260px;
   height:35px;
 }
+::-webkit-input-placeholder { /* Chrome */
+  color: rgb(233, 233, 233);
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: rgb(233, 233, 233);
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: rgb(233, 233, 233);
+  opacity: 1;
+}
+:-moz-placeholder { /* Firefox 4 - 18 */
+  color: rgb(233, 233, 233);
+  opacity: 1;
+}

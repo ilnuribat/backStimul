@@ -74,9 +74,13 @@
   width:140px;
 }
 .spanValue{
+  display: block;
   font-size: 18px;
   font-weight: 700;
   background: #2aa2a7;
   padding: 5px 20px;
   border-radius: 3px;
+}
+.modal .btn{
+  display: inline-block;
 }
