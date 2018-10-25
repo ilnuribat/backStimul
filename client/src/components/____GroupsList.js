@@ -134,7 +134,7 @@ class GroupList extends Component {
                 <input type="submit" value="Создать" onClick={this.CreateGroup} />
               </div>
             ):(
-              <div className="list animated fadeIn" style={{textAlign: "center"}} onClick={this.AddGroupInputs} >Добавить новую</div>
+              <div className="list animated fadeIn" style={{textAlign: "center"}} onClick={this.AddGroupInputs} >Добавить новую _</div>
             )
 
           }
