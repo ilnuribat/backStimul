@@ -148,16 +148,3 @@ padding: 20px;
   /* transition: all 2s ease-in-out; */
 }
 
-.column-content > .task{
-  background: #3657835e;
-}
-.column-content > .task > .lastMessage{
-  margin:5px auto;
-  text-align: left;
-  padding:10px;
-  max-height: 100px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  background: #dadada1c;
-}
