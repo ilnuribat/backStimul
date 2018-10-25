@@ -73,14 +73,14 @@ class LeafletMap extends Component {
 
       return (
         <Map center={center} zoom={8} style={styleLeaf} >
-
           <LayersControl position="topright" >
-            <BaseLayer  checked name="Цветная карта" >
+            <BaseLayer  checked name="Landscape">
               <TileLayer
                 attribution="GUOV"
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
               />
             </BaseLayer>
+
             <BaseLayer  name="Черно-белая карта">
               <TileLayer
                 attribution="GUOV"
@@ -93,10 +93,10 @@ class LeafletMap extends Component {
                 url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
               />
             </BaseLayer>
-            <BaseLayer  name="Landscape">
+            <BaseLayer  name="Цветная карта OSM " >
               <TileLayer
                 attribution="GUOV"
-                url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
             </BaseLayer>
             <BaseLayer  name="Outdoors">
