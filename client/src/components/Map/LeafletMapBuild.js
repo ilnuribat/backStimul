@@ -77,14 +77,68 @@ class LeafletMap extends Component {
           <LayersControl position="topright" >
             <BaseLayer  checked name="Цветная карта" >
               <TileLayer
-                attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                attribution="GUOV"
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
             </BaseLayer>
             <BaseLayer  name="Черно-белая карта">
               <TileLayer
-                attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                attribution="GUOV"
                 url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
+              />
+            </BaseLayer>
+            <BaseLayer  name="OpenCycleMap">
+              <TileLayer
+                attribution="GUOV"
+                url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Landscape">
+              <TileLayer
+                attribution="GUOV"
+                url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Outdoors">
+              <TileLayer
+                attribution="GUOV"
+                url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Neighbourhood">
+              <TileLayer
+                attribution="GUOV"
+                url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Toner">
+              <TileLayer
+                attribution="GUOV"
+                url="http://tile.stamen.com/toner/{z}/{x}/{y}.png"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Terrain">
+              <TileLayer
+                attribution="GUOV"
+                url="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Watercolor">
+              <TileLayer
+                attribution="GUOV"
+                url="http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Spinal Map">
+              <TileLayer
+                attribution="GUOV"
+                url="https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Full Dark">
+              <TileLayer
+                attribution="GUOV"
+                url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
               />
             </BaseLayer>
             {
