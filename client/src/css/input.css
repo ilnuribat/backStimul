@@ -202,3 +202,8 @@ select
   color: rgb(233, 233, 233);
   opacity: 1;
 }
+.modal input[type="list"]{
+  width:auto;
+  min-width: 400px;
+  max-width:600px;
+}
