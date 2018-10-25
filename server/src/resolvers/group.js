@@ -12,6 +12,7 @@ const { logger } = require('../../logger');
 const {
   getPageInfo, formWhere, pubsub, TASK_UPDATED, USER_TASK_UPDATED, TASK_STATUSES,
 } = require('./chat');
+const { DADATA_API, DADATA_SECRET } = require('../../config');
 
 async function formAddress(rawAddress) {
   logger.info('---------- make paid api request to dadata.ru ------------');
@@ -23,8 +24,8 @@ async function formAddress(rawAddress) {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        Authorization: 'Token a9a4c39341d2f4072db135bd25b751336b1abb83',
-        'X-Secret': '53298fa2e7d1762e0e329388eb3fd66ae4a3312a',
+        Authorization: `Token ${DADATA_API}`,
+        'X-Secret': DADATA_SECRET,
       },
       data: [rawAddress],
     },
