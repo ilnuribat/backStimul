@@ -12,6 +12,8 @@ const schema = new Schema({
   endDate: Date,
   address: {
     value: String,
+    fias_id: String,
+    fias_level: String,
     geoLat: String,
     geoLon: String,
     coordinates: [String],

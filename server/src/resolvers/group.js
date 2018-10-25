@@ -1,15 +1,44 @@
 const { Types: { ObjectId } } = require('mongoose');
 const moment = require('moment');
 const { withFilter } = require('apollo-server');
+const axios = require('axios');
 const {
   Group,
   UserGroup,
   User,
   Message,
 } = require('../models');
+const { logger } = require('../../logger');
 const {
   getPageInfo, formWhere, pubsub, TASK_UPDATED, USER_TASK_UPDATED, TASK_STATUSES,
 } = require('./chat');
+
+async function formAddress(rawAddress) {
+  logger.info('---------- make paid api request to dadata.ru ------------');
+
+  const { data: [address] } = await axios(
+    'https://dadata.ru/api/v2/clean/address',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: 'Token a9a4c39341d2f4072db135bd25b751336b1abb83',
+        'X-Secret': '53298fa2e7d1762e0e329388eb3fd66ae4a3312a',
+      },
+      data: [rawAddress],
+    },
+  );
+
+  return {
+    value: address.result,
+    coordinates: [address.geo_lat, address.geo_lon],
+    fias_id: address.fias_id,
+    fias_level: address.fias_level,
+    geoLat: address.geo_lat,
+    geoLon: address.geo_lon,
+  };
+}
 
 module.exports = {
   Group: {
@@ -91,8 +120,15 @@ module.exports = {
   },
   Mutation: {
     createGroup: async (parent, { group }, { user }) => {
+      let formedAddress;
+
+      if (typeof group.address === 'string') {
+        formedAddress = await formAddress(group.address);
+      }
+
       const created = await Group.create(Object.assign({
         status: TASK_STATUSES[0].id,
+        address: formedAddress,
       }, group));
 
       await UserGroup.create({
@@ -119,6 +155,16 @@ module.exports = {
 
       if (!foundGroup) {
         return false;
+      }
+
+      if (typeof group.address === 'string'
+        && foundGroup.address
+        && foundGroup.address.value !== group.address) {
+        const address = await formAddress(group.address);
+
+        Object.assign(group, { address });
+      } else {
+        Object.assign(group, { address: foundGroup.address });
       }
 
       const res = await foundGroup.update(group);
