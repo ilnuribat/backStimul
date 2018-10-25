@@ -85,6 +85,14 @@
 }
 /*********TASK*/
 
+
+.column{
+  box-shadow: 2px 2px 5px 1px rgb(0, 0, 0);
+}
+.column .task{
+  /* box-shadow: 1px 1px 6px 0px rgba(0, 0, 0, 0.9); */
+}
+
 .column:nth-child(1){
   background: rgba(214, 48, 48, 0.644);
 }

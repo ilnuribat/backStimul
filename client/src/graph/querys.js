@@ -626,8 +626,25 @@ export const setTemp = gql`
     }
   }
 `;
+
+
 export const getTemp = gql`
   query getTemp{
         tempObj @client
+      }
+`;
+
+export const setActUrl = gql`
+  mutation setActUrl($ActUrl: String){
+    setActUrl(ActUrl: $ActUrl) @client{
+      ActUrl
+    }
+  }
+`;
+
+
+export const getActUrl = gql`
+  query getActUrl{
+    ActUrl @client
       }
 `;

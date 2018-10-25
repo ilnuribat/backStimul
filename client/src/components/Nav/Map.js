@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 const Map = () =>{
   return(
-    <div className="nav-button" name="root">
+    <div className="nav-button" name="map">
       <Link
         className="link dim black b f6 f5-ns dib mr3"
         to="/map"
-        title="Root"
+        title="map"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
           <path d="M0 0h24v24H0z" fill="none"/>

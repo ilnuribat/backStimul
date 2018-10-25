@@ -52,6 +52,12 @@ export default {
 
       return {tempObj, __typename: 'tempObj' };
     },
+    
+    setActUrl: (_, { ActUrl },  { cache }) => {
+      cache.writeData({ data: { ActUrl: ActUrl } });
+
+      return {ActUrl, __typename: 'ActUrl' };
+    },
 
     private: (_, { id, name },  { cache }) => {
       cache.writeData({ data: { id: id, name: name } });

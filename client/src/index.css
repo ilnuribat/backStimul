@@ -1531,14 +1531,6 @@ select option{
 
 
 
-
-
-
-
-
-
-
-
 .userCloud{
   display: inline-block;
   background: #158b42dc;
@@ -1548,9 +1540,10 @@ select option{
 }
 .messageCloud{
   text-overflow: ellipsis;
+  
   white-space: nowrap;
   overflow: hidden;
-  display: inline-block;
+  display: block;
   border-radius: 3px;
   padding:5px;
   /* background: #0099cc4f; */
@@ -1702,3 +1695,6 @@ button.bg{
 
 
 
+a:active svg,.nav-button.active svg{
+  fill: #ff9100;
+}
