@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 // import Autocomplete from 'react-toolbox/lib/autocomplete';
 // import belle from 'belle';
 import _ from 'lodash';
-import axios from 'axios';
 import { qauf, _url, colorHash } from '../constants';
 import 'animate.css';
 import { getPrivateChat, user, group, selectUser, allUsers, glossaryStatus, groupMut, getCUser, GRU_QUERY, userTaskUpdated, tempObj, setTemp, getTemp } from '../graph/querys';
@@ -13,92 +12,9 @@ import ChatPrivate from './ChatPrivate';
 import Loading from './Loading';
 import Modal from './TaskParts/Modal';
 import ChangerForm from './TaskParts/ChangerForm';
-
-const countriesArray = ['Spain', 'England', 'USA', 'Thailand', 'Tongo', 'Slovenia', 'Россия', 'Москва'];
-const countriesObject = {'ES-es': 'Spain', 'TH-th': 'Thailand', 'EN-gb': 'England', 'EN-en': 'USA'};
-
-// class AutocompleteTest extends React.Component {
-//   state = {
-//     simple: 'Spain',
-//     multiple: ['ES-es', 'TH-th']
-//   };
-
-//   handleSimpleChange = (value) => {
-//     this.setState({simple: value});
-//   };
-
-//   handleMultipleChange = (value) => {
-//     this.setState({multiple: value});
-//   };
-
-//   render () {
-//     return (
-//       <div>
-//         <Autocomplete
-//           direction="down"
-//           onChange={this.handleMultipleChange}
-//           label="Choose countries"
-//           source={countriesObject}
-//           value={this.state.multiple}
-//         />
-
-//         <Autocomplete
-//           direction="down"
-//           label="Choose a country"
-//           hint="You can only choose one..."
-//           multiple={false}
-//           onChange={this.handleSimpleChange}
-//           source={countriesArray}
-//           value={this.state.simple}
-//         />
-//       </div>
-//     );
-//   }
-// }
-
-// class AutocompleteUser extends React.Component {
-//   state = {
-//     users: [],
-//     usersSel: [],
-//   };
-
-//   componentDidMount(){
-//     let users = [];
-//     this.props.users.map((e,i)=>{
-//       users.push(e.username);
-//     })
-
-//     this.setState({ users: users })
-//   }
-//   componentDidUpdate(){
-//     // let users = [];
-//     // this.props.users.map((e,i)=>{
-//     //   users.push(e.username);
-//     // })
-
-//     // this.setState({ users: users })
-//   }
-
-//   handleMultipleChange = (value) => {
-//     this.setState({usersSel: value});
-//   };
-
-//   render () {
-//     return (
-//       <div>
-//         <Autocomplete
-//           direction="down"
-//           onChange={this.handleMultipleChange}
-//           label="Пользователи"
-//           source={this.state.users}
-//           value={this.state.usersSel}
-//         />
-//       </div>
-//     );
-//   }
-// }
-
-
+import axios from 'axios';
+// const countriesArray = ['Spain', 'England', 'USA', 'Thailand', 'Tongo', 'Slovenia', 'Россия', 'Москва'];
+// const countriesObject = {'ES-es': 'Spain', 'TH-th': 'Thailand', 'EN-gb': 'England', 'EN-en': 'USA'};
 let usernameAss, statusName;
 
 let subsUser = (id,subscribeToMore, refetch) =>{
@@ -140,8 +56,6 @@ class GroupList extends Component {
       newAddress: "",
       addressList: [],
     }
-
-
 
     // this.loadg = this.loadg.bind(this);
     // this.loadu = this.loadu.bind(this);
@@ -252,7 +166,7 @@ class GroupList extends Component {
     this.setState({
       newAddress: e.target.value,
     })
-    this.daDataReqName(e.target.value)
+    // this.daDataReqName(e.target.value)
   }
 
 
@@ -266,50 +180,7 @@ class GroupList extends Component {
   //   });
   // }
 
-  async daDataReqId (id) {
-    const res = await axios(
-      'https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/address',
 
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83"
-        },
-        data: {
-          "query": id
-        }
-      })
-
-    return res.data.suggestions[0].data;
-  }
-
-  daDataReqName (name) {
-    axios(
-      'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83"
-        },
-        data: {
-          "query": name,
-          "count": 5
-        }
-      })
-      .then(response => {
-        this.setState({
-          addressList: response.data.suggestions,
-        })
-      })
-    // console.warn("aaa", this.state.addressList)
-
-    // .then(response => response.json())
-    // .then(data => console.warn(data));
-  }
 
   loadu(g){
 
@@ -349,9 +220,6 @@ class GroupList extends Component {
       //   }
       // }
     }
-
-    // console.log("____GROUPS",groups, );
-    // console.log("____GROUPS ID",getPrivateChat.id, thisGrId);
 
     // qauf(group(g), _url, localStorage.getItem('auth-token')).then(a=>{
     //   if(a && a.data.group.users && a.data.group.users.length !== users.length){
@@ -435,16 +303,51 @@ class GroupList extends Component {
 
   }
 
+  async daDataReqId (id) {
+    const res = await axios(
+      'https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/address',
 
-  addressAdd(address){
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83"
+        },
+        data: {
+          "query": id
+        }
+      })
+
+    return res.data.suggestions[0].data;
+  }
+  addressAdd(address, addressList){
     // console.warn(address)
     let addressInsideData = false
-    let streetId = ""
+    let streetId = "";
 
-    this.state.addressList.map((e)=>{
+    console.log("addressList---")
+    console.log(addressList)
+    console.log("address-------")
+    console.log(address)
+
+    addressList && addressList.map((e)=>{
       if (e.value === address) {
+
+        console.log("e.value")
+        console.log(e.value)
+        console.log("address compare")
+        console.log(address)
+
         addressInsideData = true
         streetId = e.data.street_fias_id
+      }else{
+
+        console.log("e.value")
+        console.log(e.value)
+        console.log("address compare")
+        console.log(address)
+
       }
     })
 
@@ -642,7 +545,7 @@ class GroupList extends Component {
   // }
 
   render() {
-    const {users, _grid, allusers, groupName, groupInfo, modal, status} = this.state;
+    const {users, _grid, allusers, groupName, groupInfo, modal, status, addressList} = this.state;
     const {getPrivateChat, getCUser, getTemp} = this.props;
 
     // let thisUsers;
@@ -677,7 +580,6 @@ class GroupList extends Component {
             }
           </div>
           <div className="f-column">
-
             {
               this.props.getPrivateChat && this.props.getPrivateChat.id ? (
                 <div className="tab-roll">
@@ -814,7 +716,7 @@ class GroupList extends Component {
                 <div className="tab-roll">
                   <div className="header"></div>
                   <div className="content">
-                    <div className="button" onClick={()=>{this.setState({modal: !modal})}}>Редактировать</div>
+                    <div className="button" onClick={()=>{this.setState({modal: !modal})}}>Информация</div>
                     <div className="content-scroll">
                     </div>
                   </div>
@@ -825,7 +727,7 @@ class GroupList extends Component {
         </div>
 
         {modal ? (
-          <Modal header="Редактирование Задачи" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
+          <Modal header="Подробная информация" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
             <div className="overWrap">
               <div>
                 {  statusName = _.result(_.find(status, (obj)=> {
@@ -837,24 +739,9 @@ class GroupList extends Component {
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
-                <div className="content-scroll">
-                  <input type="list" list="addresses" autoComplete="on" onChange={this.newAddress} />
-                  {
-                    this.state.newAddress.length > 15 ? (
-                      <div className="button" onClick={()=>this.addressAdd(this.state.newAddress)}>Добавить адрес</div>
-                    ): null
-                  }
-                  <datalist id="addresses">
-                    {this.state.addressList.map((e,i)=>(
-                      <option key={'addr' + i} >{e.value}</option>
-                    ))}
-                  </datalist>
-                  {/* <select value={this.state.value} onChange={this.handleChange}>
-                    {this.state.addressList.map((e,i)=>(
-                      <option key={'addr' + i} streetid={e.street_fias_id}>{e.value}</option>
-                    ))}
-                  </select> */}
-                </div>
+                
+                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.address && groupInfo.address.value ? groupInfo.address.value : null } name={"Адресс"} change={"address"} type={"list"} options={addressList} defaultText={groupInfo.address && groupInfo.address.value ? {name: groupInfo.address.value}  : {name: "Не указан"} } newAddress={this.newAddress} newAddressValue={this.state.newAddress} addressList={addressList} addressAdd={this.addressAdd}/>
+
               </div>
             </div>
           </ Modal>

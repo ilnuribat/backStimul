@@ -2,17 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { groupMut } from '../../graph/querys';
 import { qauf, _url } from '../../constants';
-import axios from 'axios';
-
 
 class ChangerForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {value: '', edit: false, options: [], addressList: [], addressValue:""};
+    this.state = {value: '', edit: false, options: []};
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.daDataReqName = this.daDataReqName.bind(this);
-    this.newAddress = this.newAddress.bind(this);
   }
 
   componentDidMount(){
@@ -26,53 +22,11 @@ class ChangerForm extends React.Component {
 
   handleChange(event) {
 
-    let {type} = this.props;
     this.setState({value: event.target.value});
-
-    if(type === 'list'){
-      this.daDataReqName(event.target.value)
-    }
-  }
-
-
-  newAddress(e){
-    this.setState({
-      value: e.target.value,
-    })
-    this.daDataReqName(e.target.value)
-  }
-
-  setAddrValue(e){
-    this.setState({
-      addressValue: e,
-    })
-  }
-
-  daDataReqName (name) {
-    axios(
-      'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83"
-        },
-        data: {
-          "query": name,
-          "count": 5
-        }
-      })
-      .then(response => {
-        this.setState({
-          addressList: response.data.suggestions,
-        })
-      })
-    // .then(response => response.json())
-    // .then(data => console.warn(data));
   }
 
   handleSubmit(event) {
+
 
     event.preventDefault();
     let { change, id, string, defaults } = this.props;
@@ -101,13 +55,10 @@ class ChangerForm extends React.Component {
         console.warn(e);
       });
   }
-  setGeo(geo){
-    this.setState({ geo: geo})
-  }
 
   render() {
     let {type, name, defaults, options, select, defaultText} = this.props;
-    let {edit, value, addressList,addressValue} = this.state;
+    let {edit, value} = this.state;
 
     if(type === "date" && value){
       value = value.replace(/T.*$/gi, "");
@@ -125,9 +76,8 @@ class ChangerForm extends React.Component {
                   <select name="select" onChange={this.handleChange} value={value}>
                     {!value ? (<option value="no">Не выбрано</option>) : null }
                     {
-                      options.map((e)=>{
+                      options.map((e,i)=>{
                         let nameval;
-
                         nameval = e.name || e.username || "...";
 
                         return(
@@ -148,32 +98,19 @@ class ChangerForm extends React.Component {
         );
       }
       else if(type === "list"){
-        return(
-          <div className="padded">
-            <div className="geo">{this.state.geo}</div>
-            <input type="list" list="addresses" autoComplete="on" onChange={this.newAddress} placeholder="Введите новый адрес, город или улицу" />
-            {
-              value && value.length > 15 ? (
-                <div className="button" onClick={()=>{this.props.addressAdd(value, addressList); this.setState({edit: !edit})}}>Добавить адрес</div>
-              ): null
-            }
-            <div className="btn" onClick={()=>{this.setState({edit: !edit})}}>Отмена</div>
-            <datalist id="addresses">
-              {addressList && addressList.map((e,i)=>{
-
-                return(
-                  <div className="parentQ" key={e.value}>
-                    
-                    <option key={'addr' + i} value={e.value} onClick={()=>this.setAddrValue(e.value)}>
-                      {e.value}
-                      {e.data.geo_lat && e.data.geo_lon ? (" " + e.data.geo_lat +":"+ e.data.geo_lon) : ""}
-                    </option>
-                  </div>
-                )})}
-            </datalist>
-            
-          </div>
-        )
+        <div className="padded">
+        <input type="list" list="addresses" autoComplete="on" onChange={this.props.newAddress} />
+        {
+          this.props.newAddressValue.length > 15 ? (
+            <div className="button" onClick={()=>this.addressAdd(this.props.newAddressValue)}>Добавить адрес</div>
+          ): null
+        }
+        <datalist id="addresses">
+          {this.props.addressList.map((e,i)=>(
+            <option key={'addr' + i} >{e.value}</option>
+          ))}
+        </datalist>
+      </div>
       }
       else{
 
