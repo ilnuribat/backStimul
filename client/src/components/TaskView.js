@@ -360,7 +360,8 @@ class GroupList extends Component {
         let param = `address:{
           geoLat: "${data.geo_lat}",
           geoLon: "${data.geo_lon}",
-          value: "${address}"
+          value: "${address}",
+          coordinates: ["${data.geo_lat}","${data.geo_lon}"]
         }`;
         const A = groupMut(this.props.getPrivateChat.id, `${param}`);
 
@@ -739,7 +740,7 @@ class GroupList extends Component {
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
-                
+
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.address && groupInfo.address.value ? groupInfo.address.value : null } name={"Адресс"} change={"address"} type={"list"} options={addressList} defaultText={groupInfo.address && groupInfo.address.value ? {name: groupInfo.address.value}  : {name: "Не указан"} } newAddress={this.newAddress} newAddressValue={this.state.newAddress} addressList={addressList} addressAdd={this.addressAdd}/>
 
               </div>
