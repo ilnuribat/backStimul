@@ -84,3 +84,45 @@
   background: rgb(47, 102, 104);
 }
 /*********TASK*/
+
+.column:nth-child(1){
+  background: rgba(214, 48, 48, 0.644);
+}
+
+.column:nth-child(2){
+  background: rgba(214, 148, 48, 0.644);;
+}
+
+.column:nth-child(3){
+  background: rgba(214, 48, 178, 0.644);;
+}
+
+.column:nth-child(4){
+  background: rgba(48, 134, 214, 0.644);;
+}
+
+.column:nth-child(5){
+  background: rgba(87, 214, 48, 0.644);;
+}
+
+.column .task:nth-child(even){
+  background: #003135ce;
+}
+.column .task:nth-child(odd){
+  background: #1b1919ee;
+
+}
+
+.column-content > .task{
+  
+}
+.column-content > .task > .lastMessage{
+  margin:5px auto;
+  text-align: left;
+  padding:10px;
+  max-height: 100px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  background: #dadada1c;
+}
