@@ -59,7 +59,6 @@ export default {
       return {id, name, __typename: 'chat' };
     },
     messagesListDirectUpdate: (_, {lastMessage, lastMessageId, lastMessageGroupId},  { cache }) => {
-
       const query = gql`
         query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
           direct(id: $id ) @client {
@@ -78,9 +77,16 @@ export default {
         }
       `;
 
-      const previousState = cache.readQuery({ query, variables: {"id": lastMessageGroupId}});
+      let previousState;
 
-      // console.warn("lastMessage is", lastMessage)
+      try {
+        previousState = cache.readQuery({ query, variables: {"id": lastMessageGroupId}});
+      } catch (error) {
+        console.warn("cache is empty!")
+
+        return null
+      }
+
       // console.warn("prevstate is", previousState)
 
       const newFeedItem = {cursor: lastMessageId, node: {id: lastMessageId, text: lastMessage,  __typename: "Message"},
@@ -125,7 +131,15 @@ export default {
         }
       `;
 
-      const previousState = cache.readQuery({ query, variables: {"id": lastMessageGroupId}});
+      let previousState;
+
+      try {
+        previousState = cache.readQuery({ query, variables: {"id": lastMessageGroupId}});
+      } catch (error) {
+        console.warn("cache is empty!")
+
+        return null
+      }
 
       // console.warn("lastMessage is", lastMessage)
       // console.warn("prevstate is", previousState)

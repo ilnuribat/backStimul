@@ -34,7 +34,7 @@ class LeftNav extends Component {
         let equalGroupMessage
         //пишем мессагу в кэш
 
-        console.warn(data)
+        // console.warn(data)
 
         client.mutate({
           mutation: lastMessageCache,
@@ -49,7 +49,7 @@ class LeftNav extends Component {
           //проверяем на совпадение группы мессаги и текущего привата
           client.query({query:getlastMessageCache}).then(result => {
             equalGroupMessage = _.isEqual(result.data.lastMessage.groupId, result.data.id)
-            if (!equalGroupMessage && data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
+            if (data.data.messageAdded.isDirect && !equalGroupMessage && data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
               //если не совпадают, читаем все непрочитанные приваты
               client.query({query:cGetCountPrivates}).then(result => {
                 const unr = result.data.unr +1
