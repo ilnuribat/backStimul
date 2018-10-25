@@ -27,11 +27,11 @@ class ChangerForm extends React.Component {
   handleChange(event) {
 
     let {type} = this.props;
-      this.setState({value: event.target.value});
+    this.setState({value: event.target.value});
 
-      if(type === 'list'){
-        this.daDataReqName(event.target.value)
-      }
+    if(type === 'list'){
+      this.daDataReqName(event.target.value)
+    }
   }
 
 
@@ -39,13 +39,10 @@ class ChangerForm extends React.Component {
     this.setState({
       value: e.target.value,
     })
-    console.log(e.target.value)
     this.daDataReqName(e.target.value)
   }
 
   setAddrValue(e){
-    console.log(e.target.value,"addrValue")
-    console.log(e, "addrValue2")
     this.setState({
       addressValue: e,
     })
@@ -67,9 +64,6 @@ class ChangerForm extends React.Component {
         }
       })
       .then(response => {
-
-        console.log(response.data);
-        
         this.setState({
           addressList: response.data.suggestions,
         })
@@ -107,6 +101,9 @@ class ChangerForm extends React.Component {
         console.warn(e);
       });
   }
+  setGeo(geo){
+    this.setState({ geo: geo})
+  }
 
   render() {
     let {type, name, defaults, options, select, defaultText} = this.props;
@@ -128,8 +125,9 @@ class ChangerForm extends React.Component {
                   <select name="select" onChange={this.handleChange} value={value}>
                     {!value ? (<option value="no">Не выбрано</option>) : null }
                     {
-                      options.map((e,i)=>{
+                      options.map((e)=>{
                         let nameval;
+
                         nameval = e.name || e.username || "...";
 
                         return(
@@ -152,19 +150,29 @@ class ChangerForm extends React.Component {
       else if(type === "list"){
         return(
           <div className="padded">
-          <input type="list" list="addresses" autoComplete="on" onChange={this.newAddress} placeholder="Введите новый адрес, город или улицу" />
-          {
-            value && value.length > 15 ? (
-              <div className="button" onClick={()=>{this.props.addressAdd(value, addressList); this.setState({edit: !edit})}}>Добавить адрес</div>
-            ): null
-          }
-          <div className="btn" onClick={()=>{this.setState({edit: !edit})}}>Отмена</div>
-          <datalist id="addresses">
-            {addressList && addressList.map((e,i)=>(
-              <option key={'addr' + i} onClick={()=>this.setAddrValue(e.value)}>{e.value}</option>
-            ))}
-          </datalist>
-        </div>
+            <div className="geo">{this.state.geo}</div>
+            <input type="list" list="addresses" autoComplete="on" onChange={this.newAddress} placeholder="Введите новый адрес, город или улицу" />
+            {
+              value && value.length > 15 ? (
+                <div className="button" onClick={()=>{this.props.addressAdd(value, addressList); this.setState({edit: !edit})}}>Добавить адрес</div>
+              ): null
+            }
+            <div className="btn" onClick={()=>{this.setState({edit: !edit})}}>Отмена</div>
+            <datalist id="addresses">
+              {addressList && addressList.map((e,i)=>{
+
+                return(
+                  <div className="parentQ" key={e.value}>
+                    
+                    <option key={'addr' + i} value={e.value} onClick={()=>this.setAddrValue(e.value)}>
+                      {e.value}
+                      {e.data.geo_lat && e.data.geo_lon ? (" " + e.data.geo_lat +":"+ e.data.geo_lon) : ""}
+                    </option>
+                  </div>
+                )})}
+            </datalist>
+            
+          </div>
         )
       }
       else{
