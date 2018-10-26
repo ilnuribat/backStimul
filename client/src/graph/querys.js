@@ -648,3 +648,20 @@ export const getActUrl = gql`
     ActUrl @client
       }
 `;
+
+export const setBar = gql`
+  mutation setBar($bar: Boolean, $comp: String){
+    setBar(bar: $bar, comp: $comp,) @client{
+      bar
+      comp
+    }
+  }
+`;
+
+
+export const getBar = gql`
+  query getBar{
+    bar @client
+    comp @client
+      }
+`;

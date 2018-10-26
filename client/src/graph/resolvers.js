@@ -59,6 +59,12 @@ export default {
       return {ActUrl, __typename: 'ActUrl' };
     },
 
+    setBar: (_, { bar, comp },  { cache }) => {
+      cache.writeData({ data: { bar: bar, comp: comp } });
+
+      return {bar, comp, __typename: 'BarState' };
+    },
+
     private: (_, { id, name },  { cache }) => {
       cache.writeData({ data: { id: id, name: name } });
 
