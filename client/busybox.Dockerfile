@@ -1,5 +1,5 @@
 FROM busybox
 
-COPY build /app/build
+COPY . /app/build
 
 CMD ["sh", "-c", "tail -f /dev/null"]

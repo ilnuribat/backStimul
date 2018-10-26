@@ -1,4 +1,4 @@
-const { Schema: { ObjectId } } = require('mongoose');
+const { Types: { ObjectId } } = require('mongoose');
 const {
   Group, Message, User, UserGroup,
 } = require('../models');
@@ -106,6 +106,8 @@ module.exports = {
         if (err.errmsg && err.errmsg.indexOf('duplicate key error')) {
           return group;
         }
+
+        throw err;
       }
 
       return group;

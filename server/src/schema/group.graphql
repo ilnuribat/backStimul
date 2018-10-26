@@ -8,6 +8,14 @@ type Group {
   assignedTo: UserTaskRole
   lastMessage: Message
   endDate: String
+	address: Address
+}
+
+type Address {
+	geoLat: String
+	geoLon: String
+	value: String
+  coordinates: [String]
 }
 
 input GroupInput {
@@ -17,6 +25,7 @@ input GroupInput {
   status: Int
   assignedTo: ID
   endDate: String
+  address: String
 }
 
 input UsersGroupInput {

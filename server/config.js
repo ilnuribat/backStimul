@@ -9,6 +9,8 @@ const {
   MICROSERVICES = '',
   LOG_LEVEL = 'info',
   MOLECULER_TRANSPORTER = 'redis://localhost',
+  DADATA_API = 'a9a4c39341d2f4072db135bd25b751336b1abb83',
+  DADATA_SECRET = '23244c4269211592e162cdb28f459b82716f50d8',
 } = process.env;
 
 module.exports = {
@@ -20,4 +22,6 @@ module.exports = {
   MICROSERVICES,
   LOG_LEVEL,
   MOLECULER_TRANSPORTER,
+  DADATA_API,
+  DADATA_SECRET,
 };

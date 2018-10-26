@@ -1,4 +1,4 @@
-const models = require('./data/models');
+const models = require('./src/models');
 const connectDB = require('./connectDB');
 
 /* eslint-disable */

@@ -10,7 +10,16 @@ const schema = new Schema({
   status: Number,
   assignedTo: Schema.Types.ObjectId,
   endDate: Date,
+  address: {
+    value: String,
+    fias_id: String,
+    fias_level: String,
+    geoLat: String,
+    geoLon: String,
+    coordinates: [String],
+  },
 });
+
 
 schema.virtual('id').get(function () {
   return this._id.toString();
