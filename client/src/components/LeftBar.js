@@ -65,7 +65,7 @@ class LeftBar extends Component {
   }
 
   render() {
-    if(!!this.props.Active.ActUrl && this.props.Active.ActUrl === 'root'){
+    if(!!this.props.Active.ActUrl && this.props.Active.ActUrl === 'root' || !!this.props.Active.ActUrl && this.props.Active.ActUrl === 'private'){
         return(
           <div className="left-bar">
             {
