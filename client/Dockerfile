@@ -8,4 +8,6 @@ RUN npm i
 
 COPY . .
 
-CMD ["npm", "run", "build"]
+RUN npm run build
+
+CMD [ "bash", "-c", "mkdir -p static && rm -rf static/* && cp -r build/* static/" ]
