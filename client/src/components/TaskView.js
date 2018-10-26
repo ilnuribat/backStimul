@@ -6,98 +6,15 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { qauf, _url, colorHash } from '../constants';
 import 'animate.css';
-import { getPrivateChat, user, group, selectUser, allUsers, glossaryStatus, groupMut, getCUser, GRU_QUERY, userTaskUpdated, tempObj } from '../graph/querys';
+import { getPrivateChat, user, group, selectUser, allUsers, glossaryStatus, groupMut, getCUser, GRU_QUERY, userTaskUpdated, tempObj, setTemp, getTemp } from '../graph/querys';
 import FirstLayout from './Layout';
 import ChatPrivate from './ChatPrivate';
 import Loading from './Loading';
 import Modal from './TaskParts/Modal';
 import ChangerForm from './TaskParts/ChangerForm';
-
-const countriesArray = ['Spain', 'England', 'USA', 'Thailand', 'Tongo', 'Slovenia', 'Россия', 'Москва'];
-const countriesObject = {'ES-es': 'Spain', 'TH-th': 'Thailand', 'EN-gb': 'England', 'EN-en': 'USA'};
-
-// class AutocompleteTest extends React.Component {
-//   state = {
-//     simple: 'Spain',
-//     multiple: ['ES-es', 'TH-th']
-//   };
-
-//   handleSimpleChange = (value) => {
-//     this.setState({simple: value});
-//   };
-
-//   handleMultipleChange = (value) => {
-//     this.setState({multiple: value});
-//   };
-
-//   render () {
-//     return (
-//       <div>
-//         <Autocomplete
-//           direction="down"
-//           onChange={this.handleMultipleChange}
-//           label="Choose countries"
-//           source={countriesObject}
-//           value={this.state.multiple}
-//         />
-
-//         <Autocomplete
-//           direction="down"
-//           label="Choose a country"
-//           hint="You can only choose one..."
-//           multiple={false}
-//           onChange={this.handleSimpleChange}
-//           source={countriesArray}
-//           value={this.state.simple}
-//         />
-//       </div>
-//     );
-//   }
-// }
-
-// class AutocompleteUser extends React.Component {
-//   state = {
-//     users: [],
-//     usersSel: [],
-//   };
-
-//   componentDidMount(){
-//     let users = [];
-//     this.props.users.map((e,i)=>{
-//       users.push(e.username);
-//     })
-
-//     this.setState({ users: users })
-//   }
-//   componentDidUpdate(){
-//     // let users = [];
-//     // this.props.users.map((e,i)=>{
-//     //   users.push(e.username);
-//     // })
-
-//     // this.setState({ users: users })
-//   }
-
-//   handleMultipleChange = (value) => {
-//     this.setState({usersSel: value});
-//   };
-
-//   render () {
-//     return (
-//       <div>
-//         <Autocomplete
-//           direction="down"
-//           onChange={this.handleMultipleChange}
-//           label="Пользователи"
-//           source={this.state.users}
-//           value={this.state.usersSel}
-//         />
-//       </div>
-//     );
-//   }
-// }
-
-
+import axios from 'axios';
+// const countriesArray = ['Spain', 'England', 'USA', 'Thailand', 'Tongo', 'Slovenia', 'Россия', 'Москва'];
+// const countriesObject = {'ES-es': 'Spain', 'TH-th': 'Thailand', 'EN-gb': 'England', 'EN-en': 'USA'};
 let usernameAss, statusName;
 
 let subsUser = (id,subscribeToMore, refetch) =>{
@@ -107,8 +24,9 @@ let subsUser = (id,subscribeToMore, refetch) =>{
     updateQuery: (prev, { subscriptionData }) => {
       if (!subscriptionData.data) return prev;
       const newFeedItem = subscriptionData.data.commentAdded;
-        refetch().then(()=>{
-        });
+
+      refetch().then(()=>{
+      });
 
       // return true;
 
@@ -135,9 +53,9 @@ class GroupList extends Component {
       modal: false,
       inputSaver: {},
       newUser: "",
+      newAddress: "",
+      addressList: [],
     }
-
-
 
     // this.loadg = this.loadg.bind(this);
     // this.loadu = this.loadu.bind(this);
@@ -148,9 +66,23 @@ class GroupList extends Component {
     this.inputChange = this.inputChange.bind(this);
     this.inputSave = this.inputSave.bind(this);
     this.newUser = this.newUser.bind(this);
+    this.newAddress = this.newAddress.bind(this);
+    this.addressAdd = this.addressAdd.bind(this);
   }
 
   componentDidMount(){
+
+    let obj = {name:'name'};
+    let arr = [].push(obj);
+
+    this.props.setTemp({
+      variables:{
+        tempObj:  {stingh: "sa"},
+        // tempObj: [{name: "New anme",str: "String", __typename: "str",}],
+      }
+    })
+
+
     const {getPrivateChat, getCUser} = this.props;
     const { users } = this.state;
     let _grid = getPrivateChat.id || localStorage.getItem('grid');
@@ -170,6 +102,7 @@ class GroupList extends Component {
       let groups = getCUser.user.groups;
       let thisGrId = getPrivateChat.id || _grid;
       let thisUsers;
+
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
 
       this.setState({
@@ -184,11 +117,11 @@ class GroupList extends Component {
 
         if( result1 ){
           return false;
-         }else{
+        }else{
           this.setState({
             users: [...thisUsers.users],
           });
-          
+
         }
       }else{
         return false;
@@ -198,8 +131,6 @@ class GroupList extends Component {
 
 
   }
-
-
 
   allUserGet(){
     qauf(allUsers(), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -224,14 +155,19 @@ class GroupList extends Component {
   }
 
   newUser(e){
-
-    console.log(e.target)
-
+    // console.log(e.target)
     this.setState({
       newUser: e.target.value,
     })
   }
 
+
+  newAddress(e){
+    this.setState({
+      newAddress: e.target.value,
+    })
+    // this.daDataReqName(e.target.value)
+  }
 
 
   // loadg(){
@@ -243,6 +179,8 @@ class GroupList extends Component {
   //     console.warn(e);
   //   });
   // }
+
+
 
   loadu(g){
 
@@ -256,34 +194,32 @@ class GroupList extends Component {
       });
     }
 
-    
+
 
     if(getCUser.user  && getCUser.user.groups){
       let groups = getCUser.user.groups;
       let thisGrId = getPrivateChat.id || _grid;
+
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
 
       this.setState({
         groupInfo: thisUsers,
       })
 
-      if(thisUsers && thisUsers.users && users){
-        var result1 = isArrayEqual(
-          thisUsers.users,
-          users
-        );
+      // if(thisUsers && thisUsers.users && users){
+      //   var result1 = isArrayEqual(
+      //     thisUsers.users,
+      //     users
+      //   );
 
-        if( result1 ){
-         }else{
-          // this.setState({
-          //   users: [...thisUsers.users],
-          // });
-        }
-      }
+      //   if( result1 ){
+      //   }else{
+      //     // this.setState({
+      //     //   users: [...thisUsers.users],
+      //     // });
+      //   }
+      // }
     }
-
-    // console.log("____GROUPS",groups, );
-    // console.log("____GROUPS ID",getPrivateChat.id, thisGrId);
 
     // qauf(group(g), _url, localStorage.getItem('auth-token')).then(a=>{
     //   if(a && a.data.group.users && a.data.group.users.length !== users.length){
@@ -331,29 +267,29 @@ class GroupList extends Component {
       let user = _.find(allusers, (obj)=> { return obj.username === id; });
 
       if(user){
-        console.log(user);
+        // console.log(user);
         userId = user.id;
 
       }else{
-        
+
         console.warn("Неправильный юзер");
       }
     }else{
       userId = id;
     }
 
-    
+
     q = () => {return(`mutation{
       updateUsersGroup(group: {id: "${this.props.getPrivateChat.id}", delete: ${dels}, users: ["${userId}"]} )
     }`)} ;
 
     let a = q();
-    console.log(a);
-    
+    // console.log(a);
+
     // return true;
     if(typeof q === "function"){
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
-        console.log("Answer updUsrGr",a)
+        // console.log("Answer updUsrGr",a)
       })
         .then(()=>{
           // this.loadu(this.props.getPrivateChat.id)
@@ -366,6 +302,92 @@ class GroupList extends Component {
     }
 
   }
+
+  async daDataReqId (id) {
+    const res = await axios(
+      'https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/address',
+
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83"
+        },
+        data: {
+          "query": id
+        }
+      })
+
+    return res.data.suggestions[0].data;
+  }
+
+  async daDataReqIdPaid (address) {
+    const res = await axios(
+      'https://dadata.ru/api/v2/clean/address',
+
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83",
+          // "X-Secret" : "53298fa2e7d1762e0e329388eb3fd66ae4a3312a"
+        },
+        data: [address]
+      })
+
+    return res.data.suggestions[0].data;
+  }
+
+  addressAdd(address, addressList){
+    // console.warn(address)
+    // let addressInsideData = false
+    // let streetId = "";
+
+    // addressList && addressList.map((e)=>{
+    //   if (e.value === address) {
+    //     addressInsideData = true
+    //     streetId = e.data.street_fias_id
+    //   }
+    // })
+    // if (!addressInsideData || streetId === "" || !streetId) {
+    //   console.warn("НЕТ КООРДИНАТ!!!!!!")
+    //   console.warn(addressInsideData, streetId)
+    // } else {
+    //   this.daDataReqId(address).then(data => {
+    //     console.warn(data)
+    //     let param = `address:{
+    //       geoLat: "${data.geo_lat}",
+    //       geoLon: "${data.geo_lon}",
+    //       value: "${address}",
+    //       coordinates: ["${data.geo_lat}","${data.geo_lon}"]
+    //     }`;
+    //     const A = groupMut(this.props.getPrivateChat.id, `${param}`);
+
+    //     qauf(A, _url, localStorage.getItem('auth-token')).then(a=>{
+    //       console.warn(a)
+    //     })
+    //       .catch((e)=>{
+    //         console.warn(e);
+    //       });
+
+    //     console.warn(param)
+    //   }
+    //   )
+    // }
+
+    let param = `address: "${address}"`;
+    const A = groupMut(this.props.getPrivateChat.id, `${param}`);
+
+    qauf(A, _url, localStorage.getItem('auth-token')).then(a=>{
+      console.warn(a)
+    })
+      .catch((e)=>{
+        console.warn(e);
+      });
+  }
+
 
   glossStatus(){
 
@@ -382,7 +404,7 @@ class GroupList extends Component {
   onStatSelected(e){
 
     qauf(groupMut(this.props.getPrivateChat.id, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.log(a)
+      // console.log(a)
     })
       .catch((e)=>{
         console.warn(e);
@@ -393,7 +415,7 @@ class GroupList extends Component {
   onUserSelected(e){
 
     qauf(groupMut(this.props.getPrivateChat.id, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.log(a)
+      // console.log(a)
     })
       .catch((e)=>{
         console.warn(e);
@@ -409,7 +431,7 @@ class GroupList extends Component {
   }
 
   componentDidUpdate(){
-    
+
     // this.focusInput = () => {
     //   if (this.Input) this.Input.focus();
     // };
@@ -422,8 +444,9 @@ class GroupList extends Component {
       let groups = getCUser.user.groups;
       let thisGrId = getPrivateChat.id || _grid;
       let thisUsers;
+
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
-      
+
       if(JSON.stringify(groupInfo) !== JSON.stringify(thisUsers)){
         this.setState({
           groupInfo: thisUsers,
@@ -431,22 +454,32 @@ class GroupList extends Component {
       }
 
       if(thisUsers && thisUsers.users && users){
+        // if (isArrayEqual(
+        //   thisUsers.users,
+        //   users
+        // )) {
+        //   this.setState({
+        //     users: [...thisUsers.users],
+        //   });
+        // }
+
         var result1 = isArrayEqual(
           thisUsers.users,
           users
         );
 
         if( result1 ){
-         }else{
+        }else{
           this.setState({
             users: [...thisUsers.users],
           });
         }
       }else{
       }
+
+
+
     }
-
-
 
     // const {users, _grid } = this.state;
     // const {getPrivateChat, getCUser} = this.props;
@@ -472,9 +505,9 @@ class GroupList extends Component {
     //     if( result1 ){
     //       console.log("USERS 1",thisUsers.users);
     //       console.log("USERS 2",users);
-  
+
     //       console.log("result -----",result1);
-  
+
     //       // this.changeGrUsers(thisUsers.users);
     //       // onlyunicusers = _.differenceWith(allusers, thisUsers.users, _.isEqual);
     //      }else{
@@ -484,7 +517,7 @@ class GroupList extends Component {
     //         users: [...thisUsers.users],
     //       })
     //       console.log("need update");
-          
+
     //     }
     //   }
 
@@ -494,41 +527,44 @@ class GroupList extends Component {
     // console.log("____GROUPS ID",getPrivateChat.id, thisGrId);
   }
 
-  usersSelector(){
+  // usersSelector(){
 
 
-    // this.changeGrUsers(a.data.group.users);
+  // this.changeGrUsers(a.data.group.users);
 
-    // const {users, _grid, allusers, groupName, groupInfo, modal, status} = this.state;
-    // const {getPrivateChat, getCUser} = this.props;
+  // const {users, _grid, allusers, groupName, groupInfo, modal, status} = this.state;
+  // const {getPrivateChat, getCUser} = this.props;
 
-    // let thisUsers;
-    // let onlyunicusers;
+  // let thisUsers;
+  // let onlyunicusers;
 
-    // if(!getCUser.user || !getCUser.user.groups) return true;
+  // if(!getCUser.user || !getCUser.user.groups) return true;
 
-    // let groups = getCUser.user.groups;
-    // let thisGrId = getPrivateChat.id || _grid;
+  // let groups = getCUser.user.groups;
+  // let thisGrId = getPrivateChat.id || _grid;
 
-    // console.log("____GROUPS",groups, );
-    // console.log("____GROUPS ID",getPrivateChat.id, thisGrId);
-    
+  // console.log("____GROUPS",groups, );
+  // console.log("____GROUPS ID",getPrivateChat.id, thisGrId);
 
-    // thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
 
-    // if( thisUsers && thisUsers.users){
-    //   console.log("USERS",thisUsers.users);
-    //   onlyunicusers = _.differenceWith(allusers, thisUsers.users, _.isEqual);
-    // }
-  }
+  // thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
+
+  // if( thisUsers && thisUsers.users){
+  //   console.log("USERS",thisUsers.users);
+  //   onlyunicusers = _.differenceWith(allusers, thisUsers.users, _.isEqual);
+  // }
+  // }
 
   render() {
-    const {users, _grid, allusers, groupName, groupInfo, modal, status} = this.state;
-    const {getPrivateChat, getCUser} = this.props;
+    const {users, _grid, allusers, groupName, groupInfo, modal, status, addressList} = this.state;
+    const {getPrivateChat, getCUser, getTemp} = this.props;
 
     // let thisUsers;
     let onlyunicusers;
 
+
+    // console.log(getTemp.tempObj);
+
     // if(!getCUser.user || !getCUser.user.groups) return true;
 
     // let groups = getCUser.user.groups;
@@ -536,7 +572,7 @@ class GroupList extends Component {
 
     // console.log("____GROUPS",groups, );
     // console.log("____GROUPS ID",getPrivateChat.id, thisGrId);
-    
+
 
     // thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
 
@@ -544,8 +580,8 @@ class GroupList extends Component {
     //   console.log("USERS",thisUsers.users);
     //   onlyunicusers = _.differenceWith(allusers, thisUsers.users, _.isEqual);
     // }
-    
-    
+
+
     return(
       <FirstLayout barstate="chat">
         <div className="f-container">
@@ -555,15 +591,14 @@ class GroupList extends Component {
             }
           </div>
           <div className="f-column">
-
             {
               this.props.getPrivateChat && this.props.getPrivateChat.id ? (
                 <div className="tab-roll">
                   <div className="header"><h4>Пользователи</h4></div>
                   <div className="content">
                     <div className="content-scroll">
-                    
-                    <Query query={GRU_QUERY} variables={{ id: getPrivateChat.id }} >
+
+                      <Query query={GRU_QUERY} variables={{ id: getPrivateChat.id }} >
                         {({ loading, error, data, refetch, subscribeToMore }) => {
                           if (loading){
                             return (
@@ -586,8 +621,8 @@ class GroupList extends Component {
                           if(data){
                             let usrs = data.group.users;
 
-                              onlyunicusers = _.differenceWith(allusers, usrs, _.isEqual);
-                            
+                            onlyunicusers = _.differenceWith(allusers, usrs, _.isEqual);
+
                             return(
 
                               data.group.users.map(
@@ -607,11 +642,11 @@ class GroupList extends Component {
                               )
                             )
 
-                            
+
                             // return true;
                           }
 
-                        return true;
+                          return true;
                         }}
                       </Query>
                       {
@@ -642,7 +677,7 @@ class GroupList extends Component {
                     <div className="content-scroll">
                       <div>
 
-                        <input list="users" autoComplete="on" onChange={this.newUser} />
+                        <input type="list" list="users" autoComplete="on" onChange={this.newUser} />
                         {
                           this.state.newUser ? (
                             <div className="button" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить {this.state.newUser}</div>
@@ -650,22 +685,22 @@ class GroupList extends Component {
                         }
 
                         <datalist id="users">
-                        {
-                          onlyunicusers && onlyunicusers.length > 0 ? onlyunicusers.map((e,i)=>{
-                            return(
-                              <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                            )
-                          }) : allusers.map((e,i)=>{
-                            return(
-                              <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                            )
-                          })
-                        }
-                        
-                        <option>Москва</option>
-                        <option>Моська</option>
-                        <option>Питер</option>
-                        <option>Васька</option>
+                          {
+                            onlyunicusers && onlyunicusers.length > 0 ? onlyunicusers.map((e,i)=>{
+                              return(
+                                <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                              )
+                            }) : allusers.map((e,i)=>{
+                              return(
+                                <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                              )
+                            })
+                          }
+
+                          <option>Москва</option>
+                          <option>Моська</option>
+                          <option>Питер</option>
+                          <option>Васька</option>
                         </datalist>
                       </div>
 
@@ -692,7 +727,7 @@ class GroupList extends Component {
                 <div className="tab-roll">
                   <div className="header"></div>
                   <div className="content">
-                    <div className="button" onClick={()=>{this.setState({modal: !modal})}}>Редактировать</div>
+                    <div className="button" onClick={()=>{this.setState({modal: !modal})}}>Информация</div>
                     <div className="content-scroll">
                     </div>
                   </div>
@@ -703,7 +738,7 @@ class GroupList extends Component {
         </div>
 
         {modal ? (
-          <Modal header="Редактирование Задачи" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
+          <Modal header="Подробная информация" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
             <div className="overWrap">
               <div>
                 {  statusName = _.result(_.find(status, (obj)=> {
@@ -714,7 +749,9 @@ class GroupList extends Component {
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.name} name={"Название"} change={"name"} string={1} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
                 <ChangerForm id={getPrivateChat.id} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
-                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответсвенный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
+                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
+
+                <ChangerForm id={getPrivateChat.id} defaults={groupInfo.address && groupInfo.address.value ? groupInfo.address.value : null } name={"Адресс"} change={"address"} type={"list"} options={addressList} defaultText={groupInfo.address && groupInfo.address.value ? {name: groupInfo.address.value}  : {name: "Не указан"} } newAddress={this.newAddress} newAddressValue={this.state.newAddress} addressList={addressList} addressAdd={this.addressAdd}/>
 
               </div>
             </div>
@@ -743,6 +780,8 @@ export default compose(
   graphql(selectUser, { name: 'selectUser' }),
   graphql(getCUser, { name: 'getCUser' }),
   graphql(tempObj, { name: 'tempObj' }),
+  graphql(setTemp, { name: 'setTemp' }),
+  graphql(getTemp, { name: 'getTemp' }),
 )(GroupList);
 
 const isArrayEqual = (x, y) => {

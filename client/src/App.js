@@ -31,7 +31,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      barstate: 'chat',
+      barstate: '',
     };
     this._lbarstate = this._lbarstate.bind(this);
     this.lookft = this.lookft.bind(this);

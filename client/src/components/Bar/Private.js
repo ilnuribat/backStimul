@@ -32,10 +32,12 @@ class Private extends React.Component {
 
   CreateNewGroup(uid){
     let params = `"${uid}"`;
-
+    console.log(createDirect(params));
     qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){
         ref1()
+        console.log(a);
+        
       }
     }).catch((e)=>{
       console.warn(e);

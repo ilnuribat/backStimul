@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { Fire, Favor, Private, Tasks } from './Bar';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import {cache} from '../index';
+import { setActUrl, getActUrl  } from '../graph/querys';
+import { graphql, compose } from "react-apollo";
 
 class LeftBar extends Component {
   constructor(props) {
@@ -13,6 +17,27 @@ class LeftBar extends Component {
   hidePanel = () => {
 
 
+  }
+
+  componentDidMount(){
+    if(!this.props.Active.ActUrl){
+      this.props.setActive({
+        variables:{
+          ActUrl: 'root',
+        }
+      })
+    }
+  }
+
+  componentDidUpdate(){
+    // let {Active} = this.props;
+    // if(Active && Active.ActUrl === 'private' || Active && Active.ActUrl === 'root'){
+    //   console.log(Active)
+    //   this.setState({
+    //     isHidden: false,
+    //   })
+    //   // Active.ActUrl
+    // }
   }
 
   switcher(){
@@ -40,14 +65,17 @@ class LeftBar extends Component {
   }
 
   render() {
-    return(
-      <div className="left-bar">
-        {
-          this.switcher()
-        }
-      </div>
-    )
-
+    if(!!this.props.Active.ActUrl && this.props.Active.ActUrl === 'root' || !!this.props.Active.ActUrl && this.props.Active.ActUrl === 'private'){
+        return(
+          <div className="left-bar">
+            {
+              this.switcher()
+            }
+          </div>
+        )
+    }else{
+      return true;
+    }
   }
 }
 
@@ -55,4 +83,8 @@ LeftBar.propTypes = {
   barstate: PropTypes.string.isRequired
 };
 
-export default LeftBar
+
+export default compose(
+  graphql(getActUrl, { name: 'Active' }),
+  graphql(setActUrl, { name: 'setActive' }),
+)(LeftBar);

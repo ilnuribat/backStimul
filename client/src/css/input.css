@@ -1,0 +1,209 @@
+
+form {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  width:100%;
+}
+form div{
+  text-align: center;
+}
+form>.textarea-wrapper{
+  flex:2;
+}
+
+form input[type="text"],
+form input[type="password"]
+{
+  width:260px;
+  text-align: center;
+  height: 35px;
+}
+form textarea{
+  width:100%;
+}
+
+form .btn{
+  display: inline-block;
+}
+form select{
+  width: 260px;
+  height: 35px;
+  display: inline-block;
+  float: left;
+}
+form label{
+  /* width:100%; */
+}
+
+
+input[type="text"],input[type="password"],button, textarea{
+  margin:5px auto;
+  padding:5px;
+}
+input[type="text"],input[type="password"]{
+  background: transparent;
+  display: inline-block;
+  width: 100%;
+  max-width:300px;
+  height:40px;
+  max-height: 40px;
+  padding:4px 8px;
+  border:0 none transparent;
+  border-bottom: 1px solid #0099cc;
+  border-bottom: 1px solid #e7af18;
+  box-sizing: border-box;
+  text-align: left !important;
+}
+
+input, textarea{
+  text-align: start;
+  color: #a2d1e0;
+  background: transparent;
+  border:0 none transparent;
+  border-bottom: 1px solid #0099cc;
+
+}
+input:focus, textarea:focus{
+  outline:0 none transparent;
+  border:0 none transparent;
+  border-bottom: 3px solid #0099cc;
+}
+
+.auth input{
+  display: block;
+}
+
+.button,button, input[type="submit"]{
+  border: 0;
+  padding: 0;
+  transition: all 0.3s ease-in-out;
+  max-width:200px;
+  text-align: center;
+  background: #d6e1f8a4;
+  background: #23d0fff5;
+  border:0px solid #f9f9f9;
+  border-radius: 3px;
+  color:#333;
+  cursor: pointer;
+  box-shadow: 2px 6px 6px rgba(0, 0, 0, 0.4);
+}
+
+.button, input[type="submit"]{
+  display: inline-block;
+  padding:8px 20px;
+  /* height: 40px; */
+  margin:5px;
+  background: #3dadd393;
+  background: #e7af18;
+}
+label{
+  margin:5px 0;
+}
+input[type="date"]{
+  display: inline-block;
+  width:260px;
+  height:40px;
+}
+
+.button:hover, button:hover, input[type="submit"]:hover{
+  background: #d6e1f8a4;
+  color:#fff;
+  /* box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); */
+}
+
+.taskModule .inner input[type="text"],
+.taskModule .inner input[type="password"]
+{
+width:200px;
+min-width:200px;
+height:30px;
+min-height:30px;
+margin:5px !important;
+padding:5px 10px;
+box-sizing: border-box;
+}
+
+.taskModule .inner textarea{
+width:auto;
+max-width:500px;
+min-width:200px;
+margin:5px  !important;
+box-sizing: border-box;
+}
+
+
+/* input[type="submit"] {
+  background-color: #435e85 !important;
+  background-color: #23d0fff5 !important;
+  color: white;
+  font: 700 1rem "proxima-nova",sans-serif;
+  border: none;
+  position: relative;
+  -webkit-transition: 0.3s ease-in-out;
+  -o-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
+  text-decoration: none;
+  padding: 20px 80px;
+  text-align: center;
+  cursor: pointer;
+  -webkit-box-shadow: -7px 7px 0px rgba(50,50,50,0.15);
+  box-shadow: -7px 7px 0px rgba(50,50,50,0.15);
+  margin-top: 20px;
+} */
+
+
+/********SUBMIT**********/
+input[type="submit"]{
+  background: transparent;
+  padding: 8px;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  color: #ffd900;
+  border:1px solid;
+}
+input[type="submit"]:hover{
+  background: transparent;
+  color: #ff9900;
+  border:1px solid;
+}
+
+/********SUBMIT**********/
+
+input[type="date"],
+input[type="text"],
+input[type="password"],
+input[type="list"],
+select
+{
+  /* margin:2px auto; */
+  display: inline-block;
+  width:260px;
+  height:35px;
+  color:#FFF;
+  font-size: 16px;
+}
+::-webkit-input-placeholder { /* Chrome */
+  color: rgb(233, 233, 233);
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: rgb(233, 233, 233);
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: rgb(233, 233, 233);
+  opacity: 1;
+}
+:-moz-placeholder { /* Firefox 4 - 18 */
+  color: rgb(233, 233, 233);
+  opacity: 1;
+}
+.modal input[type="list"]{
+  width:auto;
+  min-width: 400px;
+  max-width:600px;
+}

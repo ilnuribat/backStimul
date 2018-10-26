@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-// import { Mutation } from 'react-apollo';
 
 export const updTask = (...params) => {
   return (`mutation{
@@ -261,6 +260,12 @@ export const TASKS_QUERY = gql`
           text
         }
         endDate
+        address {
+          geoLat
+          geoLon
+          value
+          coordinates
+        }
       }
       }
     }
@@ -381,6 +386,7 @@ export const ALL_MESSAGE_CREATED = gql`
           userId
           groupId
           isRead
+          isDirect
       }
   }
 `;
@@ -495,6 +501,12 @@ subscription taskUpdated($id: ID!){
           text
         }
         endDate
+        address{
+          geoLat
+          geoLon
+          value
+          coordinates
+        }
       }
 }`;
 
@@ -522,6 +534,12 @@ query getCUser{
           text
         }
         endDate
+        address{
+          geoLat
+          geoLon
+          value
+          coordinates
+        }
       }
     }
 }`;
@@ -576,4 +594,74 @@ export const setRefGroups = gql`
       ref
     }
   }
+`;
+
+
+
+export const messagesListDirectUpdate = gql`
+  mutation messagesListDirectUpdate($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
+    messagesListDirectUpdate(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
+      lastMessage
+      lastMessageId
+      lastMessageGroupId
+    }
+  }
+`;
+
+
+export const messagesListGroupUpdate = gql`
+  mutation messagesListGroupUpdate($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
+    messagesListGroupUpdate(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
+      lastMessage
+      lastMessageId
+      lastMessageGroupId
+    }
+  }
+`;
+
+export const setTemp = gql`
+  mutation setTemp($tempObj: String){
+    setTemp(tempObj: $tempObj) @client{
+      tempObj
+    }
+  }
+`;
+
+
+export const getTemp = gql`
+  query getTemp{
+        tempObj @client
+      }
+`;
+
+export const setActUrl = gql`
+  mutation setActUrl($ActUrl: String){
+    setActUrl(ActUrl: $ActUrl) @client{
+      ActUrl
+    }
+  }
+`;
+
+
+export const getActUrl = gql`
+  query getActUrl{
+    ActUrl @client
+      }
+`;
+
+export const setBar = gql`
+  mutation setBar($bar: Boolean, $comp: String){
+    setBar(bar: $bar, comp: $comp,) @client{
+      bar
+      comp
+    }
+  }
+`;
+
+
+export const getBar = gql`
+  query getBar{
+    bar @client
+    comp @client
+      }
 `;

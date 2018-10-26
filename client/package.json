@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "animate.css": "^3.7.0",
+    "animejs": "^2.2.0",
     "apollo-boost": "0.1.15",
     "apollo-cache-inmemory": "^1.2.9",
     "apollo-client": "^2.4.1",
@@ -29,6 +30,8 @@
     "apollo-link-state": "^0.4.2",
     "apollo-link-ws": "^1.0.8",
     "apollo-utilities": "^1.0.21",
+    "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "belle": "^4.0.0",
     "buffer": "^5.2.1",
     "color-hash": "^1.0.3",

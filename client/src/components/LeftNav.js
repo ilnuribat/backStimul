@@ -10,7 +10,7 @@ import Map from './Nav/Map';
 
 import Loading from './Loading';
 import { qauf, _url } from '../constants';
-import { getlastMessageCache, lastMessageCache, getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups } from '../graph/querys';
+import { messagesListGroupUpdate, messagesListDirectUpdate, getlastMessageCache, lastMessageCache, getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups } from '../graph/querys';
 
 let refUser;
 
@@ -34,6 +34,8 @@ class LeftNav extends Component {
         let equalGroupMessage
         //пишем мессагу в кэш
 
+        // console.warn(data)
+
         client.mutate({
           mutation: lastMessageCache,
           variables: {
@@ -47,7 +49,7 @@ class LeftNav extends Component {
           //проверяем на совпадение группы мессаги и текущего привата
           client.query({query:getlastMessageCache}).then(result => {
             equalGroupMessage = _.isEqual(result.data.lastMessage.groupId, result.data.id)
-            if (!equalGroupMessage && data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
+            if (data.data.messageAdded.isDirect && !equalGroupMessage && data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
               //если не совпадают, читаем все непрочитанные приваты
               client.query({query:cGetCountPrivates}).then(result => {
                 const unr = result.data.unr +1
@@ -68,13 +70,22 @@ class LeftNav extends Component {
 
           })
         })
-        // console.warn("new private message", data)
+
+        //Пишем в кеш (если он есть конечно) нужной группы полученную мессагу
+        client.mutate({
+          mutation: data.data.messageAdded.isDirect ? messagesListDirectUpdate : messagesListGroupUpdate,
+          variables: {
+            lastMessage: data.data.messageAdded.text,
+            lastMessageId: data.data.messageAdded.id,
+            lastMessageGroupId: data.data.messageAdded.groupId,
+          },
+        })
       },
       error(err) { console.error('err', err); },
     });
   }
 
-  shouldComponentUpdate(nextProps,nextState){
+  shouldComponentUpdate(nextProps){
 
     if(nextProps.getRefGroups.ref){
       return true;
@@ -84,9 +95,6 @@ class LeftNav extends Component {
   }
 
   componentDidUpdate(){
-
-    console.log("Update Nav")
-
     let {getRefGroups, setRefGroups} = this.props;
 
     if(!!getRefGroups.ref && !!refUser){
@@ -155,10 +163,7 @@ class LeftNav extends Component {
               }
 
               if(data){
-
-                console.log("tasks",data);
-
-                data.user.groups.map((e,i)=>{
+                data.user.groups.map((e)=>{
                   let id = e.id;
                   // return(
                   //         <Subscription
@@ -180,7 +185,7 @@ class LeftNav extends Component {
                       updateQuery: (prev, { subscriptionData }) => {
                         refUser = refetch;
                         if (!subscriptionData.data) return prev;
-                        const newFeedItem = subscriptionData.data.commentAdded;
+                        // const newFeedItem = subscriptionData.data.commentAdded;
 
                         console.warn(prev);
                         console.warn(subscriptionData);
@@ -210,6 +215,7 @@ class LeftNav extends Component {
                   //     }}
                   //   </Subscription>
                   // )
+                  return true;
                 });
 
                 return true;
@@ -256,7 +262,11 @@ class LeftNav extends Component {
 
 LeftNav.propTypes = {
   cSetCountPrivates: PropTypes.func.isRequired,
-  client: PropTypes.object.isRequired
+  setRefGroups: PropTypes.func.isRequired,
+  client: PropTypes.object.isRequired,
+  getRefGroups: PropTypes.shape({
+    ref: PropTypes.bool
+  }).isRequired,
 };
 
 export default compose(

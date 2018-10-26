@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { Component, Fragment } from "react";
 import {
   LayerGroup,
   LayersControl,
@@ -7,27 +7,43 @@ import {
   Popup,
   TileLayer
 } from "react-leaflet";
+import { graphql, compose } from "react-apollo";
 import { divIcon } from "leaflet";
+import PropTypes from 'prop-types';
 import {Redirect} from "react-router-dom";
 import { ReactLeafletSearch } from 'react-leaflet-search'
+import { getCUser, setPrivateChat } from '../../graph/querys';
 import Indicator from "./Indicator";
 import newdata from "./Objects";
 import b from "./buttons.css";
 import  "./LeafletMap.css";
- 
+
 const { BaseLayer, Overlay } = LayersControl;
 
 const styleLeaf = {
+  margin: "0 0 0 50px",
   height: "100vh",
-  width: "90%",
-  margin: "0 auto",
+  width: "auto",
+
+
 };
 
 
-export default class LeafletMap extends PureComponent {
+function latRad(lat) {
+  var sin = Math.sin(lat * Math.PI / 180);
+  var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+
+  return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+}
+
+function zoom(mapPx, worldPx, fraction) {
+  return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+}
+
+
+class LeafletMap extends Component {
     state = {
       redirect: false,
-      redirectDetail: false,
     };
 
     customPopup(SearchInfo) {
@@ -41,68 +57,182 @@ export default class LeafletMap extends PureComponent {
         </Popup>
       );
     }
-    s
-    handleTabChange = (index) => {
-      // console.warn("clicked!", index);
+
+    handleTabChange = (index, name) => {
+      // console.warn("clicked!", index, name);
+      this.props.setPrivateChat({
+        variables: {
+          id: index,
+          name: name,
+          priv: false,
+          unr: 0,
+        }
+      });
       this.setState({redirect: true});
     }
 
-    handleTabDetail = (index) => {
-      // console.warn("clicked!", index);
-      this.setState({redirectDetail: true});
-    }
-
+    // componentDidMount() {
+    //   console.warn(this.refs.leaflet.leafletElement.getBounds() )
+    // }
 
     render() {
-      if (this.state.redirect) {
-        return <Redirect push to="/build_analytics" />;
+      const { getCUser } = this.props;
+      let centerLon = 37.43
+      let centerLat = 55.797
+
+      if (getCUser.user) {
+        let minLat = 100.00
+        let maxLat = 0.00
+        let minLon = 100.00
+        let maxLon = 0.00
+
+        getCUser.user.groups.map((post) => {
+
+          // console.warn(post)
+          minLat > parseFloat(post.address.coordinates[0]) ? minLat = parseFloat(post.address.coordinates[0]) : null
+          maxLat < parseFloat(post.address.coordinates[0]) ? maxLat = parseFloat(post.address.coordinates[0]) : null
+          minLon > parseFloat(post.address.coordinates[1]) ? minLon = parseFloat(post.address.coordinates[1]) : null
+          maxLon < parseFloat(post.address.coordinates[1]) ? maxLon = parseFloat(post.address.coordinates[1]) : null
+        })
+
+        // console.warn(minLat, maxLat, minLon, maxLon)
+        centerLon = (minLon + maxLon)/2
+        centerLat = (minLat + maxLat)/2
+
+        // let WORLD_DIM = { height: 256, width: 256 };
+        // let ZOOM_MAX = 21;
+
+        // let ne = bounds.getNorthEast();
+        // var sw = bounds.getSouthWest();
+
+        // var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+
+        // var lngDiff = ne.lng() - sw.lng();
+        // var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+        // var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+        // var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+        // return Math.min(latZoom, lngZoom, ZOOM_MAX);
+
+
       }
-      if (this.state.redirectDetail) {
-        return <Redirect push to="/build_info" />;
-      }        
-      const center = [55.797, 38.43];
+      if (this.state.redirect) {
+        return <Redirect push to="/" />;
+      }
+
+      const center = [centerLat, centerLon];
 
       return (
-        <Map center={center} zoom={15} style={styleLeaf} >
-
+        <Map center={center} zoom={8} style={styleLeaf} >
           <LayersControl position="topright" >
-            <BaseLayer  checked name="Цветная карта">
+            <BaseLayer  checked name="Landscape">
               <TileLayer
-                attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="GUOV"
+                url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
               />
             </BaseLayer>
+
             <BaseLayer  name="Черно-белая карта">
               <TileLayer
-                attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                attribution="GUOV"
                 url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
               />
             </BaseLayer>
-            <Overlay checked name="Образовательное учреждение">
-              <LayerGroup >
-                <Panel type="1" name="Образовательное учреждение" click={this.handleTabChange} clickDetail={this.handleTabDetail}/>
-              </LayerGroup>
-            </Overlay>
-            <Overlay checked name="Здравоохранение">
-              <LayerGroup >
-                <Panel type="2" name="Здравоохранение" click={this.handleTabChange} clickDetail={this.handleTabDetail}/>
-              </LayerGroup>
-            </Overlay>
-            <Overlay checked name="Культура">
-              <LayerGroup >
-                <Panel type="3" name="Культура"  click={this.handleTabChange} clickDetail={this.handleTabDetail}/>
-              </LayerGroup>
-            </Overlay>                                                            
-            <Overlay checked name="Спорт">
-              <LayerGroup >
-                <Panel type="4" name="Спорт"  click={this.handleTabChange} clickDetail={this.handleTabDetail}/>
-              </LayerGroup>
-            </Overlay>
+            <BaseLayer  name="OpenCycleMap">
+              <TileLayer
+                attribution="GUOV"
+                url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Цветная карта OSM " >
+              <TileLayer
+                attribution="GUOV"
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Outdoors">
+              <TileLayer
+                attribution="GUOV"
+                url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Neighbourhood">
+              <TileLayer
+                attribution="GUOV"
+                url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Toner">
+              <TileLayer
+                attribution="GUOV"
+                url="http://tile.stamen.com/toner/{z}/{x}/{y}.png"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Terrain">
+              <TileLayer
+                attribution="GUOV"
+                url="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Watercolor">
+              <TileLayer
+                attribution="GUOV"
+                url="http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Spinal Map">
+              <TileLayer
+                attribution="GUOV"
+                url="https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+              />
+            </BaseLayer>
+            <BaseLayer  name="Full Dark">
+              <TileLayer
+                attribution="GUOV"
+                url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+              />
+            </BaseLayer>
+            {
+              getCUser.user ? (
+                <Overlay checked name="Задачи новые" >
+                  <LayerGroup >
+                    <Panel type="1" name="Задача новая" data={getCUser} click={this.handleTabChange} />
+                  </LayerGroup>
+                </Overlay>) : null }
+            {
+              getCUser.user ? (
+                <Overlay checked name="Задачи неназначенные">
+                  <LayerGroup >
+                    <Panel type="2" name="Задача неназначенная" data={getCUser} click={this.handleTabChange} />
+                  </LayerGroup>
+                </Overlay>) : null }
+            {
+              getCUser.user ? (
+                <Overlay checked name="Задачи в работе">
+                  <LayerGroup >
+                    <Panel type="3" name="Задача в работе"  data={getCUser} click={this.handleTabChange} />
+                  </LayerGroup>
+                </Overlay>) : null }
+            {
+              getCUser.user ? (
+                <Overlay checked name="Задачи на согласовании">
+                  <LayerGroup >
+                    <Panel type="4" name="Задача на согласовании"  data={getCUser} click={this.handleTabChange} />
+                  </LayerGroup>
+                </Overlay>) : null }
+            {
+              getCUser.user ? (
+                <Overlay checked name="Задачи завершенные">
+                  <LayerGroup >
+                    <Panel type="5" name="Задача завершенная"  data={getCUser} click={this.handleTabChange} />
+                  </LayerGroup>
+                </Overlay>) : null }
             <ReactLeafletSearch
               position="topleft"
 
               showMarker={true}
-              zoom={5}
+              zoom={15}
               showPopup={true}
               popUp={this.customPopup}
               closeResultsOnClick={true}
@@ -114,7 +244,7 @@ export default class LeafletMap extends PureComponent {
               //     [44.55916341529184, 24.510498046875]
               //   ]
               // }
-              // providerOptions={{region: 'tr'}}
+              providerOptions={{region: 'ru'}}
 
               // default provider OpenStreetMap
               // provider="BingMap"
@@ -128,41 +258,30 @@ export default class LeafletMap extends PureComponent {
 }
 
 
-const ddd = divIcon({
-  className: "schoolRed",
-  iconSize: [50, 50],
-});
+// const ddd = divIcon({
+//   className: "schoolRed",
+//   iconSize: [50, 50],
+// });
 
 
-const Panel = ({ type, name, click, clickDetail })  => {
+const Panel = ({ data, type, name, click })  => {
+  // console.warn(data.user.groups)
+
   return (
-    newdata.map((post) =>
-      post.type == type ?
-        <Marker key={post.id} position={post.coordinates} icon={SwitchIcon(name, post.status)}> 
+    data.user.groups.map((post) =>
+      post.status == type && post.address.coordinates.length >0 ?
+        <Marker key={post.id} position={post.address.coordinates} icon={SwitchIcon(post.status)}>
           <Popup >
             <div className="modal" >
-              <div className="photo"><img src={post.photo} alt="fdd" className="photo" /></div>
-              <br/>
               <ul>
                 <li>Тип объекта: {name}</li>
                 <li>Название объекта: {post.name}</li>
-                <li>Руководитель: {post.owner}</li>
-                <li>Адрес: {post.address}</li>
-                <li>Статус:<span  style={{"verticalAlign": "-4px"}}>
-                  <span  style={{ "marginLeft":"2%"}}><Indicator tittle="По основному виду деятельности" stroke={(post.status === 3  ? "#ed4d31" : (post.status === 2 ? "#efa900" : "#7fb800"))} /></span>
-                  <span  style={{ "marginLeft":"2%"}}><Indicator tittle="Качество управления" stroke={(post.status1 === 3  ? "#ed4d31" : (post.status1 === 2 ? "#efa900" : "#7fb800"))} /></span>
-                  <span  style={{ "marginLeft":"2%"}}><Indicator tittle="Оценка деятельности" stroke={(post.status2 === 3  ? "#ed4d31" : (post.status2 === 2 ? "#efa900" : "#7fb800"))} /></span>
-                </span>
-                </li>
+                <li>Адрес объекта: {post.address.value}</li>
+                <li>Ответственный: <span className="userCloud2">{post.assignedTo ? post.assignedTo.username : null}</span></li>
+                <li>Последнее сообщение от <span className="userCloud2">{post.lastMessage ? post.lastMessage.from.username : null} </span>: <span className="msgCloud">{post.lastMessage ? post.lastMessage.text : null}</span></li>
               </ul>
-              <div className="bigButton">
-                <NavLink index={post.id} onClick1={clickDetail} btnColor={b.btnBlue}>Детальная информация</NavLink>
-              </div>
-              {/* <NavLink index={post.id} onClick1={clickDetail}>Детальная информация</NavLink> */}
-              <div className={`modal-footer ${b.third_btns}`}>
-                <NavLink index={post.id} onClick1={click} btnColor={b.btnGreen}>Аналитика</NavLink><span> </span>
-                <button type="button" className={b.btn + " " + b.btnDark}>Датчики/Счетчики</button>
-                <button type="button" className={b.btn + " " + b.btnDark}>KPI</button>
+              <div className="btn">
+                <NavLink index={post.id} name={post.name} onClick1={click} btnColor={b.btnBlue}>Детальная информация</NavLink>
               </div>
             </div>
           </Popup>
@@ -176,7 +295,7 @@ const Panel = ({ type, name, click, clickDetail })  => {
 
 class NavLink extends React.Component {
     handleClick = () => {
-      this.props.onClick1(this.props.index);
+      this.props.onClick1(this.props.index, this.props.name);
     }
     render() {
       return (
@@ -187,60 +306,24 @@ class NavLink extends React.Component {
 
 
 
-const SwitchIcon = (name, status)   => {
+const SwitchIcon = (status)   => {
   let value;
 
-  switch (name) {
-  case "Образовательное учреждение":
-    switch (status) {
-    case 2: 
-      value = "schoolYellow";
-      break;
-    case 3:
-      value = "schoolRed";
-      break;
-    default:
-      value = "schoolBlue";
-    }
+  switch (status) {
+  case 1:
+    value = "pinRed";
     break;
-  case "Здравоохранение":
-    switch (status) {
-    case 2: 
-      value = "healthYellow";
-      break;
-    case 3:
-      value = "healthRed";
-      break;
-    default:
-      value = "healthBlue";
-    }
+  case 2:
+    value = "pinYellow";
     break;
-  case "Культура":
-    switch (status) {
-    case 2: 
-      value = "cultureYellow";
-      break;
-    case 3:
-      value = "cultureRed";
-      break;
-    default:
-      value = "cultureBlue";
-    }
+  case 3:
+    value = "pinPurp";
     break;
-  case "Спорт":
-    switch (status) {
-    case 2: 
-      value = "sportYellow";
-      break;
-    case 3:
-      value = "sportRed";
-      break;
-    default:
-      value = "sportBlue";
-    }
+  case 4:
+    value = "pinBlue";
     break;
   default:
-    value = "iconBlue";
+    value = "pinGreen";
   }
 
   return divIcon({
@@ -249,3 +332,14 @@ const SwitchIcon = (name, status)   => {
   });
 };
 
+
+LeafletMap.propTypes = {
+  getCUser: PropTypes.object.isRequired,
+  setPrivateChat: PropTypes.func.isRequired
+};
+
+
+export default compose(
+  graphql(getCUser, { name: 'getCUser' }),
+  graphql(setPrivateChat, { name: 'setPrivateChat' }),
+)(LeafletMap);
