@@ -89,7 +89,7 @@ class ChangerForm extends React.Component {
     }
 
     qauf(A, _url, localStorage.getItem('auth-token')).then(a=>{
-      console.log(a)
+      // console.warn(a)
     })
       .catch((e)=>{
         console.warn(e);
@@ -108,7 +108,7 @@ class ChangerForm extends React.Component {
       defaultText = defaultText.replace(/T.*$/gi, "");
     }
 
-    addressList && addressList.map((e,i)=>console.warn("VALUE", i, e.value))
+    // addressList && addressList.map((e,i)=>console.warn("VALUE", i, e.value))
 
     if(edit){
       if(select){
