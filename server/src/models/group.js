@@ -18,6 +18,10 @@ const schema = new Schema({
     geoLon: String,
     coordinates: [String],
   },
+  type: {
+    type: String,
+    enum: ['DIRECT', 'TASK', 'PLACE'],
+  },
 });
 
 

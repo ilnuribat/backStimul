@@ -4,6 +4,7 @@ const group = require('./group');
 const message = require('./message');
 const direct = require('./direct');
 const glossary = require('./glossary');
+const object = require('./object');
 
 module.exports = mergeResolvers([
   user,
@@ -11,4 +12,5 @@ module.exports = mergeResolvers([
   message,
   direct,
   glossary,
+  object,
 ]);
