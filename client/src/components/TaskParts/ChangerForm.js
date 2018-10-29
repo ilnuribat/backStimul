@@ -42,12 +42,6 @@ class ChangerForm extends React.Component {
     this.daDataReqName(e.target.value)
   }
 
-  setAddrValue(e){
-    this.setState({
-      addressValue: e,
-    })
-  }
-
   daDataReqName (name) {
     axios(
       'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
@@ -114,6 +108,8 @@ class ChangerForm extends React.Component {
       defaultText = defaultText.replace(/T.*$/gi, "");
     }
 
+    addressList && addressList.map((e,i)=>console.warn("VALUE", i, e.value))
+
     if(edit){
       if(select){
         return (
@@ -158,20 +154,20 @@ class ChangerForm extends React.Component {
               ): null
             }
             <div className="btn" onClick={()=>{this.setState({edit: !edit})}}>Отмена</div>
-            <datalist id="addresses">
+            <datalist id="addresses" >
+
               {addressList && addressList.map((e,i)=>{
 
                 return(
                   <div className="parentQ" key={e.value}>
-                    
-                    <option key={'addr' + i} value={e.value} onClick={()=>this.setAddrValue(e.value)}>
-                      {e.value}
+                    <option key={'addr' + i} value={e.value}>
+                      {value}
                       {e.data.geo_lat && e.data.geo_lon ? (" " + e.data.geo_lat +":"+ e.data.geo_lon) : ""}
                     </option>
                   </div>
                 )})}
             </datalist>
-            
+
           </div>
         )
       }
