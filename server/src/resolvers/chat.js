@@ -9,6 +9,9 @@ const MESSAGE_READ = 'MESSAGE_READ';
 const TASK_UPDATED = 'TASK_UPDATED';
 const USER_TASK_UPDATED = 'USER_TASK_UPDATED';
 
+const GROUP_TYPES = ['DIRECT', 'TASK', 'OBJECT'];
+const ADDRESS_LEVELS = ['region', 'area', 'city', 'settlement', 'street', 'house'];
+
 const TASK_STATUSES = [{
   id: 1,
   name: 'Новое',
@@ -133,4 +136,6 @@ module.exports = {
   TASK_UPDATED,
   USER_TASK_UPDATED,
   TASK_STATUSES,
+  GROUP_TYPES,
+  ADDRESS_LEVELS,
 };

@@ -1,45 +1,16 @@
 const { Types: { ObjectId } } = require('mongoose');
 const moment = require('moment');
 const { withFilter } = require('apollo-server');
-const axios = require('axios');
 const {
   Group,
   UserGroup,
   User,
   Message,
 } = require('../models');
-const { logger } = require('../../logger');
 const {
   getPageInfo, formWhere, pubsub, TASK_UPDATED, USER_TASK_UPDATED, TASK_STATUSES,
 } = require('./chat');
-const { DADATA_API, DADATA_SECRET } = require('../../config');
-
-async function formAddress(rawAddress) {
-  logger.info('---------- make paid api request to dadata.ru ------------');
-
-  const { data: [address] } = await axios(
-    'https://dadata.ru/api/v2/clean/address',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: `Token ${DADATA_API}`,
-        'X-Secret': DADATA_SECRET,
-      },
-      data: [rawAddress],
-    },
-  );
-
-  return {
-    value: address.result,
-    coordinates: [address.geo_lat, address.geo_lon],
-    fias_id: address.fias_id,
-    fias_level: address.fias_level,
-    geoLat: address.geo_lat,
-    geoLon: address.geo_lon,
-  };
-}
+const { formAddress } = require('../services/address');
 
 module.exports = {
   Group: {
