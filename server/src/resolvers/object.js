@@ -3,7 +3,14 @@ const { Group } = require('../models');
 module.exports = {
   Query: {
     async rootObject(parent, { id: addressId }) {
+      if (!addressId) {
+        // вывести корень. потом рассчитаем кратчайший путь
+        const addresses = await Group.getGroupedLevel();
+
+        return { addresses };
+      }
       const rootObject = await Group.getFiasIdLevel(addressId);
+
       const addresses = await Group.getGroupedLevel(rootObject.level + 1, rootObject.id);
 
       return {

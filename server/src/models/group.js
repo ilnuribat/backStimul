@@ -85,7 +85,7 @@ schema.static('getGroupedLevel', async function (level = 0, parentId = null) {
     },
   }]);
 
-  return res;
+  return res.filter(a => a._id);
 });
 
 schema.static('getFiasIdLevel', async function (fiasId) {

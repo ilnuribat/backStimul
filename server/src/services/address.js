@@ -16,7 +16,6 @@ const { ADDRESS_LEVELS } = require('../resolvers/chat');
 const knex = Knex({
   client: 'pg',
   connection: PG_FIAS,
-  // debug: true,
 });
 
 async function getParentChain(fiasId) {
