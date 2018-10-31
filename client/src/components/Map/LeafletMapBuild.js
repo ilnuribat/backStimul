@@ -24,8 +24,6 @@ const styleLeaf = {
   margin: "0 0 0 50px",
   height: "100vh",
   width: "auto",
-
-
 };
 
 
@@ -42,21 +40,37 @@ function zoom(mapPx, worldPx, fraction) {
 
 
 class LeafletMap extends Component {
-    state = {
+  constructor(props){
+    super(props)
+    this.myInput = React.createRef()
+    this.state = {
       redirect: false,
+      offsetWidth: 1024,
+      offsetHeight: 768
     };
+  }
 
-    customPopup(SearchInfo) {
-      return(
-        <Popup>
-          <div>
-            <p>I am a custom popUp</p>
-            <p>latitude and longitude from search component: {SearchInfo.latLng.toString().replace(',',' , ')}</p>
-            <p>Info from search component: {SearchInfo.info}</p>
-          </div>
-        </Popup>
-      );
-    }
+
+
+  componentDidMount () {
+    this.setState({
+      offsetWidth: this.myInput.current.offsetWidth,
+      offsetHeight: this.myInput.current.offsetHeight
+    });
+  }
+
+
+  customPopup(SearchInfo) {
+    return(
+      <Popup>
+        <div>
+          <p>I am a custom popUp</p>
+          <p>latitude and longitude from search component: {SearchInfo.latLng.toString().replace(',',' , ')}</p>
+          <p>Info from search component: {SearchInfo.info}</p>
+        </div>
+      </Popup>
+    );
+  }
 
     handleTabChange = (index, name) => {
       // console.warn("clicked!", index, name);
@@ -71,14 +85,11 @@ class LeafletMap extends Component {
       this.setState({redirect: true});
     }
 
-    // componentDidMount() {
-    //   console.warn(this.refs.leaflet.leafletElement.getBounds() )
-    // }
-
     render() {
       const { getCUser } = this.props;
       let centerLon = 37.43
       let centerLat = 55.797
+      let currentZoom = 10
 
       if (getCUser.user) {
         let minLat = 100.00
@@ -88,34 +99,26 @@ class LeafletMap extends Component {
 
         getCUser.user.groups.map((post) => {
 
-          // console.warn(post)
           minLat > parseFloat(post.address.coordinates[0]) ? minLat = parseFloat(post.address.coordinates[0]) : null
           maxLat < parseFloat(post.address.coordinates[0]) ? maxLat = parseFloat(post.address.coordinates[0]) : null
           minLon > parseFloat(post.address.coordinates[1]) ? minLon = parseFloat(post.address.coordinates[1]) : null
           maxLon < parseFloat(post.address.coordinates[1]) ? maxLon = parseFloat(post.address.coordinates[1]) : null
         })
 
-        // console.warn(minLat, maxLat, minLon, maxLon)
         centerLon = (minLon + maxLon)/2
         centerLat = (minLat + maxLat)/2
 
-        // let WORLD_DIM = { height: 256, width: 256 };
-        // let ZOOM_MAX = 21;
+        const WORLD_DIM = { height: 256, width: 256 };
+        const ZOOM_MAX = 21;
 
-        // let ne = bounds.getNorthEast();
-        // var sw = bounds.getSouthWest();
+        const latFraction = (latRad(maxLat) - latRad(minLat)) / Math.PI;
+        const lngDiff = maxLon - minLon
+        const  lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
 
-        // var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+        const latZoom = zoom(this.state.offsetHeight, WORLD_DIM.height, latFraction);
+        const lngZoom = zoom(this.state.offsetWidth, WORLD_DIM.width, lngFraction);
 
-        // var lngDiff = ne.lng() - sw.lng();
-        // var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-
-        // var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
-        // var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
-
-        // return Math.min(latZoom, lngZoom, ZOOM_MAX);
-
-
+        currentZoom = Math.min(latZoom, lngZoom, ZOOM_MAX);
       }
       if (this.state.redirect) {
         return <Redirect push to="/" />;
@@ -124,135 +127,137 @@ class LeafletMap extends Component {
       const center = [centerLat, centerLon];
 
       return (
-        <Map center={center} zoom={8} style={styleLeaf} >
-          <LayersControl position="topright" >
-            <BaseLayer  checked name="Landscape">
-              <TileLayer
-                attribution="GUOV"
-                url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-              />
-            </BaseLayer>
+        <div ref={this.myInput}>
+          <Map center={center} zoom={currentZoom} style={styleLeaf}  >
+            <LayersControl position="topright" >
+              <BaseLayer  checked name="Landscape">
+                <TileLayer
+                  attribution="GUOV"
+                  url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                />
+              </BaseLayer>
 
-            <BaseLayer  name="Черно-белая карта">
-              <TileLayer
-                attribution="GUOV"
-                url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
-              />
-            </BaseLayer>
-            <BaseLayer  name="OpenCycleMap">
-              <TileLayer
-                attribution="GUOV"
-                url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-              />
-            </BaseLayer>
-            <BaseLayer  name="Цветная карта OSM " >
-              <TileLayer
-                attribution="GUOV"
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-            </BaseLayer>
-            <BaseLayer  name="Outdoors">
-              <TileLayer
-                attribution="GUOV"
-                url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-              />
-            </BaseLayer>
-            <BaseLayer  name="Neighbourhood">
-              <TileLayer
-                attribution="GUOV"
-                url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-              />
-            </BaseLayer>
-            <BaseLayer  name="Toner">
-              <TileLayer
-                attribution="GUOV"
-                url="http://tile.stamen.com/toner/{z}/{x}/{y}.png"
-              />
-            </BaseLayer>
-            <BaseLayer  name="Terrain">
-              <TileLayer
-                attribution="GUOV"
-                url="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
-              />
-            </BaseLayer>
-            <BaseLayer  name="Watercolor">
-              <TileLayer
-                attribution="GUOV"
-                url="http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
-              />
-            </BaseLayer>
-            <BaseLayer  name="Spinal Map">
-              <TileLayer
-                attribution="GUOV"
-                url="https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-              />
-            </BaseLayer>
-            <BaseLayer  name="Full Dark">
-              <TileLayer
-                attribution="GUOV"
-                url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
-              />
-            </BaseLayer>
-            {
-              getCUser.user ? (
-                <Overlay checked name="Задачи новые" >
-                  <LayerGroup >
-                    <Panel type="1" name="Задача новая" data={getCUser} click={this.handleTabChange} />
-                  </LayerGroup>
-                </Overlay>) : null }
-            {
-              getCUser.user ? (
-                <Overlay checked name="Задачи неназначенные">
-                  <LayerGroup >
-                    <Panel type="2" name="Задача неназначенная" data={getCUser} click={this.handleTabChange} />
-                  </LayerGroup>
-                </Overlay>) : null }
-            {
-              getCUser.user ? (
-                <Overlay checked name="Задачи в работе">
-                  <LayerGroup >
-                    <Panel type="3" name="Задача в работе"  data={getCUser} click={this.handleTabChange} />
-                  </LayerGroup>
-                </Overlay>) : null }
-            {
-              getCUser.user ? (
-                <Overlay checked name="Задачи на согласовании">
-                  <LayerGroup >
-                    <Panel type="4" name="Задача на согласовании"  data={getCUser} click={this.handleTabChange} />
-                  </LayerGroup>
-                </Overlay>) : null }
-            {
-              getCUser.user ? (
-                <Overlay checked name="Задачи завершенные">
-                  <LayerGroup >
-                    <Panel type="5" name="Задача завершенная"  data={getCUser} click={this.handleTabChange} />
-                  </LayerGroup>
-                </Overlay>) : null }
-            <ReactLeafletSearch
-              position="topleft"
+              <BaseLayer  name="Черно-белая карта">
+                <TileLayer
+                  attribution="GUOV"
+                  url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
+                />
+              </BaseLayer>
+              <BaseLayer  name="OpenCycleMap">
+                <TileLayer
+                  attribution="GUOV"
+                  url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                />
+              </BaseLayer>
+              <BaseLayer  name="Цветная карта OSM " >
+                <TileLayer
+                  attribution="GUOV"
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+              </BaseLayer>
+              <BaseLayer  name="Outdoors">
+                <TileLayer
+                  attribution="GUOV"
+                  url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                />
+              </BaseLayer>
+              <BaseLayer  name="Neighbourhood">
+                <TileLayer
+                  attribution="GUOV"
+                  url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                />
+              </BaseLayer>
+              <BaseLayer  name="Toner">
+                <TileLayer
+                  attribution="GUOV"
+                  url="http://tile.stamen.com/toner/{z}/{x}/{y}.png"
+                />
+              </BaseLayer>
+              <BaseLayer  name="Terrain">
+                <TileLayer
+                  attribution="GUOV"
+                  url="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
+                />
+              </BaseLayer>
+              <BaseLayer  name="Watercolor">
+                <TileLayer
+                  attribution="GUOV"
+                  url="http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
+                />
+              </BaseLayer>
+              <BaseLayer  name="Spinal Map">
+                <TileLayer
+                  attribution="GUOV"
+                  url="https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                />
+              </BaseLayer>
+              <BaseLayer  name="Full Dark">
+                <TileLayer
+                  attribution="GUOV"
+                  url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+                />
+              </BaseLayer>
+              {
+                getCUser.user ? (
+                  <Overlay checked name="Задачи новые" >
+                    <LayerGroup >
+                      <Panel type="1" name="Задача новая" data={getCUser} click={this.handleTabChange} />
+                    </LayerGroup>
+                  </Overlay>) : null }
+              {
+                getCUser.user ? (
+                  <Overlay checked name="Задачи неназначенные">
+                    <LayerGroup >
+                      <Panel type="2" name="Задача неназначенная" data={getCUser} click={this.handleTabChange} />
+                    </LayerGroup>
+                  </Overlay>) : null }
+              {
+                getCUser.user ? (
+                  <Overlay checked name="Задачи в работе">
+                    <LayerGroup >
+                      <Panel type="3" name="Задача в работе"  data={getCUser} click={this.handleTabChange} />
+                    </LayerGroup>
+                  </Overlay>) : null }
+              {
+                getCUser.user ? (
+                  <Overlay checked name="Задачи на согласовании">
+                    <LayerGroup >
+                      <Panel type="4" name="Задача на согласовании"  data={getCUser} click={this.handleTabChange} />
+                    </LayerGroup>
+                  </Overlay>) : null }
+              {
+                getCUser.user ? (
+                  <Overlay checked name="Задачи завершенные">
+                    <LayerGroup >
+                      <Panel type="5" name="Задача завершенная"  data={getCUser} click={this.handleTabChange} />
+                    </LayerGroup>
+                  </Overlay>) : null }
+              <ReactLeafletSearch
+                position="topleft"
 
-              showMarker={true}
-              zoom={15}
-              showPopup={true}
-              popUp={this.customPopup}
-              closeResultsOnClick={true}
-              openSearchOnLoad={true}
-              // // these searchbounds would limit results to only Turkey.
-              // searchBounds = {
-              //   [
-              //     [33.100745405144245, 46.48315429687501],
-              //     [44.55916341529184, 24.510498046875]
-              //   ]
-              // }
-              providerOptions={{region: 'ru'}}
+                showMarker={true}
+                zoom={15}
+                showPopup={true}
+                popUp={this.customPopup}
+                closeResultsOnClick={true}
+                openSearchOnLoad={true}
+                // // these searchbounds would limit results to only Turkey.
+                // searchBounds = {
+                //   [
+                //     [33.100745405144245, 46.48315429687501],
+                //     [44.55916341529184, 24.510498046875]
+                //   ]
+                // }
+                providerOptions={{region: 'ru'}}
 
               // default provider OpenStreetMap
               // provider="BingMap"
               // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
-            />
-          </LayersControl>
+              />
+            </LayersControl>
 
-        </Map>
+          </Map>
+        </div>
       );
     }
 }
