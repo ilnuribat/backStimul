@@ -13,9 +13,18 @@ module.exports = {
 
       const addresses = await Group.getGroupedLevel(rootObject.level + 1, rootObject.id);
 
+      let objects;
+
+      if (addressId) {
+        objects = await Group.find({
+          'address.fiasId': addressId,
+        });
+      }
+
       return {
         ...rootObject,
         addresses,
+        objects,
       };
     },
     async object() {
