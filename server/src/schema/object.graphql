@@ -6,6 +6,9 @@ type AddressObject {
 }
 
 type rootObject {
+  id: ID
+  name: String
+  parentId: ID
   addresses: [AddressObject]
   objects: [Object]
 }

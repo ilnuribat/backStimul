@@ -17,6 +17,7 @@ input GroupInput {
   status: Int
   assignedTo: ID
   endDate: String
+  address: String
 }
 
 input UsersGroupInput {

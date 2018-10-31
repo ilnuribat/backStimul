@@ -1,41 +1,36 @@
 const { Schema } = require('mongoose');
 const { GROUP_TYPES, ADDRESS_LEVELS } = require('../resolvers/chat');
 
-// 'region', 'area', 'city', 'settlement', 'street', 'house'
-const [
-  regionSchema,
-  areaSchema,
-  citySchema,
-  settlementSchema,
-  streetSchema,
-  houseSchema,
-] = ADDRESS_LEVELS.map(() => new Schema({
-  name: String,
-  fias_id: String,
-  type: String,
-  full: String,
-}));
+const addressLevelSchema = new Schema({
+  name: String, // Каран-Кункас
+  fiasId: String,
+  type: String, // с
+  full: String, // с Каран-Кункас
+});
 
 const parentChainItem = new Schema({
-  fias_id: String,
+  fiasId: String,
   type: String,
+  parentId: String,
+  name: String,
 });
 
-const addressSchema = new Schema({
+const addressDefinition = {
   value: String,
-  fias_id: String,
-  fias_level: String,
-  geoLat: String,
-  geoLon: String,
+  fiasId: String,
+  fiasLevel: String,
+  geoLat: String, // deprecated
+  geoLon: String, // deprecated
   coordinates: [String],
-  region: regionSchema,
-  area: areaSchema,
-  city: citySchema,
-  settlement: settlementSchema,
-  street: streetSchema,
-  house: houseSchema,
   parentChain: [parentChainItem],
+};
+
+// ['region', 'area', 'city', 'settlement', 'street', 'house']
+ADDRESS_LEVELS.forEach((level) => {
+  addressDefinition[level] = addressLevelSchema;
 });
+
+const addressSchema = new Schema(addressDefinition);
 
 const schema = new Schema({
   name: String,
@@ -63,6 +58,68 @@ schema.index({ code: 1 }, {
       $exists: true,
     },
   },
+});
+
+schema.static('getGroupedLevel', async function (level = 0, parentId = null) {
+  const res = await this.aggregate([{
+    $project: {
+      chain: {
+        $arrayElemAt: ['$address.parentChain', level],
+      },
+    },
+  }, {
+    $match: {
+      'chain.parentId': parentId,
+    },
+  }, {
+    $group: {
+      _id: '$chain.fiasId',
+      name: {
+        $first: '$chain.name',
+      },
+    },
+  }, {
+    $project: {
+      id: '$_id',
+      name: 1,
+    },
+  }]);
+
+  return res;
+});
+
+schema.static('getFiasIdLevel', async function (fiasId) {
+  const [res] = await this.aggregate([{
+    $unwind: {
+      path: '$address.parentChain',
+      includeArrayIndex: 'index',
+    },
+  }, {
+    $match: {
+      'address.parentChain.fiasId': fiasId,
+    },
+  }, {
+    $group: {
+      _id: '$address.parentChain.parentId',
+      level: {
+        $first: '$index',
+      },
+      name: {
+        $first: '$address.parentChain.name',
+      },
+      type: {
+        $first: '$address.parentChain.type',
+      },
+      parentId: {
+        $first: '$address.parentChain.parentId',
+      },
+      id: {
+        $first: '$address.parentChain.fiasId',
+      },
+    },
+  }]);
+
+  return res;
 });
 
 module.exports = schema;

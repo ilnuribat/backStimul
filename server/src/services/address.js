@@ -1,14 +1,17 @@
-const { readFileSync, writeFileSync } = require('fs');
+const {
+  readFileSync,
+  // writeFileSync,
+} = require('fs');
+// const axios = require('axios');
 const Knex = require('knex');
-const axios = require('axios');
 const {
   PG_FIAS,
-  DADATA_API,
-  DADATA_SECRET,
+  // DADATA_API,
+  // DADATA_SECRET,
 } = require('../../config');
-const { logger } = require('../../logger');
+// const { logger } = require('../../logger');
 const { ADDRESS_LEVELS } = require('../resolvers/chat');
-const { Group } = require('../models');
+// const { Group } = require('../models');
 
 const knex = Knex({
   client: 'pg',
@@ -17,13 +20,31 @@ const knex = Knex({
 });
 
 async function getParentChain(fiasId) {
-  const res = await knex.raw(`
-    SELECT rtf_aoguid as fias_id, rtf_shorttypename as type
+  let { rows } = await knex.raw(`
+    SELECT 
+      rtf_aoguid as "fiasId",
+      rtf_shorttypename as type,
+      rtf_addressobjectname as name
     FROM fstf_AddressObjects_AddressObjectTree('${fiasId}')
     ORDER BY rtf_AOLevel;
   `);
 
-  return res.rows;
+  let parent = null;
+
+
+  rows = rows.map((r) => {
+    Object.assign(r, { parentId: parent });
+    parent = r.fiasId;
+
+    return {
+      parentId: r.parentId,
+      type: r.type,
+      fiasId: r.fiasId,
+      name: r.name,
+    };
+  });
+
+  return rows.filter(r => r.fiasId !== null);
 }
 
 
@@ -53,8 +74,8 @@ async function formAddress(rawAddress) {
   const result = {
     value: address.result,
     coordinates: [address.geo_lat, address.geo_lon],
-    fias_id: address.fias_id,
-    fias_level: address.fias_level,
+    fiasId: address.fias_id,
+    fiasLevel: address.fias_level,
     geoLat: address.geo_lat,
     geoLon: address.geo_lon,
   };
@@ -64,65 +85,34 @@ async function formAddress(rawAddress) {
   levels.forEach((l) => {
     result[l] = {
       name: address[`${l}`],
-      fias_id: address[`${l}_fias_id`],
+      fiasId: address[`${l}_fias_id`],
       type: address[`${l}_type`],
       full: address[`${l}_with_type`],
     };
   });
 
-  const fiasId = result.house.fias_id ? result.street.fias_id : result.fias_id;
+  const fiasId = result.house.fiasId ? result.street.fiasId : result.fiasId;
 
   result.parentChain = await getParentChain(fiasId);
-
-  // console.log(result);
 
   return result;
 }
 
 async function test() {
-  const addresses = await Promise.all([
-    formAddress('Москва, ул Бакунинская'),
-    formAddress('Миякинский район, каран кункас, ул Победы'),
-    formAddress('Уфа, ул Кольцевая'),
-    formAddress('Респ Башкортостан, г Баймак, ул А.Алибаева'),
-    formAddress('Респ Башкортостан, г Сибай, ул Айсувака'),
-  ]);
-
-  console.log(addresses[0]);
+  // const addresses = await Promise.all([
+  //   formAddress('Респ Башкортостан, Миякинский р-н, село Ильчигулово, ул Октябрьская'),
+  //   formAddress('Москва, ул Бакунинская'),
+  //   formAddress('Миякинский район, каран кункас, ул Победы'),
+  //   formAddress('Уфа, ул Кольцевая'),
+  //   formAddress('Респ Башкортостан, г Баймак, ул А.Алибаева'),
+  //   formAddress('Респ Башкортостан, г Сибай, ул Айсувака'),
+  // ]);
 
   // await Group.insertMany(addresses.map(a => ({
   //   name: 'group',
   //   address: a,
   // })));
 }
-
-/*
-db.getCollection('groups').aggregate([{
-//     $match: {
-//         _id: {
-//             $ne: ObjectId('5bd8b2e22a651e44cfcf09ae')
-//         }
-//     }
-// }, {
-    $project: {
-        address: 1,
-        chain: {
-            $arrayElemAt: ['$address.parentChain', 0]
-        }
-    }
-}, {
-    $group: {
-        _id: '$chain.fias_id'
-    }
-}, {
-    $group: {
-        _id: 1,
-        sum: {
-            $sum: 1
-        }
-    }
-}])
-*/
 
 test();
 
