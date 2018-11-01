@@ -168,12 +168,8 @@ class LeftNav extends Component {
 
   render () {
 
-    let {__back, __info} = this.state;
+    let {__back } = this.state;
     let {getInfo} = this.props;
-
-
-    console.log("getInfo")
-    console.log(getInfo)
 
     return(
       <Fragment>
@@ -193,8 +189,8 @@ class LeftNav extends Component {
           <Map />
           <Top />
 
-          <div style={{background: "#FFF", height:"40px", textAlign:"center"}} onClick={()=>{this.props.setInfo({variables:{id:"id",message:"ПОШЁЛ НАХУЙ!", type:"Error"}})}}>
-            Ты
+          <div style={{background: "#FFF", height:"0px", textAlign:"center"}} onClick={()=>{this.props.setInfo({variables:{id:"id",message:"ПОШЁЛ НАХУЙ!", type:"Error"}})}}>
+            
           </div>
 
           {__back ? <BtnBack /> : null}
