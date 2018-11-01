@@ -191,7 +191,8 @@ class Top extends React.Component {
       this.props.setInfo({variables:{id:"id",message:"Не трогай эту штуку!", type:"error"}})
       const __back = localStorage.getItem('back'); 
       
-      this.setState({__back: __back})
+      this.setState({rootId: __back});
+      localStorage.setItem('back','')
 
       let url = "localhost:4000";
 
@@ -254,6 +255,9 @@ class Top extends React.Component {
               console.log(data)
               console.log("getDash2");
               console.log(getDash);
+
+
+              data.rootObject.parentId ? localStorage.setItem('back', data.rootObject.parentId) : null;
 
               if(getDash){
 

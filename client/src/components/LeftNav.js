@@ -193,7 +193,7 @@ class LeftNav extends Component {
             
           </div>
 
-          {__back ? <BtnBack /> : null}
+          {localStorage.getItem('back') ? <BtnBack /> : null}
           
           <Query query={TASKS_QUERY} >
             {({ loading, error, data, refetch, subscribeToMore }) => {
