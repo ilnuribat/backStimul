@@ -41,6 +41,7 @@ const QUERY_ROOT = gql`
     rootObject{
       id
       name
+      parentId
       addresses{
         id
         name
@@ -59,6 +60,7 @@ query rootObject($id: ID){
     rootObject(id: $id){
       id
       name
+      parentId
       addresses{
         id
         name
@@ -186,7 +188,7 @@ class Top extends React.Component {
 
     componentDidMount(){
 
-      this.props.setInfo({variables:{id:"id",message:"Хер вам, а не консервы!", type:"error"}})
+      this.props.setInfo({variables:{id:"id",message:"Не трогай эту штуку!", type:"error"}})
       const __back = localStorage.getItem('back'); 
       
       this.setState({__back: __back})
@@ -200,6 +202,13 @@ class Top extends React.Component {
     }
     componentDidUpdate(){
 
+    }
+
+    backToThePast(id){
+      let backid = id || '';
+        this.setState({
+          rootId: backid,
+        })
     }
 
   render(){
@@ -256,8 +265,8 @@ class Top extends React.Component {
                   <div className="inner">
                     {id ? (<div className="header">{id}</div>) : null }
                     {name ? (<div className="header">{name}</div>) : null }
-                    {__back ? (
-                    <div className="makeTile" >
+                    {data.rootObject ? (
+                    <div className="makeTile" onClick={()=>this.backToThePast(data.rootObject.parentId)}>
                       <div className="inner" >
                         <SvgBack />
                       </div>
