@@ -665,3 +665,29 @@ export const getBar = gql`
     comp @client
       }
 `;
+
+export const setInfo = gql`
+  mutation setInfo($id: String, $message: String, $type:String){
+    setInfo(id: $id, message: $message, type: $type) @client{
+      id
+      message
+      type
+    }
+  }
+`;
+export const delInfo = gql`
+  mutation delInfo($id: String){
+    delInfo(id: $id) @client{
+      id
+    }
+  }
+`;
+export const getInfo = gql`
+          query Info {
+            __info @client{
+              id
+              message
+              type
+            }
+          }
+`;

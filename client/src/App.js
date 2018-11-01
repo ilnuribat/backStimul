@@ -8,6 +8,7 @@ import TaskView from './components/TaskView';
 import aBoard from './components/aBoard';
 import Private from './components/Private';
 import Map from './components/Map/LeafletMapBuild';
+import TopParent from './components/TopParent';
 import { AUTH_TOKEN } from './constants';
 
 
@@ -100,6 +101,7 @@ class App extends Component {
             <LeftNav lstate={this._lbarstate} client={this.props.client} />
             <Switch>
               <Route exact path="/aboard" component={aBoard} />
+              <Route exact path="/top" component={TopParent} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/map" component={Map} />
               <Route exact path="/" render={(props) => <TaskView {...props} />} />

@@ -58,6 +58,7 @@ const stateLink = withClientState({
     mename: "",
     memail: "",
     tempObj:"",
+    __info:[],
     ref: false,
     ActUrl: "",
     bar: false,

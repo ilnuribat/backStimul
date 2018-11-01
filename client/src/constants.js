@@ -38,8 +38,11 @@ export const quf = (query) => {
     .then(data => data)
 };
 export const qauf = (query, uri, auth) => {
-
-  return fetch(`http://${_url}/`, {
+  let url = _url;
+  if(uri){
+    url = uri;
+  }
+  return fetch(`http://${url}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

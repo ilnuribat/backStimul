@@ -13,7 +13,7 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-react": "^7.11.1",
-    "react-scripts": "^1.1.5",
+    "react-scripts": "1.1.5",
     "uglify-js": "^3.4.9",
     "uglifyify": "^5.0.1"
   },
@@ -32,6 +32,7 @@
     "apollo-utilities": "^1.0.21",
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
+    "beautiful-scrollbar": "^0.1.6",
     "belle": "^4.0.0",
     "buffer": "^5.2.1",
     "color-hash": "^1.0.3",
@@ -58,6 +59,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "4.3.1",
     "react-toolbox": "^2.0.0-beta.13",
+    "simplebar": "^3.1.0-beta.2",
     "socket.io-client": "^2.1.1",
     "subscriptions-transport-ws": "^0.9.14",
     "tachyons": "4.11.1"

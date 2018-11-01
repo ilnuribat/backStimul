@@ -1,0 +1,39 @@
+.svg-close svg{
+  fill: #d81f1f;
+}
+
+.makeTile{
+  display: inline-block;
+  overflow: hidden;
+  width:220px;
+  height:200px;
+  background: #00000028;
+  margin: 2px;
+}
+.makeTile:hover{
+  background: #0000005e;
+}
+.makeTile .inner{
+  display: flex;
+  text-align: center;
+  cursor: pointer;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+}
+.makeTile svg{
+  display: inline-block;
+  fill: rgba(172, 255, 47, 0.486);
+  width: 96px;
+  height: 96px;
+}
+
+.svg-back{
+  display: block;
+  margin:0 auto;
+  text-align: center;
+}
+.svg-back svg{
+  display: block;
+  width: 100%;
+}

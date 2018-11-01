@@ -1,20 +1,24 @@
 @import 'https://fonts.googleapis.com/css?family=Open+Sans:300, 400';
-@import './css/column.css';
-@import './css/task.css';
-@import './css/input.css';
-@import './css/buttons.css';
-@import './css/modal.css';
+
 
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   font: inherit;
   font-size: 100%;
   vertical-align: baseline;
-  outline: none;
+  /* outline: none; */
   margin: 0;
   padding: 0;
   border: 0;
   box-sizing: border-box;
 }
+html {
+  overflow-y: scroll;
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+
 div{
   display: block;
   box-sizing: border-box;
@@ -89,9 +93,7 @@ body {
   height: 20px;
 }
 
-a,a:hover,a:active,a:visited{
-  text-decoration: none;
-}
+
 
 h1,h2,h3,h4{
   padding:5px 10px;
@@ -166,66 +168,6 @@ nav .indic.g{
   color:#999;
 }
 
-.card{
-  position: relative;
-  display: inline-block;
-  width:300px;
-  border:1px solid #08415cc9;
-  background:#08415cc9;
-  border-radius: 6px;
-  padding:10px;
-  min-height: 220px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-  display: inline-flex;
-  flex-direction: column;
-}
-.card:hover{
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-}
-.card-name{
-  width:100%;
-  color:#c2c2c2 !important;
-}
-.card-id{
-  color:#fafafa !important;
-}
-.card .semafor{
-  text-decoration: none;
-  position: absolute;
-  margin:0 auto;
-  top:auto;
-  left:auto;
-  right:auto;
-  bottom:0;
-  text-align: center;
-  color:#333;
-}
-.card .semafor > span{
-  box-sizing: border-box;
-  width:20px;
-  width:40px;
-  height:20px;
-  display: inline-block;
-  border-radius: 999em;
-  border-radius: 5px;
-  font-size:12px;
-  padding:5px;
-  margin:5px;
-}
-.card .semafor > span.y{background: #ffe923d5;}
-.card .semafor > span.g{background: #7bff23d5;}
-.card .semafor > span.r{background: #ff3d23d5;}
-
-
-
-
-.card.create{
-  height:90px;
-  min-height:90px;
-  background: #96b4b0;
-}
-
 
 .small{
   font-size: 10px;
@@ -245,10 +187,7 @@ nav .indic.g{
   height:100%;
   max-width:1024px;
 }
-.card{
-  display: inline-block;
 
-}
 html,body{
   box-sizing: border-box;
   width:100%;
@@ -413,10 +352,7 @@ width:auto;
 max-width:300% !important;
 height:100%;
 }
-.card{
-  border-radius: 0px;
-  margin:1px;
-}
+
 .colHeader{
   background: rgba(22, 34, 44, 0.404);
   padding:10px;
@@ -535,7 +471,7 @@ select{
 }
 
 svg{
-  /* cursor:pointer; */
+  cursor:pointer;
   /* border-radius:999em; */
   width:48px;
   height: 48px;
@@ -562,9 +498,6 @@ svg:hover{
 
 
 
-.card{
-  /* cursor:pointer; */
-}
 .add{
   text-align: center;
   padding: 50px;
@@ -601,9 +534,7 @@ svg:hover{
 .left-bar-inner.favor .scroller,.left-bar-inner.fire .scroller{
   padding:10px;
 }
-.card{
-  position: relative;
-}
+
 .add-favorite, .add-fav{
   fill:rgba(255, 238, 0, 0.37);
   position: absolute;
@@ -663,22 +594,8 @@ svg:hover{
   text-align: center;
   border-radius: 5px;
 }
-.card{
-  position: relative;
-}
-.card .hover{
-  display: none;
 
-}
-.card:hover .delete{
-  display: block;
-  position: absolute;
-  bottom: 10px;
-  left:10px;
-}
-.card:hover .add-favorite{
-  display: block;
-}
+
 .chkbx-frame{
   padding:10px 0px;
 }
@@ -705,52 +622,14 @@ width:100px;
   overflow: hidden;
   background: rgb(255, 255, 255);
 }
-/* .card .open{
-  position: absolute;
-  bottom:10px;
-} */
+
 
 .mess{
   background: rgba(255, 0, 191, 0.651);
   padding:20px;
   margin:2px auto;
 }
-.tile{
-  display: inline-block;
-  position: relative;
-  background: #21313F;
-  border: 1px solid #1B2126;
-  margin:2px;
-  box-sizing: border-box;
-  width:280px;
-  min-width: 280px;
-  min-height:220px;
-  padding:10px;
-  /* cursor:pointer; */
-  color:#FFF;
-  overflow: hidden;
 
-}
-.tile-name, .column-name{
-  font-size: 20px;
-  font-weight: bold;
-  width:100%;
-  padding:10px;
-  display: block;
-  background: rgb(32, 59, 80);
-  margin: 0 0 5px;
-  border-radius: 6px;
-}
-.tile-id{
-  color: rgb(178, 194, 207);
-  font-size: 10px;
-}
-
-.tile-cod{
-  font-size: 12px;
-  color: rgb(178, 194, 207);
-  margin:5px auto 0;
-}
 .hov{
   display:none;
 }
@@ -958,7 +837,6 @@ width:100px;
   max-height: 85%;
   min-height: 80%;
 }
-
 
 
 .list{
@@ -1368,7 +1246,7 @@ textarea{
   text-align: left;
   margin: 5px auto;
   position: relative;
-  /* cursor: pointer; */
+  cursor: pointer;
 }
 .user-private:hover{
   background: #6daec48e;
@@ -1408,7 +1286,7 @@ textarea{
   padding:10px;
   background: #1B2126;
   margin:5px auto;
-  /* cursor:pointer; */
+  cursor:pointer;
   height:48px;
   overflow: hidden;
 }
@@ -1505,7 +1383,6 @@ body, html, root { min-width: 300px;
   background: rgba(27, 33, 38, 0.253);
   padding:5px;
   text-align: left;
-  text-decoration: none;
 }
 
 @media screen {
@@ -1594,7 +1471,6 @@ select option{
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05); */
 }
 .btn.v2{
-  height:auto;
   width:auto;
   height:auto;
   max-width: 100%;
@@ -1711,3 +1587,51 @@ a:active svg,.nav-button.active svg{
 .a{
   outline: 0px none transparent !important;
 }
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track-piece  {
+  background-color: rgba(194, 210, 228, 0.055);
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  border-radius: 999em;
+  width:5px;
+  background-color: rgba(10, 75, 149, 0.397);
+}
+
+::-webkit-scrollbar-track{
+	background-color: rgba(105, 105, 105, 0.562);
+}
+
+::-webkit-scrollbar{
+	background-color: rgba(153, 153, 153, 0.226);
+}
+
+::-webkit-scrollbar-thumb{
+	background-color: rgba(10, 75, 149, 0.397);
+}
+body {
+  scrollbar-base-color: rgba(18, 133, 141, 0.616);
+  scrollbar-3dlight-color: rgba(192, 192, 192, 0);
+  scrollbar-highlight-color: rgba(192, 192, 192, 0);
+  scrollbar-track-color: rgba(235, 235, 235, 0.178);
+  scrollbar-arrow-color: rgba(0, 0, 0, 0);
+  scrollbar-shadow-color: rgba(192, 192, 192, 0);
+  scrollbar-dark-shadow-color: rgba(192, 192, 192, 0);
+}
+
+
+@import './css/column.css';
+@import './css/card.css';
+@import './css/task.css';
+@import './css/input.css';
+@import './css/buttons.css';
+@import './css/modal.css';
+@import './css/tile.css';
+@import './css/rootWrapper.css';
+@import './css/svg.css';
+@import './css/info.css';
+@import './css/butter.css';

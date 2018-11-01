@@ -9,6 +9,25 @@ export default {
 
       return {ref, __typename: 'ref' };
     },
+    setInfo: (_, { id, message, type },  { cache }) => {
+
+      const { __info } = cache.readQuery({
+        query: gql`
+          query Info {
+            __info{
+              id
+              message
+              type
+            }
+          }
+        `,
+      });
+      let newInfo = [...__info, {id: id, message: message, type: type}]
+
+      cache.writeData({ data: { __info: newInfo, } });
+
+      return {id, message, type , __typename: '__Info' };
+    },
 
     // tempObj: (_, { tempObj },  { cache }) => {
     //   cache.writeData({ data: { tempObj: tempObj, } });
@@ -16,6 +35,11 @@ export default {
     //   return {tempObj, __typename: 'tempObj' };
     // },
 
+    setDash: (_, { Dash },  { cache }) => {
+      cache.writeData({ data: { Dash: Dash, } });
+
+      return {Dash, __typename: 'Dash' };
+    },
     changeGroup: (_, { currentGroup, groupName = 'noname' },  { cache }) => {
       cache.writeData({ data: { currentGroup: currentGroup, groupName: groupName } });
 
