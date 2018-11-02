@@ -1,0 +1,13 @@
+.makeTask{
+  cursor: pointer;
+}
+.makeTask:hover svg{
+  fill: rgb(91, 150, 64);
+}
+.makeTaskForm form{
+  display: block;
+}
+.makeTaskForm{
+  background: rgba(0,0,0,.5);
+  padding:10px;
+}

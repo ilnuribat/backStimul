@@ -7,7 +7,6 @@ import { qauf, _url } from '../constants';
 import Column from './BoardParts/Column';
 import DataQuery from './BoardParts/DataQuery';
 import Loading from './Loading';
-import BtnBack from './btnBack';
 // import anime from 'animejs';
 
 
@@ -110,7 +109,8 @@ class Board extends Component {
               if(!e.name){
                 return true;
               }
-              return <Column data-simplebar key={"column"+e.id} name={e.name} tasks={cols[i]} selectTask={this.selectTask} />
+
+              return <Column data-simplebar key={"column"+e.id} name={e.name} tasks={cols[i]} selectTask={this.selectTask} first={i===1 ? (1) : (0)} />
             })
           }
         </div>

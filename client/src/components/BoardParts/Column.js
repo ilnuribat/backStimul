@@ -8,7 +8,7 @@ const Column = ({...props})=>{
       <div className="column-name">{props.name}</div>
       <div className="column-content">
         {
-          props.tasks.map((e)=>{
+          props.tasks && props.tasks.map((e)=>{
             let obj = {id: e.id, name: e.name };
             let time = "";
 
