@@ -1,18 +1,18 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import gql from 'graphql-tag'
-import { Mutation } from "react-apollo"
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import gql from 'graphql-tag';
+import { Mutation } from "react-apollo";
 import { SvgClose2 } from '../Svg';
 import 'animate.css';
 import { qauf } from '../../constants';
 import { createDirect } from '../../graph/querys';
-
+import axios from 'axios';
 
 
 
 const MAKE_TASK = gql`
-  mutation MakeTile($name: String) {
-    createObject(object: { name: $name }) {
+  mutation MakeTask($name: String) {
+    createTask(task: { name: $name }) {
       id
       name
     }

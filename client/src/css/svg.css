@@ -24,8 +24,8 @@
 .makeTile svg{
   display: inline-block;
   fill: rgba(172, 255, 47, 0.486);
-  width: 96px;
-  height: 96px;
+  width: 64px;
+  height: 64px;
 }
 
 .svg-back{

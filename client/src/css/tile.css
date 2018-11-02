@@ -39,10 +39,38 @@
   background: rgb(16, 29, 39);
 }
 
-.makeTile form{
+.makeTileWrap{
+  position: fixed;
+  width:100%;
+  z-index: 99;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.makeTileForm{
+  flex:1;
+  background: rgb(16, 29, 39);
+  position: relative;
+  min-width: 300px;
+  width:100%;
+  max-width: 600px;
+  padding: 50px;
+  overflow: hidden;
+}
+.makeTileForm input,.makeTileForm input[type="list"]{
+  position: relative;
+  box-sizing: border-box;
+  width: 100% !important;
+  min-width: 200px !important;
   display: block;
 }
-.makeTile form > div{
+
+
+.makeTileForm form{
+  display: block;
+}
+.makeTileForm form > div{
   display: block;
   float: none;
   clear: both;

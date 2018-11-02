@@ -6,12 +6,7 @@ import Info from './Info';
 import { compose, graphql, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { SvgBack } from './Svg';
-import { getCUser, setPrivateChat, getPrivateChat, getTemp, setTemp, getInfo, delInfo, setInfo } from '../graph/querys';
-// import Board from './board';
-// import { Route, Switch } from 'react-router-dom';
-// import { Redirect } from 'react-router'
-
-
+import { getCUser, setPrivateChat, getPrivateChat, getTemp, setTemp, delInfo, setInfo } from '../graph/querys';
 
 
 export const getDashboard = gql`
@@ -36,25 +31,6 @@ export const setDashboard = gql`
   }
 `;
 
-const QUERY_ROOT = gql`
-{
-    rootObject{
-      id
-      name
-      parentId
-      addresses{
-        id
-        name
-        __typename
-      }
-      objects{
-        id
-        name
-        __typename
-      }
-    }
-}
-`;
 const QUERY_ROOTID = gql`
 query rootObject($id: ID){
     rootObject(id: $id){
@@ -77,9 +53,9 @@ query rootObject($id: ID){
 
 
 class Top extends React.Component {
-    constructor(props) {
-      super(props)
-      this.state = {
+  constructor(props) {
+    super(props)
+    this.state = {
         __back:'',
         isHidden: true,
         id:'',
@@ -91,36 +67,16 @@ class Top extends React.Component {
       }
       this.query = this.query.bind(this)
     }
-
     query(e, type,name){
 
       localStorage.setItem('back',e)
 
-      let rootId;
       if(e){
         this.setState({rootId: e});
-        console.log("E-------------")
-        console.log(e)
       }
       
 
       if(type === 'object'){
-        let object = (id) => `
-        {
-            object(id:${id}){
-                id
-                name
-                tasks{
-                  id
-                  name
-                }
-              }
-            }
-        `;
-
-        console.log("type,e,name")
-        console.log(type,e,name)
-
         this.props.setChat({
           variables:{
               id: e,
@@ -136,71 +92,20 @@ class Top extends React.Component {
       }else if(type === 'task'){
 
       }else{
-      //   rootId = (id) =>{
-      //     let params = '';
-      //     if(!!id){
-      //       params = `(id:"${id}")`;
-      //     }
-      //   return(`
-      //   {
-      //       rootObject${params}{
-      //         id
-      //         name
-      //         addresses{
-      //           id
-      //           name
-      //         }
-      //         objects{
-      //           id
-      //           name
-      //         }
-      //       }
-      //   }
-      //   `)};
-      //   console.log(rootId(e));
-      //         qauf(rootId(e), url, localStorage.getItem('auth-token')).then(a=>{
-      //   console.log("a")
-      //   console.log(a)
-      //   if(a && a.data && a.data.rootObject){
-      //     this.setState({
-      //       id: a.data.rootObject._id,
-      //       name: a.data.rootObject.name,
-      //       childs: [...a.data.rootObject.objects]
-      //     });
-      //   }else{
-      //     console.log("Загрузка")
-      //   }
-      // })
-      //   .catch((e)=>{
-      //     console.warn(e);
-      //   });
+
       }
-      let url = "localhost:4000";
-
-
-
-      // alert(e)
-      
-      console.log(e);
-
 
     }
-
     componentDidMount(){
 
       this.props.setInfo({variables:{id:"id",message:"Не трогай эту штуку!", type:"error"}})
-      const __back = localStorage.getItem('back'); 
+      const __back = localStorage.getItem('back');
       
       this.setState({rootId: __back});
       localStorage.setItem('back','')
 
-      let url = "localhost:4000";
-
-      let id;
-      if(__back){
-        id = __back;
-      }
     }
+
     componentDidUpdate(){
 
     }
@@ -214,14 +119,8 @@ class Top extends React.Component {
 
   render(){
 
-
-
-    let {id,name,childs,__back,object,rootId} = this.state;
-    let {Dash, getDash, setDash} = this.props;
-
-
-    console.log("getDash");
-    console.log(getDash);
+    let {id,name,object,rootId} = this.state;
+    let {getDash} = this.props;
 
     if(object){
       const {Redirect} = require('react-router');
@@ -230,38 +129,20 @@ class Top extends React.Component {
       )
     }
 
-    let QUERY;
     let ROOTID="";
     if(rootId){
-      ROOTID == rootId
-      QUERY = QUERY_ROOTID
-    }else{
-      QUERY = QUERY_ROOT
+      ROOTID = rootId
     }
 
-    console.log("QUERY")
-    console.log(QUERY)
-    console.log("ROOTID")
-    console.log(ROOTID)
       return(
 
-        <Query query={QUERY} variables={{id: rootId}}>
+        <Query query={QUERY_ROOTID} variables={{id: ROOTID}}>
           {({ loading, error, data, refetch }) => {
             if (loading) return "Loading...";
             // if (error) console.log(`Error! ${error.message}`);
 
             if(data){
-              console.log("data-------------------------");
-              console.log(data);
-              console.log("getDash2");
-              console.log(getDash);
-
-
               data.rootObject && data.rootObject.parentId ? localStorage.setItem('back', data.rootObject.parentId) : null;
-
-              if(getDash){
-
-              }
 
               return(
                 <div className="rootWrapper">
@@ -294,8 +175,6 @@ class Top extends React.Component {
                             })
                     }
 
-        
-        
                     <TileMaker />
                     
                   </div> 
@@ -308,77 +187,6 @@ class Top extends React.Component {
           }}
         </Query>
       )
-
-      console.log("getDash3")
-      console.log(getDash)
-
-      return "----------------------------"
-
-        return(
-          <div className="rootWrapper">
-            <div className="fullWrapper">
-            <div className="inner">
-              {id ? (<div className="header">{id}</div>) : null }
-              {name ? (<div className="header">{name}</div>) : null }
-              
-              {
-                      getDash && getDash.rootObject && getDash.rootObject.objects.map((e)=>{
-                        let props;
-                        return(
-                          <Tile _id={e._id} name={e.name} query={this.query} />
-                        )
-                      })
-              }
-  
-  
-              <TileMaker ref={this.query} />
-              <Info type={"error"} message={"Ошибка"} />
-            </div> 
-            </div> 
-          </div> 
-        )
-
-
-
-
-
-
-
-
-    
-
-    // if(childs && childs.length > 0){
-    //   return(
-    //     <div className="rootWrapper">
-    //       <div className="fullWrapper">
-    //       <div className="inner">
-    //         {id ? (<div className="header">{id}</div>) : null }
-    //         {name ? (<div className="header">{name}</div>) : null }
-            
-    //         {
-    //                 childs.map((e)=>{
-    //                   let props;
-    //                   return(
-    //                     <Tile _id={e._id} name={e.name} query={this.query} />
-    //                   )
-    //                 })
-    //         }
-
-
-    //         <TileMaker ref={this.query} />
-    //         <Info type={"error"} message={"Ошибка"} />
-    //       </div> 
-    //       </div> 
-    //     </div> 
-    //   )
-    // }else{
-    //   return(
-    //     <div className="rootWrapper">
-    //       <Info />
-    //     </div> 
-    //   )
-      
-    // }
   }
 }
 

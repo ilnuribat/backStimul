@@ -545,6 +545,9 @@ query getCUser{
 }`;
 
 
+
+
+
 export const GRU_QUERY = gql`
   query group($id: ID!){
       group(id: $id ){
