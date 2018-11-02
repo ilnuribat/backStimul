@@ -1,6 +1,13 @@
 const { Group } = require('../models');
 
 module.exports = {
+  Object: {
+    async tasks(parent) {
+      return Group.find({
+        objectId: parent.id,
+      });
+    },
+  },
   Query: {
     async rootObject(parent, { id: addressId }) {
       if (!addressId) {
@@ -27,11 +34,8 @@ module.exports = {
         objects,
       };
     },
-    async object() {
-      return {
-        id: 1,
-        name: 'object test',
-      };
+    async object(parent, { id }) {
+      return Group.findById(id);
     },
   },
   Mutation: {

@@ -13,4 +13,5 @@ module.exports = mergeTypes([
   getSchema('direct'),
   getSchema('glossary'),
   getSchema('object'),
+  getSchema('task'),
 ]);

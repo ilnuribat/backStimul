@@ -40,6 +40,7 @@ const schema = new Schema({
   assignedTo: Schema.Types.ObjectId,
   endDate: Date,
   address: addressSchema,
+  objectId: Schema.Types.ObjectId,
   type: {
     type: String,
     enum: GROUP_TYPES,

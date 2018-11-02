@@ -1,6 +1,4 @@
-const { Types: { ObjectId } } = require('mongoose');
 const moment = require('moment');
-const { withFilter } = require('apollo-server');
 const {
   Group,
   UserGroup,
@@ -8,18 +6,18 @@ const {
   Message,
 } = require('../models');
 const {
-  getPageInfo, formWhere, pubsub, TASK_UPDATED, USER_TASK_UPDATED, TASK_STATUSES,
+  getPageInfo, formWhere,
 } = require('./chat');
-const { formAddress } = require('../services/address');
+const taskService = require('../services/task');
 
 module.exports = {
   Group: {
-    assignedTo(group) {
-      if (!group.assignedTo) {
+    assignedTo(parent) {
+      if (!parent.assignedTo) {
         return null;
       }
 
-      return User.findById(group.assignedTo);
+      return User.findById(parent.assignedTo);
     },
     async lastMessage({ id }) {
       return Message.findOne({ groupId: id }).sort({ _id: -1 });
@@ -91,144 +89,17 @@ module.exports = {
     group: (parent, { id }) => Group.findOne({ _id: id, code: null }),
   },
   Mutation: {
-    createGroup: async (parent, { group }, { user }) => {
-      let formedAddress;
-
-      if (typeof group.address === 'string') {
-        formedAddress = await formAddress(group.address);
-      }
-
-      const created = await Group.create(Object.assign({
-        status: TASK_STATUSES[0].id,
-        address: formedAddress,
-      }, group));
-
-      await UserGroup.create({
-        userId: user.id,
-        groupId: created.id,
-        lastReadCursor: ObjectId.createFromTime(0),
-      });
-
-      const { userIds } = group;
-
-      if (Array.isArray(userIds) && userIds.length) {
-        await UserGroup.insertMany(userIds.map(u => ({
-          userId: u,
-          groupId: created.id,
-          lastReadCursor: ObjectId.createFromTime(0),
-        })));
-      }
-
-      return created;
+    createGroup(parent, { group: task }, ctx) {
+      return taskService.createTask(parent, { task }, ctx);
     },
-    updateGroup: async (parent, { id, group }) => {
-      const groupId = id || group.id;
-      const foundGroup = await Group.findById(groupId);
-
-      if (!foundGroup) {
-        return false;
-      }
-
-      if (typeof group.address === 'string'
-        && foundGroup.address
-        && foundGroup.address.value !== group.address) {
-        const address = await formAddress(group.address);
-
-        Object.assign(group, { address });
-      } else {
-        Object.assign(group, { address: foundGroup.address });
-      }
-
-      const res = await foundGroup.update(group);
-
-      if (res.nModified) {
-        const updatedGroup = await Group.findById(groupId);
-
-        pubsub.publish(TASK_UPDATED, { taskUpdated: updatedGroup });
-      }
-
-      return res.nModified;
+    updateGroup(parent, { id, group: task }) {
+      return taskService.updateTask(parent, { id, task });
     },
-    deleteGroup: async (parent, { id }) => {
-      const res = await Group.deleteOne({ _id: id });
-
-      return res.n;
+    deleteGroup(parent, { id }) {
+      return taskService.deleteTask(parent, { id });
     },
-    updateUsersGroup: async (parent, { group }) => {
-      const groupId = group.id;
-      const foundGroup = await Group.findById(groupId);
-
-      if (!foundGroup) {
-        return false;
-      }
-
-      const { users } = group;
-
-      if (!Array.isArray(users) || !users.length) {
-        return false;
-      }
-
-      const fullUsers = await User.find({
-        _id: {
-          $in: users,
-        },
-      });
-
-      if (!group.delete) {
-        try {
-          const lastMessage = await Message.findOne({ groupId });
-
-          await UserGroup.insertMany(users.map(u => ({
-            userId: u,
-            groupId: foundGroup.id,
-            lastReadCursor: lastMessage ? lastMessage._id : ObjectId.createFromTime(0),
-          })));
-
-          fullUsers.map(u => pubsub.publish(USER_TASK_UPDATED, {
-            userTaskUpdated: {
-              user: {
-                id: u.id,
-                username: u.username,
-                email: u.email,
-              },
-              action: 'INVITED',
-            },
-          }));
-
-          return true;
-        } catch (err) {
-          return false;
-        }
-      }
-
-      const res = await UserGroup.deleteMany({ userId: { $in: users }, groupId: foundGroup.id });
-
-      fullUsers.map(u => pubsub.publish(USER_TASK_UPDATED, {
-        userTaskUpdated: {
-          user: {
-            id: u.id,
-            username: u.username,
-            email: u.email,
-          },
-          action: 'KICKED',
-        },
-      }));
-
-      return !!res.n;
-    },
-  },
-  Subscription: {
-    taskUpdated: {
-      subscribe: withFilter(
-        () => pubsub.asyncIterator([TASK_UPDATED]),
-        ({ taskUpdated: { _id: mId } }, { id }) => mId.toString() === id,
-      ),
-    },
-    userTaskUpdated: {
-      subscribe: withFilter(
-        () => pubsub.asyncIterator([USER_TASK_UPDATED]),
-        () => true,
-      ),
+    updateUsersGroup(parent, { group }) {
+      return taskService.updateUsersGroup(parent, { group });
     },
   },
 };

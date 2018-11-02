@@ -27,29 +27,6 @@ input UsersGroupInput {
   users: [String]!
 }
 
-input ConnectionInput {
-  first: Int
-  after: String
-  last: Int
-  before: String
-}
-
-enum UserTaskActionEnum{
-  INVITED
-  KICKED
-}
-
-type UserTaskRole {
-  id: ID
-  username: String
-  email: String
-}
-
-type UserTaskAction {
-  action: UserTaskActionEnum
-  user: UserTaskRole
-}
-
 type Query {
   groups: [Group]
   group(id: ID!): Group
@@ -60,9 +37,4 @@ type Mutation {
   updateGroup(id: ID, group: GroupInput): Boolean
   deleteGroup(id: ID!): Boolean
   updateUsersGroup(group: UsersGroupInput): Boolean
-}
-
-type Subscription {
-  taskUpdated(id: ID!): Group
-  userTaskUpdated(id: ID!): UserTaskAction
 }

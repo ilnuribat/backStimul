@@ -1,8 +1,8 @@
 type AddressObject {
   id: ID
   name: String
-  addresses: [AddressObject]
-  objects: [Object]
+  # addresses: [AddressObject]
+  # objects: [Object]
 }
 
 type rootObject {
@@ -35,7 +35,6 @@ type Object {
 type Query {
   rootObject(id: ID): rootObject
   object(id: ID): Object
-  objects: [Object]
 }
 
 type Mutation {
