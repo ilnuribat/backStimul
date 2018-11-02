@@ -1,4 +1,4 @@
-const { TASK_STATUSES } = require('./chat');
+const { TASK_STATUSES } = require('../services/chat');
 
 module.exports = {
   Glossary: {

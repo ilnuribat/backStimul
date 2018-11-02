@@ -8,7 +8,7 @@ const {
   UserGroup,
 } = require('../models');
 const { logger } = require('../../logger');
-const { getDirectChats } = require('./chat');
+const { getDirectChats } = require('../services/chat');
 
 function generateToken(user) {
   return jwt.sign({

@@ -7,7 +7,7 @@ const {
 } = require('../models');
 const {
   getPageInfo, formWhere,
-} = require('./chat');
+} = require('../services/chat');
 const taskService = require('../services/task');
 
 module.exports = {
