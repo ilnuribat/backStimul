@@ -4,7 +4,7 @@ const {
 } = require('../models');
 const {
   pubsub, TASK_UPDATED, USER_TASK_UPDATED,
-} = require('../resolvers/chat');
+} = require('../services/chat');
 
 async function createTask(parent, { task }, { user }) {
   if (!task.objectId) {

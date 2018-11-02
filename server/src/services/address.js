@@ -6,7 +6,7 @@ const {
   DADATA_SECRET,
 } = require('../../config');
 const { logger } = require('../../logger');
-const { ADDRESS_LEVELS } = require('../resolvers/chat');
+const { ADDRESS_LEVELS } = require('../services/chat');
 
 const knex = Knex({
   client: 'pg',

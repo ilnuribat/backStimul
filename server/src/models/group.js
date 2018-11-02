@@ -1,5 +1,5 @@
 const { Schema } = require('mongoose');
-const { GROUP_TYPES, ADDRESS_LEVELS } = require('../resolvers/chat');
+const { GROUP_TYPES, ADDRESS_LEVELS } = require('../services/chat');
 
 const addressLevelSchema = new Schema({
   name: String, // Каран-Кункас
