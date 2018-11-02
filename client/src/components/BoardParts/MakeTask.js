@@ -81,7 +81,7 @@ export default class MakeTask extends Component {
               </div>
             )}
           </Mutation>
-          <div className="butter mini" onClick={()=>{this.open()}}>Отменить</div>
+          <div className="butter mini" onClick={()=>{this.open()}}>Отмена</div>
         </div>
       );
     }
