@@ -2,7 +2,7 @@ const { withFilter } = require('apollo-server');
 const { Group } = require('./group');
 const {
   pubsub, TASK_UPDATED, USER_TASK_UPDATED,
-} = require('../services/chat');
+} = require('../services/constants');
 const taskService = require('../services/task');
 
 module.exports = {

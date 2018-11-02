@@ -3,7 +3,7 @@ const moment = require('moment');
 const {
   Message, User, Group, UserGroup,
 } = require('../models');
-const { MESSAGE_READ, pubsub, MESSAGE_ADDED } = require('../services/chat');
+const { MESSAGE_READ, pubsub, MESSAGE_ADDED } = require('../services/constants');
 
 
 module.exports = {
