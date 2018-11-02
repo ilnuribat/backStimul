@@ -14,7 +14,7 @@ type rootObject {
 }
 
 type Address {
-	geoLat: String
+	geoLat: String @deprecated
 	geoLon: String
 	value: String
   coordinates: [String]
@@ -30,6 +30,7 @@ type Object {
   name: String
   address: Address
   tasks: [Group]
+  parentId: String
 }
 
 type Query {

@@ -9,6 +9,17 @@ module.exports = {
         objectId: parent.id,
       });
     },
+    parentId(parent) {
+      const { address } = parent;
+
+      if (address) {
+        const { length } = address.parentChain;
+
+        return address.parentChain[length - 1].fiasId;
+      }
+
+      return null;
+    },
   },
   Query: {
     rootObject(parent, args, ctx) {
