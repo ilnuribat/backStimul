@@ -1,17 +1,12 @@
-const {
-  readFileSync,
-  // writeFileSync,
-} = require('fs');
-// const axios = require('axios');
+const axios = require('axios');
 const Knex = require('knex');
 const {
   PG_FIAS,
-  // DADATA_API,
-  // DADATA_SECRET,
+  DADATA_API,
+  DADATA_SECRET,
 } = require('../../config');
-// const { logger } = require('../../logger');
+const { logger } = require('../../logger');
 const { ADDRESS_LEVELS } = require('../resolvers/chat');
-// const { Group } = require('../models');
 
 const knex = Knex({
   client: 'pg',
@@ -48,24 +43,24 @@ async function getParentChain(fiasId) {
 
 
 async function formAddress(rawAddress) {
-  // logger.info('---------- make paid api request to dadata.ru ------------');
+  logger.info('---------- make paid api request to dadata.ru ------------');
 
-  // const { data } = await axios(
-  //   'https://dadata.ru/api/v2/clean/address',
-  //   {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Accept: 'application/json',
-  //       Authorization: `Token ${DADATA_API}`,
-  //       'X-Secret': DADATA_SECRET,
-  //     },
-  //     data: [rawAddress],
-  //   },
-  // );
+  const { data } = await axios(
+    'https://dadata.ru/api/v2/clean/address',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Token ${DADATA_API}`,
+        'X-Secret': DADATA_SECRET,
+      },
+      data: [rawAddress],
+    },
+  );
 
   // writeFileSync(rawAddress, JSON.stringify(data));
-  const data = JSON.parse(readFileSync(rawAddress, { encoding: 'utf-8' }));
+  // const data = JSON.parse(readFileSync(rawAddress, { encoding: 'utf-8' }));
 
   const [address] = data;
 
@@ -97,25 +92,7 @@ async function formAddress(rawAddress) {
   return result;
 }
 
-async function test() {
-  // const addresses = await Promise.all([
-  //   formAddress('Респ Башкортостан, Миякинский р-н, село Ильчигулово, ул Октябрьская'),
-  //   formAddress('Москва, ул Бакунинская'),
-  //   formAddress('Миякинский район, каран кункас, ул Победы'),
-  //   formAddress('Уфа, ул Кольцевая'),
-  //   formAddress('Респ Башкортостан, г Баймак, ул А.Алибаева'),
-  //   formAddress('Респ Башкортостан, г Сибай, ул Айсувака'),
-  // ]);
-
-  // await Group.insertMany(addresses.map(a => ({
-  //   name: 'group',
-  //   address: a,
-  // })));
-}
-
-test();
 
 module.exports = {
-  getParentChain,
   formAddress,
 };

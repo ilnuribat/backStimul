@@ -1,4 +1,6 @@
 const { Group } = require('../models');
+const obejctService = require('../services/object');
+const addressService = require('../services/address');
 
 module.exports = {
   Object: {
@@ -9,30 +11,8 @@ module.exports = {
     },
   },
   Query: {
-    async rootObject(parent, { id: addressId }) {
-      if (!addressId) {
-        // вывести корень. потом рассчитаем кратчайший путь
-        const addresses = await Group.getGroupedLevel();
-
-        return { addresses };
-      }
-      const rootObject = await Group.getFiasIdLevel(addressId);
-
-      const addresses = await Group.getGroupedLevel(rootObject.level + 1, rootObject.id);
-
-      let objects;
-
-      if (addressId) {
-        objects = await Group.find({
-          'address.fiasId': addressId,
-        });
-      }
-
-      return {
-        ...rootObject,
-        addresses,
-        objects,
-      };
+    rootObject(parent, args, ctx) {
+      return obejctService.rootObjectQuery(parent, args, ctx);
     },
     async object(parent, { id }) {
       return Group.findById(id);
@@ -40,12 +20,16 @@ module.exports = {
   },
   Mutation: {
     async createObject(parent, { object }) {
+      Object.assign(object, {
+        type: 'OBJECT',
+      });
       if (object.address) {
         // провалидировать адрес, вытащить цепочку родителей
+        const formedAddress = await addressService.formAddress(object.address);
+
+        Object.assign(object, { address: formedAddress });
       }
-      const res = await Group.create(Object.assign(object, {
-        type: 'OBJECT',
-      }));
+      const res = await Group.create(object);
 
       return res;
     },
