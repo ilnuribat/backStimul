@@ -56,13 +56,13 @@ export default class MakeTask extends Component {
       
       return (
         <div className="makeTaskForm animated flipInY faster">
-          <Mutation mutation={MAKE_TASK} variables={{name: `"${input}"` }}>
-            {(addTodo, { data }) => (
+          <Mutation mutation={MAKE_TASK} variables={{name: `"${input}"`, objectId: `"${this.props.objectId}"` }}>
+            {(addTask, { data }) => (
               <div>
                 <form
                   onSubmit={e => {
                     e.preventDefault();
-                    addTodo({ variables: { type: input.value } });
+                    addTask({ variables: { name: input.value } });
                     input.value = "";
                   }}
                 >
@@ -71,7 +71,7 @@ export default class MakeTask extends Component {
                       ref={node => {
                         input = node;
                       }}
-                      placeholder="Введите название"
+                      placeholder="Название"
                     />
                   </div>
                   <div>

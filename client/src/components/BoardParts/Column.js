@@ -56,7 +56,7 @@ const Column = ({...props})=>{
           })
         }
       </div>
-      {props.first ? (<MakeTask />) : null }
+      {props.first ? (<MakeTask objectId={this.props.id} />) : null }
     </div>
   )
 };
