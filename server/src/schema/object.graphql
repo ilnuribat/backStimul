@@ -22,7 +22,7 @@ type Address {
 
 input ObjectInput {
   name: String
-  address: String
+  address: String!
 }
 
 type Object {

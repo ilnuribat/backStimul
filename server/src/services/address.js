@@ -89,6 +89,10 @@ async function formAddress(rawAddress) {
 
   result.parentChain = await getParentChain(fiasId);
 
+  if (!result.parentChain.length) {
+    throw new Error('no address set');
+  }
+
   return result;
 }
 
