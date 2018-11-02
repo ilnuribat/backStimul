@@ -27,8 +27,7 @@ const middlewareLink = setContext((req, previousContext) => {
   if (jwt) {
     return {
       headers: {
-
-        authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${jwt}`,
       },
     };
   }
