@@ -2,15 +2,11 @@ const { connection, Types: { ObjectId }, mongo: { GridFSBucket } } = require('mo
 // const { GraphQLUpload } = require('apollo-server');
 const fs = require('fs');
 
-const download = async function (callback) {
+const download = async function (id) {
   const bucket = new GridFSBucket(connection.db, { bucketName: 'gridfsdownload' });
   // const CHUNKS_COLL = 'gridfsdownload.chunks';
   const FILES_COLL = 'gridfsdownload.files';
-
   const collection = connection.db.collection(FILES_COLL);
-
-  const id = ObjectId('5bdc50d4d1531833206a7ed0');
-
   const chunksQuery = await collection.findOne(id);
 
   // bucket.openDownloadStreamByName('blanks.pdf').
@@ -29,8 +25,7 @@ const storeUpload = ({ stream, filename }) => {
   const bucket = new GridFSBucket(connection.db, { bucketName: 'gridfsdownload' });
   const uploadStream = bucket.openUploadStream(filename);
 
-  download();
-
+  // download(ObjectId('5bdc50d4d1531833206a7ed0'));
   return new Promise((resolve, reject) => stream
     .pipe(uploadStream)
     .on('finish', () => uploadStream.id)
@@ -42,7 +37,6 @@ module.exports = {
   Mutation: {
     async uploadFile(parent, { file }) {
       const { stream, filename, mimetype } = await file;
-
       const id = await storeUpload({ stream, filename, mimetype });
 
       return { id, filename, mimetype };
