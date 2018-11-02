@@ -7,7 +7,7 @@ import { compose, graphql, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { SvgBack } from './Svg';
 import { getCUser, setPrivateChat, getPrivateChat, getTemp, setTemp, getInfo, delInfo, setInfo } from '../graph/querys';
-// import Board from './aBoard';
+// import Board from './board';
 // import { Route, Switch } from 'react-router-dom';
 // import { Redirect } from 'react-router'
 
@@ -226,7 +226,7 @@ class Top extends React.Component {
     if(object){
       const {Redirect} = require('react-router');
       return(
-        <Redirect to='/aBoard'/>
+        <Redirect to='/board'/>
       )
     }
 
@@ -251,13 +251,13 @@ class Top extends React.Component {
             // if (error) console.log(`Error! ${error.message}`);
 
             if(data){
-              console.log("data-------------------------")
-              console.log(data)
+              console.log("data-------------------------");
+              console.log(data);
               console.log("getDash2");
               console.log(getDash);
 
 
-              data.rootObject.parentId ? localStorage.setItem('back', data.rootObject.parentId) : null;
+              data.rootObject && data.rootObject.parentId ? localStorage.setItem('back', data.rootObject.parentId) : null;
 
               if(getDash){
 

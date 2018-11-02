@@ -5,7 +5,7 @@ import LeftNav from './components/LeftNav';
 import Login from './components/Login';
 import Profile from './components/Profile';
 import TaskView from './components/TaskView';
-import aBoard from './components/aBoard';
+import BoardView from './components/BoardView';
 import Private from './components/Private';
 import Map from './components/Map/LeafletMapBuild';
 import { AUTH_TOKEN } from './constants';
@@ -100,7 +100,7 @@ class App extends Component {
           <Fragment>
             <LeftNav lstate={this._lbarstate} client={this.props.client} />
             <Switch>
-              <Route exact path="/aboard" component={aBoard} />
+              <Route exact path="/board" component={BoardView} />
               <Route exact path="/top" component={TileBoard} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/map" component={Map} />

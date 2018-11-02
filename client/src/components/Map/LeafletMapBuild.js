@@ -98,6 +98,9 @@ class LeafletMap extends Component {
         let maxLon = 0.00
 
         getCUser.user.groups.map((post) => {
+          if(!post.address || !post.address.coordinates){
+            return true
+          }
 
           minLat > parseFloat(post.address.coordinates[0]) ? minLat = parseFloat(post.address.coordinates[0]) : null
           maxLat < parseFloat(post.address.coordinates[0]) ? maxLat = parseFloat(post.address.coordinates[0]) : null
@@ -274,7 +277,7 @@ const Panel = ({ data, type, name, click })  => {
 
   return (
     data.user.groups.map((post) =>
-      post.status == type && post.address.coordinates.length >0 ?
+      post.status == type && post.address && post.address.coordinates && post.address.coordinates.length >0 ?
         <Marker key={post.id} position={post.address.coordinates} icon={SwitchIcon(post.status)}>
           <Popup >
             <div className="modal" >

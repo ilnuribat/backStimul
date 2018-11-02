@@ -22,11 +22,11 @@ class Board extends React.Component {
 render(){
   let { Active } = this.props;
   return(
-    <div className={ Active.ActUrl && Active.ActUrl == 'aboard' ? "nav-button active" : "nav-button" } name="aboard" onClick={()=>this.setActUrl('aboard')}>
+    <div className={ Active.ActUrl && Active.ActUrl == 'board' ? "nav-button active" : "nav-button" } name="board" onClick={()=>this.setActUrl('board')}>
       <Link
         className="link dim black b f6 f5-ns dib mr3"
-        to="/aboard"
-        title="aboard"
+        to="/board"
+        title="board"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" >
           <path d="M0 0h24v24H0z" fill="none"/>

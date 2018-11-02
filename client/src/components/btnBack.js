@@ -54,10 +54,10 @@ class BtnBack extends Component {
   render() {
     let {toTop} = this.state;
     if(toTop){
-      const {Redirect} = require('react-router');
-      return(
-        <Redirect to='/Top'/>
-      )
+      // const {Redirect} = require('react-router');
+      // return(
+      //   <Redirect to='/Top'/>
+      // )
     }
     return (
       <div className="svgBackBtn" onClick={this.backToTheFuture}>

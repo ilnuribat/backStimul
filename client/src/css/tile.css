@@ -38,3 +38,12 @@
 .tile:hover{
   background: rgb(16, 29, 39);
 }
+
+.makeTile form{
+  display: block;
+}
+.makeTile form > div{
+  display: block;
+  float: none;
+  clear: both;
+}

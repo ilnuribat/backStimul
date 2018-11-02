@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import MakeTask from '../BoardParts/MakeTask'
 
 const Column = ({...props})=>{
   return(
@@ -55,6 +56,7 @@ const Column = ({...props})=>{
           })
         }
       </div>
+      {props.first ? (<MakeTask />) : null }
     </div>
   )
 };

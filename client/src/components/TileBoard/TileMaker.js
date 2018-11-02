@@ -1,8 +1,24 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import gql from 'graphql-tag'
+import { Mutation } from "react-apollo"
 import { SvgClose2 } from '../Svg';
 import 'animate.css';
 import { qauf } from '../../constants';
+import { createDirect } from '../../graph/querys';
+
+
+
+
+const MAKE_TILE = gql`
+  mutation MakeTile($name: String) {
+    createObject(object: { name: $name }) {
+      id
+      name
+    }
+  }
+`;
+
 
 export default class TileMaker extends Component {
 
@@ -10,13 +26,11 @@ export default class TileMaker extends Component {
     super(props)
   
     this.state = {
-       open: false,
-       input: '',
+      open: false,
+      input: '',
     }
 
     this.open = this.open.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleCreate = this.handleCreate.bind(this)
   }
   
   static propTypes = {
@@ -25,71 +39,10 @@ export default class TileMaker extends Component {
   open(){
     this.setState({open: !this.state.open, value: '',})
   }
-  componentDidMount(){
-    this.setState({
-      value: '',
-    })
-  }  
-  componentDidUpdate(){
-  }
-
-  handleCreate(){
-    let {value, open, } = this.state;
-    let {ref} = this.props;
-
-    if(value && open){
-
-      let url = "localhost:4000";
-
-      let MutObject = (all) => `
-      mutation{
-          object(all:${all}){
-              _id
-              name
-              tasks{
-                _id
-                name
-              }
-            }
-          }
-      `;
-      let e = `{name: "${value}"}`;
-
-      qauf(MutObject(e), url, localStorage.getItem('auth-token')).then(a=>{
-        console.log("a")
-        console.log(a)
-        if(a && a.data && a.data){
-
-          if(typeof ref === 'function'){
-            ref();
-          }
-          this.setState({
-            open: !open,
-          });
-          
-        }else{
-          console.log("Загрузка")
-        }
-      })
-      .catch((e)=>{
-          console.warn(e);
-        });
-
-     
-
-    }else{
-      return false;
-    }
-
-  }
-
-  handleChange(event) {
-
-    this.setState({value: event.target.value});
-  }
 
   render() {
     let {open,value} = this.state;
+
     if(!open){
       return (
         <div className="makeTile animated flipInX" onClick={()=>{this.open()}}>
@@ -99,15 +52,38 @@ export default class TileMaker extends Component {
         </div>
       )
     }else{
+      let input;
+      
       return (
         <div className="tile makeTile animated flipInY faster">
-          <div> <input type="text" value={value} onChange={this.handleChange} placeholder="Введите название" /> </div>
-
-          <div className="butter" onClick={()=>this.handleCreate()}>Создать</div>
+          <Mutation mutation={MAKE_TILE} variables={{name: `"${input}"` }}>
+            {(addTodo, { data }) => (
+              <div>
+                <form
+                  onSubmit={e => {
+                    e.preventDefault();
+                    addTodo({ variables: { type: input.value } });
+                    input.value = "";
+                  }}
+                >
+                  <div>
+                    <input
+                      ref={node => {
+                        input = node;
+                      }}
+                      placeholder="Введите название"
+                    />
+                  </div>
+                  <div>
+                    <button className="butter" type="submit">Добавить</button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </Mutation>
           <div className="butter mini" onClick={()=>{this.open()}}>Отменить</div>
         </div>
-      )
+      );
     }
-
   }
 }
