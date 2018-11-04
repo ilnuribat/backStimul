@@ -3,7 +3,6 @@ version: '3'
 services:
   mongo:
     image: mongo:4
-    env_file: ../../.env
     volumes:
       - /var/lib/guov/mongo:/data/db
     environment:
@@ -17,6 +16,10 @@ services:
       - /var/lib/guov/postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    environment:
+      - POSTGRES_USER=guov
+      - POSTGRES_PASSWORD=guov
+      - POSTGRES_DATABASE=fias
   nginx:
     image: nginx:1.14
     network_mode: host
