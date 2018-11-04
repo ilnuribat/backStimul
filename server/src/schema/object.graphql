@@ -15,7 +15,7 @@ type rootObject {
 
 type Address {
 	geoLat: String @deprecated
-	geoLon: String
+	geoLon: String @deprecated
 	value: String
   coordinates: [String]
 }
