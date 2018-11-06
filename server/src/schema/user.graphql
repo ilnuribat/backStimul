@@ -12,6 +12,7 @@ type User {
   messages: [Message]
   groups: [Group]
   directs: [Group]
+  tasks: [Task]
 }
 
 type AuthToken {

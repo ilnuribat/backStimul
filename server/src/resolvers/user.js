@@ -4,11 +4,10 @@ const { JWT_SECRET } = require('../../config');
 const {
   User,
   Message,
-  Group,
-  UserGroup,
 } = require('../models');
 const { logger } = require('../../logger');
 const { getDirectChats } = require('../services/chat');
+const { getTasks } = require('../services/user');
 
 function generateToken(user) {
   return jwt.sign({
@@ -22,15 +21,11 @@ module.exports = {
     async messages({ id }) {
       return Message.find({ userId: id });
     },
-    async groups({ id }) {
-      const usersGroups = await UserGroup.find({ userId: id });
-
-      return Group.find({
-        _id: {
-          $in: usersGroups.map(u => u.groupId),
-        },
-        code: null,
-      });
+    async groups(parent) {
+      return getTasks(parent.id);
+    },
+    async tasks(parent) {
+      return getTasks(parent.id);
     },
     async directs(parent, args, { user }) {
       return getDirectChats(user);
