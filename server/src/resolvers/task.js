@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { withFilter } = require('apollo-server');
 const { Group } = require('../models');
 const {
@@ -8,9 +9,12 @@ const groupService = require('../services/group');
 
 module.exports = {
   Task: {
-    async users(parent) {
-      return groupService.getMembers(parent);
-    },
+    assignedTo: groupService.assignedTo,
+    lastMessage: groupService.lastMessage,
+    users: groupService.getMembers,
+    messages: groupService.getMessages,
+    unreadCount: groupService.unreadCount,
+    endDate: ({ endDate }) => (endDate ? moment(endDate).format() : null),
   },
   Query: {
     task(parent, { id }) {

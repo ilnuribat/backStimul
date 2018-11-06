@@ -12,7 +12,6 @@ type Task {
 }
 
 input TaskInput {
-  id: ID
   name: String
   objectId: ID
   status: Int
