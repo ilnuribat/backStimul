@@ -6,7 +6,7 @@ const {
 const taskService = require('../services/task');
 
 module.exports = {
-  Task: {
+  Query: {
     task(parent, { id }) {
       return Group.findOne({ code: null, _id: id });
     },
