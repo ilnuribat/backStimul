@@ -3,15 +3,12 @@ import { graphql, compose } from "react-apollo";
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import 'animate.css';
-import { TASKS_QUERY, setPrivateChat, glossaryStatus, getCUser, setTemp, getTemp } from '../graph/querys';
+import { TASKS_QUERY, glossaryStatus, setPrivateChat, getObjectTasks, getObjectId} from '../graph/querys';
 import { qauf, _url } from '../constants';
 import Column from './BoardParts/Column';
 import DataQuery from './BoardParts/DataQuery';
 import Loading from './Loading';
 // import anime from 'animejs';
-
-
-let r;
 
 class Board extends Component {
 
@@ -20,6 +17,7 @@ class Board extends Component {
     this.state = {
       input: [],
       status: [],
+      tasks: {},
       columns: [
         "Null",
         "Новые",
@@ -27,17 +25,20 @@ class Board extends Component {
         "На проверке",
         "Завершенные",
       ],
+
+
     };
 
     this.daTa = this.daTa.bind(this)
     this.selectTask = this.selectTask.bind(this)
     this.glossStatus = this.glossStatus.bind(this)
+    this.getCurrentTasks = this.getCurrentTasks.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
 
   selectTask(e){
-    this.props.setChat({
+    this.props.setPrivateChat({
       variables: {
         id: e.id,
         name: e.name,
@@ -48,9 +49,13 @@ class Board extends Component {
   }
 
   componentDidMount(){
+    // const { getObjectId } = this.props
+
+    // console.warn("AAA" , getObjectId)
 
     this.glossStatus();
-    this.props.setChat({
+    this.getCurrentTasks("5bd9b336b598050c608f94d3");
+    this.props.setPrivateChat({
       variables: {
         id: "",
         name: "",
@@ -62,7 +67,6 @@ class Board extends Component {
   }
 
   glossStatus(){
-
     qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
       this.setState({
         status: ["",...a.data.glossary.taskStatuses]
@@ -73,25 +77,33 @@ class Board extends Component {
       });
   }
 
-  render(){
+  getCurrentTasks(id){
+    qauf(getObjectTasks(id), _url, localStorage.getItem('auth-token')).then(a=>{
+      this.setState({
+        tasks: a.data.object.tasks
+      });
+      console.warn(a.data.object.tasks)
+    })
+      .catch((e)=>{
+        console.warn(e);
+      });
+  }
 
-    if(r){
-      r();
+  render(){
+    const { getObjectId } = this.props
+
+    if (!getObjectId.currentObjectId) {
+      return null
     }
 
-    let { status } = this.state;
-    let { getCUser } = this.props;
+    let { status, tasks } = this.state;
 
     let cols = [[],[],[],[],[],[],[]];
 
-    if(getCUser.loading) return <Loading />;
-    if(!getCUser.user) return <Loading />;
-    if(!getCUser.user.groups) return <Loading />;
     if(!status) return <Loading />;
+    if(!tasks) return <Loading />;
 
-    let arr = getCUser.user.groups;
-
-    arr = _.sortBy(arr, 'unreadCount');
+    const arr = _.sortBy(tasks, 'unreadCount');
 
     _.forEach(arr, (result)=>{
       if(!result.status){
@@ -111,7 +123,6 @@ class Board extends Component {
               if(!e.name){
                 return true;
               }
-              console.warn(e.id)
 
               return <Column data-simplebar key={"column"+e.id} name={e.name} tasks={cols[i]} selectTask={this.selectTask} first={i===1 ? (1) : (0)} />
             })
@@ -129,14 +140,13 @@ class Board extends Component {
 
 
 Board.propTypes = {
-  getCUser: PropTypes.object.isRequired
+  getObjectId: PropTypes.object.isRequired,
+  setPrivateChat: PropTypes.func.isRequired
 };
 
 
 
 export default compose(
-  graphql(setPrivateChat, { name: 'setChat' }),
-  graphql(getCUser, { name: 'getCUser' }),
-  graphql(setTemp, { name: 'setTemp' }),
-  graphql(getTemp, { name: 'getTemp' }),
+  graphql(getObjectId, { name: 'getObjectId' }),
+  graphql(setPrivateChat, { name: 'setPrivateChat' }),
 )(Board);

@@ -81,7 +81,7 @@ class Top extends React.Component {
 
 
     if(type === 'object'){
-      console.error({ e, type, name})
+      // console.error({ e, type, name})
 
       this.props.setObjectId({
         variables:{

@@ -39,9 +39,11 @@ export const quf = (query) => {
 };
 export const qauf = (query, uri, auth) => {
   let url = _url;
+
   if(uri){
     url = uri;
   }
+
   return fetch(`http://${url}/`, {
     method: 'POST',
     headers: {
