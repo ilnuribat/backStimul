@@ -1,7 +1,6 @@
 const {
   Message, Group, UserGroup, User,
 } = require('../models');
-const {} = require('./constants');
 
 function formWhere({ id, before, after }) {
   let idCond;
@@ -94,22 +93,16 @@ async function getDirectChats(user) {
     },
   });
 
-  return directs.map(d => ({
+  const res = directs.map(d => ({
     ...d,
-    name: users.find(u => u.id === d.name).email,
+    name: (users.find(u => u.id === d.name) || {}).email,
   }));
+
+  return res.filter(r => r.name);
 }
 
 module.exports = {
   getPageInfo,
   formWhere,
   getDirectChats,
-  // pubsub,
-  // MESSAGE_ADDED,
-  // MESSAGE_READ,
-  // TASK_UPDATED,
-  // USER_TASK_UPDATED,
-  // TASK_STATUSES,
-  // GROUP_TYPES,
-  // ADDRESS_LEVELS,
 };
