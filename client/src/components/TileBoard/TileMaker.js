@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
+import axios from 'axios';
 import gql from 'graphql-tag'
 import { Mutation } from "react-apollo"
-import { SvgClose2 } from '../Svg';
 import 'animate.css';
-import { qauf } from '../../constants';
-import { createDirect } from '../../graph/querys';
-import axios from 'axios';
+// import { SvgClose2 } from '../Svg';
+// import { qauf } from '../../constants';
+// import { createDirect } from '../../graph/querys';
+
 
 
 
@@ -24,7 +25,7 @@ export default class TileMaker extends Component {
 
   constructor(props) {
     super(props)
-  
+
     this.state = {
       open: false,
       input: '',
@@ -34,7 +35,7 @@ export default class TileMaker extends Component {
     this.open = this.open.bind(this)
     this.daDataReqName = this.daDataReqName.bind(this)
   }
-  
+
   static propTypes = {
   }
 
@@ -77,7 +78,7 @@ export default class TileMaker extends Component {
 
   handleChange(event) {
 
-      this.daDataReqName(event.target.value)
+    this.daDataReqName(event.target.value)
   }
 
 
@@ -118,6 +119,7 @@ export default class TileMaker extends Component {
 
   render() {
     let {open,value,addressList} = this.state;
+
     if(!open){
       return (
         <div className="makeTile animated flipInX" onClick={()=>{this.open()}}>
@@ -129,64 +131,64 @@ export default class TileMaker extends Component {
     }else{
       let input;
       let address;
-      
+
       return (
         <div className="makeTileWrap">
-        <div className="makeTileForm animated flipInY faster">
-          <Mutation mutation={MAKE_TILE} variables={{name: `"${input}"`, address: `"${address}"` }}>
-            {(MakeTile, { data }) => (
-              <div>
-                <form
-                  onSubmit={e => {
-                    e.preventDefault();
-                    MakeTile({ variables: { name: input.value, address: address.value } });
-                    input.value = "";
-                    address.value = "";
-                  }}
-                >
-                  <div>
-                    <input
-                      type="text"
-                      ref={node => {
-                        input = node;
-                      }}
-                      placeholder="Название"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <input
-                      type="list" list="addresses" autoComplete="on" 
-                      ref={node => {
-                        address = node;
-                      }}
-                      placeholder="Адрес"
-                      required
-                      onChange={(event)=>{address = event.target.value; this.daDataReqName(event.target.value); console.log(address)}}
-                    />
-                                <datalist id="addresses" >
+          <div className="makeTileForm animated flipInY faster">
+            <Mutation mutation={MAKE_TILE} variables={{name: `"${input}"`, address: `"${address}"` }}>
+              {(MakeTile, { data }) => (
+                <div>
+                  <form
+                    onSubmit={e => {
+                      e.preventDefault();
+                      MakeTile({ variables: { name: input.value, address: address.value } });
+                      input.value = "";
+                      address.value = "";
+                    }}
+                  >
+                    <div>
+                      <input
+                        type="text"
+                        ref={node => {
+                          input = node;
+                        }}
+                        placeholder="Название"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="list" list="addresses" autoComplete="on"
+                        ref={node => {
+                          address = node;
+                        }}
+                        placeholder="Адрес"
+                        required
+                        onChange={(event)=>{address = event.target.value; this.daDataReqName(event.target.value); console.log(address)}}
+                      />
+                      <datalist id="addresses" >
 
-                                  {addressList && addressList.map((e,i)=>{
+                        {addressList && addressList.map((e,i)=>{
 
-                                    return(
-                                      <div className="parentQ" key={e.value}>
-                                        <option key={'addr' + i} value={e.value}>
-                                          {value}
-                                          {e.data.geo_lat && e.data.geo_lon ? (" " + e.data.geo_lat +":"+ e.data.geo_lon) : ""}
-                                        </option>
-                                      </div>
-                                    )})}
-                                  </datalist>
-                  </div>
-                  <div>
-                    <button className="butter" type="submit">Добавить</button>
-                  </div>
-                </form>
-              </div>
-            )}
-          </Mutation>
-          <div className="butter mini" onClick={()=>{this.open()}}>Отмена</div>
-        </div>
+                          return(
+                            <div className="parentQ" key={e.value}>
+                              <option key={'addr' + i} value={e.value}>
+                                {value}
+                                {e.data.geo_lat && e.data.geo_lon ? (" " + e.data.geo_lat +":"+ e.data.geo_lon) : ""}
+                              </option>
+                            </div>
+                          )})}
+                      </datalist>
+                    </div>
+                    <div>
+                      <button className="butter" type="submit">Добавить</button>
+                    </div>
+                  </form>
+                </div>
+              )}
+            </Mutation>
+            <div className="butter mini" onClick={()=>{this.open()}}>Отмена</div>
+          </div>
         </div>
       );
     }

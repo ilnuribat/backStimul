@@ -278,8 +278,6 @@ export const TASKS_QUERY = gql`
         }
         endDate
         address {
-          geoLat
-          geoLon
           value
           coordinates
         }
@@ -528,8 +526,6 @@ subscription taskUpdated($id: ID!){
         }
         endDate
         address{
-          geoLat
-          geoLon
           value
           coordinates
         }
@@ -561,8 +557,6 @@ query getCUser{
         }
         endDate
         address{
-          geoLat
-          geoLon
           value
           coordinates
         }
