@@ -3,7 +3,7 @@ const { Group } = require('../models');
 const uuidRegEx = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
 async function rootObjectQuery(parent, { id: addressId }) {
-  if (!addressId || uuidRegEx.test(addressId)) {
+  if (!addressId || !uuidRegEx.test(addressId)) {
     // вывести корень. потом рассчитаем кратчайший путь
     const addresses = await Group.getGroupedLevel();
 
