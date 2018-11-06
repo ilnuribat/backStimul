@@ -6,7 +6,11 @@ const {
 const taskService = require('../services/task');
 
 module.exports = {
-  Task: Group,
+  Task: {
+    task(parent, { id }) {
+      return Group.findOne({ code: null, _id: id });
+    },
+  },
   Mutation: {
     createTask: taskService.createTask,
     updateTask: taskService.updateTask,
