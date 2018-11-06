@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { graphql, compose } from "react-apollo";
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import 'animate.css';
-import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus, getCUser, setTemp, getTemp } from '../graph/querys';
+import { TASKS_QUERY, setPrivateChat, glossaryStatus, getCUser, setTemp, getTemp } from '../graph/querys';
 import { qauf, _url } from '../constants';
 import Column from './BoardParts/Column';
 import DataQuery from './BoardParts/DataQuery';
@@ -47,7 +48,7 @@ class Board extends Component {
   }
 
   componentDidMount(){
-    
+
     this.glossStatus();
     this.props.setChat({
       variables: {
@@ -80,8 +81,9 @@ class Board extends Component {
 
     let { status } = this.state;
     let { getCUser } = this.props;
+
     let cols = [[],[],[],[],[],[],[]];
-   
+
     if(getCUser.loading) return <Loading />;
     if(!getCUser.user) return <Loading />;
     if(!getCUser.user.groups) return <Loading />;
@@ -90,7 +92,7 @@ class Board extends Component {
     let arr = getCUser.user.groups;
 
     arr = _.sortBy(arr, 'unreadCount');
-  
+
     _.forEach(arr, (result)=>{
       if(!result.status){
         cols[1].push(result);
@@ -103,12 +105,13 @@ class Board extends Component {
     if(status){
       return(
         <div id="anim" className="content-aft-nav columns-wrapper">
- 
+
           {
             status && status.map((e,i)=>{
               if(!e.name){
                 return true;
               }
+              console.warn(e.id)
 
               return <Column data-simplebar key={"column"+e.id} name={e.name} tasks={cols[i]} selectTask={this.selectTask} first={i===1 ? (1) : (0)} />
             })
@@ -124,8 +127,14 @@ class Board extends Component {
   }
 }
 
+
+Board.propTypes = {
+  getCUser: PropTypes.object.isRequired
+};
+
+
+
 export default compose(
-  graphql(getPrivateChat, { name: 'getChat' }),
   graphql(setPrivateChat, { name: 'setChat' }),
   graphql(getCUser, { name: 'getCUser' }),
   graphql(setTemp, { name: 'setTemp' }),

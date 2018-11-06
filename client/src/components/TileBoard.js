@@ -1,12 +1,15 @@
 import React from 'react';
-import { qauf } from '../constants';
-import Tile from '../components/TileBoard/Tile'
-import TileMaker from '../components/TileBoard/TileMaker'
-import Info from './Info';
 import { compose, graphql, Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import { Redirect } from 'react-router';
+import PropTypes from 'prop-types';
+// import { qauf } from '../constants';
+import Tile from './TileBoard/Tile'
+import TileMaker from './TileBoard/TileMaker'
+// import Info from './Info';
 import { SvgBack } from './Svg';
-import { getCUser, setPrivateChat, getPrivateChat, getTemp, setTemp, delInfo, setInfo } from '../graph/querys';
+// import { getCUser, setObjectId, getTemp, setTemp, delInfo, setInfo } from '../graph/querys';
+import { setObjectId, setInfo } from '../graph/querys';
 
 
 export const getDashboard = gql`
@@ -20,7 +23,7 @@ export const getDashboard = gql`
           id
           name
         }
-      } 
+      }
     }
 `;
 export const setDashboard = gql`
@@ -56,148 +59,160 @@ class Top extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-        __back:'',
-        isHidden: true,
-        id:'',
-        name:'',
-        objects: [],
-        childs: [],
-        object: false,
-        rootId:"",
-      }
-      this.query = this.query.bind(this)
+      __back:'',
+      isHidden: true,
+      id:'',
+      name:'',
+      objects: [],
+      childs: [],
+      object: false,
+      rootId:"",
     }
-    query(e, type,name){
+    this.query = this.query.bind(this)
+  }
 
-      localStorage.setItem('back',e)
+  query(e, type,name){
 
-      if(e){
-        this.setState({rootId: e});
-      }
-      
+    localStorage.setItem('back',e)
 
-      if(type === 'object'){
-        this.props.setChat({
-          variables:{
-              id: e,
-              name: name,
-              priv: false,
-              unr: 0,
-          }
-        });
-        this.setState({
-            object: true,
-          })
-
-      }else if(type === 'task'){
-
-      }else{
-
-      }
-
+    if(e){
+      this.setState({rootId: e});
     }
-    componentDidMount(){
 
-      this.props.setInfo({variables:{id:"id",message:"Не трогай эту штуку!", type:"error"}})
-      const __back = localStorage.getItem('back');
-      
-      this.setState({rootId: __back});
-      localStorage.setItem('back','')
+
+    if(type === 'object'){
+      console.error({ e, type, name})
+
+      this.props.setObjectId({
+        variables:{
+          id: e,
+          name: name,
+          priv: false,
+          unr: 0,
+        }
+      });
+      this.setState({
+        object: true,
+      })
+
+    }else if(type === 'task'){
+
+    }else{
 
     }
 
-    componentDidUpdate(){
+  }
+  componentDidMount(){
 
-    }
+    this.props.setInfo({variables:{id:"id",message:"Не трогай эту штуку!", type:"error"}})
+    const __back = localStorage.getItem('back');
 
-    backToThePast(id){
-      let backid = id || '';
-        this.setState({
-          rootId: backid,
-        })
-    }
+    this.setState({rootId: __back});
+    localStorage.setItem('back','')
+
+  }
+
+  componentDidUpdate(){
+
+  }
+
+  backToThePast(id){
+    let backid = id || '';
+
+    this.setState({
+      rootId: backid,
+    })
+  }
 
   render(){
 
     let {id,name,object,rootId} = this.state;
-    let {getDash} = this.props;
+
+    // let {getDash} = this.props;
 
     if(object){
-      const {Redirect} = require('react-router');
+
+
       return(
         <Redirect to='/board'/>
       )
     }
 
     let ROOTID="";
+
     if(rootId){
       ROOTID = rootId
     }
 
-      return(
+    return(
 
-        <Query query={QUERY_ROOTID} variables={{id: ROOTID}}>
-          {({ loading, error, data, refetch }) => {
-            if (loading) return "Loading...";
-            // if (error) console.log(`Error! ${error.message}`);
+      <Query query={QUERY_ROOTID} variables={{id: ROOTID}}>
+        {({ loading, error, data, refetch }) => {
+          if (loading) return "Loading...";
+          // if (error) console.log(`Error! ${error.message}`);
 
-            if(data){
-              data.rootObject && data.rootObject.parentId ? localStorage.setItem('back', data.rootObject.parentId) : null;
+          if(data){
+            data.rootObject && data.rootObject.parentId ? localStorage.setItem('back', data.rootObject.parentId) : null;
 
-              return(
-                <div className="rootWrapper">
-                  <div className="fullWrapper">
+            return(
+              <div className="rootWrapper">
+                <div className="fullWrapper">
                   <div className="inner">
                     {id ? (<div className="header">{id}</div>) : null }
                     {name ? (<div className="header">{name}</div>) : null }
                     {data.rootObject ? (
-                    <div className="makeTile" onClick={()=>this.backToThePast(data.rootObject.parentId)}>
-                      <div className="inner" >
-                        <SvgBack />
+                      <div className="makeTile" onClick={()=>this.backToThePast(data.rootObject.parentId)}>
+                        <div className="inner" >
+                          <SvgBack />
+                        </div>
                       </div>
-                    </div>
                     ) : null}
                     {
-                            
-                            // getDash && getDash.rootObject && getDash.rootObject.addresses && getDash.rootObject.addresses.map((e)=>{
-                              data.rootObject && data.rootObject.addresses && data.rootObject.addresses.map((e)=>{
-                              return(
-                                <Tile key={e.id} _id={e.id} name={e.name} query={this.query} type={e.__typename||'address'} click={this.query} />
-                              )
-                            })
+
+                      // getDash && getDash.rootObject && getDash.rootObject.addresses && getDash.rootObject.addresses.map((e)=>{
+                      data.rootObject && data.rootObject.addresses && data.rootObject.addresses.map((e)=>{
+                        return(
+                          <Tile key={e.id} _id={e.id} name={e.name} query={this.query} type={e.__typename||'address'} click={this.query} />
+                        )
+                      })
                     }
                     {
-                            // getDash && getDash.rootObject && getDash.rootObject.objects && getDash.rootObject.objects.map((e)=>{
-                              data.rootObject && data.rootObject.objects && data.rootObject.objects.map((e)=>{
-                              return(
-                                <Tile key={e.id} _id={e.id} name={e.name} query={this.query} type={'object'} click={this.query} />
-                              )
-                            })
+                      // getDash && getDash.rootObject && getDash.rootObject.objects && getDash.rootObject.objects.map((e)=>{
+                      data.rootObject && data.rootObject.objects && data.rootObject.objects.map((e)=>{
+                        return(
+                          <Tile key={e.id} _id={e.id} name={e.name} query={this.query} type={'object'} click={this.query} />
+                        )
+                      })
                     }
 
                     <TileMaker />
-                    
-                  </div> 
-                  </div> 
-                </div> 
-              )
-            }
+
+                  </div>
+                </div>
+              </div>
+            )
+          }
 
 
-          }}
-        </Query>
-      )
+        }}
+      </Query>
+    )
   }
 }
 
+Top.propTypes = {
+  setObjectId: PropTypes.func.isRequired,
+  setInfo: PropTypes.func.isRequired,
+};
+
+
 export default compose(
-  graphql(getPrivateChat, { name: 'getChat' }),
-  graphql(setPrivateChat, { name: 'setChat' }),
-  graphql(getCUser, { name: 'getCUser' }),
-  graphql(setTemp, { name: 'setTemp' }),
-  graphql(getTemp, { name: 'getTemp' }),
-  graphql(getDashboard, { name: 'getDash' }),
-  graphql(setDashboard, { name: 'setDash' }),
+  graphql(setObjectId, { name: 'setObjectId' }),
+  // graphql(getCUser, { name: 'getCUser' }),
+  // graphql(setTemp, { name: 'setTemp' }),
+  // graphql(getTemp, { name: 'getTemp' }),
+  // graphql(getDashboard, { name: 'getDash' }),
+  // graphql(setDashboard, { name: 'setDash' }),
   graphql(setInfo, { name: 'setInfo' }),
-  graphql(delInfo, { name: 'delInfo' }),
+  // graphql(delInfo, { name: 'delInfo' }),
 )(Top);

@@ -62,6 +62,7 @@ const stateLink = withClientState({
     ActUrl: "",
     bar: false,
     comp: "",
+    currentObjectId: "",
     lastMessage: {
       groupId: "",
       id: "",

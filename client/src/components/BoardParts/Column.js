@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import MakeTask from '../BoardParts/MakeTask'
+import MakeTask from './MakeTask'
 
 const Column = ({...props})=>{
+
   return(
     <div className="column animated fadeIn">
       <div className="column-name">{props.name}</div>
@@ -16,7 +17,7 @@ const Column = ({...props})=>{
               time = e.endDate;
               time = time.replace(/T.*$/gi, "");
             }
-            
+
 
             return(
               <div key={e.id} className="task animated fadeIn">
@@ -27,7 +28,7 @@ const Column = ({...props})=>{
                 <div className="pWrapper">
                   <div className="mini">Дата завершения:</div>
                   <div className="cntr">{time ? (<span className="endDate-red">{time}</span>) : "Не указано" }</div>
-                   
+
                 </div>
                 <div className="pWrapper">
                   <div className="assignedTo"><div className="mini">Ответственный:</div><div className="userCloud">
@@ -35,7 +36,7 @@ const Column = ({...props})=>{
                   </div>
                   </div>
                 </div>
-                  
+
                 {e.lastMessage ? (
                   <div className="pWrapper">
                     <div className="mini">Последнее сообщение:</div>
@@ -43,9 +44,9 @@ const Column = ({...props})=>{
                       <span className="userCloud">{e.lastMessage.from.username}:</span>
                       <span className="messageCloud">{e.lastMessage.text}</span></div>
                   </div>
-                ) : null 
+                ) : null
                 }
-                  
+
                 <div className="pWrapper">
                   <Link to="/">
                     <div className="button" onClick={()=>props.selectTask(obj)} >Открыть</div>
@@ -56,9 +57,10 @@ const Column = ({...props})=>{
           })
         }
       </div>
-      {props.first ? (<MakeTask objectId={this.props.id} />) : null }
+      {props.first ? (<MakeTask />) : null }
+
     </div>
   )
 };
 
-export default Column;
+export default Column

@@ -173,6 +173,23 @@ export const setPrivateChat = gql`
   }
 `;
 
+export const getObjectId = gql`
+  query getObjectId{
+      currentObjectId @client
+      currentObjectName @client
+  }
+`;
+
+export const setObjectId = gql`
+  mutation setObjectId($name: String!, $id: String!){
+    setObjectId(name: $name, id: $id) @client {
+      id
+      name
+    }
+  }
+`;
+
+
 export const getlastMessageCache = gql`
   query getlastMessageCache{
       lastMessage @client {
@@ -316,6 +333,15 @@ export const MESSAGE_SUBS = gql`
 export const MESSAGEREAD_MUT = gql`
   mutation message($id: ID!){
     messageRead(id: $id )
+  }
+`;
+
+export const createTask = gql`
+  mutation createTask($name: String, $id: ID!) {
+    createTask(task: { name: $name, objectId: $id }) {
+      id
+      name
+    }
   }
 `;
 

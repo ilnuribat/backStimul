@@ -1,30 +1,21 @@
 import React, { Component } from 'react';
+import { graphql, compose, Mutation } from "react-apollo";
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
-import { Mutation } from "react-apollo";
-import { SvgClose2 } from '../Svg';
 import 'animate.css';
-import { qauf } from '../../constants';
-import { createDirect } from '../../graph/querys';
-import axios from 'axios';
+import { getObjectId, createTask } from '../../graph/querys';
+// import axios from 'axios';
+// import { SvgClose2 } from '../Svg';
+// import { qauf } from '../../constants';
+// import gql from 'graphql-tag';
 
 
 
-const MAKE_TASK = gql`
-  mutation MakeTask($name: String) {
-    createTask(task: { name: $name }) {
-      id
-      name
-    }
-  }
-`;
 
-
-export default class MakeTask extends Component {
+class MakeTask extends Component {
 
   constructor(props) {
     super(props)
-  
+
     this.state = {
       open: false,
       input: '',
@@ -32,7 +23,7 @@ export default class MakeTask extends Component {
 
     this.open = this.open.bind(this)
   }
-  
+
   static propTypes = {
   }
 
@@ -42,6 +33,12 @@ export default class MakeTask extends Component {
 
   render() {
     let {open,value} = this.state;
+
+    const { getObjectId } = this.props
+
+    if (!getObjectId.currentObjectId) {
+      return null
+    }
 
     if(!open){
       return (
@@ -53,16 +50,16 @@ export default class MakeTask extends Component {
       )
     }else{
       let input;
-      
+
       return (
         <div className="makeTaskForm animated flipInY faster">
-          <Mutation mutation={MAKE_TASK} variables={{name: `"${input}"`, objectId: `"${this.props.objectId}"` }}>
+          <Mutation mutation={createTask} variables={{name: `"${input}"`, id: `"${getObjectId.currentObjectId}"` }}>
             {(addTask, { data }) => (
               <div>
                 <form
                   onSubmit={e => {
                     e.preventDefault();
-                    addTask({ variables: { name: input.value } });
+                    addTask({ variables: { name: input.value, id: getObjectId.currentObjectId  } });
                     input.value = "";
                   }}
                 >
@@ -87,3 +84,16 @@ export default class MakeTask extends Component {
     }
   }
 }
+
+
+
+MakeTask.propTypes = {
+  getObjectId: PropTypes.object.isRequired
+};
+
+
+
+export default compose(
+  graphql(getObjectId, { name: 'getObjectId' }),
+  graphql(createTask, { name: 'createTask' }),
+)(MakeTask);
