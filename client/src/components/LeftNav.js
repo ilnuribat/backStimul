@@ -13,7 +13,7 @@ import ObjEdit from './Nav/ObjEdit';
 import Loading from './Loading';
 import { qauf, _url } from '../constants';
 import { messagesListGroupUpdate, messagesListDirectUpdate, getlastMessageCache, lastMessageCache, getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups, getInfo, delInfo, setInfo } from '../graph/querys';
-import BtnBack from './btnBack';
+import BtnBack from './BtnBack';
 import Info from './Info';
 
 let refUser;
@@ -24,6 +24,7 @@ class LeftNav extends Component {
     this.state = {
       isRunOnce: false,
       __info: [],
+      buttons:[],
     }
   }
 
@@ -190,7 +191,7 @@ class LeftNav extends Component {
           <Map />
           <Top />
           {localStorage.getItem('back') ? <ObjEdit /> : null}
-          {localStorage.getItem('back') ? <BtnBack /> : null}
+          <BtnBack />
           
           <Query query={TASKS_QUERY} >
             {({ loading, error, data, refetch, subscribeToMore }) => {

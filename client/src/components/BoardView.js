@@ -142,7 +142,7 @@ class Board extends Component {
       <Fragment>
         <div className="top-name">
           <h1>{info.name}</h1>
-          <p className="small">{info.id}</p>
+          {/* <p className="small">{info.id}</p> */}
         </div>
       <Query query={getObjectTasks} variables={{ id: getObjectId.currentObjectId }} >
         {({ loading, error, data }) => {
@@ -161,7 +161,6 @@ class Board extends Component {
             );
           }
           if(data &&  data.object && data.object.tasks){
-            console.warn("data is", data.object.tasks)
             if(!tasks) return <Loading />;
 
             const arr = _.sortBy(data.object.tasks, 'unreadCount');

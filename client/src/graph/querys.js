@@ -848,6 +848,27 @@ export const setDashboard = gql`
   }
 `;
 
+export const setPlace = gql`
+  mutation setPlace($id: String, $name: String, $type: String ){
+    setPlace(id: $id, name: $name, type: $type) @client{
+      place{
+        id
+        name
+        type
+      }
+    }
+  }
+`;
+export const getPlace = gql`
+  query getPlace{
+      place @client{
+        id
+        name
+        type
+      }
+    }
+`;
+
 export const QUERY_ROOTID = gql`
 query rootObject($id: ID){
     rootObject(id: $id){

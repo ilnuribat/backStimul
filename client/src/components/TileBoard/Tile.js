@@ -2,9 +2,9 @@ import React from 'react';
 import { deleteObject } from '../../graph/querys';
 import { qauf, _url } from '../../constants';
 
-const Tile = ({_id, name, click, type, updateObject, refetch}) => (
+const Tile = ({_id, name, click, type, updateObject, refetch, parentId}) => (
   <div key={_id} className="tile">
-    <div onClick={()=>click(_id,type,name)}>
+    <div onClick={()=>click(_id,type,name, parentId)}>
       {name ? (<div className="tile-name">{name}</div>) : null }
       {_id ? (<div className="tile-id">{_id}</div>) : null }
     </div>

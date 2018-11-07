@@ -9,6 +9,12 @@ export default {
 
       return {ref, __typename: 'ref' };
     },
+    
+    setPlace: (_, { id, name, type },  { cache }) => {
+      cache.writeData({ data: { id: id, name: name, type: type, } });
+
+      return {id, name, type, __typename: 'place' };
+    },
     setInfo: (_, { id, message, type },  { cache }) => {
 
       const { __info } = cache.readQuery({
