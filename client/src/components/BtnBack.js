@@ -6,11 +6,6 @@ import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus, getCUser, 
 import { SvgBackTo } from './Svg';
 import { savePlace } from '../constants';
 
-
-
-
-
-
 class BtnBack extends Component {
   constructor(props) {
     super(props)
@@ -47,6 +42,7 @@ class BtnBack extends Component {
   backToTheFuture(){
     let back = localStorage.getItem('back');
     let url = localStorage.getItem('backurl');
+    let placeId = localStorage.getItem('placeId');
 
     console.log("BACKK-------------")
 
