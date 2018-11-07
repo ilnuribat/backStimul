@@ -295,9 +295,7 @@ class LeafletMap extends Component {
 
 const Panel = ({ data, type, name, click })  => {
   // console.warn(data.user.groups)
-  if(!data.user && !data.user.groups) return true;
 
-  
   return (
     data.map((post) =>
       // post.status == type &&
@@ -330,7 +328,6 @@ class NavLink extends React.Component {
       this.props.onClick1(this.props.index, this.props.name);
     }
     render() {
-      
       return (
         <button type="button" onClick={this.handleClick} className={b.btn + " " + this.props.btnColor} style={{ "width":"100%", "height":"39px"}} >{this.props.children}</button>
       );
