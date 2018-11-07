@@ -556,10 +556,6 @@ query getCUser{
           text
         }
         endDate
-        address{
-          value
-          coordinates
-        }
       }
     }
 }`;
@@ -588,13 +584,22 @@ export const getObjectTasks2 = (id) => `
           text
         }
         endDate
-        address{
-          value
-          coordinates
-        }
       }
     }
 }`;
+
+export const getObjects = gql`
+ query getObjects {
+  objects {
+    id
+    name
+    address {
+      value
+      coordinates
+    }
+  }
+}
+`;
 
 
 export const getObjectTasks = gql`
