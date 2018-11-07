@@ -61,6 +61,10 @@ export default class TileMaker extends Component {
     this.daDataReqName(e.target.value)
   }
 
+  componentDidMount (){
+    this.props.editObject ? this.setState({open: true, input: this.props.name}) : null
+  }
+
   daDataReqName (name) {
     axios(
       'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
@@ -91,7 +95,7 @@ export default class TileMaker extends Component {
 
   render() {
     const { open,value,addressList } = this.state;
-    const { editObject } = this.props
+    const { editObject, id, name } = this.props
 
 
     if(!open){
@@ -105,19 +109,32 @@ export default class TileMaker extends Component {
     }else{
       let input;
       let address;
+      let _id;
+      let mutation = createObject
+      let variables = {name: `"${input}"`, address: `"${address}"` }
+
+      if (editObject) {
+        mutation = changeObject
+        variables = {id: `"${_id}"`, name: `"${input}"`, address: `"${address}"` }
+      }
 
       return (
         <div className="makeTileWrap">
           <div className="makeTileForm animated flipInY faster">
-            <Mutation mutation={createObject} variables={{name: `"${input}"`, address: `"${address}"` }}>
+            <Mutation mutation={mutation} variables={variables}>
               {(MakeTile, { data }) => (
                 <div>
                   <form
                     onSubmit={e => {
                       e.preventDefault();
-                      MakeTile({ variables: { name: input.value, address: address.value } });
+                      if (editObject) {
+                        MakeTile({ variables: { id: id, name: input.value, address: address.value } });
+                      } else {
+                        MakeTile({ variables: { name: input.value, address: address.value } });
+                      }
                       input.value = "";
                       address.value = "";
+                      this.props.setEdit()
                     }}
                   >
                     <div>
@@ -161,7 +178,7 @@ export default class TileMaker extends Component {
                 </div>
               )}
             </Mutation>
-            <div className="butter mini" onClick={()=>{this.open()}}>Отмена</div>
+            <div className="butter mini" onClick={()=>{this.open();editObject ? this.props.setEdit() : null}}>Отмена</div>
           </div>
         </div>
       );

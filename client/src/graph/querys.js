@@ -200,11 +200,7 @@ export const createObject = gql`
 
 export const changeObject = gql`
   mutation changeObject($id: ID!, $name: String, $address: String!) {
-    updateObject(id: $id, object: { name: $name, address: $address }) {
-      id
-      name
-      address
-    }
+    updateObject(id: $id, object: { name: $name, address: $address })
   }
 `;
 
