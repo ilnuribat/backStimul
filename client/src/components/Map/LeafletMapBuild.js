@@ -91,16 +91,14 @@ class LeafletMap extends Component {
       let centerLat = 55.797
       let currentZoom = 10
 
-      if (getCUser.user) {
+      if (getCUser.user && getCUser.user.groups) {
         let minLat = 100.00
         let maxLat = 0.00
         let minLon = 100.00
         let maxLon = 0.00
 
         getCUser.user.groups.map((post) => {
-          if(!post.address || !post.address.coordinates){
-            return true
-          }
+          if(!post.address || !post.address.coordinates) return true
 
           minLat > parseFloat(post.address.coordinates[0]) ? minLat = parseFloat(post.address.coordinates[0]) : null
           maxLat < parseFloat(post.address.coordinates[0]) ? maxLat = parseFloat(post.address.coordinates[0]) : null
@@ -274,7 +272,9 @@ class LeafletMap extends Component {
 
 const Panel = ({ data, type, name, click })  => {
   // console.warn(data.user.groups)
+  if(!data.user && !data.user.groups) return true;
 
+  
   return (
     data.user.groups.map((post) =>
       post.status == type && post.address && post.address.coordinates && post.address.coordinates.length >0 ?
@@ -306,6 +306,7 @@ class NavLink extends React.Component {
       this.props.onClick1(this.props.index, this.props.name);
     }
     render() {
+      
       return (
         <button type="button" onClick={this.handleClick} className={b.btn + " " + this.props.btnColor} style={{ "width":"100%", "height":"39px"}} >{this.props.children}</button>
       );

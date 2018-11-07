@@ -3,7 +3,7 @@ import { graphql, compose, Query } from "react-apollo";
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import 'animate.css';
-import { TASKS_QUERY, glossaryStatus, setPrivateChat, getObjectTasks, getObjectId} from '../graph/querys';
+import { TASKS_QUERY, glossaryStatus, setPrivateChat, getObjectTasks, getObjectId, setObjectId} from '../graph/querys';
 import { qauf, _url } from '../constants';
 import Column from './BoardParts/Column';
 import DataQuery from './BoardParts/DataQuery';
@@ -25,8 +25,6 @@ class Board extends Component {
         "На проверке",
         "Завершенные",
       ],
-
-
     };
 
     this.daTa = this.daTa.bind(this)
@@ -88,10 +86,18 @@ class Board extends Component {
   // }
 
   render(){
-    const { getObjectId } = this.props
+    const { getObjectId, setObjectId } = this.props;
 
     if (!getObjectId.currentObjectId) {
-      return null
+
+      let id = localStorage.getItem('back');
+      this.props.setObjectId({
+        variables:{
+          id: id,
+          priv: false,
+        }
+      });
+      // return null
     }
 
     let { status, tasks } = this.state;
@@ -168,8 +174,8 @@ Board.propTypes = {
 };
 
 
-
 export default compose(
   graphql(getObjectId, { name: 'getObjectId' }),
+  graphql(setObjectId, { name: 'setObjectId' }),
   graphql(setPrivateChat, { name: 'setPrivateChat' }),
 )(Board);
