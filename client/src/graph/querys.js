@@ -564,7 +564,7 @@ query getCUser{
     }
 }`;
 
-export const getObjectTasks = (id) => `
+export const getObjectTasks2 = (id) => `
 {
   object (id: "${id}") {
       tasks{
@@ -596,6 +596,39 @@ export const getObjectTasks = (id) => `
     }
 }`;
 
+
+export const getObjectTasks = gql`
+ query getObjectTasks($id: ID!){
+  object (id: $id) {
+      tasks{
+        id
+        name
+        users{
+          id
+          username
+        }
+        unreadCount
+        status
+        assignedTo{
+          id
+          username
+        }
+        lastMessage{
+          from{
+            id
+            username
+          }
+          text
+        }
+        endDate
+        address{
+          value
+          coordinates
+        }
+      }
+    }
+}
+`;
 
 export const GRU_QUERY = gql`
   query group($id: ID!){
