@@ -184,13 +184,12 @@ class LeftNav extends Component {
         </div>
         <nav className="left-nav">
           <Profile />
-          <Groups />
+          {/* <Groups /> */}
           {/* <Board /> */}
           <Private />
           <Map />
           <Top />
-          <ObjEdit />
-
+          {localStorage.getItem('back') ? <ObjEdit /> : null}
           {localStorage.getItem('back') ? <BtnBack /> : null}
           
           <Query query={TASKS_QUERY} >
