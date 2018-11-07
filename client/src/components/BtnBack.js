@@ -1,8 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { graphql, compose } from "react-apollo";
-import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus, getCUser, setTemp, getTemp } from '../graph/querys';
-import { SvgBack } from './Svg';
+import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus, getCUser, setTemp, getTemp, getPlace, setPlace } from '../graph/querys';
+import { SvgBackTo } from './Svg';
+import { savePlace } from '../constants';
+
+
+
+
+
 
 class BtnBack extends Component {
   constructor(props) {
@@ -16,24 +23,24 @@ class BtnBack extends Component {
   }
 
   componentDidMount(){
-    let back = localStorage.getItem('back');
-    let url = localStorage.getItem('backurl');
+    // let back = localStorage.getItem('back');
+    // let url = localStorage.getItem('backurl');
 
-    if(!!back){
-      this.setState({
-        __back: back,
-      })
-    }
+    // if(!!back){
+    //   this.setState({
+    //     __back: back,
+    //   })
+    // }
   }
   componentDidUpdate(){
-    let back = localStorage.getItem('back');
-    let url = localStorage.getItem('backurl');
+    // let back = localStorage.getItem('back');
+    // let url = localStorage.getItem('backurl');
 
-    if(!!back && back != this.state.__back){
-      this.setState({
-        __back: back,
-      })
-    }
+    // if(!!back && back != this.state.__back){
+    //   this.setState({
+    //     __back: back,
+    //   })
+    // }
   }
   
 
@@ -42,9 +49,6 @@ class BtnBack extends Component {
     let url = localStorage.getItem('backurl');
 
     console.log("BACKK-------------")
-    this.setState({
-      toTop: true,
-    })
 
   }
 
@@ -61,7 +65,9 @@ class BtnBack extends Component {
     }
     return (
       <div className="svgBackBtn" onClick={this.backToTheFuture}>
-        <SvgBack />
+        <Link to="/">
+          <SvgBackTo />
+        </Link>
       </div>
     )
   }
@@ -70,4 +76,6 @@ class BtnBack extends Component {
 export default compose(
   graphql(getPrivateChat, { name: 'getChat' }),
   graphql(setPrivateChat, { name: 'setChat' }),
+  graphql(setPlace, { name: 'setPlace' }),
+  graphql(getPlace, { name: 'getPlace' }),
 )(BtnBack);

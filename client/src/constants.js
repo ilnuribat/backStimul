@@ -2,6 +2,12 @@ import ColorHash from 'color-hash';
 
 export const colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
 
+
+export const savePlace =(id,name,type)=>{
+  localStorage.setItem("place", `"id":"${id}","name":"${name}","type":"${type}"`);
+  return true;
+}
+
 export const colors = {
   blue: {
     deep: 'rgb(0, 121, 191)',
