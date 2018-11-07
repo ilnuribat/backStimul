@@ -97,19 +97,24 @@ class Board extends Component {
     qauf(ObjectInfo(id), _url, localStorage.getItem('auth-token'))
     .then(a=>{
 
-      console.log(a.object.name);
+      console.log("a.object.name");
+      console.log(a);
+      console.log(a.data.object.name);
 
       let info = {};
 
       info.id = id;
-      info.name = a.object.name;
+      info.name = a.data.object.name;
 
       console.log(info)
 
-
-      this.setState({
-        info: info,
-      });
+      if(this.state.info.id == id && this.state.info.name == a.data.object.name){return true} 
+      else{
+        this.setState({
+          info: info,
+        });
+  
+      }
 
     })
       .catch((e)=>{
@@ -148,7 +153,7 @@ class Board extends Component {
 
     return (
       <Fragment>
-        <div>
+        <div className="top-name">
           <h1>{info.name}</h1>
           <p>{info.id}</p>
         </div>

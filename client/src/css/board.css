@@ -11,3 +11,10 @@
   background: rgba(0,0,0,.5);
   padding:10px;
 }
+
+.top-name{
+  background: rgba(0, 0, 0, 0.61);
+  color:#FFF;
+  margin:0 0 0 40px;
+  padding:20px;
+}
