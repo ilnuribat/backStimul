@@ -11,6 +11,10 @@ async function rootObjectQuery(parent, { id: addressId }) {
   }
   const rootObject = await Group.getFiasIdLevel(addressId);
 
+  if (!rootObject) {
+    throw new Error('no such address');
+  }
+
   const addresses = await Group.getGroupedLevel(rootObject.level + 1, rootObject.id);
 
   let objects;
