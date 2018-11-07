@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import {
   LayerGroup,
   LayersControl,
@@ -7,15 +7,15 @@ import {
   Popup,
   TileLayer
 } from "react-leaflet";
-import { graphql, compose } from "react-apollo";
+import { graphql, compose, Query } from "react-apollo";
 import { divIcon } from "leaflet";
 import PropTypes from 'prop-types';
 import {Redirect} from "react-router-dom";
 import { ReactLeafletSearch } from 'react-leaflet-search'
-import { getCUser, setPrivateChat } from '../../graph/querys';
-import Indicator from "./Indicator";
-import newdata from "./Objects";
+import { getObjects, setPrivateChat } from '../../graph/querys';
+// import Indicator from "./Indicator";
 import b from "./buttons.css";
+import Loading from '../Loading';
 import  "./LeafletMap.css";
 
 const { BaseLayer, Overlay } = LayersControl;
@@ -86,180 +86,203 @@ class LeafletMap extends Component {
     }
 
     render() {
-      const { getCUser } = this.props;
-      let centerLon = 37.43
-      let centerLat = 55.797
-      let currentZoom = 10
-
-      if (getCUser.user && getCUser.user.groups) {
-        let minLat = 100.00
-        let maxLat = 0.00
-        let minLon = 100.00
-        let maxLon = 0.00
-
-        getCUser.user.groups.map((post) => {
-          if(!post.address || !post.address.coordinates) return true
-
-          minLat > parseFloat(post.address.coordinates[0]) ? minLat = parseFloat(post.address.coordinates[0]) : null
-          maxLat < parseFloat(post.address.coordinates[0]) ? maxLat = parseFloat(post.address.coordinates[0]) : null
-          minLon > parseFloat(post.address.coordinates[1]) ? minLon = parseFloat(post.address.coordinates[1]) : null
-          maxLon < parseFloat(post.address.coordinates[1]) ? maxLon = parseFloat(post.address.coordinates[1]) : null
-        })
-
-        centerLon = (minLon + maxLon)/2
-        centerLat = (minLat + maxLat)/2
-
-        const WORLD_DIM = { height: 256, width: 256 };
-        const ZOOM_MAX = 21;
-
-        const latFraction = (latRad(maxLat) - latRad(minLat)) / Math.PI;
-        const lngDiff = maxLon - minLon
-        const  lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-
-        const latZoom = zoom(this.state.offsetHeight, WORLD_DIM.height, latFraction);
-        const lngZoom = zoom(this.state.offsetWidth, WORLD_DIM.width, lngFraction);
-
-        currentZoom = Math.min(latZoom, lngZoom, ZOOM_MAX);
-      }
-      if (this.state.redirect) {
-        return <Redirect push to="/" />;
-      }
-
-      const center = [centerLat, centerLon];
-
       return (
         <div ref={this.myInput}>
-          <Map center={center} zoom={currentZoom} style={styleLeaf}  >
-            <LayersControl position="topright" >
-              <BaseLayer  checked name="Landscape">
-                <TileLayer
-                  attribution="GUOV"
-                  url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                />
-              </BaseLayer>
+          <Query query={getObjects}>
+            {({ loading, data }) => {
+              if (loading){
+                return (
+                  <div style={{ paddingTop: 20 }}>
+                    <Loading />
+                  </div>
+                );
+              }
 
-              <BaseLayer  name="Черно-белая карта">
-                <TileLayer
-                  attribution="GUOV"
-                  url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
-                />
-              </BaseLayer>
-              <BaseLayer  name="OpenCycleMap">
-                <TileLayer
-                  attribution="GUOV"
-                  url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                />
-              </BaseLayer>
-              <BaseLayer  name="Цветная карта OSM " >
-                <TileLayer
-                  attribution="GUOV"
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-              </BaseLayer>
-              <BaseLayer  name="Outdoors">
-                <TileLayer
-                  attribution="GUOV"
-                  url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                />
-              </BaseLayer>
-              <BaseLayer  name="Neighbourhood">
-                <TileLayer
-                  attribution="GUOV"
-                  url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                />
-              </BaseLayer>
-              <BaseLayer  name="Toner">
-                <TileLayer
-                  attribution="GUOV"
-                  url="http://tile.stamen.com/toner/{z}/{x}/{y}.png"
-                />
-              </BaseLayer>
-              <BaseLayer  name="Terrain">
-                <TileLayer
-                  attribution="GUOV"
-                  url="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
-                />
-              </BaseLayer>
-              <BaseLayer  name="Watercolor">
-                <TileLayer
-                  attribution="GUOV"
-                  url="http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
-                />
-              </BaseLayer>
-              <BaseLayer  name="Spinal Map">
-                <TileLayer
-                  attribution="GUOV"
-                  url="https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                />
-              </BaseLayer>
-              <BaseLayer  name="Full Dark">
-                <TileLayer
-                  attribution="GUOV"
-                  url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
-                />
-              </BaseLayer>
-              {
-                getCUser.user ? (
-                  <Overlay checked name="Задачи новые" >
-                    <LayerGroup >
-                      <Panel type="1" name="Задача новая" data={getCUser} click={this.handleTabChange} />
-                    </LayerGroup>
-                  </Overlay>) : null }
-              {
-                getCUser.user ? (
-                  <Overlay checked name="Задачи неназначенные">
-                    <LayerGroup >
-                      <Panel type="2" name="Задача неназначенная" data={getCUser} click={this.handleTabChange} />
-                    </LayerGroup>
-                  </Overlay>) : null }
-              {
-                getCUser.user ? (
-                  <Overlay checked name="Задачи в работе">
-                    <LayerGroup >
-                      <Panel type="3" name="Задача в работе"  data={getCUser} click={this.handleTabChange} />
-                    </LayerGroup>
-                  </Overlay>) : null }
-              {
-                getCUser.user ? (
-                  <Overlay checked name="Задачи на согласовании">
-                    <LayerGroup >
-                      <Panel type="4" name="Задача на согласовании"  data={getCUser} click={this.handleTabChange} />
-                    </LayerGroup>
-                  </Overlay>) : null }
-              {
-                getCUser.user ? (
-                  <Overlay checked name="Задачи завершенные">
-                    <LayerGroup >
-                      <Panel type="5" name="Задача завершенная"  data={getCUser} click={this.handleTabChange} />
-                    </LayerGroup>
-                  </Overlay>) : null }
-              <ReactLeafletSearch
-                position="topleft"
+              if(data && data.objects){
+                let centerLon = 37.43
+                let centerLat = 55.797
+                let currentZoom = 10
+                let minLat = 100.00
+                let maxLat = 0.00
+                let minLon = 100.00
+                let maxLon = 0.00
 
-                showMarker={true}
-                zoom={15}
-                showPopup={true}
-                popUp={this.customPopup}
-                closeResultsOnClick={true}
-                openSearchOnLoad={true}
-                // // these searchbounds would limit results to only Turkey.
-                // searchBounds = {
-                //   [
-                //     [33.100745405144245, 46.48315429687501],
-                //     [44.55916341529184, 24.510498046875]
-                //   ]
-                // }
-                providerOptions={{region: 'ru'}}
+                data.objects.map((post) => {
+                  if(!post.address || !post.address.coordinates){
+                    return true
+                  }
 
-              // default provider OpenStreetMap
-              // provider="BingMap"
-              // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
-              />
-            </LayersControl>
+                  minLat > parseFloat(post.address.coordinates[0]) ? minLat = parseFloat(post.address.coordinates[0]) : null
+                  maxLat < parseFloat(post.address.coordinates[0]) ? maxLat = parseFloat(post.address.coordinates[0]) : null
+                  minLon > parseFloat(post.address.coordinates[1]) ? minLon = parseFloat(post.address.coordinates[1]) : null
+                  maxLon < parseFloat(post.address.coordinates[1]) ? maxLon = parseFloat(post.address.coordinates[1]) : null
+                })
 
-          </Map>
+                centerLon = (minLon + maxLon)/2
+                centerLat = (minLat + maxLat)/2
+
+                const WORLD_DIM = { height: 256, width: 256 };
+                const ZOOM_MAX = 21;
+
+                const latFraction = (latRad(maxLat) - latRad(minLat)) / Math.PI;
+                const lngDiff = maxLon - minLon
+                const lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+                const latZoom = zoom(this.state.offsetHeight, WORLD_DIM.height, latFraction);
+                const lngZoom = zoom(this.state.offsetWidth, WORLD_DIM.width, lngFraction);
+
+                currentZoom = Math.min(latZoom, lngZoom, ZOOM_MAX);
+
+                if (this.state.redirect) {
+                  return <Redirect push to="/board" />;
+                }
+
+                const center = [centerLat, centerLon];
+
+                return (
+                  <Map center={center} zoom={currentZoom} style={styleLeaf}  >
+                    <LayersControl position="topright" >
+                      <BaseLayer  checked name="Landscape">
+                        <TileLayer
+                          attribution="GUOV"
+                          url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                        />
+                      </BaseLayer>
+
+                      <BaseLayer  name="Черно-белая карта">
+                        <TileLayer
+                          attribution="GUOV"
+                          url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
+                        />
+                      </BaseLayer>
+                      <BaseLayer  name="OpenCycleMap">
+                        <TileLayer
+                          attribution="GUOV"
+                          url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                        />
+                      </BaseLayer>
+                      <BaseLayer  name="Цветная карта OSM " >
+                        <TileLayer
+                          attribution="GUOV"
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                      </BaseLayer>
+                      <BaseLayer  name="Outdoors">
+                        <TileLayer
+                          attribution="GUOV"
+                          url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                        />
+                      </BaseLayer>
+                      <BaseLayer  name="Neighbourhood">
+                        <TileLayer
+                          attribution="GUOV"
+                          url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                        />
+                      </BaseLayer>
+                      <BaseLayer  name="Toner">
+                        <TileLayer
+                          attribution="GUOV"
+                          url="http://tile.stamen.com/toner/{z}/{x}/{y}.png"
+                        />
+                      </BaseLayer>
+                      <BaseLayer  name="Terrain">
+                        <TileLayer
+                          attribution="GUOV"
+                          url="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
+                        />
+                      </BaseLayer>
+                      <BaseLayer  name="Watercolor">
+                        <TileLayer
+                          attribution="GUOV"
+                          url="http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
+                        />
+                      </BaseLayer>
+                      <BaseLayer  name="Spinal Map">
+                        <TileLayer
+                          attribution="GUOV"
+                          url="https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                        />
+                      </BaseLayer>
+                      <BaseLayer  name="Full Dark">
+                        <TileLayer
+                          attribution="GUOV"
+                          url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+                        />
+                      </BaseLayer>
+                      {
+                        data.objects ? (
+                          <Overlay checked name="Задачи новые" >
+                            <LayerGroup >
+                              <Panel type="1" name="Задача новая" data={data.objects} click={this.handleTabChange} />
+                            </LayerGroup>
+                          </Overlay>) : null }
+                      {/* {
+                        data.objects ? (
+                          <Overlay checked name="Задачи неназначенные">
+                            <LayerGroup >
+                              <Panel type="2" name="Задача неназначенная" data={data.objects} click={this.handleTabChange} />
+                            </LayerGroup>
+                          </Overlay>) : null }
+                      {
+                        data.objects ? (
+                          <Overlay checked name="Задачи в работе">
+                            <LayerGroup >
+                              <Panel type="3" name="Задача в работе"  data={data.objects} click={this.handleTabChange} />
+                            </LayerGroup>
+                          </Overlay>) : null }
+                      {
+                        data.objects ? (
+                          <Overlay checked name="Задачи на согласовании">
+                            <LayerGroup >
+                              <Panel type="4" name="Задача на согласовании"  data={data.objects} click={this.handleTabChange} />
+                            </LayerGroup>
+                          </Overlay>) : null }
+                      {
+                        data.objects ? (
+                          <Overlay checked name="Задачи завершенные">
+                            <LayerGroup >
+                              <Panel type="5" name="Задача завершенная"  data={data.objects} click={this.handleTabChange} />
+                            </LayerGroup>
+                          </Overlay>) : null } */}
+                      <ReactLeafletSearch
+                        position="topleft"
+
+                        showMarker={true}
+                        zoom={15}
+                        showPopup={true}
+                        popUp={this.customPopup}
+                        closeResultsOnClick={true}
+                        openSearchOnLoad={true}
+                        // // these searchbounds would limit results to only Turkey.
+                        // searchBounds = {
+                        //   [
+                        //     [33.100745405144245, 46.48315429687501],
+                        //     [44.55916341529184, 24.510498046875]
+                        //   ]
+                        // }
+                        providerOptions={{region: 'ru'}}
+
+                        // default provider OpenStreetMap
+                        // provider="BingMap"
+                        // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
+                      />
+                    </LayersControl>
+
+                  </Map>
+                );
+              }else{
+                return(
+                  <div>Нет данных</div>
+                )
+              }
+
+            }}
+          </Query>
         </div>
-      );
+      )
+
+
+
     }
 }
 
@@ -276,9 +299,10 @@ const Panel = ({ data, type, name, click })  => {
 
   
   return (
-    data.user.groups.map((post) =>
-      post.status == type && post.address && post.address.coordinates && post.address.coordinates.length >0 ?
-        <Marker key={post.id} position={post.address.coordinates} icon={SwitchIcon(post.status)}>
+    data.map((post) =>
+      // post.status == type &&
+      post.address && post.address.coordinates && post.address.coordinates.length >0 ?
+        <Marker key={post.id} position={post.address.coordinates} icon={SwitchIcon(1)}>
           <Popup >
             <div className="modal" >
               <ul>
@@ -343,12 +367,12 @@ const SwitchIcon = (status)   => {
 
 
 LeafletMap.propTypes = {
-  getCUser: PropTypes.object.isRequired,
+  // getCUser: PropTypes.object.isRequired,
   setPrivateChat: PropTypes.func.isRequired
 };
 
 
 export default compose(
-  graphql(getCUser, { name: 'getCUser' }),
+  // graphql(getCUser, { name: 'getCUser' }),
   graphql(setPrivateChat, { name: 'setPrivateChat' }),
 )(LeafletMap);
