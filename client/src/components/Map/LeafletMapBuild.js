@@ -12,7 +12,7 @@ import { divIcon } from "leaflet";
 import PropTypes from 'prop-types';
 import {Redirect} from "react-router-dom";
 import { ReactLeafletSearch } from 'react-leaflet-search'
-import { getObjects, setPrivateChat } from '../../graph/querys';
+import { getObjects, setObjectId } from '../../graph/querys';
 // import Indicator from "./Indicator";
 import b from "./buttons.css";
 import Loading from '../Loading';
@@ -74,14 +74,13 @@ class LeafletMap extends Component {
 
     handleTabChange = (index, name) => {
       // console.warn("clicked!", index, name);
-      this.props.setPrivateChat({
+      this.props.setObjectId({
         variables: {
           id: index,
           name: name,
-          priv: false,
-          unr: 0,
         }
       });
+      localStorage.setItem('back',index)
       this.setState({redirect: true});
     }
 
@@ -365,11 +364,11 @@ const SwitchIcon = (status)   => {
 
 LeafletMap.propTypes = {
   // getCUser: PropTypes.object.isRequired,
-  setPrivateChat: PropTypes.func.isRequired
+  setObjectId: PropTypes.func.isRequired
 };
 
 
 export default compose(
   // graphql(getCUser, { name: 'getCUser' }),
-  graphql(setPrivateChat, { name: 'setPrivateChat' }),
+  graphql(setObjectId, { name: 'setObjectId' }),
 )(LeafletMap);
