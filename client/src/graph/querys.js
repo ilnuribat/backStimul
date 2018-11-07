@@ -600,6 +600,8 @@ export const getObjectTasks2 = (id) => `
 export const getObjectTasks = gql`
  query getObjectTasks($id: ID!){
   object (id: $id) {
+      name
+      parentId
       tasks{
         id
         name
@@ -629,6 +631,21 @@ export const getObjectTasks = gql`
     }
 }
 `;
+export const getObjectInfo= gql`
+ query getObjectInfo($id: ID!){
+  object (id: $id) {
+      name
+    }
+  }
+`;
+export const ObjectInfo = (id)=>(`
+ query{
+  object (id: "${id}") {
+      name
+      parentId
+    }
+  }
+`);
 
 export const GRU_QUERY = gql`
   query group($id: ID!){
@@ -775,4 +792,47 @@ export const getInfo = gql`
               type
             }
           }
+`;
+
+
+export const getDashboard = gql`
+  query getDash{
+    rootObject @client{
+        objects{
+          id
+          name
+        }
+        addresses{
+          id
+          name
+        }
+      }
+    }
+`;
+export const setDashboard = gql`
+  mutation setBar($Dash: String){
+    setDash(Dash: $Dash) @client{
+      rootObject
+    }
+  }
+`;
+
+export const QUERY_ROOTID = gql`
+query rootObject($id: ID){
+    rootObject(id: $id){
+      id
+      name
+      parentId
+      addresses{
+        id
+        name
+        __typename
+      }
+      objects{
+        id
+        name
+        __typename
+      }
+    }
+}
 `;

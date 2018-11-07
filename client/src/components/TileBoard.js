@@ -9,50 +9,9 @@ import TileMaker from './TileBoard/TileMaker'
 // import Info from './Info';
 import { SvgBack } from './Svg';
 // import { getCUser, setObjectId, getTemp, setTemp, delInfo, setInfo } from '../graph/querys';
-import { setObjectId, setInfo } from '../graph/querys';
+import { setObjectId, setInfo, getDashboard, setDashboard, QUERY_ROOTID } from '../graph/querys';
 
 
-export const getDashboard = gql`
-  query getDash{
-    rootObject @client{
-        objects{
-          id
-          name
-        }
-        addresses{
-          id
-          name
-        }
-      }
-    }
-`;
-export const setDashboard = gql`
-  mutation setBar($Dash: String){
-    setDash(Dash: $Dash) @client{
-      rootObject
-    }
-  }
-`;
-
-const QUERY_ROOTID = gql`
-query rootObject($id: ID){
-    rootObject(id: $id){
-      id
-      name
-      parentId
-      addresses{
-        id
-        name
-        __typename
-      }
-      objects{
-        id
-        name
-        __typename
-      }
-    }
-}
-`;
 
 
 class Top extends React.Component {

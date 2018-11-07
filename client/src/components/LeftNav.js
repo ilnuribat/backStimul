@@ -8,6 +8,7 @@ import Profile from './Nav/Profile';
 import Board from './Nav/Board';
 import Map from './Nav/Map';
 import Top from './Nav/Top';
+import ObjEdit from './Nav/ObjEdit';
 
 import Loading from './Loading';
 import { qauf, _url } from '../constants';
@@ -177,7 +178,7 @@ class LeftNav extends Component {
           {getInfo && getInfo.__info && getInfo.__info.map((e,i)=>{
             return(
 
-              <Info id={e.id} mapindex={i} key={'info-'+e.id} message={e.message} type={e.type} />
+              <Info id={e.id} mapindex={i} key={'info-'+e.id + '-' +i } message={e.message} type={e.type} />
             )
           }) }
         </div>
@@ -188,10 +189,7 @@ class LeftNav extends Component {
           <Private />
           <Map />
           <Top />
-
-          <div style={{background: "#FFF", height:"0px", textAlign:"center"}} onClick={()=>{this.props.setInfo({variables:{id:"id",message:"ПОШЁЛ НАХУЙ!", type:"Error"}})}}>
-            
-          </div>
+          <ObjEdit />
 
           {localStorage.getItem('back') ? <BtnBack /> : null}
           

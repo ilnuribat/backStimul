@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { graphql, compose, Query } from "react-apollo";
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import 'animate.css';
-import { TASKS_QUERY, glossaryStatus, setPrivateChat, getObjectTasks, getObjectId, setObjectId} from '../graph/querys';
+import { TASKS_QUERY, glossaryStatus, setPrivateChat, getObjectTasks, getObjectId, setObjectId, getObjectInfo, setInfo,ObjectInfo} from '../graph/querys';
 import { qauf, _url } from '../constants';
 import Column from './BoardParts/Column';
 import DataQuery from './BoardParts/DataQuery';
@@ -15,6 +15,8 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      name:"",
+      info:{name:"", id:""},
       input: [],
       status: [],
       tasks: {},
@@ -84,10 +86,43 @@ class Board extends Component {
   //       console.warn(e);
   //     });
   // }
+  about(id){
+
+    console.log("id----------")
+    console.log(id)
+    this.props.setInfo({variables:{id:"id",message:id, type:"error"}});
+
+    
+
+    qauf(ObjectInfo(id), _url, localStorage.getItem('auth-token'))
+    .then(a=>{
+
+      console.log(a.object.name);
+
+      let info = {};
+
+      info.id = id;
+      info.name = a.object.name;
+
+      console.log(info)
+
+
+      this.setState({
+        info: info,
+      });
+
+    })
+      .catch((e)=>{
+        console.warn(e);
+      });
+
+
+  }
 
   render(){
     const { getObjectId, setObjectId } = this.props;
-
+    const { info } = this.state;
+    console.log(info)
     if (!getObjectId.currentObjectId) {
 
       let id = localStorage.getItem('back');
@@ -97,7 +132,12 @@ class Board extends Component {
           priv: false,
         }
       });
+
+      this.about(id)
+
       // return null
+    }else{
+      this.about(getObjectId.currentObjectId)
     }
 
     let { status, tasks } = this.state;
@@ -107,7 +147,11 @@ class Board extends Component {
     if(!status) return <Loading />;
 
     return (
-
+      <Fragment>
+        <div>
+          <h1>{info.name}</h1>
+          <p>{info.id}</p>
+        </div>
       <Query query={getObjectTasks} variables={{ id: getObjectId.currentObjectId }} >
         {({ loading, error, data }) => {
           if (loading){
@@ -118,10 +162,10 @@ class Board extends Component {
             );
           }
           if (error){
+
+            this.props.setInfo({variables:{id:"id",message:error.message, type:"error"}})
             return (
-              <div className="errMess">
-                {error.message}
-              </div>
+              true
             );
           }
           if(data &&  data.object && data.object.tasks){
@@ -155,14 +199,15 @@ class Board extends Component {
                 </div>
               )
             }else{
-              return(
-                "Нет данных"
-              )
+
+              this.props.setInfo({variables:{id:"id",message:"Нет данных", type:"error"}})
+              return true;
             }
           }
         }
         }
       </Query>
+      </Fragment>
     )
   }
 }
@@ -177,5 +222,6 @@ Board.propTypes = {
 export default compose(
   graphql(getObjectId, { name: 'getObjectId' }),
   graphql(setObjectId, { name: 'setObjectId' }),
+  graphql(setInfo, { name: 'setInfo' }),
   graphql(setPrivateChat, { name: 'setPrivateChat' }),
 )(Board);
