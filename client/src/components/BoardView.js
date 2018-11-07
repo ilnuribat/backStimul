@@ -88,25 +88,13 @@ class Board extends Component {
   // }
   about(id){
 
-    console.log("id----------")
-    console.log(id)
-    this.props.setInfo({variables:{id:"id",message:id, type:"error"}});
-
-    
-
     qauf(ObjectInfo(id), _url, localStorage.getItem('auth-token'))
     .then(a=>{
-
-      console.log("a.object.name");
-      console.log(a);
-      console.log(a.data.object.name);
 
       let info = {};
 
       info.id = id;
       info.name = a.data.object.name;
-
-      console.log(info)
 
       if(this.state.info.id == id && this.state.info.name == a.data.object.name){return true} 
       else{
@@ -127,7 +115,7 @@ class Board extends Component {
   render(){
     const { getObjectId, setObjectId } = this.props;
     const { info } = this.state;
-    console.log(info)
+
     if (!getObjectId.currentObjectId) {
 
       let id = localStorage.getItem('back');
@@ -140,7 +128,6 @@ class Board extends Component {
 
       this.about(id)
 
-      // return null
     }else{
       this.about(getObjectId.currentObjectId)
     }
@@ -155,7 +142,7 @@ class Board extends Component {
       <Fragment>
         <div className="top-name">
           <h1>{info.name}</h1>
-          <p>{info.id}</p>
+          <p className="small">{info.id}</p>
         </div>
       <Query query={getObjectTasks} variables={{ id: getObjectId.currentObjectId }} >
         {({ loading, error, data }) => {
