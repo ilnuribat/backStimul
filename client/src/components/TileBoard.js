@@ -12,7 +12,7 @@ import { SvgBack } from './Svg';
 import { setObjectId, setInfo, getDashboard, setDashboard, QUERY_ROOTID } from '../graph/querys';
 
 
-
+let ref;
 
 class Top extends React.Component {
   constructor(props) {
@@ -26,8 +26,19 @@ class Top extends React.Component {
       childs: [],
       object: false,
       rootId:"",
+      editObject: false
     }
     this.query = this.query.bind(this)
+  }
+
+  refetch1() {
+    console.warn("REFETCH!!")
+    ref()
+  }
+
+  updateObject(id,name){
+    console.warn(id,name)
+    this.setState({editObject: true});
   }
 
   query(e, type,name){
@@ -46,8 +57,6 @@ class Top extends React.Component {
         variables:{
           id: e,
           name: name,
-          priv: false,
-          unr: 0,
         }
       });
       this.setState({
@@ -71,9 +80,7 @@ class Top extends React.Component {
 
   }
 
-  componentDidUpdate(){
 
-  }
 
   backToThePast(id){
     let backid = id || '';
@@ -109,6 +116,7 @@ class Top extends React.Component {
         {({ loading, error, data, refetch }) => {
           if (loading) return "Loading...";
           // if (error) console.log(`Error! ${error.message}`);
+          ref = refetch
 
           if(data){
             data.rootObject && data.rootObject.parentId ? localStorage.setItem('back', data.rootObject.parentId) : null;
@@ -131,7 +139,7 @@ class Top extends React.Component {
                       // getDash && getDash.rootObject && getDash.rootObject.addresses && getDash.rootObject.addresses.map((e)=>{
                       data.rootObject && data.rootObject.addresses && data.rootObject.addresses.map((e)=>{
                         return(
-                          <Tile key={e.id} _id={e.id} name={e.name} query={this.query} type={e.__typename||'address'} click={this.query} />
+                          <Tile key={e.id} _id={e.id} name={e.name} type={e.__typename||'address'} click={this.query} />
                         )
                       })
                     }
@@ -139,7 +147,7 @@ class Top extends React.Component {
                       // getDash && getDash.rootObject && getDash.rootObject.objects && getDash.rootObject.objects.map((e)=>{
                       data.rootObject && data.rootObject.objects && data.rootObject.objects.map((e)=>{
                         return(
-                          <Tile key={e.id} _id={e.id} name={e.name} query={this.query} type={'object'} click={this.query} />
+                          <Tile key={e.id} _id={e.id} name={e.name} type='object' click={this.query} refetch={this.refetch1} updateObject={this.updateObject} />
                         )
                       })
                     }

@@ -189,6 +189,32 @@ export const setObjectId = gql`
   }
 `;
 
+export const createObject = gql`
+  mutation createObject($name: String, $address: String!) {
+    createObject(object: { name: $name, address: $address }) {
+      id
+      name
+    }
+  }
+`;
+
+export const changeObject = gql`
+  mutation changeObject($id: ID!, $name: String, $address: String!) {
+    updateObject(id: $id, object: { name: $name, address: $address }) {
+      id
+      name
+      address
+    }
+  }
+`;
+
+
+export const deleteObject = (id) =>`
+  mutation{
+    deleteObject(id: "${id}")
+  }
+`;
+
 
 export const getlastMessageCache = gql`
   query getlastMessageCache{

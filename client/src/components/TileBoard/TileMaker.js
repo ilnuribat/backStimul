@@ -4,21 +4,10 @@ import axios from 'axios';
 import gql from 'graphql-tag'
 import { Mutation } from "react-apollo"
 import 'animate.css';
+import { createObject, changeObject } from '../../graph/querys';
 // import { SvgClose2 } from '../Svg';
 // import { qauf } from '../../constants';
-// import { createDirect } from '../../graph/querys';
 
-
-
-
-const MAKE_TILE = gql`
-  mutation MakeTile($name: String, $address: String!) {
-    createObject(object: { name: $name, address: $address }) {
-      id
-      name
-    }
-  }
-`;
 
 
 export default class TileMaker extends Component {
@@ -30,10 +19,12 @@ export default class TileMaker extends Component {
       open: false,
       input: '',
       addressList:'',
+      value: ''
     }
 
     this.open = this.open.bind(this)
     this.daDataReqName = this.daDataReqName.bind(this)
+    this.newAddress = this.newAddress.bind(this);
   }
 
   static propTypes = {
@@ -58,30 +49,10 @@ export default class TileMaker extends Component {
     return res.data.suggestions[0].data;
   }
 
-  async daDataReqIdPaid (address) {
-    const res = await axios(
-      'https://dadata.ru/api/v2/clean/address',
-
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83",
-          // "X-Secret" : "53298fa2e7d1762e0e329388eb3fd66ae4a3312a"
-        },
-        data: [address]
-      })
-
-    return res.data.suggestions[0].data;
-  }
-
   handleChange(event) {
 
     this.daDataReqName(event.target.value)
   }
-
-
 
   newAddress(e){
     this.setState({
@@ -89,6 +60,7 @@ export default class TileMaker extends Component {
     })
     this.daDataReqName(e.target.value)
   }
+
   daDataReqName (name) {
     axios(
       'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
@@ -118,7 +90,9 @@ export default class TileMaker extends Component {
   }
 
   render() {
-    let {open,value,addressList} = this.state;
+    const { open,value,addressList } = this.state;
+    const { editObject } = this.props
+
 
     if(!open){
       return (
@@ -135,7 +109,7 @@ export default class TileMaker extends Component {
       return (
         <div className="makeTileWrap">
           <div className="makeTileForm animated flipInY faster">
-            <Mutation mutation={MAKE_TILE} variables={{name: `"${input}"`, address: `"${address}"` }}>
+            <Mutation mutation={createObject} variables={{name: `"${input}"`, address: `"${address}"` }}>
               {(MakeTile, { data }) => (
                 <div>
                   <form
@@ -164,7 +138,7 @@ export default class TileMaker extends Component {
                         }}
                         placeholder="Адрес"
                         required
-                        onChange={(event)=>{address = event.target.value; this.daDataReqName(event.target.value); console.log(address)}}
+                        value={value} onChange={this.newAddress}
                       />
                       <datalist id="addresses" >
 
