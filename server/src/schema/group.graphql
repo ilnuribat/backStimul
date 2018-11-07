@@ -28,13 +28,13 @@ input UsersGroupInput {
 }
 
 type Query {
-  groups: [Group]
-  group(id: ID!): Group
+  groups: [Group] @deprecated
+  group(id: ID!): Group @deprecated
 }
 
 type Mutation {
-  createGroup(group: GroupInput): Group
-  updateGroup(id: ID, group: GroupInput): Boolean
-  deleteGroup(id: ID!): Boolean
-  updateUsersGroup(group: UsersGroupInput): Boolean
+  createGroup(group: GroupInput): Group @deprecated
+  updateGroup(id: ID, group: GroupInput): Boolean @deprecated
+  deleteGroup(id: ID!): Boolean @deprecated
+  updateUsersGroup(group: UsersGroupInput): Boolean @deprecated
 }
