@@ -185,7 +185,7 @@ class LeftNav extends Component {
         <nav className="left-nav">
           <Profile />
           <Groups />
-          <Board />
+          {/* <Board /> */}
           <Private />
           <Map />
           <Top />
