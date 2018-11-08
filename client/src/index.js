@@ -27,8 +27,7 @@ const middlewareLink = setContext((req, previousContext) => {
   if (jwt) {
     return {
       headers: {
-
-        authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${jwt}`,
       },
     };
   }
@@ -58,10 +57,19 @@ const stateLink = withClientState({
     mename: "",
     memail: "",
     tempObj:"",
+    __info:[],
     ref: false,
     ActUrl: "",
     bar: false,
     comp: "",
+    currentObjectId: "",
+    currentObjectName: "",
+    place:{
+      id: "no",
+      name: "no",
+      type: "no",
+      __typename: "place",
+    },
     lastMessage: {
       groupId: "",
       id: "",

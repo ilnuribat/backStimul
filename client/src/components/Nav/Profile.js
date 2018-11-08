@@ -1,29 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { setActUrl, getActUrl } from '../../graph/querys';
 import { graphql, compose } from "react-apollo";
+import { setActUrl, getActUrl } from '../../graph/querys';
 
 class Profile extends React.Component {
-    constructor(props) {
-      super(props)
-      this.state = {
-        isHidden: true
+  constructor(props) {
+    super(props)
+    this.state = {
+      isHidden: true
+    }
+  }
+
+  setActUrl(e){
+    this.props.setActive({
+      variables: {
+        ActUrl: e,
       }
-    }
-
-    setActUrl(e){
-      this.props.setActive({
-        variables: {
-          ActUrl: e,
-        }
-      });
-    }
+    });
+  }
 
 
-render(){
-  let { Active } = this.props;
-  return(
-    <div className={ Active.ActUrl && Active.ActUrl == 'login' ? "nav-button active" : "nav-button" } name="login" onClick={()=>this.setActUrl('login')}>
+  render(){
+    let { Active } = this.props;
+
+    return(
+      <div className={ Active.ActUrl && Active.ActUrl == 'login' ? "nav-button active" : "nav-button" } name="login" onClick={()=>this.setActUrl('login')}>
         <Link
           className="link dim black b f6 f5-ns dib mr3"
           to="/login"

@@ -5,27 +5,29 @@ import LeftNav from './components/LeftNav';
 import Login from './components/Login';
 import Profile from './components/Profile';
 import TaskView from './components/TaskView';
-import aBoard from './components/aBoard';
+import BoardView from './components/BoardView';
+import Root from './components/Root';
 import Private from './components/Private';
 import Map from './components/Map/LeafletMapBuild';
 import { AUTH_TOKEN } from './constants';
+import TileBoard from './components/TileBoard';
 
 
-export const qf = (_url, ...params) => {
-  return fetch(_url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: JSON.stringify({
-      params
-    })
-  })
-    .then(r => r.json())
-    .then(data => console.warn("quf data", data))
-    .then(data => data)
-};
+// export const qf = (_url, ...params) => {
+//   return fetch(_url, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       'Accept': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       params
+//     })
+//   })
+//     .then(r => r.json())
+//     .then(data => console.warn("quf data", data))
+//     .then(data => data)
+// };
 
 class App extends Component {
   constructor(props) {
@@ -99,10 +101,12 @@ class App extends Component {
           <Fragment>
             <LeftNav lstate={this._lbarstate} client={this.props.client} />
             <Switch>
-              <Route exact path="/aboard" component={aBoard} />
+              <Route exact path="/task" component={TaskView} />
+              <Route exact path="/board" component={BoardView} />
+              <Route exact path="/top" component={TileBoard} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/map" component={Map} />
-              <Route exact path="/" render={(props) => <TaskView {...props} />} />
+              <Route exact path="/" render={(props) => <Root {...props} />} />
               <Route exact path="/profile" component={Profile} />
               <Route exact path="/private" render={(props) => <Private {...props} />} />
             </Switch>

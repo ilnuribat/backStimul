@@ -196,6 +196,6 @@ class ChangerForm extends React.Component {
       )
     }
   }
-};
+}
 
 export default ChangerForm;
