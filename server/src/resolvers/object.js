@@ -67,9 +67,11 @@ module.exports = {
         const formedAddress = await addressService.formAddress(object.address);
 
         Object.assign(object, { address: formedAddress });
+      } else {
+        Object.assign(object, { address: foundObject.address });
       }
 
-      const res = await Group.update({
+      const res = await Group.updateOne({
         _id: id,
       }, {
         $set: object,
