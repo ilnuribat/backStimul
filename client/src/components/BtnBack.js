@@ -18,6 +18,9 @@ class BtnBack extends Component {
   }
 
   componentDidMount(){
+
+    console.log(window.history)
+    console.log(window.location.pathname)
     // let back = localStorage.getItem('back');
     // let url = localStorage.getItem('backurl');
 
@@ -40,6 +43,10 @@ class BtnBack extends Component {
   
 
   backToTheFuture(){
+
+    
+    // window.history.back();
+    // window.history.go(-1);
     let back = localStorage.getItem('back');
     let url = localStorage.getItem('backurl');
     let placeId = localStorage.getItem('placeId');
@@ -52,20 +59,31 @@ class BtnBack extends Component {
   }
 
   render() {
+    let path = window.location.pathname;
+
+    console.log(path);
+    
     let {toTop} = this.state;
-    if(toTop){
-      // const {Redirect} = require('react-router');
-      // return(
-      //   <Redirect to='/Top'/>
-      // )
+    if(path === '/task'){
+      return (
+        <div className="svgBackBtn" onClick={this.backToTheFuture}>
+          <Link to="/board">
+            <SvgBackTo />
+          </Link>
+        </div>
+      )
+    }else{
+      return (
+        <div className="svgBackBtn" onClick={this.backToTheFuture}>
+          <Link to="/">
+            <SvgBackTo />
+          </Link>
+        </div>
+      )
     }
-    return (
-      <div className="svgBackBtn" onClick={this.backToTheFuture}>
-        <Link to="/">
-          <SvgBackTo />
-        </Link>
-      </div>
-    )
+
+
+
   }
 }
 
