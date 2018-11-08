@@ -66,7 +66,7 @@ class BtnBack extends Component {
     let {toTop} = this.state;
 
     if(path === '/Top'){
-      return "ПФ"
+      return true
     }
 
     if(path === '/task'){

@@ -61,7 +61,7 @@ export default class MessagesList extends Component {
     let same = false;
     let usid = "";
 
-    if(priv && data.direct && data.direct.messages && data.direct.messages.edges ){
+    if(data && priv && data.direct && data.direct.messages && data.direct.messages.edges ){
       datas = data.direct.messages.edges;
     }else if(data.group && data.group.messages && data.group.messages.edges ){
       datas = data.group.messages.edges;
