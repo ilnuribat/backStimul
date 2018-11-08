@@ -11,6 +11,7 @@ const {
   MOLECULER_TRANSPORTER = 'redis://localhost',
   DADATA_API = 'a9a4c39341d2f4072db135bd25b751336b1abb83',
   DADATA_SECRET = '23244c4269211592e162cdb28f459b82716f50d8',
+  PG_FIAS = 'postgresql://guov:guov@127.0.0.1/fias',
 } = process.env;
 
 module.exports = {
@@ -24,4 +25,5 @@ module.exports = {
   MOLECULER_TRANSPORTER,
   DADATA_API,
   DADATA_SECRET,
+  PG_FIAS,
 };
