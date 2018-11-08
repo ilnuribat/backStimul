@@ -80,7 +80,7 @@ export default class MessagesList extends Component {
               let {node} = e;
 
               if(!node.from){
-
+                return true
               }
 
               // console.log(e)
