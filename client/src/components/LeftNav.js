@@ -190,7 +190,7 @@ class LeftNav extends Component {
           <Private />
           <Map />
           <Top />
-          {localStorage.getItem('back') ? <ObjEdit /> : null}
+          {/* {localStorage.getItem('back') ? <ObjEdit /> : null} */}
           <BtnBack />
           
           <Query query={TASKS_QUERY} >
