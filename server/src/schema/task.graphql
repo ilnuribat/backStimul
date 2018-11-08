@@ -9,11 +9,13 @@ type Task {
   lastMessage: Message
   endDate: String
   address: Address
+  childTasks: [Task]
 }
 
 input TaskInput {
   name: String
   objectId: ID
+  parentId: ID
   status: Int
   assignedTo: ID
   endDate: String

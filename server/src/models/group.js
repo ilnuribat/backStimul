@@ -31,6 +31,7 @@ const schema = new Schema({
     type: String,
     enum: GROUP_TYPES,
   },
+  parentId: Schema.Types.ObjectId,
 });
 
 
