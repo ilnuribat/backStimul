@@ -12,8 +12,6 @@ const addressDefinition = {
   value: String,
   fiasId: String,
   fiasLevel: String,
-  geoLat: String, // deprecated
-  geoLon: String, // deprecated
   coordinates: [String],
   parentChain: [parentChainItem],
 };
