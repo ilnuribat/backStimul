@@ -14,6 +14,7 @@ export default class Tile extends Component {
 
   setEdit () {
     this.setState ({edit: !this.state.edit})
+    this.state.edit ?  this.props.refetch() : null
   }
 
   render ()   {
