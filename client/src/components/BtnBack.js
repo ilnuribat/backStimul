@@ -64,6 +64,11 @@ class BtnBack extends Component {
     console.log(path);
     
     let {toTop} = this.state;
+
+    if(path === '/Top'){
+      return "ПФ"
+    }
+
     if(path === '/task'){
       return (
         <div className="svgBackBtn" onClick={this.backToTheFuture}>
