@@ -19,12 +19,14 @@ export default class TileMaker extends Component {
       open: false,
       input: '',
       addressList:'',
-      value: ''
+      value: '',
+      stateName:'',
     }
 
     this.open = this.open.bind(this)
     this.daDataReqName = this.daDataReqName.bind(this)
     this.newAddress = this.newAddress.bind(this);
+    this.newName = this.newName.bind(this);
   }
 
   static propTypes = {
@@ -60,9 +62,14 @@ export default class TileMaker extends Component {
     })
     this.daDataReqName(e.target.value)
   }
+  newName(e){
+    this.setState({
+      stateName: e.target.value,
+    })
+  }
 
   componentDidMount (){
-    this.props.editObject ? this.setState({open: true, input: this.props.name}) : null
+    this.props.editObject && this.props.name && this.props.addr ? this.setState({open: true, stateName: this.props.name, value: this.props.addr}) : null;
   }
 
   daDataReqName (name) {
@@ -94,8 +101,8 @@ export default class TileMaker extends Component {
   }
 
   render() {
-    const { open,value,addressList } = this.state;
-    const { editObject, id, name } = this.props
+    const { open,value,addressList, stateName } = this.state;
+    const { editObject, id, name, addr } = this.props
 
 
     if(!open){
@@ -108,6 +115,7 @@ export default class TileMaker extends Component {
       )
     }else{
       let input;
+
       let address;
       let _id;
       let mutation = createObject
@@ -143,7 +151,9 @@ export default class TileMaker extends Component {
                         ref={node => {
                           input = node;
                         }}
+                        value={stateName}
                         placeholder="Название"
+                        onChange={this.newName}
                         required
                       />
                     </div>

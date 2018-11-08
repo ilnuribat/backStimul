@@ -18,13 +18,13 @@ export default class Tile extends Component {
   }
 
   render ()   {
-    const {_id, name, click, type, updateObject, refetch, parentId} = this.props
+    const {_id, name, click, type, updateObject, refetch, parentId, addr} = this.props
     const { edit } = this.state
 
     if(edit){
       console.warn("EEEDIT")
 
-      return <TileMaker editObject={true} id={_id} name={name} parentId={parentId} setEdit={this.setEdit}/>
+      return <TileMaker editObject={true} addr={addr} id={_id} name={name} parentId={parentId} setEdit={this.setEdit}/>
     }else{
 
 
@@ -32,6 +32,7 @@ export default class Tile extends Component {
         <div key={_id} className="tile">
           <div onClick={()=>click(_id,type,name, parentId)}>
             {name ? (<div className="tile-name">{name}</div>) : null }
+            {addr ? (<div className="tile-addr">{addr}</div>) : null }
             {_id ? (<div className="tile-id">{_id}</div>) : null }
           </div>
           {type === 'object' ? (
