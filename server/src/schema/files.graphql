@@ -1,13 +1,16 @@
   type File {
     id: ID!
-    filename: String!
-    mimetype: String!
+    fileId: String
+    filename: String
+    mimetype: String
+    length: Int
   }
 
   type Query {
-    uploads: [File]
+    uploads: [File],
+    findFiles (id: ID!): [File],
   }
 
   type Mutation {
-    uploadFile(file: Upload!): File!
+    uploadFile(id: ID!, file: Upload!): File!
   }

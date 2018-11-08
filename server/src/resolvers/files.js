@@ -1,4 +1,7 @@
 const { connection, Types: { ObjectId }, mongo: { GridFSBucket } } = require('mongoose');
+const {
+  Files,
+} = require('../models');
 // const { GraphQLUpload } = require('apollo-server');
 const fs = require('fs');
 
@@ -21,25 +24,59 @@ const download = async function (id) {
 };
 
 
-const storeUpload = ({ stream, filename }) => {
+const fileUpload = async (taskId, fileId) => {
+  try {
+    await Files.create({
+      taskId,
+      fileId,
+    });
+  } catch (err) {
+    if (err.errmsg && err.errmsg.indexOf('duplicate key error') > -1) {
+      await Files.findOne({ fileId });
+    }
+  }
+};
+
+const storeUpload = ({ stream, filename, id }) => {
   const bucket = new GridFSBucket(connection.db, { bucketName: 'gridfsdownload' });
   const uploadStream = bucket.openUploadStream(filename);
 
   // download(ObjectId('5bdc50d4d1531833206a7ed0'));
   return new Promise((resolve, reject) => stream
     .pipe(uploadStream)
-    .on('finish', () => uploadStream.id)
+    .on('finish', () => {
+      console.log('fuinish');
+      fileUpload(id, uploadStream.id);
+
+      return uploadStream.id;
+    })
     .on('error', reject));
 };
 
 module.exports = {
+  Query: {
+    findFiles: async (parent, { id }) => {
+
+      let file = await Files.find({ taskId: id });
+
+      // .exec((er, doc) => {
+      //   console.log(doc);
+      //   return doc;
+      // });
+      // console.log(ObjectId(file.fileId).toString(), "string");
+
+      return file;
+    },
+  },
   // Upload: GraphQLUpload,
   Mutation: {
-    async uploadFile(parent, { file }) {
+    async uploadFile(parent, { id, file }) {
       const { stream, filename, mimetype } = await file;
-      const id = await storeUpload({ stream, filename, mimetype });
+      const ida = await storeUpload({ stream, filename, id });
 
-      return { id, filename, mimetype };
+      // console.log("AAAAAAAAA")
+
+      return { ida, filename, mimetype };
     },
   },
 };
