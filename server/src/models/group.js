@@ -1,12 +1,5 @@
 const { Schema } = require('mongoose');
-const { GROUP_TYPES, ADDRESS_LEVELS } = require('../services/constants');
-
-const addressLevelSchema = new Schema({
-  name: String, // Каран-Кункас
-  fiasId: String,
-  type: String, // с
-  full: String, // с Каран-Кункас
-});
+const { GROUP_TYPES } = require('../services/constants');
 
 const parentChainItem = new Schema({
   fiasId: String,
@@ -24,11 +17,6 @@ const addressDefinition = {
   coordinates: [String],
   parentChain: [parentChainItem],
 };
-
-// ['region', 'area', 'city', 'settlement', 'street', 'house']
-ADDRESS_LEVELS.forEach((level) => {
-  addressDefinition[level] = addressLevelSchema;
-});
 
 const addressSchema = new Schema(addressDefinition);
 
