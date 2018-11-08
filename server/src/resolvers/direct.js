@@ -5,7 +5,7 @@ const {
 const GroupResolver = require('./group');
 const {
   getPageInfo, formWhere, getDirectChats,
-} = require('./chat');
+} = require('../services/chat');
 
 
 module.exports = {
