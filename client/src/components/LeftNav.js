@@ -7,10 +7,14 @@ import Groups from './Nav/Groups';
 import Profile from './Nav/Profile';
 import Board from './Nav/Board';
 import Map from './Nav/Map';
+import Top from './Nav/Top';
+import ObjEdit from './Nav/ObjEdit';
 
 import Loading from './Loading';
 import { qauf, _url } from '../constants';
-import { messagesListGroupUpdate, messagesListDirectUpdate, getlastMessageCache, lastMessageCache, getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups } from '../graph/querys';
+import { messagesListGroupUpdate, messagesListDirectUpdate, getlastMessageCache, lastMessageCache, getUnreadCount, cSetCountPrivates, cGetCountPrivates, ALL_MESSAGE_CREATED, taskUpdated, TASKS_QUERY, setRefGroups, getRefGroups, getInfo, delInfo, setInfo } from '../graph/querys';
+import BtnBack from './BtnBack';
+import Info from './Info';
 
 let refUser;
 
@@ -19,6 +23,8 @@ class LeftNav extends Component {
     super(props)
     this.state = {
       isRunOnce: false,
+      __info: [],
+      buttons:[],
     }
   }
 
@@ -85,9 +91,13 @@ class LeftNav extends Component {
     });
   }
 
-  shouldComponentUpdate(nextProps){
+  shouldComponentUpdate(nextProps, nextState){
 
-    if(nextProps.getRefGroups.ref){
+    if(nextProps != this.props){
+      return true;
+    }
+
+    if(nextProps.getRefGroups.ref || nextState.__back != this.state.__back){
       return true;
     }else{
       return false;
@@ -96,6 +106,15 @@ class LeftNav extends Component {
 
   componentDidUpdate(){
     let {getRefGroups, setRefGroups} = this.props;
+    const __back = localStorage.getItem("back")
+    if(__back != this.state.__back){
+      
+      this.setState({__back: __back})
+    }
+    console.log(this.props.getInfo)
+    this.setState({
+      __info: this.props.getInfo.__info
+    })
 
     if(!!getRefGroups.ref && !!refUser){
 
@@ -108,12 +127,25 @@ class LeftNav extends Component {
   }
 
   componentDidMount (){
+    const __back = localStorage.getItem("back")
+    this.setState({__back: __back})
+
+
     if (!this.isRunOnce) {
       this.queryCounterDirects()
       this.subscribe(this.props.client)
       this.setState({isRunOnce : true});
     }
   }
+
+  // componentWillUpdate(){
+
+    
+  //   console.log(this.props.getInfo)
+  //   this.setState({
+  //     __info: this.props.getInfo.__info
+  //   })
+  // }
 
   queryCounterDirects () {
     qauf(getUnreadCount(), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -137,14 +169,29 @@ class LeftNav extends Component {
   }
 
   render () {
+
+    let {__back } = this.state;
+    let {getInfo} = this.props;
+
     return(
       <Fragment>
+        <div className="infoWrapper">
+          {getInfo && getInfo.__info && getInfo.__info.map((e,i)=>{
+            return(
+              <Info id={e.id} mapindex={i} key={'info-'+e.id + '-' +i } message={e.message} type={e.type} />
+            )
+          }) }
+        </div>
         <nav className="left-nav">
           <Profile />
-          <Groups />
-          <Board />
+          {/* <Groups /> */}
+          {/* <Board /> */}
           <Private />
           <Map />
+          <Top />
+          {/* {localStorage.getItem('back') ? <ObjEdit /> : null} */}
+          <BtnBack />
+          
           <Query query={TASKS_QUERY} >
             {({ loading, error, data, refetch, subscribeToMore }) => {
               if (loading){
@@ -273,5 +320,7 @@ export default compose(
   graphql(cSetCountPrivates, { name: 'cSetCountPrivates' }),
   graphql(getRefGroups, { name: 'getRefGroups' }),
   graphql(setRefGroups, { name: 'setRefGroups' }),
+  graphql(getInfo, { name: 'getInfo' }),
+  graphql(setInfo, { name: 'setInfo' }),
 )(LeftNav);
 

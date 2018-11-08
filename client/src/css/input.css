@@ -207,3 +207,8 @@ select
   min-width: 400px;
   max-width:600px;
 }
+input{
+  margin:5px auto;
+  height: 40px;
+  
+}
