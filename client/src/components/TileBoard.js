@@ -188,7 +188,7 @@ class Top extends React.Component {
                       // getDash && getDash.rootObject && getDash.rootObject.objects && getDash.rootObject.objects.map((e)=>{
                       data.rootObject && data.rootObject.objects && data.rootObject.objects.map((e)=>{
                         return(
-                          <Tile key={e.id} _id={e.id} name={e.name} type='object' click={this.query} refetch={this.refetch1} parentId={data.rootObject.id} updateObject={this.updateObject} />
+                          <Tile key={e.id} _id={e.id} name={e.name} type='object' click={this.query} refetch={this.refetch1} addr={e.address.value} parentId={data.rootObject.id} updateObject={this.updateObject} />
                         )
                       })
                     }

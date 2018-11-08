@@ -69,7 +69,7 @@ export default class TileMaker extends Component {
   }
 
   componentDidMount (){
-    this.props.editObject && this.props.name  ? this.setState({open: true, stateName: this.props.name}) : null;
+    this.props.editObject && this.props.name && this.props.addr ? this.setState({open: true, stateName: this.props.name, value: this.props.addr}) : null;
   }
 
   daDataReqName (name) {

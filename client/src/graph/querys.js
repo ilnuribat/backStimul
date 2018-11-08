@@ -879,6 +879,9 @@ query rootObject($id: ID){
       objects{
         id
         name
+        address {
+          value
+        }
         __typename
       }
     }
