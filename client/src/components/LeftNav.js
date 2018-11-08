@@ -178,7 +178,6 @@ class LeftNav extends Component {
         <div className="infoWrapper">
           {getInfo && getInfo.__info && getInfo.__info.map((e,i)=>{
             return(
-
               <Info id={e.id} mapindex={i} key={'info-'+e.id + '-' +i } message={e.message} type={e.type} />
             )
           }) }

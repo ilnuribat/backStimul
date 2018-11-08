@@ -79,13 +79,23 @@ export default class MessagesList extends Component {
               n++;
               let {node} = e;
 
+              if(!node.from){
+
+              }
+
               // console.log(e)
 
               let tr = 'them';
               let createdAt = node.createdAt || "none";
               let text = node.text || "none";
               let id = node.userId || "none";
-              let username = node.from.username || "none";
+              let username;
+              if(node.from && node.from.username){
+                username = node.from.username;
+              }else{
+                username = "none";
+              }
+              
               let date = moment(createdAt).fromNow() || "none";
               let messageText = text;
               let read = node.isRead;
