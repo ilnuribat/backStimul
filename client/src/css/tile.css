@@ -25,8 +25,15 @@
   border-radius: 6px;
 }
 .tile-id{
-  color: rgb(178, 194, 207);
+  color: rgba(178, 194, 207, 0.199);
   font-size: 10px;
+}
+.tile-addr{
+  color: rgb(178, 194, 207);
+  font-size: 12px;
+  padding: 2px 5px;
+  margin:5px;
+  border-bottom: 1px solid #21313F;
 }
 
 .tile-cod{
