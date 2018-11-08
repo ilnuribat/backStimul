@@ -56,8 +56,19 @@ const storeUpload = ({ stream, filename, id }) => {
 module.exports = {
   Query: {
     findFiles: async (parent, { id }) => {
+      const file = await Files.find({ taskId: id });
 
-      let file = await Files.find({ taskId: id });
+      const file = Files.aggregate([
+        {$match: { taskId: "5be2d0efe7c10e6642ec1662" }},
+        {$addFields: {fileIdObject: {"$toObjectId": "$fileId"}}},
+        {$lookup:
+          {from: 'gridfsdownload.files',
+            localField: 'fileIdObject',
+            foreignField: '_id',
+            as: 'ururu'
+          }
+        }]);
+
 
       // .exec((er, doc) => {
       //   console.log(doc);
