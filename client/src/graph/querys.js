@@ -173,6 +173,45 @@ export const setPrivateChat = gql`
   }
 `;
 
+export const getObjectId = gql`
+  query getObjectId{
+      currentObjectId @client
+      currentObjectName @client
+  }
+`;
+
+export const setObjectId = gql`
+  mutation setObjectId($name: String!, $id: String!){
+    setObjectId(name: $name, id: $id) @client {
+      id
+      name
+    }
+  }
+`;
+
+export const createObject = gql`
+  mutation createObject($name: String, $address: String!) {
+    createObject(object: { name: $name, address: $address }) {
+      id
+      name
+    }
+  }
+`;
+
+export const changeObject = gql`
+  mutation changeObject($id: ID!, $name: String, $address: String!) {
+    updateObject(id: $id, object: { name: $name, address: $address })
+  }
+`;
+
+
+export const deleteObject = (id) =>`
+  mutation{
+    deleteObject(id: "${id}")
+  }
+`;
+
+
 export const getlastMessageCache = gql`
   query getlastMessageCache{
       lastMessage @client {
@@ -261,8 +300,6 @@ export const TASKS_QUERY = gql`
         }
         endDate
         address {
-          geoLat
-          geoLon
           value
           coordinates
         }
@@ -316,6 +353,15 @@ export const MESSAGE_SUBS = gql`
 export const MESSAGEREAD_MUT = gql`
   mutation message($id: ID!){
     messageRead(id: $id )
+  }
+`;
+
+export const createTask = gql`
+  mutation createTask($name: String, $id: ID!) {
+    createTask(task: { name: $name, objectId: $id }) {
+      id
+      name
+    }
   }
 `;
 
@@ -502,8 +548,6 @@ subscription taskUpdated($id: ID!){
         }
         endDate
         address{
-          geoLat
-          geoLon
           value
           coordinates
         }
@@ -534,16 +578,101 @@ query getCUser{
           text
         }
         endDate
+      }
+    }
+}`;
+
+export const getObjectTasks2 = (id) => `
+{
+  object (id: "${id}") {
+      tasks{
+        id
+        name
+        users{
+          id
+          username
+        }
+        unreadCount
+        status
+        assignedTo{
+          id
+          username
+        }
+        lastMessage{
+          from{
+            id
+            username
+          }
+          text
+        }
+        endDate
+      }
+    }
+}`;
+
+export const getObjects = gql`
+ query getObjects {
+  objects {
+    id
+    name
+    address {
+      value
+      coordinates
+    }
+  }
+}
+`;
+
+
+export const getObjectTasks = gql`
+ query getObjectTasks($id: ID!){
+  object (id: $id) {
+      name
+      parentId
+      tasks{
+        id
+        name
+        users{
+          id
+          username
+        }
+        unreadCount
+        status
+        assignedTo{
+          id
+          username
+        }
+        lastMessage{
+          from{
+            id
+            username
+          }
+          text
+        }
+        endDate
         address{
-          geoLat
-          geoLon
           value
           coordinates
         }
       }
     }
-}`;
-
+}
+`;
+export const getObjectInfo= gql`
+ query getObjectInfo($id: ID!){
+  object (id: $id) {
+      name
+    }
+  }
+`;
+export const ObjectInfo = (id)=>(`
+ query{
+  object (id: "${id}") {
+      name
+      parentId
+    }
+  }
+`);
 
 export const GRU_QUERY = gql`
   query group($id: ID!){
@@ -664,4 +793,94 @@ export const getBar = gql`
     bar @client
     comp @client
       }
+`;
+
+export const setInfo = gql`
+  mutation setInfo($id: String, $message: String, $type:String){
+    setInfo(id: $id, message: $message, type: $type) @client{
+      id
+      message
+      type
+    }
+  }
+`;
+export const delInfo = gql`
+  mutation delInfo($id: String){
+    delInfo(id: $id) @client{
+      id
+    }
+  }
+`;
+export const getInfo = gql`
+          query Info {
+            __info @client{
+              id
+              message
+              type
+            }
+          }
+`;
+
+
+export const getDashboard = gql`
+  query getDash{
+    rootObject @client{
+        objects{
+          id
+          name
+        }
+        addresses{
+          id
+          name
+        }
+      }
+    }
+`;
+export const setDashboard = gql`
+  mutation setBar($Dash: String){
+    setDash(Dash: $Dash) @client{
+      rootObject
+    }
+  }
+`;
+
+export const setPlace = gql`
+  mutation setPlace($id: String, $name: String, $type: String ){
+    setPlace(id: $id, name: $name, type: $type) @client{
+      place{
+        id
+        name
+        type
+      }
+    }
+  }
+`;
+export const getPlace = gql`
+  query getPlace{
+      place @client{
+        id
+        name
+        type
+      }
+    }
+`;
+
+export const QUERY_ROOTID = gql`
+query rootObject($id: ID){
+    rootObject(id: $id){
+      id
+      name
+      parentId
+      addresses{
+        id
+        name
+        __typename
+      }
+      objects{
+        id
+        name
+        __typename
+      }
+    }
+}
 `;

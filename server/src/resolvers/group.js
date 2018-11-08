@@ -36,8 +36,6 @@ async function formAddress(rawAddress) {
     coordinates: [address.geo_lat, address.geo_lon],
     fias_id: address.fias_id,
     fias_level: address.fias_level,
-    geoLat: address.geo_lat,
-    geoLon: address.geo_lon,
   };
 }
 

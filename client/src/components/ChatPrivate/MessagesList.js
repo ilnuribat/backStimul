@@ -61,7 +61,7 @@ export default class MessagesList extends Component {
     let same = false;
     let usid = "";
 
-    if(priv && data.direct && data.direct.messages && data.direct.messages.edges ){
+    if(data && priv && data.direct && data.direct.messages && data.direct.messages.edges ){
       datas = data.direct.messages.edges;
     }else if(data.group && data.group.messages && data.group.messages.edges ){
       datas = data.group.messages.edges;
@@ -79,13 +79,23 @@ export default class MessagesList extends Component {
               n++;
               let {node} = e;
 
+              if(!node.from){
+                return true
+              }
+
               // console.log(e)
 
               let tr = 'them';
               let createdAt = node.createdAt || "none";
               let text = node.text || "none";
               let id = node.userId || "none";
-              let username = node.from.username || "none";
+              let username;
+              if(node.from && node.from.username){
+                username = node.from.username;
+              }else{
+                username = "none";
+              }
+              
               let date = moment(createdAt).fromNow() || "none";
               let messageText = text;
               let read = node.isRead;

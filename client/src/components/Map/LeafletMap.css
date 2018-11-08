@@ -24,7 +24,9 @@ form div {
   text-align: left;
 }
 
-
+input[type="radio"] {
+  height:10px;
+}
 .userCloud2{
   background: #158b42dc;
   overflow: hidden;

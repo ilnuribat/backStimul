@@ -12,8 +12,6 @@ type Group {
 }
 
 type Address {
-	geoLat: String
-	geoLon: String
 	value: String
   coordinates: [String]
 }
