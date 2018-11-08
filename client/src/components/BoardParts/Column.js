@@ -48,7 +48,7 @@ const Column = ({...props})=>{
                 }
 
                 <div className="pWrapper">
-                  <Link to="/">
+                  <Link to="/task">
                     <div className="button" onClick={()=>props.selectTask(obj)} >Открыть</div>
                   </Link>
                 </div>

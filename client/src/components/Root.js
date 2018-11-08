@@ -44,7 +44,7 @@ class Root extends Component {
     console.log(this.props.getPlace);
     
     let placeType = this.props.getPlace.place.type;
-    let urlsArr = ['map','top','board','login','profile','private'];
+    let urlsArr = ['map','top','board','login','profile','private', 'task'];
 
     let cis = urlsArr.indexOf(placeType);
 

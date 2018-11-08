@@ -101,6 +101,7 @@ class App extends Component {
           <Fragment>
             <LeftNav lstate={this._lbarstate} client={this.props.client} />
             <Switch>
+              <Route exact path="/task" component={TaskView} />
               <Route exact path="/board" component={BoardView} />
               <Route exact path="/top" component={TileBoard} />
               <Route exact path="/login" component={Login} />
