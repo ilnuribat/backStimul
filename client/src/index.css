@@ -1164,7 +1164,9 @@ margin-left: 1em;
   top: 0;
   left: -0.7em;
 }
-
+.msg blockquote{
+  padding: 8px;
+}
 
 
 .circ{
