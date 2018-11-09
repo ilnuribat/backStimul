@@ -1,0 +1,11 @@
+type File {
+  id: ID!
+  name: String!
+  size: String
+  mimeType: String
+  date: String
+}
+
+type Mutation {
+  uploadFile(id: ID!, file: Upload!): File!
+}
