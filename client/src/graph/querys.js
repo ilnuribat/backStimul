@@ -892,8 +892,8 @@ export const uploadFile = gql`
   mutation($file: Upload!, $id: ID!) {
     uploadFile(id: $id, file: $file) {
       id
-      filename
-      mimetype
+      name
+      size
     }
   }
 `;
