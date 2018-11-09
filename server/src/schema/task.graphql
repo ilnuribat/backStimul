@@ -9,7 +9,7 @@ type Task {
   lastMessage: Message
   endDate: String
   address: Address
-  childTasks: [Task]
+  parentId: ID
 }
 
 input TaskInput {
