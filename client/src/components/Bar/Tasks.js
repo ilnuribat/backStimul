@@ -59,8 +59,8 @@ class Tasks extends Component {
 
   fetcher(){
     qauf(user(localStorage.getItem('userid')), _url, localStorage.getItem('auth-token')).then(a=>{
-      if(a && a.data.user.groups){
-        this.changeState(a.data.user.groups);
+      if(a && a.data.user.tasks){
+        this.changeState(a.data.user.tasks);
       }
     }).catch((e)=>{
       console.warn(e);
@@ -127,16 +127,16 @@ class Tasks extends Component {
 
     // console.log("getRefGroups",getRefGroups)
 
-    let cols = [[],[],[],[],[],[],[]]; 
+    let cols = [[],[],[],[],[],[],[]];
 
     if(getCUser.loading) return <Loading />;
     if(!getCUser.user) return <Loading />;
-    if(!getCUser.user.groups) return <Loading />;
+    if(!getCUser.user.tasks) return <Loading />;
 
-    let arr = getCUser.user.groups;
+    let arr = getCUser.user.tasks;
 
     arr = _.sortBy(arr, 'unreadCount');
-  
+
     _.forEach(arr, (result)=>{
       if(!result.status){
         cols[1].push(result);

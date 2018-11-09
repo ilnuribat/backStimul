@@ -8,88 +8,88 @@ export const updTask = (...params) => {
 
 export const createGroup = (params) => {
   return (`mutation{
-          createGroup(group: ${params}){
+          createTask(task: ${params}){
             id
           }
         }`)
 };
 
 export const createDirect = (params) => {
-  return (`mutation{
-          directMessage(id: ${params}){
-            id
-          }
-        }`)
+  return (`
+    mutation {
+      directMessage(id: ${params}) {
+        id
+      }
+    }`)
 };
 
-export const user = (id) => `
-query{
-  user {
-    groups{
-      id
-      name
+export const user = () => `
+  query{
+    user {
+      tasks {
+        id
+        name
+      }
     }
   }
-}
 `;
 
 export const group = (gid) => `
-query{
-  group(id: "${gid}"){
-    id
-    name
-    users{
+  query {
+    task (id: "${gid}") {
       id
-      username
+      name
+      status
+      endDate
+      users {
+        id
+        username
+      }
+      assignedTo {
+        id
+        username
+      }
     }
-    endDate
-    assignedTo{
-      id
-      username
-    }
-    status
-  }
   }
 `;
 
 export const groupMut = (gid,params) =>`
-  mutation{
-    updateGroup(id: "${gid}", group: {${params}})
+  mutation {
+    updateTask(id: "${gid}", task: {${params}})
   }
 `;
 
 
 export const getPriority = () => `{
-    glossary{
-        priorities{
-          name
-          id
-        }
+  glossary{
+      priorities{
+        name
+        id
       }
     }
+  }
 `;
 
 export const crTask = (...params) => {return(`
   mutation{
-        createTask(${params}){
-          id
-        }
-      }
+    createTask(${params}){
+      id
+    }
+  }
 `)};
 
 export const getById = (id) => {
-  return (
-    `{
-            task(id: ${id}) {
-                id
-                name
-                description
-                index
-                columnId
-                priority
-              }
-        }
-        `)
+  return (`{
+    task(id: ${id}) {
+        id
+        name
+        description
+        index
+        columnId
+        priority
+      }
+    }
+  `)
 };
 
 
@@ -143,16 +143,16 @@ export const cSetCountPrivates = gql`
 
 export const getPrivateChat = gql`
   query private{
-      id @client
-      name @client
-      unr @client
-      priv @client
+    id @client
+    name @client
+    unr @client
+    priv @client
   }
 `;
 
 export const cGetChats = gql`
   query chats{
-      chats
+    chats
   }
 `;
 
@@ -175,8 +175,8 @@ export const setPrivateChat = gql`
 
 export const getObjectId = gql`
   query getObjectId{
-      currentObjectId @client
-      currentObjectName @client
+    currentObjectId @client
+    currentObjectName @client
   }
 `;
 
@@ -213,13 +213,13 @@ export const deleteObject = (id) =>`
 
 
 export const getlastMessageCache = gql`
-  query getlastMessageCache{
-      lastMessage @client {
-        groupId
-        id
-        text
-      }
-      id @client
+  query getlastMessageCache {
+    lastMessage @client {
+      groupId
+      id
+      text
+    }
+    id @client
   }
 `;
 
@@ -234,119 +234,115 @@ export const lastMessageCache = gql`
 `;
 
 export const allUsers = () => `
-    {
-      users{
-        id
-        username
-      }
-    }
+{
+  users {
+    id
+    username
+  }
+}
 `;
 
 export const USERS_QUERY = gql`
-    query{
-      users{
-        id
-        username
-      }
+  query {
+    users {
+      id
+      username
     }
+  }
 `;
 
 export const privates = () => `
-    {
-      user{
-        id
-        directs{
-          id
-          name
-        }
-      }
+{
+  user {
+    id
+    directs {
+      id
+      name
     }
+  }
+}
 `;
 
 export const PRIVS_QUERY = gql`
-    query{
-      user{
-        directs{
-          id
-          name
-          unreadCount
-        }
-      }
-    }
-`;
-
-export const TASKS_QUERY = gql`
-    query{
-      user{
-        groups{
+  query {
+    user {
+      directs {
         id
         name
-        users{
-          id
-          username
-        }
+        unreadCount
+      }
+    }
+  }
+`;
+
+// deprecated
+export const TASKS_QUERY = gql`
+  query {
+    user {
+      tasks {
+        id
+        name
+        endDate
         unreadCount
         status
-        assignedTo{
+        users {
           id
           username
         }
-        lastMessage{
-          from{
+        assignedTo {
+          id
+          username
+        }
+        lastMessage {
+          text
+          from {
             id
             username
           }
-          text
         }
-        endDate
-        address {
-          value
-          coordinates
-        }
-      }
       }
     }
+  }
 `;
 
 export const PRIV_QUERY = gql`
   query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
-      direct(id: $id ){
-          unreadCount
-          messages(messageConnection: $messageConnection) {
-              edges {
-                  cursor
-                  node {
-
-                      isRead
-                      id
-                      userId
-                      from {
-                      id
-                      username
-                      }
-                      createdAt
-                      text
-                  }
-              }
+    direct(id: $id ){
+      unreadCount
+      messages(messageConnection: $messageConnection) {
+        edges {
+          cursor
+          node {
+            id
+            text
+            isRead
+            userId
+            createdAt
+            from {
+              id
+              username
+            }
           }
+        }
       }
+    }
   }
 `;
 
 export const MESSAGE_QUERY = gql`
   query message($id: ID!){
     message(id: $id ){
-          isRead
-          text
-      }
+      isRead
+      text
+    }
   }
 `;
 
 export const MESSAGE_SUBS = gql`
   subscription message($id: ID!){
     message(id: $id ){
-          isRead
-      }
+        isRead
+    }
   }
 `;
 
@@ -372,101 +368,93 @@ mutation {
 `)};
 
 export const GR_QUERY = gql`
-  query task($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
+  query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
     task(id: $id ){
-          name
-          users{
+      name
+      users{
+        id
+        username
+      }
+      messages(messageConnection: $messageConnection) {
+        edges {
+          cursor
+          node {
+            isRead
+            id
+            userId
+            from {
               id
               username
+            }
+            createdAt
+            text
           }
-          files {
-            id
-            size
-            name
-            mimeType
-            date
-          }
-          messages(messageConnection: $messageConnection) {
-              edges {
-                  cursor
-                  node {
-                      isRead
-                      id
-                      userId
-                      from {
-                      id
-                      username
-                      }
-                      createdAt
-                      text
-                  }
-              }
-              pageInfo {
-                  hasNextPage
-                  hasPreviousPage
-              }
-          }
+        }
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
       }
+    }
   }
 `;
 
 export const MESSAGE_CREATED = gql`
   subscription Added($id: String!){
-      messageAdded(groupId: $id){
-          id
-          text
-          from{
-            id
-            username
-          }
-          createdAt
-          userId
-          isRead
+    messageAdded(groupId: $id){
+      id
+      text
+      from{
+        id
+        username
       }
+      createdAt
+      userId
+      isRead
+    }
   }
 `;
 
 export const ALL_MESSAGE_CREATED = gql`
   subscription {
-      messageAdded{
-          id
-          text
-          from{
-            id
-            username
-          }
-          createdAt
-          userId
-          groupId
-          isRead
-          isDirect
+    messageAdded {
+      id
+      text
+      createdAt
+      userId
+      groupId
+      isRead
+      isDirect
+      from {
+        id
+        username
       }
+    }
   }
 `;
 
 export const MESSAGE_READ = gql`
-  subscription messageRead($id: ID!){
-      messageRead(id: $id){
-        isRead
-      }
+  subscription messageRead($id: ID!) {
+    messageRead(id: $id){
+      isRead
+    }
   }
 `;
 
 export const SUBS_GR = (id) => `
-  subscription messageAdded(groupId: ${id}){
-          id
-          text
+  subscription messageAdded(groupId: ${id}) {
+    id
+    text
   }
 `;
 
-export const glossaryStatus = () => `
-  {
-    glossary{
-      taskStatuses{
-        id
-        name
-      }
+export const glossaryStatus = () => `{
+  glossary{
+    taskStatuses {
+      id
+      name
     }
+  }
 }
 `;
 
@@ -475,11 +463,11 @@ mutation Add($id: String!, $text: String! ){
     createMessage(message:{groupId: $id, text: $text}){
       id
       text
-      from{
-          id
+      from {
+        id
       }
-      to{
-          id
+      to {
+        id
       }
     }
   }`;
@@ -490,7 +478,7 @@ export const messRead = gql`{
 
 export const GroupBid = gql`
 query group($id: ID!){
-    group( id: $id ){
+    task( id: $id ){
       name
       status
       endDate
@@ -508,7 +496,7 @@ export const getUnreadCount2 = gql`{
         id
         unreadCount
       }
-      groups {
+      tasks {
         id
         unreadCount
       }
@@ -516,105 +504,103 @@ export const getUnreadCount2 = gql`{
 }`;
 
 
-export const getUnreadCount = () => `
-    {
-      user{
-        directs{
-          id
-          unreadCount
-        }
-        groups {
-          id
-          unreadCount
-        }
-      }
+export const getUnreadCount = () => `{
+  user {
+    directs {
+      id
+      unreadCount
     }
+    tasks {
+      id
+      unreadCount
+    }
+  }
+}
 `;
 
 export const taskUpdated = gql`
 subscription taskUpdated($id: ID!){
   taskUpdated(id: $id){
+    id
+    name
+    unreadCount
+    status
+    endDate
+    users {
+      id
+      username
+    }
+    assignedTo {
+      id
+      username
+    }
+    lastMessage {
+      text
+      from {
         id
-        name
-        users{
-          id
-          username
-        }
-        unreadCount
-        status
-        assignedTo{
-          id
-          username
-        }
-        lastMessage{
-          from{
-            id
-            username
-          }
-          text
-        }
-        endDate
-        address{
-          value
-          coordinates
-        }
+        username
       }
+    }
+    address {
+      value
+      coordinates
+    }
+  }
 }`;
 
 export const getCUser = gql`
-query getCUser{
-    user @client{
-      groups{
+query getCUser {
+  user @client {
+    tasks {
+      id
+      name
+      unreadCount
+      status
+      endDate
+      users {
         id
-        name
-        users{
+        username
+      }
+      assignedTo {
+        id
+        username
+      }
+      lastMessage {
+        text
+        from {
           id
           username
         }
-        unreadCount
-        status
-        assignedTo{
-          id
-          username
-        }
-        lastMessage{
-          from{
-            id
-            username
-          }
-          text
-        }
-        endDate
       }
     }
+  }
 }`;
 
-export const getObjectTasks2 = (id) => `
-{
+export const getObjectTasks2 = (id) => `{
   object (id: "${id}") {
-      tasks{
+    tasks {
+      id
+      name
+      unreadCount
+      endDate
+      status
+      users {
         id
-        name
-        users{
+        username
+      }
+      assignedTo {
+        id
+        username
+      }
+      lastMessage {
+        text
+        from {
           id
           username
         }
-        unreadCount
-        status
-        assignedTo{
-          id
-          username
-        }
-        lastMessage{
-          from{
-            id
-            username
-          }
-          text
-        }
-        endDate
       }
     }
+  }
 }`;
 
 export const getObjects = gql`
@@ -634,36 +620,36 @@ export const getObjects = gql`
 export const getObjectTasks = gql`
  query getObjectTasks($id: ID!){
   object (id: $id) {
+    name
+    parentId
+    tasks {
+      id
       name
+      endDate
+      unreadCount
+      status
       parentId
-      tasks{
+      users {
         id
-        parentId
-        name
-        users{
+        username
+      }
+      assignedTo {
+        id
+        username
+      }
+      lastMessage {
+        from {
           id
           username
         }
-        unreadCount
-        status
-        assignedTo{
-          id
-          username
-        }
-        lastMessage{
-          from{
-            id
-            username
-          }
-          text
-        }
-        endDate
-        address{
-          value
-          coordinates
-        }
+        text
       }
     }
+    address {
+      value
+      coordinates
+    }
+  }
 }
 `;
 export const getObjectTasksTemp = gql`
@@ -688,7 +674,7 @@ export const getObjectInfo= gql`
 `;
 export const ObjectInfo = (id)=>(`
  query{
-  object (id: "${id}") {
+  object(id: "${id}") {
       name
       parentId
     }
@@ -696,31 +682,31 @@ export const ObjectInfo = (id)=>(`
 `);
 
 export const GRU_QUERY = gql`
-  query group($id: ID!){
-      group(id: $id ){
-          users{
-              id
-              username
-          }
+  query group($id: ID!) {
+    task(id: $id ) {
+      users {
+        id
+        username
       }
+    }
   }
 `;
 
 export const userTaskUpdated = gql`
-  subscription userTaskUpdated($id: ID!){
-    userTaskUpdated(id: $id){
-          action
-          user{
-              id
-              username
-          }
+  subscription userTaskUpdated($id: ID!) {
+    userTaskUpdated(id: $id) {
+      action
+      user {
+        id
+        username
       }
+    }
   }
 `;
 
 export const tempObj = gql`
-  mutation tempObj($tempObj: String!){
-    tempObj (tempObj: $tempObj) @client{
+  mutation tempObj($tempObj: String!) {
+    tempObj (tempObj: $tempObj) @client {
       tempObj
     }
   }
@@ -728,8 +714,8 @@ export const tempObj = gql`
 
 export const tempObjGet = gql`
   query tempObjGet{
-        tempObj @client
-      }
+    tempObj @client
+  }
 `;
 
 export const getRefGroups = gql`
@@ -780,8 +766,8 @@ export const setTemp = gql`
 
 export const getTemp = gql`
   query getTemp{
-        tempObj @client
-      }
+    tempObj @client
+  }
 `;
 
 export const setActUrl = gql`
@@ -796,7 +782,7 @@ export const setActUrl = gql`
 export const getActUrl = gql`
   query getActUrl{
     ActUrl @client
-      }
+  }
 `;
 
 export const setBar = gql`
@@ -810,10 +796,10 @@ export const setBar = gql`
 
 
 export const getBar = gql`
-  query getBar{
+  query getBar {
     bar @client
     comp @client
-      }
+  }
 `;
 
 export const setInfo = gql`
@@ -833,24 +819,24 @@ export const delInfo = gql`
   }
 `;
 export const getInfo = gql`
-          query Info {
-            __info @client{
-              id
-              message
-              type
-            }
-          }
+  query Info {
+    __info @client {
+      id
+      message
+      type
+    }
+  }
 `;
 
 
 export const getDashboard = gql`
-  query getDash{
-    rootObject @client{
-        objects{
+  query getDash {
+    rootObject @client {
+        objects {
           id
           name
         }
-        addresses{
+        addresses {
           id
           name
         }
@@ -858,8 +844,8 @@ export const getDashboard = gql`
     }
 `;
 export const setDashboard = gql`
-  mutation setBar($Dash: String){
-    setDash(Dash: $Dash) @client{
+  mutation setBar($Dash: String) {
+    setDash(Dash: $Dash) @client {
       rootObject
     }
   }
@@ -877,8 +863,8 @@ export const setPlace = gql`
   }
 `;
 export const getPlace = gql`
-  query getPlace{
-      place @client{
+  query getPlace {
+      place @client {
         id
         name
         type
@@ -887,17 +873,17 @@ export const getPlace = gql`
 `;
 
 export const QUERY_ROOTID = gql`
-query rootObject($id: ID){
-    rootObject(id: $id){
+query rootObject($id: ID) {
+    rootObject(id: $id) {
       id
       name
       parentId
-      addresses{
+      addresses {
         id
         name
         __typename
       }
-      objects{
+      objects {
         id
         name
         address {

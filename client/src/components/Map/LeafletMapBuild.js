@@ -293,7 +293,7 @@ class LeafletMap extends Component {
 
 
 const Panel = ({ data, type, name, click })  => {
-  // console.warn(data.user.groups)
+  // console.warn(data.user.tasks)
 
   return (
     data.map((post) =>

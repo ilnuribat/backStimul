@@ -31,8 +31,8 @@ module.exports = {
   Mutation: {
     createTask: taskService.createTask,
     updateTask: taskService.updateTask,
-    updateUsersGroup: taskService.updateUsersGroup,
     deleteTask: taskService.deleteTask,
+    updateUsersTask: taskService.updateUsersGroup,
   },
   Subscription: {
     taskUpdated: {

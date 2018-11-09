@@ -21,12 +21,6 @@ input GroupInput {
   address: String
 }
 
-input UsersGroupInput {
-  id: ID!
-  delete: Boolean
-  users: [String]!
-}
-
 type Query {
   groups: [Group] @deprecated
   group(id: ID!): Group @deprecated
@@ -36,5 +30,5 @@ type Mutation {
   createGroup(group: GroupInput): Group @deprecated
   updateGroup(id: ID, group: GroupInput): Boolean @deprecated
   deleteGroup(id: ID!): Boolean @deprecated
-  updateUsersGroup(group: UsersGroupInput): Boolean @deprecated
+  updateUsersGroup(group: UsersTaskInput): Boolean @deprecated
 }
