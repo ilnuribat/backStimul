@@ -368,10 +368,10 @@ mutation {
 `)};
 
 export const GR_QUERY = gql`
-  query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
-    task(id: $id ){
+  query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
+    task(id: $id ) {
       name
-      users{
+      users {
         id
         username
       }
