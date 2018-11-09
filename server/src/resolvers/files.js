@@ -59,28 +59,54 @@ const storeUpload = ({
 module.exports = {
   Task: {
     files: async ({ id }) => {
-      const file = await Files.aggregate([{
-        $match: {
-          taskId: id,
-        },
-      }, {
-        $addFields: {
-          fileIdObject: {
-            $toObjectId: '$fileId',
+      const file = await Files.aggregate([
+        {
+          $match: {
+            taskId: id,
+          },
+        }, {
+          $project: {
+            _id: 0,
+            fileId: 1,
+            mimetype: 1,
+          },
+        }, {
+          $addFields: {
+            fileIdObject: {
+              $toObjectId: '$fileId',
+            },
+          },
+        }, {
+          $lookup: {
+            from: 'gridfsdownload.files',
+            localField: 'fileIdObject',
+            foreignField: '_id',
+            as: 'fileBody',
+          },
+        }, {
+          $unwind: {
+            path: '$fileBody',
+          },
+        }, {
+          $addFields: {
+            id: '$fileId',
+            size: '$fileBody.length',
+            name: '$fileBody.filename',
+            date: {
+              $toString: '$fileBody.uploadDate',
+            },
+            mimeType: '$mimetype',
+          },
+        }, {
+          $project: {
+            fileBody: 0,
+            fileIdObject: 0,
+            fileId: 0,
           },
         },
-      }, {
-        $lookup: {
-          from: 'gridfsdownload.files',
-          localField: 'fileIdObject',
-          foreignField: '_id',
-          as: 'fileBody',
-        },
-      }, {
-        $unwind: {
-          path: '$fileBody',
-        },
-      }]);
+      ]);
+
+      console.log('aaa', file);
 
       return file;
     },

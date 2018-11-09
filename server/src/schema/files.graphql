@@ -3,6 +3,7 @@ type File {
   name: String!
   size: String
   mimeType: String
+  date: String
 }
 
 type Mutation {
