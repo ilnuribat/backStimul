@@ -144,7 +144,6 @@ class GroupList extends Component {
     })
   }
 
-
   newAddress(e){
     this.setState({
       newAddress: e.target.value,
@@ -162,8 +161,6 @@ class GroupList extends Component {
         _grid: g,
       });
     }
-
-
 
     if(getCUser.user  && getCUser.user.groups){
       let groups = getCUser.user.groups;
@@ -215,9 +212,7 @@ class GroupList extends Component {
     }`)} ;
 
     let a = q();
-    // console.log(a);
 
-    // return true;
     if(typeof q === "function"){
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
         // console.log("Answer updUsrGr",a)
