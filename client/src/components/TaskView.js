@@ -619,13 +619,13 @@ class GroupList extends Component {
                           subsUser(getPrivateChat.id, subscribeToMore, refetch);
 
                           if(data){
-                            let usrs = data.group.users;
+                            let usrs = data.task.users;
 
                             onlyunicusers = _.differenceWith(allusers, usrs, _.isEqual);
 
                             return(
 
-                              data.group.users.map(
+                              data.task.users.map(
                                 (e,i)=>{
                                   return(
                                     <div className="username" role="presentation" key={'usr-'+i} >

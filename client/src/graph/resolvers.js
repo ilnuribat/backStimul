@@ -9,7 +9,7 @@ export default {
 
       return {ref, __typename: 'ref' };
     },
-    
+
     setPlace: (_, { id, name, type },  { cache }) => {
       cache.writeData({ data: { id: id, name: name, type: type, } });
 
@@ -198,7 +198,7 @@ export default {
       const data = {
         group: {
           messages:{
-            edges: [...previousState.group.messages.edges, newFeedItem],
+            edges: [...previousState.task.messages.edges, newFeedItem],
             __typename: "MessageConnection",
           },
           __typename: "Group"

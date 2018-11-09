@@ -63,8 +63,8 @@ export default class MessagesList extends Component {
 
     if(data && priv && data.direct && data.direct.messages && data.direct.messages.edges ){
       datas = data.direct.messages.edges;
-    }else if(data.group && data.group.messages && data.group.messages.edges ){
-      datas = data.group.messages.edges;
+    }else if(data.task && data.task.messages && data.task.messages.edges ){
+      datas = data.task.messages.edges;
     }else{
       return(<div className="mess">нет данных</div>)
     }
@@ -95,7 +95,7 @@ export default class MessagesList extends Component {
               }else{
                 username = "none";
               }
-              
+
               let date = moment(createdAt).fromNow() || "none";
               let messageText = text;
               let read = node.isRead;
