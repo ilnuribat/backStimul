@@ -98,8 +98,8 @@ class GroupList extends Component {
     this.allUserGet();
     this.glossStatus();
 
-    if(getCUser.user  && getCUser.user.groups){
-      let groups = getCUser.user.groups;
+    if(getCUser.user  && getCUser.user.tasks){
+      let groups = getCUser.user.tasks;
       let thisGrId = getPrivateChat.id || _grid;
       let thisUsers;
 
@@ -196,8 +196,8 @@ class GroupList extends Component {
 
 
 
-    if(getCUser.user  && getCUser.user.groups){
-      let groups = getCUser.user.groups;
+    if(getCUser.user  && getCUser.user.tasks){
+      let groups = getCUser.user.tasks;
       let thisGrId = getPrivateChat.id || _grid;
 
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
@@ -440,8 +440,8 @@ class GroupList extends Component {
     const { users, groupInfo } = this.state;
     let _grid = getPrivateChat.id || localStorage.getItem('grid');
 
-    if(getCUser.user  && getCUser.user.groups){
-      let groups = getCUser.user.groups;
+    if(getCUser.user  && getCUser.user.tasks){
+      let groups = getCUser.user.tasks;
       let thisGrId = getPrivateChat.id || _grid;
       let thisUsers;
 

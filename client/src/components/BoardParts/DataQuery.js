@@ -9,7 +9,7 @@ const DataQuery = ({...props})=>{
       // if (error) return `Error! ${error.message}`;
       // console.log(data);
 
-        return data.user.groups;
+        return data.user.tasks;
 
       }}
     </Query>
