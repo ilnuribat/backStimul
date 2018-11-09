@@ -9,6 +9,7 @@ type Task {
   lastMessage: Message
   endDate: String
   address: Address
+  files: [File]
 }
 
 input TaskInput {
