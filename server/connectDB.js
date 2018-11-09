@@ -3,7 +3,7 @@ const { logger } = require('./logger');
 const { MONGODB_HOST } = require('./config');
 
 module.exports = async function () {
-  return new Promise((resolve, reeject) => {
+  return new Promise((resolve, reject) => {
     logger.info('Connecting to mongo...');
     mongoose.connection
       .once('open', () => {
@@ -12,7 +12,7 @@ module.exports = async function () {
       })
       .on('error', (error) => {
         logger.error(error);
-        reeject(error);
+        reject(error);
       });
 
     mongoose.set('debug', true);

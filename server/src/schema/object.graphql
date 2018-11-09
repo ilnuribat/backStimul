@@ -1,0 +1,46 @@
+type AddressObject {
+  id: ID
+  name: String
+  # addresses: [AddressObject]
+  # objects: [Object]
+}
+
+type rootObject {
+  id: ID
+  name: String
+  parentId: ID
+  addresses: [AddressObject]
+  objects: [Object]
+}
+
+type Address {
+	geoLat: String @deprecated
+	geoLon: String @deprecated
+	value: String
+  coordinates: [String]
+}
+
+input ObjectInput {
+  name: String
+  address: String
+}
+
+type Object {
+  id: ID
+  name: String
+  address: Address
+  tasks: [Group]
+  parentId: String
+}
+
+type Query {
+  rootObject(id: ID): rootObject
+  object(id: ID): Object
+  objects: [Object]
+}
+
+type Mutation {
+  createObject(object: ObjectInput): Object
+  updateObject(id: ID!, object: ObjectInput): Boolean
+  deleteObject(id: ID!): Boolean
+}

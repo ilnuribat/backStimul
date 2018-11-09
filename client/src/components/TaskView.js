@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { graphql, compose, Query  } from "react-apollo";
+import { graphql, compose, Query, Mutation } from "react-apollo";
 import PropTypes from 'prop-types';
+import Dropzone from 'react-dropzone';
+// import Autocomplete from 'react-toolbox/lib/autocomplete';
+// import belle from 'belle';
 import _ from 'lodash';
 import { qauf, _url, colorHash } from '../constants';
 import 'animate.css';
-import { getPrivateChat, selectUser, allUsers, glossaryStatus, groupMut, getCUser, GRU_QUERY, userTaskUpdated, tempObj, setTemp, getTemp } from '../graph/querys';
+import { uploadFile, getPrivateChat, selectUser, allUsers, glossaryStatus, groupMut, getCUser, GRU_QUERY, userTaskUpdated, tempObj, setTemp, getTemp } from '../graph/querys';
 import FirstLayout from './Layout';
 import ChatPrivate from './ChatPrivate';
 import Loading from './Loading';
@@ -44,6 +47,7 @@ class GroupList extends Component {
       newUser: "",
       newAddress: "",
       addressList: [],
+      upload: false
     }
 
     this.allUserGet = this.allUserGet.bind(this);
@@ -357,9 +361,11 @@ class GroupList extends Component {
   }
 
   render() {
-    const {users, _grid, allusers, groupName, groupInfo, modal, status, addressList} = this.state;
+    const {upload, users, _grid, allusers, groupName, groupInfo, modal, status, addressList} = this.state;
     const {getPrivateChat, getCUser, getTemp} = this.props;
 
+    const idObject = getPrivateChat.id
+    // let thisUsers;
     let onlyunicusers;
 
     return(
@@ -460,11 +466,6 @@ class GroupList extends Component {
                               )
                             })
                           }
-
-                          <option>Москва</option>
-                          <option>Моська</option>
-                          <option>Питер</option>
-                          <option>Васька</option>
                         </datalist>
                       </div>
 
@@ -484,6 +485,33 @@ class GroupList extends Component {
                   </div>
                 </div>
               ) : null
+            }
+            {this.props.getPrivateChat && this.props.getPrivateChat.id ? (
+              !upload ? (
+                <div className="tab-roll">
+                  <div className="header"></div>
+                  <div className="content">
+                    <div className="button" onClick={()=>{this.setState({upload: !upload})}}>Прикрепить файл</div>
+                    <div className="content-scroll">
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="tab-roll">
+                  <div className="header"></div>
+                  <div className="content">
+                    <Mutation mutation={uploadFile}>
+                      {upload => (
+                        <Dropzone onDrop={([file]) => {upload({ variables: { id: idObject, file } }).then(()=>this.setState({upload: !upload})).catch((err)=>console.warn(err));this.setState({upload: !upload}) }}>
+                          <p>Переместите сюда файлы или нажмите для добавления.</p>
+                        </Dropzone>
+                      )}
+
+                    </Mutation>
+                  </div>
+                </div>
+              )
+            ): null
             }
           </div>
         </div>

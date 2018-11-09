@@ -1,0 +1,66 @@
+type Task {
+  id: ID!
+  name: String
+  users: [User]
+  messages(messageConnection: ConnectionInput): MessageConnection
+  unreadCount: Int
+  status: Int
+  assignedTo: UserTaskRole
+  lastMessage: Message
+  endDate: String
+  address: Address
+  files: [File]
+}
+
+input TaskInput {
+  name: String
+  objectId: ID
+  status: Int
+  assignedTo: ID
+  endDate: String
+}
+
+input UsersTaskInput {
+  id: ID!
+  delete: Boolean
+  users: [String]!
+}
+
+input ConnectionInput {
+  first: Int
+  after: String
+  last: Int
+  before: String
+}
+
+enum UserTaskActionEnum {
+  INVITED
+  KICKED
+}
+
+type UserTaskRole {
+  id: ID
+  username: String
+  email: String
+}
+
+type UserTaskAction {
+  action: UserTaskActionEnum
+  user: UserTaskRole
+}
+
+type Query {
+  task(id: ID!): Task
+}
+
+type Mutation {
+  createTask(task: TaskInput): Task
+  updateTask(id: ID, task: TaskInput): Boolean
+  deleteTask(id: ID!): Boolean
+  updateUsersTask(task: UsersTaskInput): Boolean
+}
+
+type Subscription {
+  taskUpdated(id: ID!): Task
+  userTaskUpdated(id: ID!): UserTaskAction
+}

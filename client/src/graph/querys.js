@@ -901,3 +901,30 @@ query rootObject($id: ID){
     }
 }
 `;
+
+export const uploadFile = gql`
+  mutation($file: Upload!, $id: ID!) {
+    uploadFile(id: $id, file: $file) {
+      id
+      name
+      size
+    }
+  }
+`;
+
+
+export const findFiles = gql`
+  query($id: ID!) {
+    findFiles(id: $id) {
+      fileId
+    }
+  }
+`;
+
+export const findFiles0 = gql`
+  query($id: ID!) {
+    findFiles(id: $id) {
+      id
+    }
+  }
+`;

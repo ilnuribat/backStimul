@@ -12,4 +12,7 @@ module.exports = mergeTypes([
   getSchema('message'),
   getSchema('direct'),
   getSchema('glossary'),
+  getSchema('files'),
+  getSchema('object'),
+  getSchema('task'),
 ]);
