@@ -15,6 +15,13 @@ module.exports = {
     messages: groupService.getMessages,
     unreadCount: groupService.unreadCount,
     endDate: ({ endDate }) => (endDate ? moment(endDate).format() : null),
+    parentId: ({ parentId }) => {
+      if (parentId) {
+        return parentId.toString();
+      }
+
+      return null;
+    },
   },
   Query: {
     task(parent, { id }) {

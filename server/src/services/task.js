@@ -37,7 +37,7 @@ async function updateTask(parent, { id, task }) {
     throw new Error('no ability to change objectId');
   }
 
-  const res = await Group.update({
+  const res = await Group.updateOne({
     _id: id,
   }, {
     $set: task,

@@ -10,11 +10,13 @@ type Task {
   endDate: String
   address: Address
   files: [File]
+  parentId: ID
 }
 
 input TaskInput {
   name: String
   objectId: ID
+  parentId: ID
   status: Int
   assignedTo: ID
   endDate: String
