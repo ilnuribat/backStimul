@@ -53,14 +53,16 @@ class Board extends Component {
     // console.warn("AAA" , getObjectId)
     // this.getCurrentTasks("5bd9b336b598050c608f94d3");
     this.glossStatus();
-    this.props.setPrivateChat({
-      variables: {
-        id: "",
-        name: "",
-        priv: false,
-        unr: 0,
-      }
-    })
+
+
+    // this.props.setPrivateChat({
+    //   variables: {
+    //     id: "",
+    //     name: "",
+    //     priv: false,
+    //     unr: 0,
+    //   }
+    // })
 
   }
 
@@ -96,12 +98,12 @@ class Board extends Component {
       info.id = id;
       info.name = a.data.object.name;
 
-      if(this.state.info.id == id && this.state.info.name == a.data.object.name){return true} 
+      if(this.state.info.id == id && this.state.info.name == a.data.object.name){return true}
       else{
         this.setState({
           info: info,
         });
-  
+
       }
 
     })
@@ -154,16 +156,26 @@ class Board extends Component {
             );
           }
           if (error){
+            console.log(error)
+            return(
+              <div className="mess">
+                {error.message}
+              </div>
+            )
 
-            this.props.setInfo({variables:{id:"id",message:error.message, type:"error"}})
-            return (
-              true
-            );
+            let mess = 0;
+            if(mess === 0){
+              this.props.setInfo({variables:{id:"id",message:`Данные не получены! ${error.message}`, type:"error"}});
+              // this.setState({
+              //   rootId: "",
+              // });
+              mess = 1;
+            }
           }
           if(data &&  data.object && data.object.tasks){
 
             console.log(data)
-            
+
             if(!tasks) return <Loading />;
 
             const arr = _.sortBy(data.object.tasks, 'unreadCount');
@@ -194,7 +206,14 @@ class Board extends Component {
               )
             }else{
 
-              this.props.setInfo({variables:{id:"id",message:"Нет данных", type:"error"}})
+              let mess = 0;
+              if(mess === 0){
+                this.props.setInfo({variables:{id:"id",message:`Данные не получены! ${error.message}`, type:"error"}});
+                this.setState({
+                  rootId: "",
+                });
+                mess = 1;
+              }
               return true;
             }
           }
