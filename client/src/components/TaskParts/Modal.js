@@ -37,3 +37,11 @@ const Modal = ({...props})=>{
 };
 
 export default Modal;
+// compose(
+//   graphql(getPrivateChat, { name: 'getPrivateChat' }),
+//   graphql(selectUser, { name: 'selectUser' }),
+//   graphql(getCUser, { name: 'getCUser' }),
+//   graphql(tempObj, { name: 'tempObj' }),
+//   graphql(setTemp, { name: 'setTemp' }),
+//   graphql(getTemp, { name: 'getTemp' }),
+// )(Modal);
