@@ -33,6 +33,7 @@
     "axios": "^0.18.0",
     "bcrypt": "^2.0.1",
     "dotenv": "^6.0.0",
+    "filesize": "^3.6.1",
     "graphql": "^14.0.2",
     "graphql-tools": "^3.1.1",
     "ioredis": "^4.0.0",
