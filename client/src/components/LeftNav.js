@@ -210,7 +210,7 @@ class LeftNav extends Component {
               }
 
               if(data){
-                data.user.groups.map((e)=>{
+                data.user.tasks.map((e)=>{
                   let id = e.id;
                   // return(
                   //         <Subscription
