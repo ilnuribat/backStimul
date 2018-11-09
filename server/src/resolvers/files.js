@@ -20,17 +20,23 @@ const download = async function (id) {
       console.log(error);
     })
     .on('finish', () => {
-      // console.log('done!');
+      // resolve(); console.log('done!');
     });
 };
 
 
-const fileUpload = async ({ taskId, fileId }) => Files.create({
+const fileUpload = async ({ taskId, fileId, mimetype }) => Files.create({
   taskId,
   fileId,
+  mimetype,
 });
 
-const storeUpload = ({ stream, filename: name, taskId }) => {
+const storeUpload = ({
+  stream,
+  filename: name,
+  taskId,
+  mimetype,
+}) => {
   const bucket = new GridFSBucket(connection.db, { bucketName: 'gridfsdownload' });
   const uploadStream = bucket.openUploadStream(name);
 
@@ -38,11 +44,12 @@ const storeUpload = ({ stream, filename: name, taskId }) => {
   return new Promise((resolve, reject) => stream
     .pipe(uploadStream)
     .on('finish', async () => {
-      await fileUpload({ taskId, fileId: uploadStream.id }).then;
+      await fileUpload({ taskId, fileId: uploadStream.id, mimetype }).then;
 
       return resolve({
         id: uploadStream.id.toString(),
         name,
+        mimetype,
         size: filesize(uploadStream.length),
       });
     })
