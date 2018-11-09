@@ -1,4 +1,7 @@
-@import 'https://fonts.googleapis.com/css?family=Open+Sans:300, 400';
+/* @import url('https://fonts.googleapis.com/css?family=Montserrat:400,400i,500,700|Roboto:400,400i,500,700'); */
+/* @import url('https://fonts.googleapis.com/css?family=Open+Sans:300, 400'); */
+/* @import url('https://fonts.googleapis.com/css?family=Montserrat|Roboto'); */
+
 @import './css/reset.css';
 
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
@@ -34,9 +37,14 @@ svg {
 }
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  /* font-family: 'Open Sans', sans-serif; */
   width: 100%;
   height: 100%;
+  font-family: 'Roboto', sans-serif;
+  font-family: 'Montserrat', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-family: 'Exo 2', sans-serif;
 }
 
 *,
@@ -1639,3 +1647,10 @@ body {
 @import './css/butter.css';
 @import './css/inputs.css';
 @import './css/board.css';
+
+
+
+@import './newcss/nav.css';
+@import './newcss/board.css';
+@import './newcss/root.css';
+@import './newcss/task.css';

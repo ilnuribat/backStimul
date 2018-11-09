@@ -631,6 +631,7 @@ export const getObjectTasks = gql`
       parentId
       tasks{
         id
+        parentId
         name
         users{
           id

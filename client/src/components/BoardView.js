@@ -161,6 +161,9 @@ class Board extends Component {
             );
           }
           if(data &&  data.object && data.object.tasks){
+
+            console.log(data)
+            
             if(!tasks) return <Loading />;
 
             const arr = _.sortBy(data.object.tasks, 'unreadCount');

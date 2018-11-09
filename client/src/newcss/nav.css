@@ -1,0 +1,9 @@
+.left-nav {
+  display: flex;
+  flex-direction: column;
+  width: 109px;
+  background-color: #202225;
+}
+.left-nav svg{
+  fill: #3e75b2;
+}

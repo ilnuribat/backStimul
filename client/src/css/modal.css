@@ -6,9 +6,10 @@
   position: relative;
   display: block;
   width:auto;
+  height: 100%;
   min-width:300px;
-  max-width: 90%;
-  background: #365964;
+  max-width: 100%;
+  background: #363636d2;
   margin:auto auto;
   padding:40px 20px;
   overflow: hidden;
@@ -42,7 +43,8 @@
   width: 100%;
   height: 100%;
   margin: auto auto;
-  padding-top: 10%;
+  z-index: 999;
+  /* padding-top: 10%; */
 }
 .modal .close{
   cursor: pointer;
@@ -51,7 +53,7 @@
   right:0px;
   top:0px;
   position: absolute;
-  display: block;  
+  display: block;
 }
 .modal .close svg{
   opacity:1;

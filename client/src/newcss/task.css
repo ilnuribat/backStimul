@@ -1,0 +1,21 @@
+.task{
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid #6e8497;
+  /* background-color: #3d4147; */
+  background: transparent;
+  background-color: transparent;
+  border-radius: 6px;
+}
+.column .task:nth-child(odd), .column .task:nth-child(even){
+  background: transparent;
+  background-color: transparent;
+}
+.pWrapper:nth-child(odd),.pWrapper:nth-child(even) {
+  background: transparent;
+}
+.column .taskHead {
+  background: transparent;
+  padding: 10px;
+}
