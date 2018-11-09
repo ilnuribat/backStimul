@@ -372,12 +372,19 @@ mutation {
 `)};
 
 export const GR_QUERY = gql`
-  query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
-      group(id: $id ){
+  query task($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
+    task(id: $id ){
           name
           users{
               id
               username
+          }
+          files {
+            id
+            size
+            name
+            mimeType
+            date
           }
           messages(messageConnection: $messageConnection) {
               edges {
