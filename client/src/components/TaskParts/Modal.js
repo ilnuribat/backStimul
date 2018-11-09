@@ -21,6 +21,16 @@ const Modal = ({...props})=>{
             {props.children}
           </div>
         </div>
+
+        <div className="padded">
+          <select>
+            <option>Выбрать задачу</option>
+            <option>Задача 1</option>
+            <option>Задача 2</option>
+            <option>Задача 3</option>
+          </select>
+        </div>
+
       </div>
     </div>
   )

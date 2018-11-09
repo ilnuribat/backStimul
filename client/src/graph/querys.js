@@ -659,6 +659,19 @@ export const getObjectTasks = gql`
     }
 }
 `;
+export const getObjectTasksTemp = gql`
+ query getObjectTasksTemp($id: ID!){
+  object (id: $id) @client{
+      tasks{
+        id
+        parentId
+        name
+        status
+      }
+    }
+}
+`;
+
 export const getObjectInfo= gql`
  query getObjectInfo($id: ID!){
   object (id: $id) {
