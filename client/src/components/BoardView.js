@@ -3,7 +3,7 @@ import { graphql, compose, Query } from "react-apollo";
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import 'animate.css';
-import { TASKS_QUERY, glossaryStatus, setPrivateChat, getObjectTasks, getObjectId, setObjectId, getObjectInfo, setInfo,ObjectInfo} from '../graph/querys';
+import { TASKS_QUERY, glossaryStatus, setPrivateChat, getObjectTasks, getObjectTasks2, getObjectId, setObjectId, getObjectInfo, setInfo,ObjectInfo} from '../graph/querys';
 import { qauf, _url } from '../constants';
 import Column from './BoardParts/Column';
 import DataQuery from './BoardParts/DataQuery';
@@ -27,6 +27,7 @@ class Board extends Component {
         "На проверке",
         "Завершенные",
       ],
+      currentObjectId: ""
     };
 
     this.daTa = this.daTa.bind(this)
@@ -48,22 +49,39 @@ class Board extends Component {
     });
   }
 
+  shouldComponentUpdate(nextProps, nextState){
+    if(nextProps != this.props){
+      if (!_.isEqual(nextProps.getObjectId, this.props.getObjectId) && nextProps.getObjectId.currentObjectId != "") {
+        // console.warn("getObjectId", _.isEqual(nextProps.getObjectId, this.props.getObjectId));
+        // console.warn("setPrivateChat", _.isEqual(nextProps.setInfo, this.props.setPrivateChat));
+
+        // console.warn("nextProps", nextProps);
+        // console.warn("props", this.props);
+        return true
+
+      }
+    }
+    if(nextState != this.state){
+
+      if (!_.isEqual(nextState.info, this.props.info) && nextState.info.id != "" && nextState.status.length > 1) {
+        console.warn("nextSTate", nextState);
+        console.warn("state", this.state);
+
+        return true
+      }
+    }
+
+    return false
+
+  }
   componentDidMount(){
-    // const { getObjectId } = this.props
-    // console.warn("AAA" , getObjectId)
-    // this.getCurrentTasks("5bd9b336b598050c608f94d3");
     this.glossStatus();
+  }
 
+  componentWillUpdate () {
+    const { getObjectId } = this.props
 
-    // this.props.setPrivateChat({
-    //   variables: {
-    //     id: "",
-    //     name: "",
-    //     priv: false,
-    //     unr: 0,
-    //   }
-    // })
-
+    console.warn("AAA" , getObjectId.currentObjectId.length)
   }
 
   glossStatus(){
@@ -77,51 +95,51 @@ class Board extends Component {
       });
   }
 
-  // getCurrentTasks(id){
-  //   qauf(getObjectTasks(id), _url, localStorage.getItem('auth-token')).then(a=>{
-  //     this.setState({
-  //       tasks: a.data.object.tasks
-  //     });
-  //     console.warn(a.data.object.tasks)
-  //   })
-  //     .catch((e)=>{
-  //       console.warn(e);
-  //     });
-  // }
-  about(id){
-
-    qauf(ObjectInfo(id), _url, localStorage.getItem('auth-token'))
-    .then(a=>{
-
-      let info = {};
-
-      info.id = id;
-      info.name = a.data.object.name;
-
-      if(this.state.info.id == id && this.state.info.name == a.data.object.name){return true}
-      else{
-        this.setState({
-          info: info,
-        });
-
-      }
-
+  getCurrentTasks(id){
+    qauf(getObjectTasks2(id), _url, localStorage.getItem('auth-token')).then(a=>{
+      this.setState({
+        tasks: a.data.object.tasks
+      });
+      console.warn(a.data.object.tasks)
     })
       .catch((e)=>{
         console.warn(e);
       });
+  }
+  about(id){
+    qauf(ObjectInfo(id), _url, localStorage.getItem('auth-token'))
+      .then(a=>{
 
+        let info = {};
 
+        info.id = id;
+        info.name = a.data.object.name;
+
+        if(this.state.info.id == id && this.state.info.name == a.data.object.name){return true}
+        else{
+          this.setState({
+            info: info,
+          });
+
+        }
+
+      })
+      .catch((e)=>{
+        console.warn(e);
+      });
   }
 
   render(){
     const { getObjectId, setObjectId } = this.props;
     const { info } = this.state;
 
+    console.warn("BBBBB");
+
     if (!getObjectId.currentObjectId) {
 
       let id = localStorage.getItem('back');
-      this.props.setObjectId({
+
+      setObjectId({
         variables:{
           id: id,
           priv: false,
@@ -129,6 +147,8 @@ class Board extends Component {
       });
 
       this.about(id)
+
+      return <Loading />
 
     }else{
       this.about(getObjectId.currentObjectId)
@@ -146,80 +166,84 @@ class Board extends Component {
           <h1>{info.name}</h1>
           {/* <p className="small">{info.id}</p> */}
         </div>
-      <Query query={getObjectTasks} variables={{ id: getObjectId.currentObjectId }} >
-        {({ loading, error, data }) => {
-          if (loading){
-            return (
-              <div style={{ paddingTop: 20, margin: "auto"}}>
-                <Loading />
-              </div>
-            );
-          }
-          if (error){
-            console.log(error)
-            return(
-              <div className="mess">
-                {error.message}
-              </div>
-            )
-
-            let mess = 0;
-            if(mess === 0){
-              this.props.setInfo({variables:{id:"id",message:`Данные не получены! ${error.message}`, type:"error"}});
-              // this.setState({
-              //   rootId: "",
-              // });
-              mess = 1;
+        <Query query={getObjectTasks} variables={{ id: getObjectId.currentObjectId }} >
+          {({ loading, error, data }) => {
+            if (loading){
+              return (
+                <div style={{ paddingTop: 20, margin: "auto"}}>
+                  <Loading />
+                </div>
+              );
             }
-          }
-          if(data &&  data.object && data.object.tasks){
+            if (error){
+              console.log(error)
 
-            console.log(data)
-
-            if(!tasks) return <Loading />;
-
-            const arr = _.sortBy(data.object.tasks, 'unreadCount');
-
-            _.forEach(arr, (result)=>{
-              if(!result.status){
-                cols[1].push(result);
-              }
-              if(result.status){
-                cols[result.status].push(result);
-              }
-            });
-
-            if(status){
               return(
-                <div id="anim" className="content-aft-nav columns-wrapper">
-
-                  {
-                    status && status.map((e,i)=>{
-                      if(!e.name){
-                        return true;
-                      }
-
-                      return <Column data-simplebar key={"column"+e.id} name={e.name} tasks={cols[i]} selectTask={this.selectTask} first={i===1 ? (1) : (0)} />
-                    })
-                  }
+                <div className="mess">
+                  {error.message}
                 </div>
               )
-            }else{
 
               let mess = 0;
+
               if(mess === 0){
                 this.props.setInfo({variables:{id:"id",message:`Данные не получены! ${error.message}`, type:"error"}});
-                this.setState({
-                  rootId: "",
-                });
+                // this.setState({
+                //   rootId: "",
+                // });
                 mess = 1;
               }
-              return true;
+            }
+            if(data &&  data.object && data.object.tasks){
+
+              console.log(data)
+
+              if(!tasks) return <Loading />;
+
+              const arr = _.sortBy(data.object.tasks, 'unreadCount');
+
+              _.forEach(arr, (result)=>{
+                if(!result.status){
+                  cols[1].push(result);
+                }
+                if(result.status){
+                  cols[result.status].push(result);
+                }
+              });
+
+              if(status){
+                return(
+                  <div id="anim" className="content-aft-nav columns-wrapper">
+
+                    {
+                      status && status.map((e,i)=>{
+                        if(!e.name){
+                          return true;
+                        }
+
+                        return <Column data-simplebar key={"column"+e.id} name={e.name} tasks={cols[i]} selectTask={this.selectTask} first={i===1 ? (1) : (0)} />
+                      })
+                    }
+                  </div>
+                )
+              }else{
+
+                let mess = 0;
+
+                if(mess === 0){
+                  this.props.setInfo({variables:{id:"id",message:`Данные не получены! ${error.message}`, type:"error"}});
+                  this.setState({
+                    rootId: "",
+                  });
+                  mess = 1;
+                }
+
+                return true;
+              }
             }
           }
-        }
-        }
-      </Query>
+          }
+        </Query>
       </Fragment>
     )
   }
@@ -228,7 +252,8 @@ class Board extends Component {
 
 Board.propTypes = {
   getObjectId: PropTypes.object.isRequired,
-  setPrivateChat: PropTypes.func.isRequired
+  setPrivateChat: PropTypes.func.isRequired,
+  setObjectId: PropTypes.func.isRequired
 };
 
 

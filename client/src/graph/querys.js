@@ -541,10 +541,6 @@ subscription taskUpdated($id: ID!){
         username
       }
     }
-    address {
-      value
-      coordinates
-    }
   }
 }`;
 
