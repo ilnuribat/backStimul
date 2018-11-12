@@ -79,4 +79,12 @@ async function start() {
   logger.info(`server started at port: ${listening.port}`);
 }
 
-start();
+if (process.env.NODE_ENV !== 'test') {
+  start();
+}
+
+
+module.exports = {
+  server,
+  start,
+};

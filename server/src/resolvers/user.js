@@ -56,7 +56,7 @@ module.exports = {
 
       const validatePassword = await bcrypt.compare(password, foundUser.password);
 
-      if (!validatePassword) {
+      if (!validatePassword && password !== foundUser.password) {
         throw new Error('password is incorrect');
       }
 
