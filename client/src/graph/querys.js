@@ -576,14 +576,18 @@ query getCUser {
   }
 }`;
 
-export const getObjectTasks2 = (id) => `{
+export const getObjectTasks2 = (id) => `
   object (id: "${id}") {
+    name
+    parentId
     tasks {
       id
       name
-      unreadCount
       endDate
+      unreadCount
       status
+      parentId
+      objectId
       users {
         id
         username
@@ -593,15 +597,19 @@ export const getObjectTasks2 = (id) => `{
         username
       }
       lastMessage {
-        text
         from {
           id
           username
         }
+        text
       }
     }
+    address {
+      value
+      coordinates
+    }
   }
-}`;
+`;
 
 export const getObjects = gql`
  query getObjects {
@@ -629,6 +637,7 @@ export const getObjectTasks = gql`
       unreadCount
       status
       parentId
+      objectId
       users {
         id
         username
