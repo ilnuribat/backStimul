@@ -12,11 +12,13 @@ import { divIcon } from "leaflet";
 import PropTypes from 'prop-types';
 import {Redirect} from "react-router-dom";
 import { ReactLeafletSearch } from 'react-leaflet-search'
-import { getObjects, setObjectId } from '../../graph/querys';
-// import Indicator from "./Indicator";
+
 import b from "./buttons.css";
-import Loading from '../Loading';
 import  "./LeafletMap.css";
+
+import { getObjects } from '../../../GraphQL/Qur/Query/index';
+import { setObjectId } from '../../../GraphQL/Qur/Mutation/index';
+import Loading from '../../Loading';
 
 const { BaseLayer, Overlay } = LayersControl;
 

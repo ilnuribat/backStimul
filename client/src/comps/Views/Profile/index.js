@@ -35,13 +35,15 @@ class Profile extends Component {
 
   render() {
     return (
-      <div className="auth">
+      <div className="parent">
+      <div className="container mini Profile">
         <h3>Привет, {this.state.user}!</h3>
         <div>Вы можете изменить своё имя</div>
         <input type="text" placeholder="новый Логин или Email" onChange={(e) => {
           this.setState({ email: e.target.value });
         }} />
         <div className="button" onClick={() => { this.getUserNamePass() }}>изменить имя</div>
+      </div>
       </div>
     )
   }

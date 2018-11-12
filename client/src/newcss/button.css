@@ -1,0 +1,8 @@
+.button, button{
+  display: block;
+  background: #5492af;
+  text-align: center;
+  padding: 5px;
+  width:auto;
+  cursor: pointer;
+}

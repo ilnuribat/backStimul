@@ -7,3 +7,12 @@
 .left-nav svg{
   fill: #3e75b2;
 }
+
+.Nav .nav{
+  display: block;
+  width: 100%;
+  height: 40px;
+}
+.Nav .nav svg{
+  fill: #3e75b2;
+}

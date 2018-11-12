@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { graphql, compose  } from "react-apollo";
-import {quf, AUTH_TOKEN} from '../constants';
-import { meSet, meGet } from '../graph/querys';
+
+
+import { quf, AUTH_TOKEN } from '../../constants';
+import { LoginQuery } from '../../GraphQL/Qur/Query';
+import { meGet } from '../../GraphQL/Cache';
+import { meSet } from '../../GraphQL/Qur/Mutation';
+
+
 
 class Login extends Component {
   constructor(props) {
@@ -144,15 +150,7 @@ class Login extends Component {
   }
 }
 
-const LoginQuery = (email, password) => `
-mutation{
-  login(user:{email:"${email}",password:"${password}"}){
-    id
-    username
-    jwt
-  }
-}
-`;
+
 
 export default compose(
   graphql(meSet, { name: 'meSet' }),

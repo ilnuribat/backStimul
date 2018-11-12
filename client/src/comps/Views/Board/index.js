@@ -4,11 +4,14 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import 'animate.css';
 import { TASKS_QUERY, glossaryStatus, setPrivateChat, getObjectTasks, getObjectId, setObjectId, getObjectInfo, setInfo,ObjectInfo} from '../graph/querys';
-import { qauf, _url } from '../constants';
+
+
 import Column from './BoardParts/Column';
 import DataQuery from './BoardParts/DataQuery';
-import Loading from './Loading';
-// import anime from 'animejs';
+
+
+import Loading from '../../Loading';
+import { qauf, _url } from '../../../constants';
 
 class Board extends Component {
 

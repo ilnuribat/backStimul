@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'tachyons';
-import './index.css';
 import { WebSocketLink } from 'apollo-link-ws';
 import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
