@@ -5,6 +5,7 @@ const {
 const {
   pubsub, TASK_UPDATED, USER_TASK_UPDATED,
 } = require('../services/constants');
+const { logger } = require('../../logger');
 
 async function createTask(parent, { task }, { user }) {
   if (!task.objectId) {
@@ -52,15 +53,15 @@ async function updateTask(parent, { id, task }) {
   return res.nModified;
 }
 
-async function updateUsersGroup(parent, { group }) {
-  const groupId = group.id;
+async function updateUsersTask(parent, { task }) {
+  const groupId = task.id;
   const foundGroup = await Group.findById(groupId);
 
   if (!foundGroup) {
     return false;
   }
 
-  const { users } = group;
+  const { users } = task;
 
   if (!Array.isArray(users) || !users.length) {
     return false;
@@ -72,7 +73,7 @@ async function updateUsersGroup(parent, { group }) {
     },
   });
 
-  if (!group.delete) {
+  if (!task.delete) {
     try {
       const lastMessage = (await Message.findOne({ groupId })) || {};
 
@@ -84,17 +85,16 @@ async function updateUsersGroup(parent, { group }) {
 
       fullUsers.map(u => pubsub.publish(USER_TASK_UPDATED, {
         userTaskUpdated: {
-          user: {
-            id: u.id,
-            username: u.username,
-            email: u.email,
-          },
+          user: u,
+          task: foundGroup,
           action: 'INVITED',
         },
       }));
 
       return true;
     } catch (err) {
+      logger.error(err);
+
       return false;
     }
   }
@@ -103,11 +103,8 @@ async function updateUsersGroup(parent, { group }) {
 
   fullUsers.map(u => pubsub.publish(USER_TASK_UPDATED, {
     userTaskUpdated: {
-      user: {
-        id: u.id,
-        username: u.username,
-        email: u.email,
-      },
+      user: u,
+      task: foundGroup,
       action: 'KICKED',
     },
   }));
@@ -125,6 +122,6 @@ async function deleteTask(parent, { id }) {
 module.exports = {
   createTask,
   updateTask,
-  updateUsersGroup,
+  updateUsersTask,
   deleteTask,
 };
