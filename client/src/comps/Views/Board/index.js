@@ -43,6 +43,7 @@ class Board extends Component {
     this.selectTask = this.selectTask.bind(this)
     this.glossStatus = this.glossStatus.bind(this)
     this.childs = this.childs.bind(this)
+    this.toTask = this.toTask.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
@@ -90,12 +91,21 @@ class Board extends Component {
 
   }
 
-  childs(id){
-    this.setState({
-      showChilds: !this.state.showChilds,
-      curParentId: id
-    });
+  toTask(id){
 
+    console.log("To TASK ID")
+    console.log(id)
+
+  }
+
+  childs(id){
+    console.log(id)
+    if(id){
+      this.setState({
+        showChilds: !this.state.showChilds,
+        curParentId: id
+      });
+    }
     // console.log("THIS CHILDS")
     // console.log(id)
 
@@ -228,7 +238,7 @@ class Board extends Component {
                               {
                                 cols[e.id].map((task, i)=>{
                                   return(
-                                    <Task key={task.id} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} />
+                                    <Task key={task.id} id={task.id} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs}/>
                                   )
                                 })
                               }
