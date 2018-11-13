@@ -1,20 +1,11 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../../config');
 const {
   User,
   Message,
 } = require('../models');
 const { logger } = require('../../logger');
 const { getDirectChats } = require('../services/chat');
-const { getTasks } = require('../services/user');
-
-function generateToken(user) {
-  return jwt.sign({
-    id: user.id,
-    password: user.password.slice(-10),
-  }, JWT_SECRET);
-}
+const { getTasks, generateToken } = require('../services/user');
 
 module.exports = {
   User: {

@@ -33,7 +33,7 @@ const server = new ApolloServer({
     } catch (err) {
       logger.debug('invalid jwt');
 
-      throw new Error('invalid jwt');
+      throw new Error('invalid token');
     }
 
     const { id } = jwtBody;
