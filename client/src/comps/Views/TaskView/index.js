@@ -156,6 +156,8 @@ class GroupList extends Component {
   allTasksGet(){
     qauf(allUsers(), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){
+        console.log(a.data)
+
         this.setState({
           allTasks: a.data.tasks,
         })
