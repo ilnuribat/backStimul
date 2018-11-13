@@ -19,6 +19,7 @@ import  "./LeafletMap.css";
 import { getObjects } from '../../../GraphQL/Qur/Query/index';
 import { setObjectId } from '../../../GraphQL/Cache';
 import Loading from '../../Loading';
+import Content from '../../Lays/Content';
 
 
 const { BaseLayer, Overlay } = LayersControl;
@@ -89,136 +90,137 @@ class LeafletMap extends Component {
 
     render() {
       return (
-        <div ref={this.myInput}>
-          <Query query={getObjects}>
-            {({ loading, data }) => {
-              if (loading){
-                return (
-                  <div style={{ paddingTop: 20 }}>
-                    <Loading />
-                  </div>
-                );
-              }
-
-              if(data && data.objects){
-                let centerLon = 37.43
-                let centerLat = 55.797
-                let currentZoom = 10
-                let minLat = 100.00
-                let maxLat = 0.00
-                let minLon = 100.00
-                let maxLon = 0.00
-
-                data.objects.map((post) => {
-                  if(!post.address || !post.address.coordinates){
-                    return true
-                  }
-
-                  minLat > parseFloat(post.address.coordinates[0]) ? minLat = parseFloat(post.address.coordinates[0]) : null
-                  maxLat < parseFloat(post.address.coordinates[0]) ? maxLat = parseFloat(post.address.coordinates[0]) : null
-                  minLon > parseFloat(post.address.coordinates[1]) ? minLon = parseFloat(post.address.coordinates[1]) : null
-                  maxLon < parseFloat(post.address.coordinates[1]) ? maxLon = parseFloat(post.address.coordinates[1]) : null
-                })
-
-                centerLon = (minLon + maxLon)/2
-                centerLat = (minLat + maxLat)/2
-
-                const WORLD_DIM = { height: 256, width: 256 };
-                const ZOOM_MAX = 21;
-
-                const latFraction = (latRad(maxLat) - latRad(minLat)) / Math.PI;
-                const lngDiff = maxLon - minLon
-                const lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-
-                const latZoom = zoom(this.state.offsetHeight, WORLD_DIM.height, latFraction);
-                const lngZoom = zoom(this.state.offsetWidth, WORLD_DIM.width, lngFraction);
-
-                currentZoom = Math.min(latZoom, lngZoom, ZOOM_MAX);
-
-                if (this.state.redirect) {
-                  return <Redirect push to="/board" />;
+        <Content>
+          <div ref={this.myInput}>
+            <Query query={getObjects}>
+              {({ loading, data }) => {
+                if (loading){
+                  return (
+                    <div style={{ paddingTop: 20 }}>
+                      <Loading />
+                    </div>
+                  );
                 }
 
-                const center = [centerLat, centerLon];
+                if(data && data.objects){
+                  let centerLon = 37.43
+                  let centerLat = 55.797
+                  let currentZoom = 10
+                  let minLat = 100.00
+                  let maxLat = 0.00
+                  let minLon = 100.00
+                  let maxLon = 0.00
 
-                return (
-                  <Map center={center} zoom={currentZoom} style={styleLeaf}  >
-                    <LayersControl position="topright" >
-                      <BaseLayer  checked name="Landscape">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                        />
-                      </BaseLayer>
+                  data.objects.map((post) => {
+                    if(!post.address || !post.address.coordinates){
+                      return true
+                    }
 
-                      <BaseLayer  name="Черно-белая карта">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="OpenCycleMap">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Цветная карта OSM " >
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Outdoors">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Neighbourhood">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Toner">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="http://tile.stamen.com/toner/{z}/{x}/{y}.png"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Terrain">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Watercolor">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Spinal Map">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Full Dark">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
-                        />
-                      </BaseLayer>
-                      {
-                        data.objects ? (
-                          <Overlay checked name="Задачи новые" >
-                            <LayerGroup >
-                              <Panel type="1" name="Задача новая" data={data.objects} click={this.handleTabChange} />
-                            </LayerGroup>
-                          </Overlay>) : null }
-                      {/* {
+                    minLat > parseFloat(post.address.coordinates[0]) ? minLat = parseFloat(post.address.coordinates[0]) : null
+                    maxLat < parseFloat(post.address.coordinates[0]) ? maxLat = parseFloat(post.address.coordinates[0]) : null
+                    minLon > parseFloat(post.address.coordinates[1]) ? minLon = parseFloat(post.address.coordinates[1]) : null
+                    maxLon < parseFloat(post.address.coordinates[1]) ? maxLon = parseFloat(post.address.coordinates[1]) : null
+                  })
+
+                  centerLon = (minLon + maxLon)/2
+                  centerLat = (minLat + maxLat)/2
+
+                  const WORLD_DIM = { height: 256, width: 256 };
+                  const ZOOM_MAX = 21;
+
+                  const latFraction = (latRad(maxLat) - latRad(minLat)) / Math.PI;
+                  const lngDiff = maxLon - minLon
+                  const lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+                  const latZoom = zoom(this.state.offsetHeight, WORLD_DIM.height, latFraction);
+                  const lngZoom = zoom(this.state.offsetWidth, WORLD_DIM.width, lngFraction);
+
+                  currentZoom = Math.min(latZoom, lngZoom, ZOOM_MAX);
+
+                  if (this.state.redirect) {
+                    return <Redirect push to="/board" />;
+                  }
+
+                  const center = [centerLat, centerLon];
+
+                  return (
+                    <Map center={center} zoom={currentZoom} style={styleLeaf}  >
+                      <LayersControl position="topright" >
+                        <BaseLayer  checked name="Landscape">
+                          <TileLayer
+                            attribution="GUOV"
+                            url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                          />
+                        </BaseLayer>
+
+                        <BaseLayer  name="Черно-белая карта">
+                          <TileLayer
+                            attribution="GUOV"
+                            url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
+                          />
+                        </BaseLayer>
+                        <BaseLayer  name="OpenCycleMap">
+                          <TileLayer
+                            attribution="GUOV"
+                            url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                          />
+                        </BaseLayer>
+                        <BaseLayer  name="Цветная карта OSM " >
+                          <TileLayer
+                            attribution="GUOV"
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          />
+                        </BaseLayer>
+                        <BaseLayer  name="Outdoors">
+                          <TileLayer
+                            attribution="GUOV"
+                            url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                          />
+                        </BaseLayer>
+                        <BaseLayer  name="Neighbourhood">
+                          <TileLayer
+                            attribution="GUOV"
+                            url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                          />
+                        </BaseLayer>
+                        <BaseLayer  name="Toner">
+                          <TileLayer
+                            attribution="GUOV"
+                            url="http://tile.stamen.com/toner/{z}/{x}/{y}.png"
+                          />
+                        </BaseLayer>
+                        <BaseLayer  name="Terrain">
+                          <TileLayer
+                            attribution="GUOV"
+                            url="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
+                          />
+                        </BaseLayer>
+                        <BaseLayer  name="Watercolor">
+                          <TileLayer
+                            attribution="GUOV"
+                            url="http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
+                          />
+                        </BaseLayer>
+                        <BaseLayer  name="Spinal Map">
+                          <TileLayer
+                            attribution="GUOV"
+                            url="https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                          />
+                        </BaseLayer>
+                        <BaseLayer  name="Full Dark">
+                          <TileLayer
+                            attribution="GUOV"
+                            url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+                          />
+                        </BaseLayer>
+                        {
+                          data.objects ? (
+                            <Overlay checked name="Задачи новые" >
+                              <LayerGroup >
+                                <Panel type="1" name="Задача новая" data={data.objects} click={this.handleTabChange} />
+                              </LayerGroup>
+                            </Overlay>) : null }
+                        {/* {
                         data.objects ? (
                           <Overlay checked name="Задачи неназначенные">
                             <LayerGroup >
@@ -246,41 +248,43 @@ class LeafletMap extends Component {
                               <Panel type="5" name="Задача завершенная"  data={data.objects} click={this.handleTabChange} />
                             </LayerGroup>
                           </Overlay>) : null } */}
-                      <ReactLeafletSearch
-                        position="topleft"
+                        <ReactLeafletSearch
+                          position="topleft"
 
-                        showMarker={true}
-                        zoom={15}
-                        showPopup={true}
-                        popUp={this.customPopup}
-                        closeResultsOnClick={true}
-                        openSearchOnLoad={true}
-                        // // these searchbounds would limit results to only Turkey.
-                        // searchBounds = {
-                        //   [
-                        //     [33.100745405144245, 46.48315429687501],
-                        //     [44.55916341529184, 24.510498046875]
-                        //   ]
-                        // }
-                        providerOptions={{region: 'ru'}}
+                          showMarker={true}
+                          zoom={15}
+                          showPopup={true}
+                          popUp={this.customPopup}
+                          closeResultsOnClick={true}
+                          openSearchOnLoad={true}
+                          // // these searchbounds would limit results to only Turkey.
+                          // searchBounds = {
+                          //   [
+                          //     [33.100745405144245, 46.48315429687501],
+                          //     [44.55916341529184, 24.510498046875]
+                          //   ]
+                          // }
+                          providerOptions={{region: 'ru'}}
 
                         // default provider OpenStreetMap
                         // provider="BingMap"
                         // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
-                      />
-                    </LayersControl>
+                        />
+                      </LayersControl>
 
-                  </Map>
-                );
-              }else{
-                return(
-                  <div>Нет данных</div>
-                )
-              }
+                    </Map>
+                  );
+                }else{
+                  return(
+                    <div>Нет данных</div>
+                  )
+                }
 
-            }}
-          </Query>
-        </div>
+              }}
+            </Query>
+
+          </div>
+        </Content>
       )
 
 

@@ -3,8 +3,8 @@ import 'animate.css';
 import { graphql, compose  } from "react-apollo";
 import PropTypes from 'prop-types';
 import FirstLayout from './Layout';
-import ChatPrivate from './ChatPrivate';
-import { getPrivateChat, setPrivateChat } from '../graph/querys';
+import ChatPrivate from '../ChatView';
+import { getChat, setChat } from '../../../GraphQL/Cache';
 
 class Private extends Component {
   constructor(props) {
@@ -96,6 +96,6 @@ Private.propTypes = {
 
 
 export default compose(
-  graphql(getPrivateChat, { name: 'getchat' }),
-  graphql(setPrivateChat, { name: 'setPrivateChat' }),
+  graphql(getChat, { name: 'getchat' }),
+  graphql(setChat, { name: 'setPrivateChat' }),
 )(Private);
