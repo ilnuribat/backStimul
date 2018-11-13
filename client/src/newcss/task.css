@@ -19,3 +19,96 @@
   background: transparent;
   padding: 10px;
 }
+
+.Task{
+  width:100%;
+  border-radius: 6px;
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
+  border-radius: 6px;
+  border: solid 1px #6e8497;
+  background-color: #3d4147;
+  min-height: 120px;
+  margin: 5px auto;
+  padding:10px;
+  display: flex;
+  flex-direction: column;
+  /* align-content: flex-start; */
+  /* align-items: flex-start; */
+  /* justify-content: flex-start; */
+  /* justify-items: flex-start; */
+}
+.Task > div{
+}
+
+.Task .Name{
+  font-size: 14px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.3px;
+  color: #ffffff;
+}
+.Task .Content{
+
+}
+.Task .TaskChat{
+  margin: 5px 0;
+}
+.Task .TaskChat .ChatName{
+  font-size: 10px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.2px;
+  color: #ffffff;
+}
+.Task .TaskChat .ChatMessage{
+  
+  font-size: 10px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.2px;
+  color: #a3b6c5;
+}
+.Task .endDate{
+  opacity: 0.7;
+  font-size: 11px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.3px;
+  color: #a3b6c5;
+  margin:5px 0;
+}
+.Task .TaskUser{
+  
+}
+.Task .TaskUserName{
+
+}
+.Task .TaskUserPhoto{
+
+}
+.Task .Bottom{
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+}
+.Task .Bottom > div{
+  border-radius: 3px;
+width:36px;
+height:36px;
+border:1px solid #3e75b2;
+margin:10px 5px 0;
+}
+.Task .Bottom svg{
+  width:100%;
+  height:100%;
+  fill: #3e75b2;
+  cursor: pointer;
+}

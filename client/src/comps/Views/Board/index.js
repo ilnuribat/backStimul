@@ -13,6 +13,7 @@ import { getObjectTasks, glossaryStatus, TASKS_QUERY, ObjectInfo } from '../../.
 import { Redirect } from 'react-router';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
+import '../../../newcss/task.css';
 import { Svg } from '../../Parts/SVG/index';
 
 
@@ -39,6 +40,7 @@ class Board extends Component {
     this.daTa = this.daTa.bind(this)
     this.selectTask = this.selectTask.bind(this)
     this.glossStatus = this.glossStatus.bind(this)
+    this.childs = this.childs.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
@@ -82,6 +84,13 @@ class Board extends Component {
         unr: 0,
       }
     })
+
+  }
+
+  childs(id){
+
+    console.log("THIS CHILDS")
+    console.log(id)
 
   }
 
@@ -206,13 +215,51 @@ class Board extends Component {
                                 {
                                   cols[e.id].map((task, i)=>{
                                     return(
-                                      <div className="task">
-                                        {
-                                          task.id
-                                        }
+                                      <div className="Task">
+                                        <div style={{"display":"none"}}>
+                                          {
+                                            task.id
+                                          }
+                                        </div>
+                                        <div className="Name">
                                         {
                                           task.name
                                         }
+                                        </div>
+                                        {
+                                          task.endDate ? (
+                                            <div className="endDate">
+                                              истекает:
+                                              {task.endDate}
+                                            </div>
+                                          ): null
+                                        }
+
+                                        {
+                                          task.lastMessage ? (
+                                            <div className="TaskChat">
+                                              <div className="ChatName">
+                                              {
+                                                task.lastMessage.from.username
+                                              }
+                                              </div>
+                                              <div className="ChatMessage">
+                                              {
+                                                task.lastMessage.text
+                                              }
+                                              </div>
+                                              <div className="Bottom">
+                                                <div className="TaskUserPhoto"></div>
+                                                <div className="Childs" onClick={()=>{this.childs(task.id)}}>
+                                                  <Svg svg="deps"></Svg>  
+                                                </div>
+                                              </div>
+                                            </div>
+                                          ) : null
+                                        }
+
+
+
                                       </div>
                                     )
                                   })
