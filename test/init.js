@@ -1,4 +1,5 @@
 const request = require('request-promise-native');
+const { generateToken } = require('../server/src/services/user');
 const connectDB = require('../server/connectDB');
 const { User } = require('../server/src/models');
 
@@ -13,13 +14,18 @@ before(async function () {
     password: this.password,
   });
 
-  this.request = request.defaults({
+  const token = generateToken(this.user);
+
+  this.requestNoAuth = request.defaults({
     method: 'POST',
     uri: 'http://localhost:8500/',
-    headers: {
-      'content-type': 'application/json',
-    },
     json: true,
+  });
+
+  this.request = this.requestNoAuth.defaults({
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
 });
 
