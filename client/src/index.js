@@ -61,6 +61,7 @@ const stateLink = withClientState({
     ActUrl: "",
     bar: false,
     comp: "",
+    rootId: "",
     currentObjectId: "",
     currentObjectName: "",
     place:{

@@ -287,6 +287,13 @@ export const setObjectId = gql`
     }
   }
 `;
+export const rootId = gql`
+  mutation rootId($id: String!){
+    rootId(id: $id) @client {
+      rootId
+    }
+  }
+`;
 
 export const meSet = gql`
   mutation meSet($meid: String, $mename: String, $memail: String) {

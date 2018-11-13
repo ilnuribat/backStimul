@@ -89,6 +89,12 @@ export default {
       return {ActUrl, __typename: 'ActUrl' };
     },
 
+    rootId: (_, { id },  { cache }) => {
+      cache.writeData({ data: { rootId: id } });
+
+      return {id, __typename: 'ActUrl' };
+    },
+
     setBar: (_, { bar, comp },  { cache }) => {
       cache.writeData({ data: { bar: bar, comp: comp } });
 

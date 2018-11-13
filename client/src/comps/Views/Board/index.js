@@ -10,13 +10,13 @@ import Task from '../../Parts/Task';
 import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
-import { getObjectId, setChat, setInfo, setObjectId } from '../../../GraphQL/Cache';
+import { getObjectId, setChat, setInfo, setObjectId, rootId } from '../../../GraphQL/Cache';
 import { getObjectTasks, glossaryStatus, TASKS_QUERY, ObjectInfo } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
 import '../../../newcss/task.css';
 import { Svg } from '../../Parts/SVG/index';
-
+import { Link } from 'react-router-dom';
 
 class Board extends Component {
 
@@ -46,6 +46,7 @@ class Board extends Component {
     this.glossStatus = this.glossStatus.bind(this)
     this.childs = this.childs.bind(this)
     this.toTask = this.toTask.bind(this)
+    this.toBack = this.toBack.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
@@ -127,6 +128,19 @@ class Board extends Component {
     //   }
     // })
 
+  }
+
+  toBack(id){
+    console.log("TO BACK",id);
+
+    if(id){
+      localStorage.setItem('rootId', id)
+      this.props.rootId({
+        variables:{
+          id: id,
+        }
+      })
+    }
   }
 
   toTask(id, name, parentId){
@@ -253,8 +267,10 @@ class Board extends Component {
                   <Redirect to="/" />
                 );
               }
+              if(data && data.object){
 
-              this.state.showChilds ? data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))  : null
+              
+                this.state.curParentId && this.state.showChilds ? data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))  : null
 
 
               let arr = _.sortBy(data.object.tasks, 'status');
@@ -274,14 +290,14 @@ class Board extends Component {
               console.log("cols",cols)
 
 
-              if(data && data.object){
+
                 console.log("data",data)
 
                 return(
                   <div className="Board">
                     <div className="Board-Top">
                       {
-                        data.object.parentId ? (<div className="toBack" onClick={()=>{console.log("PARENT", data.object.parentId)}}><Svg svg="back" /></div>) : null
+                        data.object.parentId ? (<div className="toBack" onClick={()=>{this.toBack(data.object.parentId)}}><Link to="/tile"><Svg svg="back" /></Link></div>) : null
                       }
                       <h1>{data.object.name}</h1>
                       {/* <p className="small">{info.id}</p> */}
@@ -298,9 +314,60 @@ class Board extends Component {
                             <Column key={e.id} id={e.id} status={e.name} name={e.name} >
                               {
                                 cols[e.id].map((task, i)=>{
-                                  return(
-                                    <Task key={task.id} id={task.id} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs}/>
+                                  let {children, name, id, endDate, lastMessage, click, childs} = task;
+
+                                  return( 
+                                        <div className="Task" >
+                                        <div style={{"display":"none"}}>
+                                          {
+                                            id
+                                          }
+                                        </div>
+                                        <div className="Name" onClick={()=>click(id, name)}>
+                                          {
+                                            name
+                                          }
+                                        </div>
+                                        {
+                                          endDate ? (
+                                            <div className="endDate">
+                                                истекает:
+                                              {endDate}
+                                            </div>
+                                          ): null
+                                        }
+                            
+                                        {
+                                          lastMessage ? (
+                                            <div className="TaskChat">
+                                              <div className="ChatName">
+                                                {
+                                                  lastMessage.from.username
+                                                }
+                                              </div>
+                                              <div className="ChatMessage">
+                                                {
+                                                  lastMessage.text
+                                                }
+                                              </div>
+                            
+                                            </div>
+                                          ) : null
+                                        }
+                                        <div className="Bottom">
+                                          <div className="TaskUserPhoto"></div>
+                                          <div className="Childs" onClick={()=>this.childs(id)}>
+                                            <Svg svg="deps"></Svg>
+                                          </div>
+                                        </div>
+                                        <div className="linked" onClick={()=>this.click(id, name)}>
+                                          открыть
+                                        </div>
+                                        </div>
                                   )
+                                  // return(
+                                  //   <Task key={task.id} id={task.id} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs}/>
+                                  // )
                                 })
                               }
                             </Column>
@@ -340,6 +407,7 @@ Board.propTypes = {
 
 
 export default compose(
+  graphql(rootId, { name: 'rootId' }),
   graphql(getObjectId, { name: 'getObjectId' }),
   graphql(setObjectId, { name: 'setObjectId' }),
   graphql(setInfo, { name: 'setInfo' }),
