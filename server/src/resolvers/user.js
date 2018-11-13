@@ -81,6 +81,9 @@ module.exports = {
         return {
           token,
           userId: newUser.id,
+          id: newUser.id,
+          username: newUser.email,
+          jwt: token,
         };
       } catch (err) {
         if (err.errmsg.indexOf('duplicate key error')) {
