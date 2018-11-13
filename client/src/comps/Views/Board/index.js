@@ -166,7 +166,21 @@ class Board extends Component {
                   <Redirect to="/" />
                 );
               }
-              
+
+              let arr = _.sortBy(data.object.tasks, 'status');
+              arr = _.sortBy(data.object.tasks, 'unreadCount');
+
+
+              _.forEach(arr, (result)=>{
+                if(!result.status){
+                  cols[1].push(result);
+                }
+                if(result.status){
+                  cols[result.status].push(result);
+                }
+              });
+
+              console.log(cols)
 
               
               if(data && data.object){
@@ -189,7 +203,20 @@ class Board extends Component {
                             }
                             return(
                               <Column key={e.id} id={e.id} status={e.name} name={e.name} >
-                                <div>a</div>
+                                {
+                                  cols[e.id].map((task, i)=>{
+                                    return(
+                                      <div className="task">
+                                        {
+                                          task.id
+                                        }
+                                        {
+                                          task.name
+                                        }
+                                      </div>
+                                    )
+                                  })
+                                }
                               </Column>
                             )
                           })
