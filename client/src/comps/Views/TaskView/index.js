@@ -20,7 +20,7 @@ import { userTaskUpdated } from '../../../GraphQL/Qur/Subscr';
 import Content from '../../Lays/Content';
 import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
-
+import '../../../newcss/taskview.css'
 
 
 let statusName;
@@ -45,6 +45,7 @@ class GroupList extends Component {
     super(props)
     this.state = {
       users: [],
+      allTasks:[],
       allusers: [],
       status: [],
       input: {},
@@ -144,6 +145,19 @@ class GroupList extends Component {
       if(a && a.data){
         this.setState({
           allusers: a.data.users
+        })
+      }
+    }).catch((e)=>{
+      console.warn(e);
+    });
+  }
+
+
+  allTasksGet(){
+    qauf(allUsers(), _url, localStorage.getItem('auth-token')).then(a=>{
+      if(a && a.data){
+        this.setState({
+          allTasks: a.data.tasks,
         })
       }
     }).catch((e)=>{
@@ -350,6 +364,7 @@ class GroupList extends Component {
     const { users, groupInfo } = this.state;
     let _grid = getChat.id || localStorage.getItem('grid');
 
+
     if(getCUser.user  && getCUser.user.groups){
       let groups = getCUser.user.groups;
       let thisGrId = getChat.id || _grid;
@@ -394,18 +409,53 @@ class GroupList extends Component {
 
     return(
       <Fragment>
-        <Bar>
-
-        </Bar>
+        {/* <Bar></Bar> */}
         <Content>
-          <div className="f-container">
-            <div className="f-column">
+          <div className="TaskView">
+            <div className="TaskViewInner">
               {
                 this.props.getChat && this.props.getChat.id ? <ChatView name={this.props.getChat.name} id={this.props.getChat.id} priv={0} /> : (<div className="errorMessage">Выберите чат</div>)
               }
             </div>
-            <div className="f-column">
-              {
+          </div>
+{console.log(this.state.allTasks)}
+          {modal ? (
+            <Modal header="Подробная информация" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
+              <div className="overWrap">
+                <div>
+                  {  statusName = _.result(_.find(status, (obj)=> {
+                    return obj.id === groupInfo.status;
+                  }), 'name')
+                  }
+
+                  <ChangerForm id={getChat.id} defaults={groupInfo.name} name={"Название"} change={"name"} string={1} />
+                  <ChangerForm id={getChat.id} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
+                  <ChangerForm id={getChat.id} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
+                  <ChangerForm id={getChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
+
+                          <div className="padded">
+                            <select>
+                            <option value="0" onChange={(e)=>{e.preventDefault(); console.log(e.target.value)}}>Выбрать задачу</option>
+                              
+                              {
+                                this.state.allTasks.map((e,i)=>{
+                                  return(
+                                    <option key={e.id} value={e.id}>{e.name}</option>
+                                  )
+                                })
+                              }
+                              
+                            </select>
+                          </div>
+                </div>
+              </div>
+            </ Modal>
+          ) : null
+
+          }
+        </Content>
+        <Panel>
+        {
                 this.props.getChat && this.props.getChat.id ? (
                   <div className="tab-roll">
                     <div className="header"><h4>Пользователи</h4></div>
@@ -466,8 +516,19 @@ class GroupList extends Component {
                   </div>
                 ): null
               }
-
-              {
+        {
+                this.props.getChat && this.props.getChat.id ? (
+                  <div className="tab-roll">
+                    <div className="header"></div>
+                    <div className="content">
+                      <div className="button" onClick={()=>{this.setState({modal: !modal})}}>Информация</div>
+                      <div className="content-scroll">
+                      </div>
+                    </div>
+                  </div>
+                ) : null
+              }
+        {
                 this.props.getChat && this.props.getChat.id ? (
                   <div className="tab-roll">
                     <div className="header"><h4>Добавить пользователя</h4></div>
@@ -502,18 +563,6 @@ class GroupList extends Component {
                   </div>
                 ) : null
               }
-              {
-                this.props.getChat && this.props.getChat.id ? (
-                  <div className="tab-roll">
-                    <div className="header"></div>
-                    <div className="content">
-                      <div className="button" onClick={()=>{this.setState({modal: !modal})}}>Информация</div>
-                      <div className="content-scroll">
-                      </div>
-                    </div>
-                  </div>
-                ) : null
-              }
               {this.props.getChat && this.props.getChat.id ? (
                 !upload ? (
                   <div className="tab-roll">
@@ -541,31 +590,7 @@ class GroupList extends Component {
                 )
               ): null
               }
-            </div>
-          </div>
-
-          {modal ? (
-            <Modal header="Подробная информация" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
-              <div className="overWrap">
-                <div>
-                  {  statusName = _.result(_.find(status, (obj)=> {
-                    return obj.id === groupInfo.status;
-                  }), 'name')
-                  }
-
-                  <ChangerForm id={getChat.id} defaults={groupInfo.name} name={"Название"} change={"name"} string={1} />
-                  <ChangerForm id={getChat.id} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
-                  <ChangerForm id={getChat.id} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
-                  <ChangerForm id={getChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
-
-                </div>
-              </div>
-            </ Modal>
-          ) : null
-
-          }
-        </Content>
-        <Panel></Panel>
+        </Panel>
       </Fragment>
     );
   }

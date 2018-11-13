@@ -262,9 +262,10 @@ class Board extends Component {
               }
               if (error){
                 this.props.setInfo({variables:{id:"id",message:error.message, type:"error"}})
-
+                console.log('Error', error.message)
                 return(
-                  <Redirect to="/" />
+                  "error"
+                  // <Redirect to="/" />
                 );
               }
               if(data && data.object){
@@ -314,60 +315,60 @@ class Board extends Component {
                             <Column key={e.id} id={e.id} status={e.name} name={e.name} >
                               {
                                 cols[e.id].map((task, i)=>{
-                                  let {children, name, id, endDate, lastMessage, click, childs} = task;
+                                  // let {children, name, id, endDate, lastMessage, click, childs} = task;
 
-                                  return( 
-                                        <div className="Task" >
-                                        <div style={{"display":"none"}}>
-                                          {
-                                            id
-                                          }
-                                        </div>
-                                        <div className="Name" onClick={()=>click(id, name)}>
-                                          {
-                                            name
-                                          }
-                                        </div>
-                                        {
-                                          endDate ? (
-                                            <div className="endDate">
-                                                истекает:
-                                              {endDate}
-                                            </div>
-                                          ): null
-                                        }
+                                  // return( 
+                                  //       <div className="Task" >
+                                  //       <div style={{"display":"none"}}>
+                                  //         {
+                                  //           id
+                                  //         }
+                                  //       </div>
+                                  //       <div className="Name" onClick={()=>click(id, name)}>
+                                  //         {
+                                  //           name
+                                  //         }
+                                  //       </div>
+                                  //       {
+                                  //         endDate ? (
+                                  //           <div className="endDate">
+                                  //               истекает:
+                                  //             {endDate}
+                                  //           </div>
+                                  //         ): null
+                                  //       }
                             
-                                        {
-                                          lastMessage ? (
-                                            <div className="TaskChat">
-                                              <div className="ChatName">
-                                                {
-                                                  lastMessage.from.username
-                                                }
-                                              </div>
-                                              <div className="ChatMessage">
-                                                {
-                                                  lastMessage.text
-                                                }
-                                              </div>
+                                  //       {
+                                  //         lastMessage ? (
+                                  //           <div className="TaskChat">
+                                  //             <div className="ChatName">
+                                  //               {
+                                  //                 lastMessage.from.username
+                                  //               }
+                                  //             </div>
+                                  //             <div className="ChatMessage">
+                                  //               {
+                                  //                 lastMessage.text
+                                  //               }
+                                  //             </div>
                             
-                                            </div>
-                                          ) : null
-                                        }
-                                        <div className="Bottom">
-                                          <div className="TaskUserPhoto"></div>
-                                          <div className="Childs" onClick={()=>this.childs(id)}>
-                                            <Svg svg="deps"></Svg>
-                                          </div>
-                                        </div>
-                                        <div className="linked" onClick={()=>this.click(id, name)}>
-                                          открыть
-                                        </div>
-                                        </div>
-                                  )
-                                  // return(
-                                  //   <Task key={task.id} id={task.id} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs}/>
+                                  //           </div>
+                                  //         ) : null
+                                  //       }
+                                  //       <div className="Bottom">
+                                  //         <div className="TaskUserPhoto"></div>
+                                  //         <div className="Childs" onClick={()=>this.childs(id)}>
+                                  //           <Svg svg="deps"></Svg>
+                                  //         </div>
+                                  //       </div>
+                                  //       <div className="linked" onClick={()=>this.click(id, name)}>
+                                  //         открыть
+                                  //       </div>
+                                  //       </div>
                                   // )
+                                  return(
+                                    <Task key={task.id} id={task.id} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs}/>
+                                  )
                                 })
                               }
                             </Column>

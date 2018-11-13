@@ -142,7 +142,7 @@ export default class MessagesList extends Component {
                               >
                                 {({ data, subscribeToMore }) => {
                                   // console.warn("subs", subscribeToMore)
-                                  subscribeToRead(subscribeToMore, node.id)
+                                  subscribeToRead(subscribeToMore, node.id);
                                   // console.log("subscribeToMore_______________________________");
                                   // console.log(subscribeToMore);
 
