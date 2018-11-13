@@ -143,10 +143,10 @@ class Board extends Component {
     if(!!getObjectId.id){
       return (
         <Content>
-            <div className="Board-Top">
-              <h1>{info.name}</h1>
-              {/* <p className="small">{info.id}</p> */}
-            </div>
+          <div className="Board-Top">
+            <h1>{info.name}</h1>
+            {/* <p className="small">{info.id}</p> */}
+          </div>
           <Query query={getObjectTasks} variables={{ id: getObjectId.id }} >
             {({ loading, error, data }) => {
               if (loading){
@@ -158,6 +158,7 @@ class Board extends Component {
               }
               if (error){
                 this.props.setInfo({variables:{id:"id",message:error.message, type:"error"}})
+
                 return(
                   <Redirect to="/" />
                 );

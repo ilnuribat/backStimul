@@ -12,6 +12,7 @@ import { setPlace, getPlace, getChat, setChat, setObjectId, getObjectId } from '
 import { compose, graphql } from 'react-apollo';
 import { Redirect } from 'react-router';
 
+
 class TileBoard extends Component {
   constructor(props) {
     super(props)
