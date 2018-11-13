@@ -29,6 +29,7 @@ class Board extends Component {
       status: [],
       tasks: {},
       toRoot: false,
+      toTask: false,
       columns: [
         "Null",
         "Новые",
@@ -91,7 +92,7 @@ class Board extends Component {
 
   }
 
-  toTask(id, name){
+  toTask(id, name, parentId){
 
     console.log("To TASK ID")
     console.log(id)
@@ -101,6 +102,10 @@ class Board extends Component {
         name: name,
         priv: false,
       }
+    });
+    
+    this.setState({
+      toTask: true,
     })
 
   }
@@ -157,7 +162,7 @@ class Board extends Component {
 
   render(){
     const { getObjectId, setObjectId } = this.props;
-    const { info, toRoot, status, tasks } = this.state;
+    const { info, toRoot, status, tasks, toTask } = this.state;
     let cols = [[],[],[],[],[],[],[]];
 
     if (!getObjectId.currentObjectId) {
@@ -180,6 +185,8 @@ class Board extends Component {
     // }
 
     if(!status) return <Loading />;
+    if(toRoot) return <Redirect to="/" />;
+    if(toTask) return <Redirect to="/task" />;
     if(getObjectId.currentObjectId){
       return (
         <Content>
