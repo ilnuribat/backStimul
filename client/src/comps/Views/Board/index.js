@@ -91,10 +91,17 @@ class Board extends Component {
 
   }
 
-  toTask(id){
+  toTask(id, name){
 
     console.log("To TASK ID")
     console.log(id)
+    this.props.setChat({
+      variables: {
+        id: id,
+        name: name,
+        priv: false,
+      }
+    })
 
   }
 

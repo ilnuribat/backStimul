@@ -26,7 +26,7 @@ class Task extends Component {
                 id
               }
             </div>
-            <div className="Name" onClick={()=>click(id)}>
+            <div className="Name" onClick={()=>click(id, name)}>
               {
                 name
               }
@@ -63,7 +63,7 @@ class Task extends Component {
                 <Svg svg="deps"></Svg>
               </div>
             </div>
-            <div className="linked" onClick={()=>click(id)}>
+            <div className="linked" onClick={()=>click(id, name)}>
               открыть
             </div>
             </div>
