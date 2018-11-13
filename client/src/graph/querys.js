@@ -670,6 +670,40 @@ export const getObjectTasksTemp = gql`
 }
 `;
 
+
+export const getObjectTasksChild = gql`
+ query getObjectTasksChild($objectId: ID!, $parentId: ID!){
+  getObjectTasksChild (objectId: $objectId, parentId: $parentId) @client {
+    object{
+      tasks{
+        id
+        name
+        endDate
+        unreadCount
+        status
+        parentId
+        objectId
+        users {
+          id
+          username
+        }
+        assignedTo {
+          id
+          username
+        }
+        lastMessage {
+          from {
+            id
+            username
+          }
+          text
+        }
+      }
+    }
+  }
+}
+`;
+
 export const getObjectInfo= gql`
  query getObjectInfo($id: ID!){
   object (id: $id) {
