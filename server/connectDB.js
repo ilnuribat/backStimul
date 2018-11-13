@@ -15,7 +15,7 @@ module.exports = async function () {
         reject(error);
       });
 
-    mongoose.set('debug', true);
+    mongoose.set('debug', !['test', 'production'].includes(process.env.NODE_ENV));
 
     mongoose.connect(MONGODB_HOST, {
       useNewUrlParser: true,
