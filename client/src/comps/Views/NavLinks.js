@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import { Svg } from '../Parts/SVG/index';
 
 const NavArr = [
-  {name:"1", link:"1", comp:"", svg:"search"},
-  {name:"2", link:"2", comp:"", svg:"svg2"},
-  {name:"3", link:"3", comp:"", svg:"svg3"},
-  {name:"4", link:"4", comp:"", svg:"svg1"},
+  {name:"1", link:"", comp:"", svg:"search"},
+  {name:"2", link:"", comp:"", svg:"svg2"},
+  {name:"3", link:"", comp:"", svg:"svg3"},
+  {name:"4", link:"map", comp:"", svg:"location"},
 ];
 
 export default class NavLinks extends Component {

@@ -17,8 +17,9 @@ import b from "./buttons.css";
 import  "./LeafletMap.css";
 
 import { getObjects } from '../../../GraphQL/Qur/Query/index';
-import { setObjectId } from '../../../GraphQL/Qur/Mutation/index';
+import { setObjectId } from '../../../GraphQL/Cache';
 import Loading from '../../Loading';
+
 
 const { BaseLayer, Overlay } = LayersControl;
 

@@ -1,13 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Redirect } from 'react-router';
-import { getPrivateChat } from '../GraphQL/Qur/Query';
-import { setPrivateChat } from '../GraphQL/Qur/Mutation';
-import { getPlace } from '../GraphQL/Qur/Query';
-import { setPlace } from '../GraphQL/Cache';
+import { setPlace, setChat, getChat, getPlace } from '../GraphQL/Cache';
 import { graphql } from 'react-apollo';
 import { compose } from 'react-apollo';
-
 
 /** RootLoader */
 
@@ -47,8 +43,8 @@ class RootLoader extends Component {
 
 
 export default compose(
-  graphql(getPrivateChat, { name: 'getChat' }),
-  graphql(setPrivateChat, { name: 'setChat' }),
+  graphql(getChat, { name: 'getChat' }),
+  graphql(setChat, { name: 'setChat' }),
   graphql(getPlace, { name: 'getPlace' }),
   graphql(setPlace, { name: 'setPlace' }),
 )(RootLoader);

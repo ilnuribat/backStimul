@@ -12,7 +12,8 @@ import { getMainDefinition } from 'apollo-utilities';
 import { createUploadLink } from 'apollo-upload-client';
 import App from './App';
 import {_url} from './constants';
-import resolvers from './graph/resolvers';
+import resolvers from './GraphQL/Res';
+
 
 const httpLink = createUploadLink({
   uri: `http://${_url}/`,

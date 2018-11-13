@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom';
-import NavTopInner from './NavTopInner';
 
 
-export default class NavTop extends Component {
+export default class NavTopInner extends Component {
   static propTypes = {
   }
 
@@ -12,11 +11,8 @@ export default class NavTop extends Component {
     let {children} = this.props;
 
     return (
-      <div className="NavTop">
-        <div><Link to="/profile">top</Link></div>
-        {/* <NavTopInner/> */}
+      <div className="NavTopInner">
         {children}
-        
       </div>
     )
   }

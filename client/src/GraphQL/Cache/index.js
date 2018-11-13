@@ -1,5 +1,161 @@
 import gql from 'graphql-tag';
 
+
+export const meGet = gql`
+  query meGet{
+      meid @client
+      mename @client
+      memail @client
+    }
+`;
+
+
+
+export const getObjectId = gql`
+  query getObjectId{
+      id @client
+      name @client
+  }
+`;
+export const appendUser = gql`
+  query appendUser {
+    userName @client
+    userId @client
+  }
+`;
+export const getChat = gql`
+  query private{
+      id @client
+      name @client
+      unr @client
+      priv @client
+  }
+`;
+export const cGetCountPrivates = gql`
+  query countPrivates {
+    unr @client
+  }
+`;
+export const getlastMessageCache = gql`
+  query getlastMessageCache{
+      lastMessage @client {
+        groupId
+        id
+        text
+      }
+      id @client
+  }
+`;
+export const tempObjGet = gql`
+  query tempObjGet{
+        tempObj @client
+      }
+`;
+
+export const getRefGroups = gql`
+  query Ref{
+    ref @client
+  }
+`;
+
+export const getTemp = gql`
+  query getTemp{
+        tempObj @client
+      }
+`;
+
+export const getActUrl = gql`
+  query getActUrl{
+    ActUrl @client
+      }
+`;
+
+export const getBar = gql`
+  query getBar{
+    bar @client
+    comp @client
+      }
+`;
+
+export const getInfo = gql`
+          query Info {
+            __info @client{
+              id
+              message
+              type
+            }
+          }
+`;
+
+export const getDashboard = gql`
+  query getDash{
+    rootObject @client{
+        objects{
+          id
+          name
+        }
+        addresses{
+          id
+          name
+        }
+      }
+    }
+`;
+
+export const getPlace = gql`
+  query getPlace{
+      place @client{
+        id
+        name
+        type
+      }
+    }
+`;
+
+
+export const getCUser = gql`
+query getCUser{
+    user @client{
+      groups{
+        id
+        name
+        users{
+          id
+          username
+        }
+        unreadCount
+        status
+        assignedTo{
+          id
+          username
+        }
+        lastMessage{
+          from{
+            id
+            username
+          }
+          text
+        }
+        endDate
+      }
+    }
+}`;
+
+export const getObjectTasksTemp = gql`
+ query getObjectTasksTemp($id: ID!){
+  object (id: $id) @client{
+      tasks{
+        id
+        parentId
+        name
+        status
+      }
+    }
+}
+`;
+
+
+
 export const tempObj = gql`
   mutation tempObj($tempObj: String!){
     tempObj (tempObj: $tempObj) @client{
@@ -21,14 +177,6 @@ export const setDashboard = gql`
     }
   }
 `;
-export const meGet = gql`
-  query meGet{
-      meid @client
-      mename @client
-      memail @client
-    }
-`;
-
 export const setPlace = gql`
   mutation setPlace($id: String, $name: String, $type: String ){
     setPlace(id: $id, name: $name, type: $type) @client{
@@ -97,4 +245,65 @@ mutation setBar($bar: Boolean, $comp: String){
     comp
   }
 }
+`;
+export const cSetCountPrivates = gql`
+  mutation countPrivates($unr:Number){
+    countPrivates(unr: $unr) @client{
+      unr
+    }
+  }
+`;
+export const selectUser = gql`
+  mutation selectUser($userName: String!, $userId: String!) {
+    selectUser(userName: $userName, userId: $userId) @client {
+      userName
+      userId
+    }
+  }
+`;
+
+export const cSetChats = gql`
+  mutation privates($name: String!, $id: String!){
+    privates(name: $name, id: $id) @client {
+      chats
+    }
+  }
+`;
+
+export const setChat = gql`
+  mutation private($name: String!, $id: String!){
+    private(name: $name, id: $id) @client {
+      id
+      name
+    }
+  }
+`;
+
+export const setObjectId = gql`
+  mutation setObjectId($name: String!, $id: String!){
+    setObjectId(name: $name, id: $id) @client {
+      id
+      name
+    }
+  }
+`;
+
+export const meSet = gql`
+  mutation meSet($meid: String, $mename: String, $memail: String) {
+    meSet(meid: $meid, mename: $mename, memail: $memail) @client {
+      meid
+      mename
+      memail
+    }
+  }
+`;
+
+export const lastMessageCache = gql`
+  mutation lastMessageCache($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
+    lastMessageCache(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
+      lastMessage
+      lastMessageId
+      lastMessageGroupId
+    }
+  }
 `;

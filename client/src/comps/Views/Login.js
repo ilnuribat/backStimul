@@ -4,8 +4,7 @@ import { graphql, compose  } from "react-apollo";
 
 import { quf, AUTH_TOKEN } from '../../constants';
 import { LoginQuery } from '../../GraphQL/Qur/Query';
-import { meGet } from '../../GraphQL/Cache';
-import { meSet } from '../../GraphQL/Qur/Mutation';
+import { meGet, meSet } from '../../GraphQL/Cache';
 
 
 

@@ -10,14 +10,15 @@ import Root from './comps/Root';
 import Nav from './comps/Lays/Nav';
 import Map from './comps/Views/Map';
 import Profile from './comps/Views/Profile';
-// import Board from './comps/Views/Board';
-// import TaskView from './comps/Views/TaskView';
+import Board from './comps/Views/Board';
+import TaskView from './comps/Views/TaskView';
 import TileBoard from './comps/Views/TileBoard';
 import ChatView from './comps/Views/ChatView';
 import Login from './comps/Views/Login';
 
 import RootLoader from './comps/RootLoader';
 import NavLinks from './comps/Views/NavLinks';
+import NavTop from './comps/Views/NavTop';
 
 
 const Components = [
@@ -98,7 +99,7 @@ class App extends Component {
         ) : (
           <Fragment>
             <Nav>
-              
+              <NavTop/>
               <NavLinks />
             </Nav>
             <Root>
@@ -111,8 +112,8 @@ class App extends Component {
                   //   )
                   // })
                 }
-                {/* <Route exact path="/task" component={TaskView} /> */}
-                {/* <Route exact path="/board" component={Board} /> */}
+                <Route exact path="/task" component={TaskView} />
+                <Route exact path="/board" component={Board} />
                 <Route exact path="/tile" component={TileBoard} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/map" component={Map} />

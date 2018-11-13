@@ -84,21 +84,7 @@ export const getById = (id) => {
 };
 
 
-export const getObjectId = gql`
-  query getObjectId{
-      currentObjectId @client
-      currentObjectName @client
-  }
-`;
 
-export const getPrivateChat = gql`
-  query private{
-      id @client
-      name @client
-      unr @client
-      priv @client
-  }
-`;
 
 export const cGetChats = gql`
   query chats{
@@ -106,30 +92,11 @@ export const cGetChats = gql`
   }
 `;
 
-export const appendUser = gql`
-  query appendUser {
-    userName @client
-    userId @client
-  }
-`;
-
-export const cGetCountPrivates = gql`
-  query countPrivates {
-    unr @client
-  }
-`;
 
 
-export const getlastMessageCache = gql`
-  query getlastMessageCache{
-      lastMessage @client {
-        groupId
-        id
-        text
-      }
-      id @client
-  }
-`;
+
+
+
 export const allUsers = () => `
     {
       users{
@@ -304,71 +271,7 @@ export const GRU_QUERY = gql`
   }
 `;
 
-export const tempObjGet = gql`
-  query tempObjGet{
-        tempObj @client
-      }
-`;
 
-export const getRefGroups = gql`
-  query Ref{
-    ref @client
-  }
-`;
-
-export const getTemp = gql`
-  query getTemp{
-        tempObj @client
-      }
-`;
-
-export const getActUrl = gql`
-  query getActUrl{
-    ActUrl @client
-      }
-`;
-
-export const getBar = gql`
-  query getBar{
-    bar @client
-    comp @client
-      }
-`;
-
-export const getInfo = gql`
-          query Info {
-            __info @client{
-              id
-              message
-              type
-            }
-          }
-`;
-
-export const getDashboard = gql`
-  query getDash{
-    rootObject @client{
-        objects{
-          id
-          name
-        }
-        addresses{
-          id
-          name
-        }
-      }
-    }
-`;
-
-export const getPlace = gql`
-  query getPlace{
-      place @client{
-        id
-        name
-        type
-      }
-    }
-`;
 export const QUERY_ROOTID = gql`
 query rootObject($id: ID){
     rootObject(id: $id){
@@ -453,33 +356,6 @@ export const getUnreadCount = () => `
 
 
 
-export const getCUser = gql`
-query getCUser{
-    user @client{
-      groups{
-        id
-        name
-        users{
-          id
-          username
-        }
-        unreadCount
-        status
-        assignedTo{
-          id
-          username
-        }
-        lastMessage{
-          from{
-            id
-            username
-          }
-          text
-        }
-        endDate
-      }
-    }
-}`;
 
 export const getObjectTasks2 = (id) => `
 {
@@ -517,6 +393,10 @@ export const getObjectTasks = gql`
   object (id: $id) {
       name
       parentId
+      address{
+          value
+          coordinates
+        }
       tasks{
         id
         parentId
@@ -539,26 +419,12 @@ export const getObjectTasks = gql`
           text
         }
         endDate
-        address{
-          value
-          coordinates
-        }
+
       }
     }
 }
 `;
-export const getObjectTasksTemp = gql`
- query getObjectTasksTemp($id: ID!){
-  object (id: $id) @client{
-      tasks{
-        id
-        parentId
-        name
-        status
-      }
-    }
-}
-`;
+
 
 export const findFiles = gql`
   query($id: ID!) {
