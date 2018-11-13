@@ -385,9 +385,6 @@ export const getObjectTasks2 = (id) => `
     }
 }`;
 
-
-
-
 export const getObjectTasks = gql`
  query getObjectTasks($id: ID!){
   object (id: $id) {

@@ -1,0 +1,46 @@
+.Board-Top{
+display: flex;
+flex-direction: row;
+height: 60px;
+background: #2a2c31;
+}
+.Board-Top > h1{
+  flex:1;
+  padding:20px;
+  color: aliceblue;
+  font-size: 38px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -1.1px;
+  color: #ffffff;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+}
+.toBack{
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  
+}
+.toBack svg{
+  width: 64px;
+  height: 64px;
+  fill: #3e75b2;
+}
+.Board{
+  display: flex;
+  flex-direction: column;
+  height:100%;
+}
+.Board-Content{
+  display: flex;
+  flex:1 1 auto;
+  flex-direction: row;
+  overflow-y:hidden;
+  overflow-x:auto;
+  align-items: flex-start;
+  justify-content: flex-start;
+}

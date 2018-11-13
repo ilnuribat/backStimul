@@ -12,7 +12,8 @@ import { getObjectId, setChat, setInfo, setObjectId } from '../../../GraphQL/Cac
 import { getObjectTasks, glossaryStatus, TASKS_QUERY, ObjectInfo } from '../../../GraphQL/Qur/Query';
 import { Redirect } from 'react-router';
 import Content from '../../Lays/Content';
-
+import '../../../newcss/boardview.css';
+import { Svg } from '../../Parts/SVG/index';
 
 
 class Board extends Component {
@@ -56,15 +57,21 @@ class Board extends Component {
   componentDidMount(){
     // this.props.glossStatus
     const { getObjectId, setObjectId } = this.props;
+    if(getObjectId.currentObjectId && getObjectId.currentObjectName){
+      this.setState({
+        info: {id:getObjectId.currentObjectId, name: getObjectId.currentObjectName },
+      })
+    }
+    if(!getObjectId.currentObjectId) {
 
-    if(!getObjectId.id) {
+      console.log("a")
+      console.log(getObjectId)
       // this.setState({
       //   toRoot: true,
       // })
-      return false;
+      // return false;
     }
-
-    let ObjId = localStorage.getItem('ObjectId') || getObjectId.id;
+    let ObjId = localStorage.getItem('ObjectId') || getObjectId.currentObjectId;
 
     this.glossStatus();
     this.props.setChat({
@@ -120,7 +127,7 @@ class Board extends Component {
     const { info, toRoot, status, tasks } = this.state;
     let cols = [[],[],[],[],[],[],[]];
 
-    if (!getObjectId.id) {
+    if (!getObjectId.currentObjectId) {
       return <Redirect to="/" />
     }
 
@@ -140,14 +147,10 @@ class Board extends Component {
     // }
 
     if(!status) return <Loading />;
-    if(!!getObjectId.id){
+    if(!!getObjectId.currentObjectId){
       return (
         <Content>
-          <div className="Board-Top">
-            <h1>{info.name}</h1>
-            {/* <p className="small">{info.id}</p> */}
-          </div>
-          <Query query={getObjectTasks} variables={{ id: getObjectId.id }} >
+          <Query query={getObjectTasks} variables={{ id: getObjectId.currentObjectId }} >
             {({ loading, error, data }) => {
               if (loading){
                 return (
@@ -163,9 +166,39 @@ class Board extends Component {
                   <Redirect to="/" />
                 );
               }
-              if(data && data.object && data.object.tasks){
+              
+
+              
+              if(data && data.object){
                 console.log(data)
-                return "Data"
+                return(
+                  <div className="Board">
+                    <div className="Board-Top">
+                        {
+                          data.object.parentId ? (<div className="toBack" onClick={()=>{console.log("PARENT", data.object.parentId)}}><Svg svg="back" /></div>) : null
+                        }
+                      <h1>{data.object.name}</h1>
+                      {/* <p className="small">{info.id}</p> */}
+                    </div>
+                    <div className="Board-Content">
+                        {console.log(status)}
+                        {
+                          status && status.map((e,i)=>{
+                            if( i === 0 ){
+                              return(true)
+                            }
+                            return(
+                              <Column key={e.id} id={e.id} status={e.name} name={e.name} >
+                                <div>a</div>
+                              </Column>
+                            )
+                          })
+                        }
+                    </div>
+                  </div>
+                )
+
+                // return "Data"
               }else{
                 return "data"
               }
