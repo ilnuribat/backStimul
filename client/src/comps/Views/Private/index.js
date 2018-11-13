@@ -1,10 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import 'animate.css';
 import { graphql, compose  } from "react-apollo";
 import PropTypes from 'prop-types';
-import FirstLayout from './Layout';
-import ChatPrivate from '../ChatView';
+import ChatView from '../ChatView';
 import { getChat, setChat } from '../../../GraphQL/Cache';
+import Content from '../../Lays/Content';
+import Bar from '../../Lays/Bar';
+import PrivateBar from './PrivateBar';
 
 class Private extends Component {
   constructor(props) {
@@ -37,7 +39,7 @@ class Private extends Component {
 
   componentWillUnmount(){
     // console.warn("UMount")
-    this.props.setPrivateChat({
+    this.props.setChat({
       variables: { id: "", name: "" }
     })
   }
@@ -52,50 +54,54 @@ class Private extends Component {
   render() {
 
     return(
-      <FirstLayout barstate="private">
-        <div className="f-container">
-          <div className="f-column" style={{color: ""}}>
-            {
-              this.props.getchat && this.props.getchat.id ? <ChatPrivate key={this.props.getchat.id} name={this.props.getchat.name} id={this.props.getchat.id} priv={1} /> : (<div className="errorMessage">Выберите чат</div>)
-            }
-          </div>
-          <div className="f-column">
-            <div className="tab-roll">
-              <div className="header"><h4>_</h4></div>
-              <div className="content">
-                <div className="content-scroll">
-                  {
+      <Fragment>
+        <Bar >
+          <PrivateBar />
+        </Bar>
+        <Content>
+          <div className="f-container">
+            <div className="f-column" style={{color: ""}}>
+              {
+                this.props.getchat && this.props.getchat.id ? <ChatView key={this.props.getchat.id} name={this.props.getchat.name} id={this.props.getchat.id} priv={1} /> : (<div className="errorMessage">Выберите чат</div>)
+              }
+            </div>
+            <div className="f-column">
+              <div className="tab-roll">
+                <div className="header"><h4>_</h4></div>
+                <div className="content">
+                  <div className="content-scroll">
+                    {
 
-                  }
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <div className="tab-roll">
+                <div className="header"><h4>_</h4></div>
+                <div className="content">
+                  <div className="content-scroll">
+                    {
+
+                    }
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div className="tab-roll">
-              <div className="header"><h4>_</h4></div>
-              <div className="content">
-                <div className="content-scroll">
-                  {
-
-                  }
-                </div>
-              </div>
-            </div>
           </div>
-        </div>
-      </FirstLayout>
-
+        </Content>
+      </Fragment>
     );
   }
 }
 
 Private.propTypes = {
-  setPrivateChat: PropTypes.func.isRequired,
+  setChat: PropTypes.func.isRequired,
   getchat: PropTypes.object.isRequired
 };
 
 
 export default compose(
   graphql(getChat, { name: 'getchat' }),
-  graphql(setChat, { name: 'setPrivateChat' }),
+  graphql(setChat, { name: 'setChat' }),
 )(Private);

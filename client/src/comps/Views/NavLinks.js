@@ -5,9 +5,9 @@ import { Svg } from '../Parts/SVG/index';
 
 const NavArr = [
   {name:"search", link:"", comp:"", svg:"search"},
-  {name:"2", link:"", comp:"", svg:"svg2"},
+  {name:"private", link:"/chat", comp:"", svg:"private"},
   {name:"3", link:"", comp:"", svg:"svg3"},
-  {name:"map", link:"map", comp:"", svg:"location"},
+  {name:"map", link:"/map", comp:"", svg:"location"},
 ];
 
 export default class NavLinks extends Component {
