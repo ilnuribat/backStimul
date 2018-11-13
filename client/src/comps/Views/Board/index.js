@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import 'animate.css';
 
+import { Redirect } from 'react-router';
 import Column from '../../Parts/Column';
 import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
 import { getObjectId, setChat, setInfo, setObjectId } from '../../../GraphQL/Cache';
 import { getObjectTasks, glossaryStatus, TASKS_QUERY, ObjectInfo } from '../../../GraphQL/Qur/Query';
-import { Redirect } from 'react-router';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
 import '../../../newcss/task.css';
@@ -35,6 +35,7 @@ class Board extends Component {
         "На проверке",
         "Завершенные",
       ],
+      showChilds: false,
     };
 
     this.daTa = this.daTa.bind(this)
@@ -59,6 +60,7 @@ class Board extends Component {
   componentDidMount(){
     // this.props.glossStatus
     const { getObjectId, setObjectId } = this.props;
+
     if(getObjectId.currentObjectId && getObjectId.currentObjectName){
       this.setState({
         info: {id:getObjectId.currentObjectId, name: getObjectId.currentObjectName },
@@ -88,9 +90,13 @@ class Board extends Component {
   }
 
   childs(id){
+    this.setState({
+      showChilds: !this.state.showChilds,
+      curParentId: id
+    });
 
-    console.log("THIS CHILDS")
-    console.log(id)
+    // console.log("THIS CHILDS")
+    // console.log(id)
 
   }
 
@@ -108,22 +114,22 @@ class Board extends Component {
   about(id){
 
     qauf(ObjectInfo(id), _url, localStorage.getItem('auth-token'))
-    .then(a=>{
+      .then(a=>{
 
-      let info = {};
+        let info = {};
 
-      info.id = id;
-      info.name = a.data.object.name;
+        info.id = id;
+        info.name = a.data.object.name;
 
-      if(this.state.info.id == id && this.state.info.name == a.data.object.name){return true} 
-      else{
-        this.setState({
-          info: info,
-        });
-  
-      }
+        if(this.state.info.id == id && this.state.info.name == a.data.object.name){return true}
+        else{
+          this.setState({
+            info: info,
+          });
 
-    })
+        }
+
+      })
       .catch((e)=>{
         console.warn(e);
       });
@@ -156,7 +162,7 @@ class Board extends Component {
     // }
 
     if(!status) return <Loading />;
-    if(!!getObjectId.currentObjectId){
+    if(getObjectId.currentObjectId){
       return (
         <Content>
           <Query query={getObjectTasks} variables={{ id: getObjectId.currentObjectId }} >
@@ -176,7 +182,11 @@ class Board extends Component {
                 );
               }
 
+              this.state.showChilds ? data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))  : null
+
+
               let arr = _.sortBy(data.object.tasks, 'status');
+
               arr = _.sortBy(data.object.tasks, 'unreadCount');
 
 
@@ -191,84 +201,86 @@ class Board extends Component {
 
               console.log(cols)
 
-              
+
               if(data && data.object){
                 console.log(data)
+
                 return(
                   <div className="Board">
                     <div className="Board-Top">
-                        {
-                          data.object.parentId ? (<div className="toBack" onClick={()=>{console.log("PARENT", data.object.parentId)}}><Svg svg="back" /></div>) : null
-                        }
+                      {
+                        data.object.parentId ? (<div className="toBack" onClick={()=>{console.log("PARENT", data.object.parentId)}}><Svg svg="back" /></div>) : null
+                      }
                       <h1>{data.object.name}</h1>
                       {/* <p className="small">{info.id}</p> */}
                     </div>
                     <div className="Board-Content">
-                        {console.log(status)}
-                        {
-                          status && status.map((e,i)=>{
-                            if( i === 0 ){
-                              return(true)
-                            }
-                            return(
-                              <Column key={e.id} id={e.id} status={e.name} name={e.name} >
-                                {
-                                  cols[e.id].map((task, i)=>{
-                                    return(
-                                      <div className="Task">
-                                        <div style={{"display":"none"}}>
-                                          {
-                                            task.id
-                                          }
-                                        </div>
-                                        <div className="Name">
+                      {console.log(status)}
+                      {
+                        status && status.map((e,i)=>{
+                          if( i === 0 ){
+                            return(true)
+                          }
+
+                          return(
+                            <Column key={e.id} id={e.id} status={e.name} name={e.name} >
+                              {
+                                cols[e.id].map((task, i)=>{
+                                  return(
+                                    <div key = {task.id} className="Task">
+                                      <div style={{"display":"none"}}>
+                                        {
+                                          task.id
+                                        }
+                                      </div>
+                                      <div className="Name">
                                         {
                                           task.name
                                         }
-                                        </div>
-                                        {
-                                          task.endDate ? (
-                                            <div className="endDate">
+                                      </div>
+                                      {
+                                        task.endDate ? (
+                                          <div className="endDate">
                                               истекает:
-                                              {task.endDate}
-                                            </div>
-                                          ): null
-                                        }
+                                            {task.endDate}
+                                          </div>
+                                        ): null
+                                      }
 
-                                        {
-                                          task.lastMessage ? (
-                                            <div className="TaskChat">
-                                              <div className="ChatName">
+                                      {
+                                        task.lastMessage ? (
+                                          <div className="TaskChat">
+                                            <div className="ChatName">
                                               {
                                                 task.lastMessage.from.username
                                               }
-                                              </div>
-                                              <div className="ChatMessage">
+                                            </div>
+                                            <div className="ChatMessage">
                                               {
                                                 task.lastMessage.text
                                               }
-                                              </div>
+                                            </div>
 
-                                            </div>
-                                          ) : null
-                                        }
-                                          <div className="Bottom">
-                                            <div className="TaskUserPhoto"></div>
-                                            <div className="Childs" onClick={()=>{this.childs(task.id)}}>
-                                              <Svg svg="deps"></Svg>  
-                                            </div>
                                           </div>
-
-
-
+                                        ) : null
+                                      }
+                                      <div className="Bottom">
+                                        <div className="TaskUserPhoto"></div>
+                                        <div className="Childs" onClick={()=>{this.childs(task.id)}}>
+                                          <Svg svg="deps"></Svg>
+                                        </div>
                                       </div>
-                                    )
-                                  })
-                                }
-                              </Column>
-                            )
-                          })
-                        }
+
+
+
+                                    </div>
+                                  )
+                                })
+                              }
+                            </Column>
+                          )
+                        })
+                      }
                     </div>
                   </div>
                 )
@@ -277,7 +289,7 @@ class Board extends Component {
               }else{
                 return "data"
               }
-    
+
             }}
           </Query>
         </Content>
