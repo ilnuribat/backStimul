@@ -13,7 +13,7 @@
     "migrate:down": "npx sequelize db:migrate:undo",
     "services:up": "docker-compose -f dev/services.yml up -d",
     "services:down": "docker-compose -f dev/services.yml down",
-    "test": "NODE_ENV=test mocha --exit test/*"
+    "test": "NODE_ENV=test mocha test/init.js --exit test/*"
   },
   "author": "",
   "license": "ISC",
@@ -21,7 +21,8 @@
     "ignore": [
       "dev/*",
       "node_modules/*",
-      "client"
+      "client",
+      "test"
     ]
   },
   "devDependencies": {
