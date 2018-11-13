@@ -8,15 +8,15 @@ import TileMaker from '../TileMaker/index';
 class Tile extends Component {
   constructor(props) {
     super(props)
-  
+
     this.state = {
-       edit: false,
+      edit: false,
     }
     this.edit = this.edit.bind(this);
   }
 
   edit(){
-    
+
   }
 
   static propTypes = {
@@ -24,7 +24,8 @@ class Tile extends Component {
 
   render() {
     let {edit} = this.state;
-    let {children, name, descr, id, click, parentId, type} = this.props;
+    let {children, name, descr, id, click, parentId, type, refetch} = this.props;
+
     if(edit){
       return(
         <TileMaker edit={true} setEdit={()=>{this.setState({edit: !edit})}} />
@@ -32,8 +33,8 @@ class Tile extends Component {
     }else{
       return (
         <div className="Tile">
-        {type === "Object" ? (<div className="Edit" onClick={()=>{this.setState({edit:!edit})}}><SvgEdit /></div>) : null}
-        {type === "Object" ? (<div className="Rem"><SvgRem /></div>) : null}
+          {type === "Object" ? (<div className="Edit" onClick={()=>{this.setState({edit:!edit})}}><SvgEdit /></div>) : null}
+          {type === "Object" ? (<div className="Rem" onClick={()=>refetch(id, parentId)}><SvgRem /></div>) : null}
           <div className="name" onClick={()=>click(id,type,name, parentId)}>{name}</div>
           <div className="descr">{descr}</div>
           {/* <div className="id">{id}</div> */}
