@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import Content from '../../Lays/Content/index';
+import '../../../newcss/login.css'
+
 
 class Profile extends Component {
   constructor(props) {
@@ -35,16 +38,18 @@ class Profile extends Component {
 
   render() {
     return (
-      <div className="parent">
-      <div className="container mini Profile">
-        <h3>Привет, {this.state.user}!</h3>
-        <div>Вы можете изменить своё имя</div>
-        <input type="text" placeholder="новый Логин или Email" onChange={(e) => {
-          this.setState({ email: e.target.value });
-        }} />
-        <div className="button" onClick={() => { this.getUserNamePass() }}>изменить имя</div>
-      </div>
-      </div>
+      <Content>
+        <div className="ProfilePage">
+          <div className="container mini Profile">
+            <h3>Привет, {this.state.user}!</h3>
+            <div>Вы можете изменить своё имя</div>
+            <input type="text" placeholder="новый Логин или Email" onChange={(e) => {
+              this.setState({ email: e.target.value });
+            }} />
+            <div className="button" onClick={() => { this.getUserNamePass() }}>изменить имя</div>
+          </div>
+        </div>
+      </Content> 
     )
   }
 }

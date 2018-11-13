@@ -5,6 +5,8 @@ import { graphql, compose  } from "react-apollo";
 import { quf, AUTH_TOKEN } from '../../constants';
 import { LoginQuery } from '../../GraphQL/Qur/Query';
 import { meGet, meSet } from '../../GraphQL/Cache';
+import '../../newcss/login.css'
+import Content from '../Lays/Content/index';
 
 
 
@@ -102,8 +104,8 @@ class Login extends Component {
     // console.warn("MeName",meGet.mename)
 
     return (
-
-      <div>
+      <Content>
+      <div className="LoginPage">
         {!authToken ? (
           <div className="auth">
             <div className="logo">
@@ -145,6 +147,7 @@ class Login extends Component {
             </div>
           )}
       </div>
+      </Content>
     )
   }
 }
