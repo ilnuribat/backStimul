@@ -41,6 +41,7 @@
 }
 
 .Task .Name{
+  cursor: pointer;
   font-size: 14px;
   font-weight: 300;
   font-style: normal;

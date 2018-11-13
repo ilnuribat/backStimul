@@ -6,6 +6,7 @@ import 'animate.css';
 
 import { Redirect } from 'react-router';
 import Column from '../../Parts/Column';
+import Task from '../../Parts/Task';
 import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
@@ -227,53 +228,7 @@ class Board extends Component {
                               {
                                 cols[e.id].map((task, i)=>{
                                   return(
-                                    <div key = {task.id} className="Task">
-                                      <div style={{"display":"none"}}>
-                                        {
-                                          task.id
-                                        }
-                                      </div>
-                                      <div className="Name">
-                                        {
-                                          task.name
-                                        }
-                                      </div>
-                                      {
-                                        task.endDate ? (
-                                          <div className="endDate">
-                                              истекает:
-                                            {task.endDate}
-                                          </div>
-                                        ): null
-                                      }
-
-                                      {
-                                        task.lastMessage ? (
-                                          <div className="TaskChat">
-                                            <div className="ChatName">
-                                              {
-                                                task.lastMessage.from.username
-                                              }
-                                            </div>
-                                            <div className="ChatMessage">
-                                              {
-                                                task.lastMessage.text
-                                              }
-                                            </div>
-
-                                          </div>
-                                        ) : null
-                                      }
-                                      <div className="Bottom">
-                                        <div className="TaskUserPhoto"></div>
-                                        <div className="Childs" onClick={()=>{this.childs(task.id)}}>
-                                          <Svg svg="deps"></Svg>
-                                        </div>
-                                      </div>
-
-
-
-                                    </div>
+                                    <Task key={task.id} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} />
                                   )
                                 })
                               }

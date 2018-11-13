@@ -18,3 +18,14 @@
   justify-content:center;
   justify-items: center;
 }
+.Profile{
+  height: auto;
+  min-width: 300px;
+  max-width: 500px;
+  text-align: center;
+  padding:20px;
+  background: #21313f;
+  border: 1px solid #1b2126;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
