@@ -248,15 +248,16 @@ class Board extends Component {
                                                 task.lastMessage.text
                                               }
                                               </div>
-                                              <div className="Bottom">
-                                                <div className="TaskUserPhoto"></div>
-                                                <div className="Childs" onClick={()=>{this.childs(task.id)}}>
-                                                  <Svg svg="deps"></Svg>  
-                                                </div>
-                                              </div>
+
                                             </div>
                                           ) : null
                                         }
+                                          <div className="Bottom">
+                                            <div className="TaskUserPhoto"></div>
+                                            <div className="Childs" onClick={()=>{this.childs(task.id)}}>
+                                              <Svg svg="deps"></Svg>  
+                                            </div>
+                                          </div>
 
 
 
