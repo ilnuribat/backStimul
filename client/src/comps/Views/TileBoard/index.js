@@ -48,15 +48,16 @@ class TileBoard extends Component {
       });
     }
     else if(id && type === 'Object'){
+      this.setState({
+        object: true,
+      })
       this.props.setObjectId({
         variables:{
           id: id,
           name: name,
         }
       });
-      this.setState({
-        object: true,
-      })
+
 
     }
     else{
@@ -84,7 +85,7 @@ class TileBoard extends Component {
 
   render() {
     let { tiles, rootid, parentid, object } = this.state;
-    if(object && this.props.getObjectId.id) return <Redirect to="/board"/>
+    if(object || this.props.getObjectId.id) return <Redirect to="/board"/>
     return(
       <Content>
         <div className="TileBoard">

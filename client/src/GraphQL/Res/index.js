@@ -102,7 +102,7 @@ export default {
     },
 
     setObjectId: (_, { id, name },  { cache }) => {
-      cache.writeData({ data: { id: id, name: name } });
+      cache.writeData({ data: { currentObjectId: id, currentObjectName: name } });
 
       return {id, name, __typename: 'chat' };
     },

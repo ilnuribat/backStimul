@@ -13,8 +13,8 @@ export const meGet = gql`
 
 export const getObjectId = gql`
   query getObjectId{
-      id @client
-      name @client
+    currentObjectId @client
+      currentObjectName @client
   }
 `;
 export const appendUser = gql`
