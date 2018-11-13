@@ -24,7 +24,7 @@ export default class NavLinks extends Component {
         {
           NavArr.map((e,i)=>{
             return(
-              <div className="nav">
+              <div className="nav" key={"nav"+i+e.link}>
                 <Link to={e.link}>
                   <Svg svg={e.svg} />
                 </Link>

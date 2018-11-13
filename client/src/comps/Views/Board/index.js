@@ -23,6 +23,7 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      _id:"",
       name:"",
       info:{name:"", id:""},
       input: [],
@@ -61,34 +62,70 @@ class Board extends Component {
   }
 
   componentDidMount(){
-    // this.props.glossStatus
-    const { getObjectId, setObjectId } = this.props;
+    let { getObjectId, setObjectId } = this.props;
 
-    if(getObjectId.currentObjectId && getObjectId.currentObjectName){
-      this.setState({
-        info: {id:getObjectId.currentObjectId, name: getObjectId.currentObjectName },
-      })
-    }
-    if(!getObjectId.currentObjectId) {
 
-      console.log("a")
-      console.log(getObjectId)
-      // this.setState({
-      //   toRoot: true,
-      // })
-      // return false;
-    }
-    let ObjId = localStorage.getItem('ObjectId') || getObjectId.currentObjectId;
 
-    this.glossStatus();
-    this.props.setChat({
-      variables: {
-        id: "",
-        name: "",
-        priv: false,
-        unr: 0,
+    console.log("_______________BOARD__________________0")
+    console.log(getObjectId.currentObjectId, localStorage.getItem('ObjectId'))
+
+
+
+    console.log("_______________BOARD__________________1")
+
+    if(getObjectId.currentObjectId || localStorage.getItem('ObjectId')){
+      console.log("_______________BOARD__________________2");
+      let id = getObjectId.currentObjectId || localStorage.getItem('ObjectId');
+      this.props.setObjectId({
+        variables:{
+          id: id,
+          name: "",
+        }
+      });
+      console.log("_______________BOARD__________________3");
+      console.log("ID",id);
+      if(id){
+        this.setState({
+          _id: id,
+        });
       }
-    })
+
+
+      console.log("_______________BOARD__________________4");
+    }
+    // else{
+    //   this.props.setObjectId({
+    //     variables:{
+    //       id: localStorage.getItem('ObjectId'),
+    //       name: "",
+    //     }
+    //   });
+    //   this.setState({
+    //     _id: getObjectId.currentObjectId,
+    //   })
+    // }
+    // if(!getObjectId.currentObjectId) {
+
+    //   console.log("a")
+    //   console.log(getObjectId)
+    //   // this.setState({
+    //   //   toRoot: true,
+    //   // })
+    //   // return false;
+    // }
+    // console.log("_______________BOARD__________________5")
+    // let ObjId = localStorage.getItem('ObjectId') || getObjectId.currentObjectId;
+
+    
+    // console.log("_______________BOARD__________________6")
+    // this.props.setChat({
+    //   variables: {
+    //     id: "",
+    //     name: "",
+    //     priv: false,
+    //     unr: 0,
+    //   }
+    // })
 
   }
 
@@ -96,6 +133,13 @@ class Board extends Component {
 
     console.log("To TASK ID")
     console.log(id)
+
+
+    if(id){
+      localStorage.setItem('grid', id)
+      localStorage.setItem('grnm', name)
+    }
+
     this.props.setChat({
       variables: {
         id: id,
@@ -123,51 +167,52 @@ class Board extends Component {
 
   }
 
-  glossStatus(){
+  glossStatus(id){
     qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
+      console.log("_______________BOARD__________________7")
       this.setState({
-        status: ["",...a.data.glossary.taskStatuses]
+        status: ["",...a.data.glossary.taskStatuses],
       });
+      console.log("_______________BOARD__________________8")
     })
       .catch((e)=>{
+        console.log("_______________BOARD__________________9")
         console.warn(e);
       });
   }
 
-  about(id){
+  // about(id){
 
-    qauf(ObjectInfo(id), _url, localStorage.getItem('auth-token'))
-      .then(a=>{
+  //   qauf(ObjectInfo(id), _url, localStorage.getItem('auth-token'))
+  //     .then(a=>{
 
-        let info = {};
+  //       let info = {};
 
-        info.id = id;
-        info.name = a.data.object.name;
+  //       info.id = id;
+  //       info.name = a.data.object.name;
 
-        if(this.state.info.id == id && this.state.info.name == a.data.object.name){return true}
-        else{
-          this.setState({
-            info: info,
-          });
+  //       if(this.state.info.id == id && this.state.info.name == a.data.object.name){return true}
+  //       else{
+  //         this.setState({
+  //           info: info,
+  //         });
 
-        }
+  //       }
 
-      })
-      .catch((e)=>{
-        console.warn(e);
-      });
-
-
-  }
+  //     })
+  //     .catch((e)=>{
+  //       console.warn(e);
+  //     });
+  // }
 
   render(){
     const { getObjectId, setObjectId } = this.props;
-    const { info, toRoot, status, tasks, toTask } = this.state;
+    const { _id, info, toRoot, status, tasks, toTask } = this.state;
     let cols = [[],[],[],[],[],[],[]];
 
-    if (!getObjectId.currentObjectId) {
-      return <Redirect to="/" />
-    }
+    // if (!_id) {
+    //   return <Redirect to="/" />
+    // }
 
     // if(false){
     //   let id = localStorage.getItem('back');
@@ -184,13 +229,15 @@ class Board extends Component {
     //   this.about(getObjectId.currentObjectId)
     // }
 
-    if(!status) return <Loading />;
+
     if(toRoot) return <Redirect to="/" />;
     if(toTask) return <Redirect to="/task" />;
-    if(getObjectId.currentObjectId){
+
+
+    if(_id && status){
       return (
         <Content>
-          <Query query={getObjectTasks} variables={{ id: getObjectId.currentObjectId }} >
+          <Query query={getObjectTasks} variables={{ id: _id}} >
             {({ loading, error, data }) => {
               if (loading){
                 return (
@@ -224,11 +271,11 @@ class Board extends Component {
                 }
               });
 
-              console.log(cols)
+              console.log("cols",cols)
 
 
               if(data && data.object){
-                console.log(data)
+                console.log("data",data)
 
                 return(
                   <div className="Board">
@@ -240,7 +287,7 @@ class Board extends Component {
                       {/* <p className="small">{info.id}</p> */}
                     </div>
                     <div className="Board-Content">
-                      {console.log(status)}
+                      {console.log("status2",status)}
                       {
                         status && status.map((e,i)=>{
                           if( i === 0 ){
@@ -274,8 +321,14 @@ class Board extends Component {
         </Content>
       )
     }else{
-      return <Redirect to="/" />
+        console.log("status")
+        this.glossStatus(_id);
+        return <Loading/>
     }
+    
+    // else{
+    //   return <Redirect to="/" />
+    // }
 
   }
 }

@@ -14,10 +14,14 @@ import Loading from '../../Loading';
 import Modal from './Modal';
 import ChangerForm from './ChangerForm';
 import { uploadFile, groupMut } from '../../../GraphQL/Qur/Mutation';
-import { getChat, selectUser, getCUser, tempObj, setTemp, getTemp } from '../../../GraphQL/Cache';
+import { getChat, selectUser, getCUser, tempObj, setTemp, getTemp, setChat } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, GRU_QUERY } from '../../../GraphQL/Qur/Query';
 import { userTaskUpdated } from '../../../GraphQL/Qur/Subscr';
 import Content from '../../Lays/Content';
+import Bar from '../../Lays/Bar/index';
+import Panel from '../../Lays/Panel/index';
+
+
 
 let statusName;
 
@@ -80,12 +84,27 @@ class GroupList extends Component {
     const {getChat, getCUser} = this.props;
     const { users } = this.state;
     let _grid = getChat.id || localStorage.getItem('grid');
+    let _grnm = getChat.name || localStorage.getItem('grnm');
 
-    this.setState({
-      groupName: getChat.name,
-      groupId: getChat.id,
-      _grid: getChat.id,
-    });
+    if(localStorage.getItem('grid') && localStorage.getItem('grnm') && !getChat.id && !getChat.name){
+
+      this.props.setChat({
+        variables:{
+          id: localStorage.getItem('grid'),
+          name: localStorage.getItem('grnm'),
+        }
+      })
+    }
+
+    if(_grid && _grnm){
+      this.setState({
+        groupName: _grnm,
+        groupId: _grid,
+        _grid: _grid,
+      });
+
+
+    }
     this.allUserGet();
     this.glossStatus();
 
@@ -375,6 +394,9 @@ class GroupList extends Component {
 
     return(
       <Fragment>
+        <Bar>
+
+        </Bar>
         <Content>
           <div className="f-container">
             <div className="f-column">
@@ -543,6 +565,7 @@ class GroupList extends Component {
 
           }
         </Content>
+        <Panel></Panel>
       </Fragment>
     );
   }
@@ -560,6 +583,7 @@ GroupList.propTypes = {
 
 export default compose(
   graphql(getChat, { name: 'getChat' }),
+  graphql(setChat, { name: 'setChat' }),
   graphql(selectUser, { name: 'selectUser' }),
   graphql(getCUser, { name: 'getCUser' }),
   graphql(tempObj, { name: 'tempObj' }),

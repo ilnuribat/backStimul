@@ -24,6 +24,8 @@ class TileBoard extends Component {
       tiles:[],
       rootid:"",
       parentid:"",
+      objectid:"",
+      objectname:"",
       object: false,
       editObject: false,
     }
@@ -67,7 +69,7 @@ class TileBoard extends Component {
 
     console.log("-------------")
     console.log(id, type, name, parentId)
-    console.log(this.props.getObjectId)
+
 
 
 
@@ -80,16 +82,37 @@ class TileBoard extends Component {
       });
     }
     else if(id && type === 'Object'){
-      this.setState({
-        object: true,
-      })
       this.props.setObjectId({
         variables:{
           id: id,
           name: name,
         }
-      });
+      })
+      localStorage.setItem('ObjectId',id);
+      localStorage.setItem('ObjectName',name);
+      
 
+
+      if(this.props.getObjectId.currentObjectId){
+        this.setState({
+          objectid: id,
+          objectname: name,
+          object: true,
+        })
+        console.log("getObjectId",this.props.getObjectId)
+      }else{
+        this.props.setObjectId({
+          variables:{
+            id: id,
+            name: name,
+          }
+        })
+        this.setState({
+          objectid: id,
+          objectname: name,
+          object: true,
+        })
+      }
 
     }
     else{
@@ -117,9 +140,11 @@ class TileBoard extends Component {
   }
 
   render() {
-    let { tiles, rootid, parentid, object } = this.state;
+    let { tiles, rootid, parentid, object, objectid, objectname } = this.state;
 
-    if(object || this.props.getObjectId.id) return <Redirect to="/board"/>
+    if(object && objectid){
+        return <Redirect to="/board"/>
+    } 
 
     return(
       <Content>
