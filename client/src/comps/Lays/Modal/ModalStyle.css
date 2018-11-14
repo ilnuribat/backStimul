@@ -3,6 +3,7 @@
   position: fixed;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   margin: 0;
   padding: 0;
   top:0;
@@ -16,50 +17,312 @@
   justify-content: center;
 }
 .ModalWrap{
-  background: #ffffff0e;
   height: auto;
   min-height: 50%;
-  max-height: 100%;
+  max-height: 90%;
   width:100%;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  padding: 50px;
+  padding: 10px;
+  overflow: hidden;
+  
 }
 .ModalWrap > div{
+  position: relative;
+  color:#fff;
   margin:0 20px;
-  padding: 50px;
+  padding: 30px;
   border-radius: 5px;
   max-height: 90%;
   overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border-radius: 6px;
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
+  background-color: #2f3136;
+
+}
+.ModalBlockName{
+  margin:5px 0 15px;
+  font-size: 12px;
 }
 .ModalWrap > div > .inner{
-  margin:0 20px;
-  padding: 50px;
-  border-radius: 5px;
-  max-height: 90%;
+  /* background: rgb(94, 94, 94); */
+  margin:0;
+  padding: 0;
+  border-radius: 0;
+  /* height: 500px; */
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+  display: block;
+  /* flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start; */
 }
 .ModalBig{
   width:90%;
+  max-width: 600px;
   height: auto;
   min-height: 200px;
-  background: rgb(170, 170, 170);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
 }
 .ModalSmall{
   width:90%;
-  max-width: 300px;
+  max-width: 400px;
   height: auto;
   min-height: 200px;
-  background: rgb(189, 189, 189);
+}
+.ModalBlock, .ModalCol{
+  /* background: #ddd; */
+  width: 100%;
+  /* min-height: 60px; */
+  height: auto;
+  margin:5px auto;
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
+.ModalBlockRow, .ModalRow{
+  /* background: #ddd; */
+  width: 100%;
+  /* min-height: 60px; */
+  height: auto;
+  margin:5px auto;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.ModalRow > .ModalCol{
+  display: flex;
+  flex-direction: column;
+  margin:0 5px 0;
+  width: 100%;
+}
+.ModalBlockName{
+  flex:1;
+  width: 100%;
+}
+
+
+select,
+input[type="date"],
+input[type="text"],
+input{
+  border:0 none transparent;
+  border-bottom:0 none transparent;
+}
+.ModalInput{
+  width: 100%;
+}
+.EditForm{}
+.EditForm label, label{
+  width: 100%;
+  height: 45px;
+  border-radius: 4px;
+  border: solid 1px #808fa3;
+  background: none transparent;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.EditForm .Button{
+
+}
+ select,
+.EditForm select,
+ input[type="date"],
+.EditForm input[type="date"]{
+  background: none transparent;
+  color:#fff;
+  text-align: center;
+  font-size: 12px;
+}
+
+ input[type="text"],
+.EditForm input[type="text"]{
+  width: 100%;
+  height: 45px;
+  border-radius: 4px;
+  background-color: #3d4147;
+  color:#fff;
+  padding: 10px;
+}
+.InputWrapper{
+  width: 100%;
+  height: 45px;
+  border-radius: 4px;
+  background-color: #3d4147;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.InputWrapper input{
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  background-color: #3d4147;
+}
+.InputWrapper .SaveBtn{
+  width: 45px;
+  height: 45px;
+  border-radius: 0;
+  background-color: #3d4147;
+}
+
+.files-drop .Svg{
+  margin:0 10px 0 0;
+  display: block;
+  widows: 24px;
+  height: 24px;
+}
+.files-drop svg{
+
+  fill:#3e74b27c;
+}
+
+.files-drop{
+  border-radius: 6px;
+  text-align: center;
+  width:100%;
+  height: auto;
+  padding:40px 20px;
+  border:2px dashed #3e74b27c;
+  background-color: #3d4147;
+}
+
+.ModalClose{
+  position: absolute;
+  top:10px;
+  right:5px;
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+option{
+  background: #2f3136;
+}
+
+
+
+/******************FileRow**************/
+
+.FileRow{
+  margin: 5px 0;
+  display: flex;
+  width: 100%;
+  height: 45px;
+  cursor:pointer;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.FileIcon{
+  height: 32px;
+  width: 32px;
+  object-fit: contain;
+  border-radius: 2px;
+  background-color: #3d4147;
+  margin:0 20px 0 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.FileIcon svg{
+  height: 24px;
+  width: 24px;
+  fill:#3e74b27c;
+}
+.FileName{
+  font-size: 12px;
+  width: 100%;
+  color:#fff;
+}
+
+
+/******************FileRow**************/
+/******************UserRow**************/
+
+.UserRow{
+  margin: 5px 0;
+  display: flex;
+  width: 100%;
+  height: 45px;
+  cursor:pointer;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.UserRow .UserIcon{
+  flex:1 1 auto;
+  height: 48px;
+  width: 48px;
+  max-height: 48px;
+  max-width: 48px;
+  border-radius: 999em;
+  background-color: #3d4147;
+  margin:0 20px 0 0;
+  overflow: hidden;
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.UserRow .UserIcon svg{
+  height: 100%;
+  width:  100%;
+  fill:#3e74b27c;
+}
+.UserRow .UserName{
+  flex:2;
+  font-size: 12px;
+  width: 100%;
+  color:#fff;
+}
+
+
+/******************FileRow**************/
+
+
+/******************SVG**************/
+
+.Svg{
+  display: block;
+  width:100%;
+  height:100%;
+  /* max-width: 32px;
+  max-height: 32px;
+  margin:0 auto; */
+}
+.Svg.Inline{
+  display: inline-block;
+  /* height: auto;
+  width: auto;
+  max-width: 32px;
+  max-height: 32px; */
+  margin:0 auto;
+}
+.Svg svg{
+  width:100%;
+  height: 100%;
+}
+
+.nav{
+  width:100%;
+  height: 20px;
+}
+/******************SVG**************/
