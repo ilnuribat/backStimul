@@ -35,6 +35,7 @@ const ModalRow = ({children})=>{
 const InputWrapper = ({children})=>{
   return(
     <div className="InputWrapper">
+      <input type="text"/><div className="SaveBtn"><Svg svg="save"/>Сохранить</div>
       {children}
     </div>
   )
@@ -86,7 +87,7 @@ class Modal extends Component {
                   Название
                 </ModalBlockName>
                 <InputWrapper>
-                  <input type="text"/><div className="SaveBtn"></div>
+                  
                 </InputWrapper>
               </ModalCol>
 

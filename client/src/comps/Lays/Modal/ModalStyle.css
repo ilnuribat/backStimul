@@ -157,6 +157,10 @@ input{
   color:#fff;
   padding: 10px;
 }
+
+
+
+
 .InputWrapper{
   width: 100%;
   height: 45px;
@@ -166,7 +170,8 @@ input{
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
+  padding:4px;
 }
 .InputWrapper input{
   width: 100%;
@@ -175,10 +180,26 @@ input{
   background-color: #3d4147;
 }
 .InputWrapper .SaveBtn{
-  width: 45px;
-  height: 45px;
-  border-radius: 0;
-  background-color: #3d4147;
+  cursor: pointer;
+  width: auto;
+  height: 90%;
+  border-radius: 5px 5px 5px 5px ;
+  background: transparent;
+  /* border-left:1px solid #808fa3; */
+  border:1px solid #727272;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color:#808fa3;
+}
+.InputWrapper .SaveBtn svg{
+  fill: #3165b3;
+  fill: #5e5e5e;
+  widows: 24px;
+  height: 24px;
+}
+.InputWrapper .SaveBtn .Svg{
+  height: 24px;width: 24px;
 }
 
 .files-drop .Svg{
