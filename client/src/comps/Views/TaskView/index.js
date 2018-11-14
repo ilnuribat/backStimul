@@ -14,7 +14,7 @@ import Loading from '../../Loading';
 import Modal from './Modal';
 import ChangerForm from './ChangerForm';
 import { uploadFile, groupMut, updTask } from '../../../GraphQL/Qur/Mutation';
-import { getChat, selectUser, getCUser, tempObj, setTemp, getTemp, setChat, getObjectId } from '../../../GraphQL/Cache';
+import { selectUser, getCUser, tempObj, setTemp, getTemp, setChat } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, GRU_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
 import { userTaskUpdated } from '../../../GraphQL/Qur/Subscr';
 import Content from '../../Lays/Content';
@@ -48,8 +48,9 @@ class GroupList extends Component {
       allusers: [],
       status: [],
       input: {},
-      groupName: "",
-      groupId: "",
+      taskName: "",
+      taskId: "",
+      objectId: "",
       groupInfo: {},
       modal: false,
       inputSaver: {},
@@ -72,6 +73,8 @@ class GroupList extends Component {
 
   componentDidMount(){
 
+    const { location, getCUser } = this.props;
+
     let obj = {name:'name'};
     let arr = [].push(obj);
 
@@ -81,36 +84,31 @@ class GroupList extends Component {
       }
     });
 
-    const {getChat, getCUser} = this.props;
     const { users } = this.state;
-    let _grid = getChat.id || localStorage.getItem('grid');
-    let _grnm = getChat.name || localStorage.getItem('grnm');
+    const _grid = location.state.taskId || localStorage.getItem('grid');
+    const _grnm = location.state.taskName || localStorage.getItem('grnm');
+    const _objId = location.state.objectId || localStorage.getItem('ObjectId');
 
-    if(localStorage.getItem('grid') && localStorage.getItem('grnm') && !getChat.id && !getChat.name){
-
+    if(_grid && _grnm){
       this.props.setChat({
         variables:{
           id: localStorage.getItem('grid'),
           name: localStorage.getItem('grnm'),
         }
       })
-    }
-
-    if(_grid && _grnm){
       this.setState({
-        groupName: _grnm,
-        groupId: _grid,
-        _grid: _grid,
+        taskName: _grnm,
+        taskId: _grid,
+        objectId: _objId
       });
-
-
     }
+
     this.allUserGet();
     this.glossStatus();
 
     if(getCUser.user  && getCUser.user.groups){
       let groups = getCUser.user.groups;
-      let thisGrId = getChat.id || _grid;
+      let thisGrId = _grid;
       let thisUsers;
 
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
@@ -152,9 +150,9 @@ class GroupList extends Component {
   }
 
 
-  getTaskLists(objectId, taskId){
+  getTaskLists(){
     // console.warn("GETTASK!!", objectId, taskId)
-    !objectId ? objectId = localStorage.getItem('ObjectId') : null
+    const { objectId, taskId } = this.state
 
     qauf(getObjectTasks3(objectId), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){
@@ -203,30 +201,6 @@ class GroupList extends Component {
     })
   }
 
-  loadu(g){
-
-    const {users, _grid } = this.state;
-    const {getChat, getCUser} = this.props;
-    let thisUsers;
-
-    if(_grid !== g ){
-      this.setState({
-        _grid: g,
-      });
-    }
-
-    if(getCUser.user  && getCUser.user.groups){
-      let groups = getCUser.user.groups;
-      let thisGrId = getChat.id || _grid;
-
-      thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
-
-      this.setState({
-        groupInfo: thisUsers,
-      })
-    }
-  }
-
   userSelect(n,i){
     const {selectUser} = this.props;
 
@@ -260,7 +234,7 @@ class GroupList extends Component {
 
 
     q = () => {return(`mutation{
-      updateUsersGroup(group: {id: "${this.props.getChat.id}", delete: ${dels}, users: ["${userId}"]} )
+      updateUsersGroup(group: {id: "${this.state.taskId}", delete: ${dels}, users: ["${userId}"]} )
     }`)} ;
 
     let a = q();
@@ -320,7 +294,7 @@ class GroupList extends Component {
 
   addressAdd(address, addressList){
     let param = `address: "${address}"`;
-    const A = groupMut(this.props.getChat.id, `${param}`);
+    const A = groupMut(this.state.taskId, `${param}`);
 
     qauf(A, _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn(a)
@@ -345,7 +319,7 @@ class GroupList extends Component {
 
   onStatSelected(e){
 
-    qauf(groupMut(this.props.getChat.id, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
+    qauf(groupMut(this.state.taskId, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
       // console.log(a)
     })
       .catch((e)=>{
@@ -356,7 +330,7 @@ class GroupList extends Component {
 
   onUserSelected(e){
 
-    qauf(groupMut(this.props.getChat.id, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
+    qauf(groupMut(this.state.taskId, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
       // console.log(a)
     })
       .catch((e)=>{
@@ -374,13 +348,13 @@ class GroupList extends Component {
 
   componentDidUpdate(){
 
-    const {getChat, getCUser} = this.props;
-    const { users, groupInfo } = this.state;
-    let _grid = getChat.id || localStorage.getItem('grid');
+    const { getCUser } = this.props;
+    const { users, groupInfo, taskId } = this.state;
+    let _grid = taskId || localStorage.getItem('grid');
 
     if(getCUser.user  && getCUser.user.groups){
       let groups = getCUser.user.groups;
-      let thisGrId = getChat.id || _grid;
+      let thisGrId = taskId || _grid;
       let thisUsers;
 
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
@@ -413,10 +387,9 @@ class GroupList extends Component {
   }
 
   render() {
-    const {upload, users, _grid, allusers, groupName, groupInfo, modal, status, addressList} = this.state;
-    const {getChat, getCUser, getTemp, getObjectId} = this.props;
+    const {upload, users, allusers, taskName, taskId, groupInfo, modal, status } = this.state;
 
-    const idObject = getChat.id
+    const idObject = taskId
     // let thisUsers;
     let onlyunicusers;
 
@@ -427,7 +400,7 @@ class GroupList extends Component {
           <div className="TaskView">
             <div className="TaskViewInner">
               {
-                this.props.getChat && this.props.getChat.id ? <ChatView name={this.props.getChat.name} id={this.props.getChat.id} priv={0} /> : (<div className="errorMessage">Выберите чат</div>)
+                taskId ? <ChatView name={taskName} id={taskId} priv={0} /> : (<div className="errorMessage">Выберите чат</div>)
               }
             </div>
           </div>
@@ -440,10 +413,10 @@ class GroupList extends Component {
                   }), 'name')
                   }
 
-                  <ChangerForm id={getChat.id} defaults={groupInfo.name} name={"Название"} change={"name"} string={1} />
-                  <ChangerForm id={getChat.id} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
-                  <ChangerForm id={getChat.id} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
-                  <ChangerForm id={getChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
+                  <ChangerForm id={taskId} defaults={groupInfo.name} name={"Название"} change={"name"} string={1} />
+                  <ChangerForm id={taskId} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
+                  <ChangerForm id={taskId} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
+                  <ChangerForm id={taskId} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
 
                   <div className="padded">
                     <select onChange={(e)=>{this.writeParentId(e, idObject)}}>
@@ -467,13 +440,13 @@ class GroupList extends Component {
         </Content>
         <Panel>
           {
-            this.props.getChat && this.props.getChat.id ? (
+            taskId ? (
               <div className="tab-roll">
                 <div className="header"><h4>Пользователи</h4></div>
                 <div className="content">
                   <div className="content-scroll">
 
-                    <Query query={GRU_QUERY} variables={{ id: getChat.id }} >
+                    <Query query={GRU_QUERY} variables={{ id: taskId }} >
                       {({ loading, error, data, refetch, subscribeToMore }) => {
                         if (loading){
                           return (
@@ -491,7 +464,7 @@ class GroupList extends Component {
                         }
 
 
-                        subsUser(getChat.id, subscribeToMore, refetch);
+                        subsUser(taskId, subscribeToMore, refetch);
 
                         if(data){
                           let usrs = data.group.users;
@@ -528,11 +501,11 @@ class GroupList extends Component {
             ): null
           }
           {
-            this.props.getChat && this.props.getChat.id ? (
+            taskId ? (
               <div className="tab-roll">
                 <div className="header"></div>
                 <div className="content">
-                  <div className="button" onClick={()=>{this.setState({modal: !modal});this.getTaskLists(getObjectId.currentObjectId ,idObject)}}>Информация</div>
+                  <div className="button" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Информация</div>
                   <div className="content-scroll">
                   </div>
                 </div>
@@ -540,7 +513,7 @@ class GroupList extends Component {
             ) : null
           }
           {
-            this.props.getChat && this.props.getChat.id ? (
+            taskId? (
               <div className="tab-roll">
                 <div className="header"><h4>Добавить пользователя</h4></div>
                 <div className="content">
@@ -574,7 +547,7 @@ class GroupList extends Component {
               </div>
             ) : null
           }
-          {this.props.getChat && this.props.getChat.id ? (
+          {taskId ? (
             !upload ? (
               <div className="tab-roll">
                 <div className="header"></div>
@@ -610,22 +583,16 @@ class GroupList extends Component {
 
 
 GroupList.propTypes = {
-  getChat: PropTypes.shape({
-    id: PropTypes.string,
-    name:  PropTypes.string,
-  }).isRequired,
   selectUser: PropTypes.func.isRequired
 };
 
 export default compose(
-  graphql(getChat, { name: 'getChat' }),
   graphql(setChat, { name: 'setChat' }),
   graphql(selectUser, { name: 'selectUser' }),
   graphql(getCUser, { name: 'getCUser' }),
   graphql(tempObj, { name: 'tempObj' }),
   graphql(setTemp, { name: 'setTemp' }),
   graphql(getTemp, { name: 'getTemp' }),
-  graphql(getObjectId, { name: 'getObjectId' }),
 )(GroupList);
 
 const isArrayEqual = (x, y) => {

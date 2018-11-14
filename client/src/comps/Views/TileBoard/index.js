@@ -24,7 +24,7 @@ class TileBoard extends Component {
       tiles:[],
       rootid:"",
       parentid:"",
-      objectid:"",
+      objectId:"",
       objectname:"",
       object: false,
       editObject: false,
@@ -90,12 +90,12 @@ class TileBoard extends Component {
       })
       localStorage.setItem('ObjectId',id);
       localStorage.setItem('ObjectName',name);
-      
+
 
 
       if(this.props.getObjectId.currentObjectId){
         this.setState({
-          objectid: id,
+          objectId: id,
           objectname: name,
           object: true,
         })
@@ -108,7 +108,7 @@ class TileBoard extends Component {
           }
         })
         this.setState({
-          objectid: id,
+          objectId: id,
           objectname: name,
           object: true,
         })
@@ -140,11 +140,14 @@ class TileBoard extends Component {
   }
 
   render() {
-    let { tiles, rootid, parentid, object, objectid, objectname } = this.state;
+    let { tiles, rootid, parentid, object, objectId, objectname } = this.state;
 
-    if(object && objectid){
-        return <Redirect to="/board"/>
-    } 
+    if(object && objectId){
+      return <Redirect to={{
+        pathname: '/board',
+        state: { objectId: this.state.objectId }
+      }} />
+    }
 
     return(
       <Content>
@@ -156,6 +159,7 @@ class TileBoard extends Component {
                 if (error){
                   console.log(error) ;
                   this.cleanStorage();
+
                   return <Loading />}
                 if (loading) return <Loading />;
 

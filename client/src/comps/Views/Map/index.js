@@ -50,7 +50,8 @@ class LeafletMap extends Component {
     this.state = {
       redirect: false,
       offsetWidth: 1024,
-      offsetHeight: 768
+      offsetHeight: 768,
+      objectId: ""
     };
   }
 
@@ -84,11 +85,9 @@ class LeafletMap extends Component {
           name: name,
         }
       });
-      // localStorage.setItem('back',index)
       localStorage.setItem('ObjectId',index);
       localStorage.setItem('ObjectName',name);
-
-      this.setState({redirect: true});
+      this.setState({redirect: true, objectId: index} );
     }
 
     render() {
@@ -141,7 +140,10 @@ class LeafletMap extends Component {
                   currentZoom = Math.min(latZoom, lngZoom, ZOOM_MAX);
 
                   if (this.state.redirect) {
-                    return <Redirect push to="/board" />;
+                    return <Redirect to={{
+                      pathname: '/board',
+                      state: { objectId: this.state.objectId }
+                    }} />
                   }
 
                   const center = [centerLat, centerLon];

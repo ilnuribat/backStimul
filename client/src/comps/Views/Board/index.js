@@ -2,28 +2,31 @@ import React, { Component, Fragment } from 'react';
 import { graphql, compose, Query } from "react-apollo";
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import 'animate.css';
-
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
+
+import 'animate.css';
 import Column from '../../Parts/Column';
 import Task from '../../Parts/Task';
 import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
-import { getObjectId, setChat, setInfo, setObjectId, rootId } from '../../../GraphQL/Cache';
-import { getObjectTasks, glossaryStatus, TASKS_QUERY, ObjectInfo } from '../../../GraphQL/Qur/Query';
+import { setChat, setInfo, setObjectId, rootId } from '../../../GraphQL/Cache';
+import { getObjectTasks, glossaryStatus, TASKS_QUERY } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
 import '../../../newcss/task.css';
 import { Svg } from '../../Parts/SVG/index';
-import { Link } from 'react-router-dom';
+
 
 class Board extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      _id:"",
+      objectId:"",
+      taskId:"",
+      taskName: "",
       name:"",
       info:{name:"", id:""},
       input: [],
@@ -63,75 +66,29 @@ class Board extends Component {
   }
 
   componentDidMount(){
-    let { getObjectId, setObjectId } = this.props;
+    const { setObjectId, location } = this.props;
 
+    if(location.state.objectId || localStorage.getItem('ObjectId')){
 
+      const id =location.state.objectId  || localStorage.getItem('ObjectId') ;
 
-    console.log("_______________BOARD__________________0")
-    console.log(getObjectId.currentObjectId, localStorage.getItem('ObjectId'))
-
-
-
-    console.log("_______________BOARD__________________1")
-
-    if(getObjectId.currentObjectId || localStorage.getItem('ObjectId')){
-      console.log("_______________BOARD__________________2");
-      let id =localStorage.getItem('ObjectId') ||  getObjectId.currentObjectId ;
-      this.props.setObjectId({
+      setObjectId({
         variables:{
           id: id,
           name: "",
         }
       });
-      console.log("_______________BOARD__________________3");
-      console.log("ID",id);
+
       if(id){
         this.setState({
-          _id: id,
+          objectId: id,
         });
       }
-
-
-      console.log("_______________BOARD__________________4");
     }
-    // else{
-    //   this.props.setObjectId({
-    //     variables:{
-    //       id: localStorage.getItem('ObjectId'),
-    //       name: "",
-    //     }
-    //   });
-    //   this.setState({
-    //     _id: getObjectId.currentObjectId,
-    //   })
-    // }
-    // if(!getObjectId.currentObjectId) {
-
-    //   console.log("a")
-    //   console.log(getObjectId)
-    //   // this.setState({
-    //   //   toRoot: true,
-    //   // })
-    //   // return false;
-    // }
-    // console.log("_______________BOARD__________________5")
-    // let ObjId = localStorage.getItem('ObjectId') || getObjectId.currentObjectId;
-
-
-    // console.log("_______________BOARD__________________6")
-    // this.props.setChat({
-    //   variables: {
-    //     id: "",
-    //     name: "",
-    //     priv: false,
-    //     unr: 0,
-    //   }
-    // })
-
   }
 
   toBack(id){
-    console.log("TO BACK",id);
+    console.warn("TO BACK",id);
 
     if(id){
       localStorage.setItem('rootId', id)
@@ -145,9 +102,8 @@ class Board extends Component {
 
   toTask(id, name, parentId){
 
-    console.log("To TASK ID")
-    console.log(id)
-
+    console.warn("To TASK ID")
+    console.warn(id)
 
     if(id){
       localStorage.setItem('grid', id)
@@ -164,33 +120,32 @@ class Board extends Component {
 
     this.setState({
       toTask: true,
+      taskId: id,
+      taskName: name
     })
 
   }
 
   childs(id){
-    console.log(id)
+    console.warn(id)
     if(id){
       this.setState({
         showChilds: !this.state.showChilds,
         curParentId: id
       });
     }
-    // console.log("THIS CHILDS")
-    // console.log(id)
-
   }
 
   glossStatus(id){
     qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.log("_______________BOARD__________________7")
+      console.warn("_______________BOARD__________________7")
       this.setState({
         status: ["",...a.data.glossary.taskStatuses],
       });
-      console.log("_______________BOARD__________________8")
+      console.warn("_______________BOARD__________________8")
     })
       .catch((e)=>{
-        console.log("_______________BOARD__________________9")
+        console.warn("_______________BOARD__________________9")
         console.warn(e);
       });
   }
@@ -220,38 +175,19 @@ class Board extends Component {
   // }
 
   render(){
-    const { getObjectId, setObjectId } = this.props;
-    const { _id, info, toRoot, status, tasks, toTask } = this.state;
+    const { objectId, info, toRoot, status, taskId, toTask, taskName } = this.state;
     let cols = [[],[],[],[],[],[],[]];
 
-    // if (!_id) {
-    //   return <Redirect to="/" />
-    // }
-
-    // if(false){
-    //   let id = localStorage.getItem('back');
-    //   this.props.setObjectId({
-    //     variables:{
-    //       id: id,
-    //       priv: false,
-    //     }
-    //   });
-
-    //   this.about(id)
-
-    // }else{
-    //   this.about(getObjectId.currentObjectId)
-    // }
-
-
     if(toRoot) return <Redirect to="/" />;
-    if(toTask) return <Redirect to="/task" />;
+    if(toTask) return <Redirect to={{
+      pathname: '/task',
+      state: { taskId: taskId, taskName: taskName, objectId: objectId }
+    }} />
 
-
-    if(_id && status){
+    if(objectId && status){
       return (
         <Content>
-          <Query query={getObjectTasks} variables={{ id: _id}} >
+          <Query query={getObjectTasks} variables={{ id: objectId}} >
             {({ loading, error, data }) => {
               if (loading){
                 return (
@@ -262,7 +198,8 @@ class Board extends Component {
               }
               if (error){
                 this.props.setInfo({variables:{id:"id",message:error.message, type:"error"}})
-                console.log('Error', error.message)
+                console.warn('Error', error.message)
+
                 return(
                   "error"
                   // <Redirect to="/" />
@@ -274,25 +211,25 @@ class Board extends Component {
                 this.state.curParentId && this.state.showChilds ? data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))  : null
 
 
-              let arr = _.sortBy(data.object.tasks, 'status');
+                let arr = _.sortBy(data.object.tasks, 'status');
 
-              arr = _.sortBy(data.object.tasks, 'unreadCount');
-
-
-              _.forEach(arr, (result)=>{
-                if(!result.status){
-                  cols[1].push(result);
-                }
-                if(result.status){
-                  cols[result.status].push(result);
-                }
-              });
-
-              console.log("cols",cols)
+                arr = _.sortBy(data.object.tasks, 'unreadCount');
 
 
+                _.forEach(arr, (result)=>{
+                  if(!result.status){
+                    cols[1].push(result);
+                  }
+                  if(result.status){
+                    cols[result.status].push(result);
+                  }
+                });
 
-                console.log("data",data)
+                console.warn("cols",cols)
+
+
+
+                console.warn("data",data)
 
                 return(
                   <div className="Board">
@@ -304,7 +241,7 @@ class Board extends Component {
                       <p className="small">{info.id}</p>
                     </div>
                     <div className="Board-Content">
-                      {console.log("status2",status)}
+                      {console.warn("status2",status)}
                       {
                         status && status.map((e,i)=>{
                           if( i === 0 ){
@@ -338,27 +275,17 @@ class Board extends Component {
         </Content>
       )
     }else{
-        console.log("status")
-        this.glossStatus(_id);
-        return <Loading/>
+      console.warn("status")
+      this.glossStatus(objectId);
+
+      return <Loading/>
     }
-
-    // else{
-    //   return <Redirect to="/" />
-    // }
-
   }
 }
 
 
-Board.propTypes = {
-  getObjectId: PropTypes.object.isRequired,
-};
-
-
 export default compose(
   graphql(rootId, { name: 'rootId' }),
-  graphql(getObjectId, { name: 'getObjectId' }),
   graphql(setObjectId, { name: 'setObjectId' }),
   graphql(setInfo, { name: 'setInfo' }),
   graphql(setChat, { name: 'setChat' }),
