@@ -41,7 +41,6 @@ function zoom(mapPx, worldPx, fraction) {
   return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
 }
 
-
 class LeafletMap extends Component {
   constructor(props){
     super(props)
@@ -365,7 +364,5 @@ const SwitchIcon = (status)   => {
     iconSize: [50, 50],
   });
 };
-
-
 
 export default LeafletMap;

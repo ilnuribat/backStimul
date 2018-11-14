@@ -237,7 +237,7 @@ class Board extends Component {
                       <p className="small">{info.id}</p>
                     </div>
                     <div className="Board-Content">
-                      {console.warn("status2",status)}
+                      {/* {console.warn("status2",status)} */}
                       {
                         status && status.map((e,i)=>{
                           if( i === 0 ){
@@ -271,7 +271,7 @@ class Board extends Component {
         </Content>
       )
     }else{
-      console.warn("status")
+      // console.warn("status")
       this.glossStatus(objectId);
 
       return <Loading/>
