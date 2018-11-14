@@ -385,6 +385,18 @@ export const getObjectTasks2 = (id) => `
     }
 }`;
 
+
+export const getObjectTasks3 = (id) => `
+{
+  object (id: "${id}") {
+      tasks{
+        id
+        name
+        parentId
+      }
+    }
+}`;
+
 export const getObjectTasks = gql`
  query getObjectTasks($id: ID!){
   object (id: $id) {

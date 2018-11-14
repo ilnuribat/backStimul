@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export const updTask = (...params) => {
   return (`mutation{
-        updateTask(id: "${params[0]}", ${params[1]})
+        updateTask(id: "${params[0]}", task: ${params[1]})
       }`)
 };
 

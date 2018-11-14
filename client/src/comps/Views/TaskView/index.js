@@ -13,15 +13,14 @@ import ChatView from '../ChatView';
 import Loading from '../../Loading';
 import Modal from './Modal';
 import ChangerForm from './ChangerForm';
-import { uploadFile, groupMut } from '../../../GraphQL/Qur/Mutation';
-import { getChat, selectUser, getCUser, tempObj, setTemp, getTemp, setChat } from '../../../GraphQL/Cache';
-import { allUsers, glossaryStatus, GRU_QUERY } from '../../../GraphQL/Qur/Query';
+import { uploadFile, groupMut, updTask } from '../../../GraphQL/Qur/Mutation';
+import { getChat, selectUser, getCUser, tempObj, setTemp, getTemp, setChat, getObjectId } from '../../../GraphQL/Cache';
+import { allUsers, glossaryStatus, GRU_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
 import { userTaskUpdated } from '../../../GraphQL/Qur/Subscr';
 import Content from '../../Lays/Content';
 import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
-
 
 let statusName;
 
@@ -153,19 +152,33 @@ class GroupList extends Component {
   }
 
 
-  allTasksGet(){
-    qauf(allUsers(), _url, localStorage.getItem('auth-token')).then(a=>{
-      if(a && a.data){
-        console.log(a.data)
+  getTaskLists(objectId, taskId){
+    // console.warn("GETTASK!!", objectId, taskId)
+    !objectId ? objectId = localStorage.getItem('ObjectId') : null
 
+    qauf(getObjectTasks3(objectId), _url, localStorage.getItem('auth-token')).then(a=>{
+      if(a && a.data){
+        a.data.object.tasks = a.data.object.tasks.filter((task) => (task.parentId != taskId && task.id != taskId ))
         this.setState({
-          allTasks: a.data.tasks,
+          allTasks: a.data.object.tasks,
         })
       }
     }).catch((e)=>{
       console.warn(e);
-    });
+    })
   }
+
+  writeParentId(e, taskId) {
+    // e.preventDefault();
+    console.warn("writeParentId", e.target.value, taskId)
+    qauf(updTask(taskId,`{parentId: "${e.target.value}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
+      console.warn(a)
+    }).catch((e)=>{
+      console.warn(e);
+    })
+
+  }
+
 
   changeState(a){
     return false;
@@ -239,7 +252,6 @@ class GroupList extends Component {
         userId = user.id;
 
       }else{
-
         console.warn("Неправильный юзер");
       }
     }else{
@@ -366,7 +378,6 @@ class GroupList extends Component {
     const { users, groupInfo } = this.state;
     let _grid = getChat.id || localStorage.getItem('grid');
 
-
     if(getCUser.user  && getCUser.user.groups){
       let groups = getCUser.user.groups;
       let thisGrId = getChat.id || _grid;
@@ -403,7 +414,7 @@ class GroupList extends Component {
 
   render() {
     const {upload, users, _grid, allusers, groupName, groupInfo, modal, status, addressList} = this.state;
-    const {getChat, getCUser, getTemp} = this.props;
+    const {getChat, getCUser, getTemp, getObjectId} = this.props;
 
     const idObject = getChat.id
     // let thisUsers;
@@ -420,7 +431,6 @@ class GroupList extends Component {
               }
             </div>
           </div>
-{console.log(this.state.allTasks)}
           {modal ? (
             <Modal header="Подробная информация" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
               <div className="overWrap">
@@ -435,20 +445,19 @@ class GroupList extends Component {
                   <ChangerForm id={getChat.id} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
                   <ChangerForm id={getChat.id} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
 
-                          <div className="padded">
-                            <select>
-                            <option value="0" onChange={(e)=>{e.preventDefault(); console.log(e.target.value)}}>Выбрать задачу</option>
-                              
-                              {
-                                this.state.allTasks.map((e,i)=>{
-                                  return(
-                                    <option key={e.id} value={e.id}>{e.name}</option>
-                                  )
-                                })
-                              }
-                              
-                            </select>
-                          </div>
+                  <div className="padded">
+                    <select onChange={(e)=>{this.writeParentId(e, idObject)}}>
+                      <option value="0">Выбрать задачу</option>
+                      {
+                        this.state.allTasks.map((e,i)=>{
+                          return(
+                            <option key={e.id} value={e.id}>{e.name}</option>
+                          )
+                        })
+                      }
+
+                    </select>
+                  </div>
                 </div>
               </div>
             </ Modal>
@@ -457,141 +466,141 @@ class GroupList extends Component {
           }
         </Content>
         <Panel>
-        {
-                this.props.getChat && this.props.getChat.id ? (
-                  <div className="tab-roll">
-                    <div className="header"><h4>Пользователи</h4></div>
-                    <div className="content">
-                      <div className="content-scroll">
+          {
+            this.props.getChat && this.props.getChat.id ? (
+              <div className="tab-roll">
+                <div className="header"><h4>Пользователи</h4></div>
+                <div className="content">
+                  <div className="content-scroll">
 
-                        <Query query={GRU_QUERY} variables={{ id: getChat.id }} >
-                          {({ loading, error, data, refetch, subscribeToMore }) => {
-                            if (loading){
-                              return (
-                                <div style={{ paddingTop: 20, margin: "auto"}}>
-                                  <Loading />
-                                </div>
-                              );
-                            }
-                            if (error){
-                              return (
-                                <div className="errMess">
-                                  {error.message}
-                                </div>
-                              );
-                            }
+                    <Query query={GRU_QUERY} variables={{ id: getChat.id }} >
+                      {({ loading, error, data, refetch, subscribeToMore }) => {
+                        if (loading){
+                          return (
+                            <div style={{ paddingTop: 20, margin: "auto"}}>
+                              <Loading />
+                            </div>
+                          );
+                        }
+                        if (error){
+                          return (
+                            <div className="errMess">
+                              {error.message}
+                            </div>
+                          );
+                        }
 
 
-                            subsUser(getChat.id, subscribeToMore, refetch);
+                        subsUser(getChat.id, subscribeToMore, refetch);
 
-                            if(data){
-                              let usrs = data.group.users;
+                        if(data){
+                          let usrs = data.group.users;
 
-                              onlyunicusers = _.differenceWith(allusers, usrs, _.isEqual);
+                          onlyunicusers = _.differenceWith(allusers, usrs, _.isEqual);
 
-                              return(
+                          return(
 
-                                data.group.users.map(
-                                  (e,i)=>{
-                                    return(
-                                      <div className="username" role="presentation" key={'usr-'+i} >
-                                        <div className="name" style={{color: colorHash.hex(e.username)}} >{e.username}{localStorage.getItem('userid') === e.id ? (<span className="me"> - это я</span>) : '' }</div>
-                                        <div className="hoverTrigger">
-                                          <div className="hover">
-                                            <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
-                                            <div className="btn v2" onClick={()=>this.userAdd(e.id)}>Удалить {e.username}</div>
-                                          </div>
-                                        </div>
+                            data.group.users.map(
+                              (e,i)=>{
+                                return(
+                                  <div className="username" role="presentation" key={'usr-'+i} >
+                                    <div className="name" style={{color: colorHash.hex(e.username)}} >{e.username}{localStorage.getItem('userid') === e.id ? (<span className="me"> - это я</span>) : '' }</div>
+                                    <div className="hoverTrigger">
+                                      <div className="hover">
+                                        <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
+                                        <div className="btn v2" onClick={()=>this.userAdd(e.id)}>Удалить {e.username}</div>
                                       </div>
-                                    )
-                                  }
+                                    </div>
+                                  </div>
                                 )
-                              )
+                              }
+                            )
+                          )
 
-                            }
+                        }
 
-                            return true;
-                          }}
-                        </Query>
-                      </div>
-                    </div>
+                        return true;
+                      }}
+                    </Query>
                   </div>
-                ): null
-              }
-        {
-                this.props.getChat && this.props.getChat.id ? (
-                  <div className="tab-roll">
-                    <div className="header"></div>
-                    <div className="content">
-                      <div className="button" onClick={()=>{this.setState({modal: !modal})}}>Информация</div>
-                      <div className="content-scroll">
-                      </div>
-                    </div>
+                </div>
+              </div>
+            ): null
+          }
+          {
+            this.props.getChat && this.props.getChat.id ? (
+              <div className="tab-roll">
+                <div className="header"></div>
+                <div className="content">
+                  <div className="button" onClick={()=>{this.setState({modal: !modal});this.getTaskLists(getObjectId.currentObjectId ,idObject)}}>Информация</div>
+                  <div className="content-scroll">
                   </div>
-                ) : null
-              }
-        {
-                this.props.getChat && this.props.getChat.id ? (
-                  <div className="tab-roll">
-                    <div className="header"><h4>Добавить пользователя</h4></div>
-                    <div className="content">
-                      <div className="content-scroll">
-                        <div>
+                </div>
+              </div>
+            ) : null
+          }
+          {
+            this.props.getChat && this.props.getChat.id ? (
+              <div className="tab-roll">
+                <div className="header"><h4>Добавить пользователя</h4></div>
+                <div className="content">
+                  <div className="content-scroll">
+                    <div>
 
-                          <input type="list" list="users" autoComplete="on" onChange={this.newUser} />
-                          {
-                            this.state.newUser ? (
-                              <div className="button" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить {this.state.newUser}</div>
-                            ): null
-                          }
+                      <input type="list" list="users" autoComplete="on" onChange={this.newUser} />
+                      {
+                        this.state.newUser ? (
+                          <div className="button" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить {this.state.newUser}</div>
+                        ): null
+                      }
 
-                          <datalist id="users">
-                            {
-                              onlyunicusers && onlyunicusers.length > 0 ? onlyunicusers.map((e,i)=>{
-                                return(
-                                  <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                                )
-                              }) : allusers.map((e,i)=>{
-                                return(
-                                  <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                                )
-                              })
-                            }
-                          </datalist>
-                        </div>
-
-                      </div>
+                      <datalist id="users">
+                        {
+                          onlyunicusers && onlyunicusers.length > 0 ? onlyunicusers.map((e,i)=>{
+                            return(
+                              <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                            )
+                          }) : allusers.map((e,i)=>{
+                            return(
+                              <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                            )
+                          })
+                        }
+                      </datalist>
                     </div>
-                  </div>
-                ) : null
-              }
-              {this.props.getChat && this.props.getChat.id ? (
-                !upload ? (
-                  <div className="tab-roll">
-                    <div className="header"></div>
-                    <div className="content">
-                      <div className="button" onClick={()=>{this.setState({upload: !upload})}}>Прикрепить файл</div>
-                      <div className="content-scroll">
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="tab-roll">
-                    <div className="header"></div>
-                    <div className="content">
-                      <Mutation mutation={uploadFile}>
-                        {upload => (
-                          <Dropzone onDrop={([file]) => {upload({ variables: { id: idObject, file } }).then(()=>this.setState({upload: !upload})).catch((err)=>console.warn(err));this.setState({upload: !upload}) }}>
-                            <p>Переместите сюда файлы или нажмите для добавления.</p>
-                          </Dropzone>
-                        )}
 
-                      </Mutation>
-                    </div>
                   </div>
-                )
-              ): null
-              }
+                </div>
+              </div>
+            ) : null
+          }
+          {this.props.getChat && this.props.getChat.id ? (
+            !upload ? (
+              <div className="tab-roll">
+                <div className="header"></div>
+                <div className="content">
+                  <div className="button" onClick={()=>{this.setState({upload: !upload})}}>Прикрепить файл</div>
+                  <div className="content-scroll">
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="tab-roll">
+                <div className="header"></div>
+                <div className="content">
+                  <Mutation mutation={uploadFile}>
+                    {upload => (
+                      <Dropzone onDrop={([file]) => {upload({ variables: { id: idObject, file } }).then(()=>this.setState({upload: !upload})).catch((err)=>console.warn(err));this.setState({upload: !upload}) }}>
+                        <p>Переместите сюда файлы или нажмите для добавления.</p>
+                      </Dropzone>
+                    )}
+
+                  </Mutation>
+                </div>
+              </div>
+            )
+          ): null
+          }
         </Panel>
       </Fragment>
     );
@@ -616,6 +625,7 @@ export default compose(
   graphql(tempObj, { name: 'tempObj' }),
   graphql(setTemp, { name: 'setTemp' }),
   graphql(getTemp, { name: 'getTemp' }),
+  graphql(getObjectId, { name: 'getObjectId' }),
 )(GroupList);
 
 const isArrayEqual = (x, y) => {
