@@ -269,14 +269,14 @@ class Board extends Component {
                 );
               }
               if(data && data.object){
-
+                let FullData = data.object;
+                let Changed;
               
-                this.state.curParentId && this.state.showChilds ? data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))  : null
 
 
-              let arr = _.sortBy(data.object.tasks, 'status');
+              let arr = _.sortBy(FullData.tasks, 'status');
 
-              arr = _.sortBy(data.object.tasks, 'unreadCount');
+              arr = _.sortBy(FullData.tasks, 'unreadCount');
 
 
               _.forEach(arr, (result)=>{
@@ -298,10 +298,10 @@ class Board extends Component {
                   <div className="Board">
                     <div className="Board-Top">
                       {
-                        data.object.parentId ? (<div className="toBack" onClick={()=>{this.toBack(data.object.parentId)}}><Link to="/tile"><Svg svg="back" /></Link></div>) : null
+                        FullData.parentId ? (<div className="toBack" onClick={()=>{this.toBack(FullData.parentId)}}><Link to="/tile"><Svg svg="back" /></Link></div>) : null
                       }
-                      <h1>{data.object.name}</h1>
-                      <p className="small">{info.id}</p>
+                      <h1>{FullData.name}</h1>
+                      {/* <p className="small">{info.id}</p> */}
                     </div>
                     <div className="Board-Content">
                       {console.log("status2",status)}
@@ -311,13 +311,106 @@ class Board extends Component {
                             return(true)
                           }
 
+                          this.state.curParentId && this.state.showChilds ? data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))  : null;
+
+                          // if(Changed && Changed.length > 0){
+                          //   console.log("Changed")
+                          //   console.log(Changed)
+                          //   // FullData.tasks = [...Changed];
+                          //   try{
+
+
+                          //     // Object.defineProperty(FullData, 'tasks', {
+                          //     //   enumerable: true,
+                          //     //   configurable: true,
+                          //     //   writable: true,
+                          //     //   value: Changed,
+                          //     // });
+                          //   }catch(e){
+                          //     console.log(e)
+                          //   }
+
+                          // }
+
+
                           return(
                             <Column key={e.id} id={e.id} status={e.name} name={e.name} >
                               {
+
+
                                 cols[e.id].map((task, i)=>{
+                                  let hide = false;
+                                  if(Changed){
+                                    var find_id = _.result(_.find(Changed, function(obj){
+                                      return obj.id === task.id;
+                                  }), 'id');
+
+                                    console.log("Changed");
+                                    console.log(Changed);
+                                    console.log("find_id");
+                                    console.log(find_id);
+
+                                    if(!find_id){
+                                      hide = true;
+                                    }else{
+                                      hide = false;
+                                    }
+                                }
+                                  // let {children, name, id, endDate, lastMessage, click, childs} = task;
+
+                                  // return( 
+                                  //       <div className="Task" >
+                                  //       <div style={{"display":"none"}}>
+                                  //         {
+                                  //           id
+                                  //         }
+                                  //       </div>
+                                  //       <div className="Name" onClick={()=>click(id, name)}>
+                                  //         {
+                                  //           name
+                                  //         }
+                                  //       </div>
+                                  //       {
+                                  //         endDate ? (
+                                  //           <div className="endDate">
+                                  //               истекает:
+                                  //             {endDate}
+                                  //           </div>
+                                  //         ): null
+                                  //       }
+                            
+                                  //       {
+                                  //         lastMessage ? (
+                                  //           <div className="TaskChat">
+                                  //             <div className="ChatName">
+                                  //               {
+                                  //                 lastMessage.from.username
+                                  //               }
+                                  //             </div>
+                                  //             <div className="ChatMessage">
+                                  //               {
+                                  //                 lastMessage.text
+                                  //               }
+                                  //             </div>
+                            
+                                  //           </div>
+                                  //         ) : null
+                                  //       }
+                                  //       <div className="Bottom">
+                                  //         <div className="TaskUserPhoto"></div>
+                                  //         <div className="Childs" onClick={()=>this.childs(id)}>
+                                  //           <Svg svg="deps"></Svg>
+                                  //         </div>
+                                  //       </div>
+                                  //       <div className="linked" onClick={()=>this.click(id, name)}>
+                                  //         открыть
+                                  //       </div>
+                                  //       </div>
+                                  // )
                                   return(
                                     <Task key={task.id} id={task.id} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs}/>
                                   )
+
                                 })
                               }
                             </Column>
