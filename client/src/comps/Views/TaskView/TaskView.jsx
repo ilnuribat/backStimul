@@ -23,7 +23,7 @@ import '../../../newcss/taskview.css'
 
 let statusName;
 
-class GroupList extends Component {
+class TaskView extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -516,7 +516,7 @@ class GroupList extends Component {
 
 
 
-GroupList.propTypes = {
+TaskView.propTypes = {
   selectUser: PropTypes.func.isRequired
 };
 
@@ -527,7 +527,7 @@ export default compose(
   graphql(tempObj, { name: 'tempObj' }),
   graphql(setTemp, { name: 'setTemp' }),
   graphql(getTemp, { name: 'getTemp' }),
-)(GroupList);
+)(TaskView);
 
 const isArrayEqual = (x, y) => {
   return _(x).differenceWith(y, _.isEqual).isEmpty();

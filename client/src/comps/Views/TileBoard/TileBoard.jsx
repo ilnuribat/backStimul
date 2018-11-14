@@ -58,6 +58,7 @@ class TileBoard extends Component {
 
   cleanStorage(){
     localStorage.setItem('rootId', "")
+    localStorage.setItem('placeParent', "")
     localStorage.setItem('parentId', "")
     this.setState({
       rootid: "",
