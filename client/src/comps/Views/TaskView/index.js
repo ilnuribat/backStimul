@@ -2,10 +2,10 @@ import React, { Component, Fragment } from 'react';
 import { graphql, compose, Query, Mutation } from "react-apollo";
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
+import _ from 'lodash';
 // import Autocomplete from 'react-toolbox/lib/autocomplete';
 // import belle from 'belle';
-import axios from 'axios';
-import _ from 'lodash';
+
 
 import { qauf, _url, colorHash } from '../../../constants';
 import 'animate.css';
@@ -16,28 +16,12 @@ import ChangerForm from './ChangerForm';
 import { uploadFile, groupMut, updTask } from '../../../GraphQL/Qur/Mutation';
 import { selectUser, getCUser, tempObj, setTemp, getTemp, setChat } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, GRU_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
-import { userTaskUpdated } from '../../../GraphQL/Qur/Subscr';
 import Content from '../../Lays/Content';
 import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
 
 let statusName;
-
-let subsUser = (id,subscribeToMore, refetch) =>{
-  return subscribeToMore({
-    document: userTaskUpdated,
-    variables: { id: id },
-    updateQuery: (prev, { subscriptionData }) => {
-      if (!subscriptionData.data) return prev;
-      const newFeedItem = subscriptionData.data.commentAdded;
-
-      refetch().then(()=>{
-      });
-
-    }
-  });
-};
 
 class GroupList extends Component {
   constructor(props) {
@@ -255,43 +239,6 @@ class GroupList extends Component {
 
   }
 
-  async daDataReqId (id) {
-    const res = await axios(
-      'https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/address',
-
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83"
-        },
-        data: {
-          "query": id
-        }
-      })
-
-    return res.data.suggestions[0].data;
-  }
-
-  async daDataReqIdPaid (address) {
-    const res = await axios(
-      'https://dadata.ru/api/v2/clean/address',
-
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83",
-          // "X-Secret" : "53298fa2e7d1762e0e329388eb3fd66ae4a3312a"
-        },
-        data: [address]
-      })
-
-    return res.data.suggestions[0].data;
-  }
-
   addressAdd(address, addressList){
     let param = `address: "${address}"`;
     const A = groupMut(this.state.taskId, `${param}`);
@@ -462,9 +409,6 @@ class GroupList extends Component {
                             </div>
                           );
                         }
-
-
-                        subsUser(taskId, subscribeToMore, refetch);
 
                         if(data){
                           let usrs = data.group.users;

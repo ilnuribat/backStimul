@@ -248,24 +248,6 @@ class GroupList extends Component {
     return res.data.suggestions[0].data;
   }
 
-  async daDataReqIdPaid (address) {
-    const res = await axios(
-      'https://dadata.ru/api/v2/clean/address',
-
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83",
-          // "X-Secret" : "53298fa2e7d1762e0e329388eb3fd66ae4a3312a"
-        },
-        data: [address]
-      })
-
-    return res.data.suggestions[0].data;
-  }
-
   addressAdd(address, addressList){
     let param = `address: "${address}"`;
     const A = groupMut(this.props.getPrivateChat.id, `${param}`);
