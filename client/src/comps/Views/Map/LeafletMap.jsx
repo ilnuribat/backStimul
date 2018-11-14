@@ -24,7 +24,7 @@ import Content from '../../Lays/Content';
 const { BaseLayer, Overlay } = LayersControl;
 
 const styleLeaf = {
-  margin: "0 0 0 50px",
+  margin: "0 0 0 0",
   height: "100vh",
   width: "auto",
 };

@@ -53,7 +53,7 @@ class Fetch extends Component {
   }
 }
 
-class ChatBody extends Component {
+class ChatView extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -101,22 +101,22 @@ class ChatBody extends Component {
           <Fetch priv={priv} id={id} {...this.props} />
         </section>
 
-          <AddMesMut>
-            {(add) => (
-              <AddNew
-                key={id}
-                add={({ id, text }) => add({ variables: { id: `${id}`, text } })}
-                toBottom={()=>{this.toBottom();}}
-              />
-            )}
-          </AddMesMut>
+        <AddMesMut>
+          {(add) => (
+            <AddNew
+              key={id}
+              add={({ id, text }) => add({ variables: { id: `${id}`, text } })}
+              toBottom={()=>{this.toBottom();}}
+            />
+          )}
+        </AddMesMut>
       </div>
     );
   }
 }
 
 
-ChatBody.propTypes = {
+ChatView.propTypes = {
   getchat: PropTypes.shape({
     id: PropTypes.string
   }).isRequired,
@@ -127,10 +127,10 @@ AddMesMut.propTypes = {
   children: PropTypes.func.isRequired,
 };
 
-ChatBody.defaultProps = {
+ChatView.defaultProps = {
 };
 
 export default compose(
   graphql(getChat, { name: 'getchat' }),
-)(ChatBody);
+)(ChatView);
 
