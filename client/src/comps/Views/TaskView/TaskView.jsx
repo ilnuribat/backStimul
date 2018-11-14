@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 import { qauf, _url, colorHash } from '../../../constants';
 import 'animate.css';
-import ChatView from '../ChatView';
+import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
 import Modal from './Modal';
 import ChangerForm from './ChangerForm';

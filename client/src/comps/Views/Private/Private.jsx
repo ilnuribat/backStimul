@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import 'animate.css';
 import { graphql, compose  } from "react-apollo";
 import PropTypes from 'prop-types';
-import ChatView from '../ChatView';
+import ChatView from '../ChatView/ChatView';
 import { getChat, setChat } from '../../../GraphQL/Cache';
 import Content from '../../Lays/Content';
 import Bar from '../../Lays/Bar';
