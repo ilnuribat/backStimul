@@ -129,6 +129,10 @@ class TileBoard extends Component {
   }
 
   componentDidMount(){
+    const { location } = this.props
+
+    console.warn("LOCATIION!", location.state)
+
     if(localStorage.getItem('rootId') != 'undefined' || localStorage.getItem('parentId') != 'undefined' ){
       this.setState({
         rootid: localStorage.getItem('rootId') || "",

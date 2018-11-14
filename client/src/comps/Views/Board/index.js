@@ -27,6 +27,7 @@ class Board extends Component {
       objectId:"",
       taskId:"",
       taskName: "",
+      rootId: "",
       name:"",
       info:{name:"", id:""},
       input: [],
@@ -175,10 +176,13 @@ class Board extends Component {
   // }
 
   render(){
-    const { objectId, info, toRoot, status, taskId, toTask, taskName } = this.state;
+    const { objectId, info, status, taskId, toTask, taskName } = this.state;
     let cols = [[],[],[],[],[],[],[]];
 
-    if(toRoot) return <Redirect to="/" />;
+    // if(toRoot) return <Redirect to={{
+    //   pathname: '/',
+    //   state: { rootId: rootId }
+    // }} />
     if(toTask) return <Redirect to={{
       pathname: '/task',
       state: { taskId: taskId, taskName: taskName, objectId: objectId }
@@ -202,11 +206,10 @@ class Board extends Component {
 
                 return(
                   "error"
-                  // <Redirect to="/" />
+
                 );
               }
               if(data && data.object){
-
 
                 this.state.curParentId && this.state.showChilds ? data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))  : null
 
@@ -235,7 +238,13 @@ class Board extends Component {
                   <div className="Board">
                     <div className="Board-Top">
                       {
-                        data.object.parentId ? (<div className="toBack" onClick={()=>{this.toBack(data.object.parentId)}}><Link to="/tile"><Svg svg="back" /></Link></div>) : null
+                        data.object.parentId ? (<div className="toBack" onClick={()=>{this.toBack(data.object.parentId)}}>
+                          <Link to={{
+                            pathname: '/tile',
+                            state: { rootId: data.object.parentId }
+                          }}>
+                            <Svg svg="back" />
+                          </Link></div>) : null
                       }
                       <h1>{data.object.name}</h1>
                       <p className="small">{info.id}</p>

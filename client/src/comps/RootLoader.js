@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Redirect } from 'react-router';
+import { graphql, compose } from 'react-apollo';
 import { setPlace, setChat, getChat, getPlace } from '../GraphQL/Cache';
-import { graphql } from 'react-apollo';
-import { compose } from 'react-apollo';
+
+
 
 /** RootLoader */
 
@@ -12,31 +13,37 @@ class RootLoader extends Component {
   }
 
   render() {
-    let {children} = this.props;
+    const {children, location} = this.props;
 
-    let placeType = this.props.getPlace.place.type;
-    let urlsArr = ['map', 'tile', 'top','board','login','profile','private', 'task'];
+    const placeType = this.props.getPlace.place.type;
+    const urlsArr = ['map', 'tile', 'top','board','login','profile','private', 'task'];
 
-    let cis = urlsArr.indexOf(placeType);
+    const cis = urlsArr.indexOf(placeType);
+    let rootState = ""
 
     switch (placeType){
-      case "map":
-          return(
-            <Redirect to="/map"/>
-          )
-        break;
+    case "map":
+      return(
+        <Redirect to="/map"/>
+      )
+      break;
 
-      case placeType && cis >= 0:
-          return(
-            <Redirect to={`/${placeType}`}/>
-          )
-        break;
-    
-      default:
-          return(
-          <Redirect to='/tile'/>
-          )
-        break;
+    case placeType && cis >= 0:
+      return(
+        <Redirect to={`/${placeType}`}/>
+      )
+      break;
+
+    default:
+      location && location.state && location.state.rootId ? rootState = location.state.rootId : null
+
+      return (
+        <Redirect to={{
+          pathname: '/tile',
+          state: { rootState }
+        }}/>
+      )
+      break;
     }
   }
 }
