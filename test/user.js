@@ -1,19 +1,17 @@
 const { assert } = require('chai');
 
-const loginQuery = {
-  query: `
-    {
-      user {
-        id
-        email
-      }
+const query = `
+  {
+    user {
+      id
+      email
     }
-  `,
-};
+  }
+`;
 
-describe('user', () => {
+describe.only('user', () => {
   it('get info with token', async function () {
-    const { data, errors } = await this.request({ body: loginQuery });
+    const { data, errors } = await this.request({ query, token: '' });
 
     assert.isUndefined(errors);
     assert.isObject(data.user);
@@ -22,7 +20,7 @@ describe('user', () => {
   });
 
   it('try to get info with no token', async function () {
-    const { data, errors } = await this.requestNoAuth({ body: loginQuery });
+    const { data, errors } = await this.request({ query, bearer: false });
 
     assert.isNull(data.user);
     assert.isArray(errors);
@@ -30,19 +28,10 @@ describe('user', () => {
   });
 
   it('try to get info with wrong token', async function () {
-    try {
-      await this.requestNoAuth({
-        body: loginQuery,
-        headers: {
-          authorization: 'Bearer asdf',
-        },
-      });
+    const { data, errors } = await this.request({ query, token: 'fasdf' });
 
-      throw new Error();
-    } catch (err) {
-      assert.isObject(err.error);
-      assert.isArray(err.error.errors);
-      assert.include(err.error.errors[0].message, 'invalid token');
-    }
+    assert.isUndefined(data);
+    assert.isArray(errors);
+    assert.include(errors[0].message, 'invalid token');
   });
 });

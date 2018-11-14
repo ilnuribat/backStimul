@@ -1,9 +1,14 @@
-const request = require('request-promise-native');
+const chai = require('chai');
+const chaiHttp = require('chai-http');
 const { generateToken } = require('../server/src/services/user');
 const connectDB = require('../server/connectDB');
 const { User } = require('../server/src/models');
+const { app } = require('../server');
 
 before(async function () {
+  chai.use(chaiHttp);
+  const requester = chai.request(app).keepOpen();
+
   await connectDB();
 
   this.email = 'test@User.guov';
@@ -14,19 +19,28 @@ before(async function () {
     password: this.password,
   });
 
-  const token = generateToken(this.user);
+  const generatedToken = generateToken(this.user);
 
-  this.requestNoAuth = request.defaults({
-    method: 'POST',
-    uri: 'http://localhost:8500/',
-    json: true,
-  });
+  this.request = ({ query, token, bearer }) => requester
+    .post('/')
+    .send({ query })
+    .set('Authorization', `${
+      bearer === false ? '' : 'Bearer'
+    } ${token || generatedToken}`)
+    .then(r => r.body);
 
-  this.request = this.requestNoAuth.defaults({
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-  });
+  const query = `
+    {
+      user {
+        id
+        email
+      }
+    }
+  `;
+
+  const res = await this.request({ query, bearer: false });
+
+  console.log(res);
 });
 
 after(async function () {
