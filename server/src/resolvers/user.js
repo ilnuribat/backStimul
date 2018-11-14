@@ -65,7 +65,8 @@ module.exports = {
       const { email, password } = user;
 
       try {
-        const hashPassword = await bcrypt.hash(password, 12);
+        const rounds = process.env.NODE_ENV === 'production' ? 12 : 1;
+        const hashPassword = await bcrypt.hash(password, rounds);
         const newUser = await User.create({ email, password: hashPassword });
         const token = generateToken(newUser);
 
