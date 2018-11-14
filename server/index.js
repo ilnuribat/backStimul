@@ -1,5 +1,7 @@
-const { ApolloServer } = require('apollo-server');
+const express = require('express');
+const { ApolloServer } = require('apollo-server-express');
 const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
 const connectToMongo = require('./connectDB');
 const { HTTP_PORT, JWT_SECRET } = require('./config');
 const { User } = require('./src/models');
@@ -72,11 +74,21 @@ const server = new ApolloServer({
   },
 });
 
+const app = express();
+
+app.use(bodyParser());
+
+server.applyMiddleware({ app, path: '/' });
+
 async function start() {
   await connectToMongo();
-  const listening = await server.listen({ port: HTTP_PORT });
 
-  logger.info(`server started at port: ${listening.port}`);
+  return new Promise((resolve/* , reject */) => {
+    app.listen({ port: HTTP_PORT }, () => {
+      logger.info(`server started at port: ${HTTP_PORT}`);
+      resolve();
+    });
+  });
 }
 
 if (process.env.NODE_ENV !== 'test') {
@@ -85,6 +97,6 @@ if (process.env.NODE_ENV !== 'test') {
 
 
 module.exports = {
-  server,
+  app,
   start,
 };
