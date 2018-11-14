@@ -57,7 +57,7 @@ export default class NavLinks extends Component {
             )
           })
         }
-        {modal ? (<Modal/>) : null}
+        {modal ? (<Modal close={this.modal} small="1"/>) : null}
       </div>
     )
   }

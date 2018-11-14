@@ -4,9 +4,9 @@ import './ModalStyle.css'
 import Svg from '../../Parts/SVG'
 
 
-const ModalClose = ()=>{
+const ModalClose = ({click})=>{
   return(
-    <div className="ModalClose">
+    <div className="ModalClose" onClick={()=>{click? click() : console.log("Modal close")}}>
       <Svg svg="close"></Svg>
     </div>
   )
@@ -73,13 +73,13 @@ class Modal extends Component {
   }
 
   render() {
-    let {children, big, small } = this.props;
+    let {children, big, small, click, close } = this.props;
     return (
       <div className="ModalFull">
         <div className="ModalWrap">
 
           <div className="ModalBig">
-            <ModalClose></ModalClose>
+            <ModalClose click={()=>{close ? close() : console.log("No close function") }}/>
             <div className="inner">
               <ModalCol>
                 <ModalBlockName>
@@ -151,11 +151,14 @@ class Modal extends Component {
 
             </div>
           </div>
-          <div className="ModalSmall">
-            <div className="inner">
-            <div className="ModalCol"></div>
+          {small?(
+            <div className="ModalSmall">
+              <div className="inner">
+              <div className="ModalCol"></div>
+              </div>
             </div>
-          </div>
+          ): null}
+
         </div>
         
       </div>
