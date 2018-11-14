@@ -111,7 +111,7 @@ class AddNew extends Component {
     }
 
     return (
-      <form className='chat-inp' id="addNew" onSubmit={this.submitHandler}>
+      <form className='ChatForm chat-inp' id="addNew" onSubmit={this.submitHandler}>
         <div className="textarea-wrapper">
           <span className="chat-to" style={{color: colorHash.hex(user)}}>{user}</span>
           <textarea id="focus-chpocus" onKeyDown={this.onKeyDown} ref={this.setTextInputRef} name="1" type="text" value={input} placeholder='Сообщение...' onChange={this.changeInput} required />

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom';
 import { Svg } from '../Parts/SVG/index';
+import Modal from '../Lays/Modal';
+
 
 const NavArr = [
   {name:"search", link:"/", comp:"", svg:"search"},
@@ -9,14 +11,32 @@ const NavArr = [
   {name:"3", link:"", comp:"", svg:"svg3"},
   {name:"Private", link:"/chat", comp:"", svg:"private"},
   {name:"Pap", link:"/map", comp:"", svg:"location"},
+  {name:"Modal", link:"", comp:"", svg:"modal", click:"modal"},
 ];
 
 export default class NavLinks extends Component {
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+       modal: false,
+    }
+
+    this.modal = this.modal.bind(this)
+  }
+  
+  modal(){
+    this.setState({
+      modal: !this.state.modal,
+    })
+  }
+
   static propTypes = {
   }
 
   render() {
     let {children} = this.props;
+    let {modal} = this.state;
 
     return (
       <div className="NavLinks">
@@ -24,14 +44,20 @@ export default class NavLinks extends Component {
         {
           NavArr.map((e,i)=>{
             return(
-              <div className="nav" key={"nav"+i+e.link}>
-                <Link to={e.link}>
+              <div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click === "modal" ? this.modal() : console.log('No click')} }>
+                {e.link ? (
+                  <Link to={e.link}>
+                    <Svg svg={e.svg} />
+                  </Link>
+                ) : (
                   <Svg svg={e.svg} />
-                </Link>
+                ) }
+
               </div>
             )
           })
         }
+        {modal ? (<Modal/>) : null}
       </div>
     )
   }
