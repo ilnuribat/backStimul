@@ -11,7 +11,7 @@ import Task from '../../Parts/Task';
 import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
-import { setChat, setInfo, setObjectId, rootId } from '../../../GraphQL/Cache';
+import { setChat, setInfo, rootId } from '../../../GraphQL/Cache';
 import { getObjectTasks, glossaryStatus, TASKS_QUERY } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
@@ -67,18 +67,11 @@ class Board extends Component {
   }
 
   componentDidMount(){
-    const { setObjectId, location } = this.props;
+    const { location } = this.props;
 
     if(location.state.objectId || localStorage.getItem('ObjectId')){
 
       const id =location.state.objectId  || localStorage.getItem('ObjectId') ;
-
-      setObjectId({
-        variables:{
-          id: id,
-          name: "",
-        }
-      });
 
       if(id){
         this.setState({
@@ -139,14 +132,11 @@ class Board extends Component {
 
   glossStatus(id){
     qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.warn("_______________BOARD__________________7")
       this.setState({
         status: ["",...a.data.glossary.taskStatuses],
       });
-      console.warn("_______________BOARD__________________8")
     })
       .catch((e)=>{
-        console.warn("_______________BOARD__________________9")
         console.warn(e);
       });
   }
@@ -228,11 +218,8 @@ class Board extends Component {
                   }
                 });
 
-                console.warn("cols",cols)
-
-
-
-                console.warn("data",data)
+                // console.warn("cols",cols)
+                // console.warn("data",data)
 
                 return(
                   <div className="Board">
@@ -295,7 +282,6 @@ class Board extends Component {
 
 export default compose(
   graphql(rootId, { name: 'rootId' }),
-  graphql(setObjectId, { name: 'setObjectId' }),
   graphql(setInfo, { name: 'setInfo' }),
   graphql(setChat, { name: 'setChat' }),
 )(Board);

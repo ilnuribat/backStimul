@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import 'animate.css';
+import { Mutation } from 'react-apollo';
 import axios from 'axios';
+import 'animate.css';
+
 import { SvgPlusBox } from '../SVG';
 import Tiled from '../Tiled/index';
 import { createObject, changeObject } from '../../../GraphQL/Qur/Mutation/index';
-import { Mutation } from 'react-apollo';
+
 
 /** TileMaker */
 
@@ -13,7 +15,7 @@ class TileMaker extends Component {
 
   constructor(props) {
     super(props)
-  
+
     this.state = {
       open:false,
       edit:false,
@@ -31,7 +33,7 @@ class TileMaker extends Component {
     this.newAddress = this.newAddress.bind(this);
     this.newName = this.newName.bind(this);
   }
-  
+
 
   componentDidMount(){
     let {edit} = this.props;

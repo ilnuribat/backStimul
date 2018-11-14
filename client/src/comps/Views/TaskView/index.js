@@ -17,7 +17,7 @@ import { uploadFile, groupMut, updTask } from '../../../GraphQL/Qur/Mutation';
 import { selectUser, getCUser, tempObj, setTemp, getTemp, setChat } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, GRU_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
-import Bar from '../../Lays/Bar/index';
+// import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
 
@@ -48,8 +48,6 @@ class GroupList extends Component {
     this.userAdd = this.userAdd.bind(this);
     this.glossStatus = this.glossStatus.bind(this);
     this.onStatSelected = this.onStatSelected.bind(this);
-    this.inputChange = this.inputChange.bind(this);
-    this.inputSave = this.inputSave.bind(this);
     this.newUser = this.newUser.bind(this);
     this.newAddress = this.newAddress.bind(this);
     this.addressAdd = this.addressAdd.bind(this);
@@ -161,6 +159,27 @@ class GroupList extends Component {
 
   }
 
+  onStatSelected(e){
+
+    qauf(groupMut(this.state.taskId, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
+      // console.log(a)
+    })
+      .catch((e)=>{
+        console.warn(e);
+      });
+
+  }
+
+  onUserSelected(e){
+
+    qauf(groupMut(this.state.taskId, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
+      // console.log(a)
+    })
+      .catch((e)=>{
+        console.warn(e);
+      });
+
+  }
 
   changeState(a){
     return false;
@@ -262,35 +281,6 @@ class GroupList extends Component {
       .catch((e)=>{
         console.warn(e);
       });
-  }
-
-  onStatSelected(e){
-
-    qauf(groupMut(this.state.taskId, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      // console.log(a)
-    })
-      .catch((e)=>{
-        console.warn(e);
-      });
-
-  }
-
-  onUserSelected(e){
-
-    qauf(groupMut(this.state.taskId, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      // console.log(a)
-    })
-      .catch((e)=>{
-        console.warn(e);
-      });
-
-  }
-  inputSave(){
-
-  }
-
-  inputChange(e){
-
   }
 
   componentDidUpdate(){

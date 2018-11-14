@@ -7,7 +7,7 @@ import {
   Popup,
   TileLayer
 } from "react-leaflet";
-import { graphql, compose, Query } from "react-apollo";
+import { Query } from "react-apollo";
 import { divIcon } from "leaflet";
 import PropTypes from 'prop-types';
 import {Redirect} from "react-router-dom";
@@ -17,7 +17,6 @@ import b from "./buttons.css";
 import  "./LeafletMap.css";
 
 import { getObjects } from '../../../GraphQL/Qur/Query/index';
-import { setObjectId } from '../../../GraphQL/Cache';
 import Loading from '../../Loading';
 import Content from '../../Lays/Content';
 
@@ -79,12 +78,6 @@ class LeafletMap extends Component {
 
     handleTabChange = (index, name) => {
       console.warn("clicked!", index, name);
-      this.props.setObjectId({
-        variables: {
-          id: index,
-          name: name,
-        }
-      });
       localStorage.setItem('ObjectId',index);
       localStorage.setItem('ObjectName',name);
       this.setState({redirect: true, objectId: index} );
@@ -374,13 +367,5 @@ const SwitchIcon = (status)   => {
 };
 
 
-LeafletMap.propTypes = {
-  // getCUser: PropTypes.object.isRequired,
-  setObjectId: PropTypes.func.isRequired
-};
 
-
-export default compose(
-  // graphql(getCUser, { name: 'getCUser' }),
-  graphql(setObjectId, { name: 'setObjectId' }),
-)(LeafletMap);
+export default LeafletMap;

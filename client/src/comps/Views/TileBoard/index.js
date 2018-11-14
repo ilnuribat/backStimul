@@ -9,7 +9,7 @@ import { QUERY_ROOTID } from '../../../GraphQL/Qur/Query';
 import Loading from '../../Loading';
 import Tiled from '../../Parts/Tiled';
 import { SvgBack } from '../../Parts/SVG';
-import { setPlace, getPlace, getChat, setChat, setObjectId, getObjectId } from '../../../GraphQL/Cache';
+import { setPlace, getPlace, getChat, setChat } from '../../../GraphQL/Cache';
 import { qauf, _url } from '../../../constants';
 import { deleteObject } from '../../../GraphQL/Qur/Mutation';
 
@@ -66,13 +66,8 @@ class TileBoard extends Component {
   }
 
   query(id, type, name, parentId){
-
-    console.log("-------------")
-    console.log(id, type, name, parentId)
-
-
-
-
+    // console.log("-------------")
+    // console.log(id, type, name, parentId)
     if(id && type === 'AddressObject'){
       localStorage.setItem('rootId', id)
       localStorage.setItem('parentId', parentId)
@@ -82,38 +77,13 @@ class TileBoard extends Component {
       });
     }
     else if(id && type === 'Object'){
-      this.props.setObjectId({
-        variables:{
-          id: id,
-          name: name,
-        }
-      })
       localStorage.setItem('ObjectId',id);
       localStorage.setItem('ObjectName',name);
-
-
-
-      if(this.props.getObjectId.currentObjectId){
-        this.setState({
-          objectId: id,
-          objectname: name,
-          object: true,
-        })
-        console.log("getObjectId",this.props.getObjectId)
-      }else{
-        this.props.setObjectId({
-          variables:{
-            id: id,
-            name: name,
-          }
-        })
-        this.setState({
-          objectId: id,
-          objectname: name,
-          object: true,
-        })
-      }
-
+      this.setState({
+        objectId: id,
+        objectname: name,
+        object: true,
+      })
     }
     else{
       this.cleanStorage()
@@ -130,8 +100,7 @@ class TileBoard extends Component {
 
   componentDidMount(){
     const { location } = this.props
-
-    console.warn("LOCATIION!", location.state)
+    // console.warn("LOCATIION!", location.state)
 
     if(localStorage.getItem('rootId') != 'undefined' || localStorage.getItem('parentId') != 'undefined' ){
       this.setState({
@@ -207,8 +176,6 @@ class TileBoard extends Component {
 }
 
 export default compose(
-  graphql(setObjectId, { name: 'setObjectId' }),
-  graphql(getObjectId, { name: 'getObjectId' }),
   graphql(getChat, { name: 'getChat' }),
   graphql(setChat, { name: 'setChat' }),
   graphql(getPlace, { name: 'getPlace' }),
