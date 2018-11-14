@@ -32,10 +32,14 @@
   },
   "dependencies": {
     "apollo-server": "^2.1.0",
+    "apollo-server-express": "^2.2.2",
     "axios": "^0.18.0",
     "bcrypt": "^2.0.1",
+    "body-parser": "^1.18.3",
     "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
     "dotenv": "^6.0.0",
+    "express": "^4.16.4",
     "graphql": "^14.0.2",
     "graphql-tools": "^3.1.1",
     "ioredis": "^4.0.0",
@@ -52,9 +56,6 @@
     "nodemon": "^1.18.4",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.5",
-    "supertest": "^3.3.0",
     "uuid": "^3.3.2",
     "winston": "^3.1.0"
   }
