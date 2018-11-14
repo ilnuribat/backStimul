@@ -19,7 +19,7 @@ import { allUsers, glossaryStatus, GRU_QUERY, getObjectTasks3 } from '../../../G
 import Content from '../../Lays/Content';
 import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
-import '../../../newcss/taskview.css'
+
 
 let statusName;
 
