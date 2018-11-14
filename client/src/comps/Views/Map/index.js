@@ -77,14 +77,17 @@ class LeafletMap extends Component {
   }
 
     handleTabChange = (index, name) => {
-      // console.warn("clicked!", index, name);
+      console.warn("clicked!", index, name);
       this.props.setObjectId({
         variables: {
           id: index,
           name: name,
         }
       });
-      localStorage.setItem('back',index)
+      // localStorage.setItem('back',index)
+      localStorage.setItem('ObjectId',index);
+      localStorage.setItem('ObjectName',name);
+
       this.setState({redirect: true});
     }
 

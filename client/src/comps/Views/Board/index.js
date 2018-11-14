@@ -76,7 +76,7 @@ class Board extends Component {
 
     if(getObjectId.currentObjectId || localStorage.getItem('ObjectId')){
       console.log("_______________BOARD__________________2");
-      let id = getObjectId.currentObjectId || localStorage.getItem('ObjectId');
+      let id =localStorage.getItem('ObjectId') ||  getObjectId.currentObjectId ;
       this.props.setObjectId({
         variables:{
           id: id,
@@ -117,7 +117,7 @@ class Board extends Component {
     // console.log("_______________BOARD__________________5")
     // let ObjId = localStorage.getItem('ObjectId') || getObjectId.currentObjectId;
 
-    
+
     // console.log("_______________BOARD__________________6")
     // this.props.setChat({
     //   variables: {
@@ -161,7 +161,7 @@ class Board extends Component {
         priv: false,
       }
     });
-    
+
     this.setState({
       toTask: true,
     })
@@ -270,7 +270,7 @@ class Board extends Component {
               }
               if(data && data.object){
 
-              
+
                 this.state.curParentId && this.state.showChilds ? data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))  : null
 
 
@@ -342,7 +342,7 @@ class Board extends Component {
         this.glossStatus(_id);
         return <Loading/>
     }
-    
+
     // else{
     //   return <Redirect to="/" />
     // }
