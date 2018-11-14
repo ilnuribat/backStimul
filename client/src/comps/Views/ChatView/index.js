@@ -6,6 +6,7 @@ import MessagesListData from './MessagesListData';
 import { ADD_MUT } from "../../../GraphQL/Qur/Mutation";
 import { getChat } from "../../../GraphQL/Cache";
 import { GR_QUERY, PRIV_QUERY } from "../../../GraphQL/Qur/Query";
+import '../../../newcss/taskview.css'
 
 const AddMesMut = ({ children }) => (
   <Mutation
