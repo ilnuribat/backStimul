@@ -18,12 +18,16 @@ class Modal extends Component {
   }
 
   render() {
-    let {children, } = this.props;
+    let {children, big, small } = this.props;
     return (
       <div className="ModalFull">
         <div className="ModalWrap">
-          <div className="ModalBig"></div>
-          <div className="ModalSmall"></div>
+          <div className="ModalBig">
+            <div className="inner"></div>
+          </div>
+          <div className="ModalSmall">
+            <div className="inner"></div>
+          </div>
         </div>
         
       </div>

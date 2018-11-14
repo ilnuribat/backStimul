@@ -10,21 +10,56 @@
   right:0;
   bottom: 0;
   z-index: 999;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.7);
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 .ModalWrap{
-  background: #fff;
+  background: #ffffff0e;
   height: auto;
+  min-height: 50%;
+  max-height: 100%;
   width:100%;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding: 50px;
 }
-.ModalBig{}
+.ModalWrap > div{
+  margin:0 20px;
+  padding: 50px;
+  border-radius: 5px;
+  max-height: 90%;
+  overflow: hidden;
+}
+.ModalWrap > div > .inner{
+  margin:0 20px;
+  padding: 50px;
+  border-radius: 5px;
+  max-height: 90%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.ModalBig{
+  width:90%;
+  height: auto;
+  min-height: 200px;
+  background: rgb(170, 170, 170);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
 .ModalSmall{
-
+  width:90%;
+  max-width: 300px;
+  height: auto;
+  min-height: 200px;
+  background: rgb(189, 189, 189);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
