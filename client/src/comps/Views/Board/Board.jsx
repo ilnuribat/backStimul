@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { graphql, compose, Query } from "react-apollo";
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -28,20 +28,10 @@ class Board extends Component {
       taskId:"",
       taskName: "",
       rootId: "",
-      name:"",
       info:{name:"", id:""},
-      input: [],
       status: [],
-      tasks: {},
       toRoot: false,
       toTask: false,
-      columns: [
-        "Null",
-        "Новые",
-        "В работе",
-        "На проверке",
-        "Завершенные",
-      ],
       showChilds: false,
     };
 
@@ -68,16 +58,14 @@ class Board extends Component {
 
   componentDidMount(){
     const { location } = this.props;
+    let id;
 
-    if(location.state.objectId || localStorage.getItem('ObjectId')){
+    (location.state && location.state.objectId) ? id = location.state.objectId : id = localStorage.getItem('ObjectId')
 
-      const id =location.state.objectId  || localStorage.getItem('ObjectId') ;
-
-      if(id){
-        this.setState({
-          objectId: id,
-        });
-      }
+    if(id){
+      this.setState({
+        objectId: id,
+      });
     }
   }
 
@@ -94,7 +82,7 @@ class Board extends Component {
     }
   }
 
-  toTask(id, name, parentId){
+  toTask(id, name){
 
     console.warn("To TASK ID")
     console.warn(id)
@@ -130,7 +118,7 @@ class Board extends Component {
     }
   }
 
-  glossStatus(id){
+  glossStatus(){
     qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
       this.setState({
         status: ["",...a.data.glossary.taskStatuses],
@@ -167,6 +155,7 @@ class Board extends Component {
 
   render(){
     const { objectId, info, status, taskId, toTask, taskName } = this.state;
+    const { setInfo } = this.props;
     let cols = [[],[],[],[],[],[],[]];
 
     // if(toRoot) return <Redirect to={{
@@ -191,24 +180,18 @@ class Board extends Component {
                 );
               }
               if (error){
-                this.props.setInfo({variables:{id:"id",message:error.message, type:"error"}})
+                setInfo({variables:{id:"id",message:error.message, type:"error"}})
                 console.warn('Error', error.message)
 
                 return(
                   "error"
-
                 );
               }
               if(data && data.object){
-
                 this.state.curParentId && this.state.showChilds ? data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))  : null
-
-
                 let arr = _.sortBy(data.object.tasks, 'status');
 
                 arr = _.sortBy(data.object.tasks, 'unreadCount');
-
-
                 _.forEach(arr, (result)=>{
                   if(!result.status){
                     cols[1].push(result);
@@ -247,7 +230,7 @@ class Board extends Component {
                           return(
                             <Column key={e.id} id={e.id} status={e.name} name={e.name} >
                               {
-                                cols[e.id].map((task, i)=>{
+                                cols[e.id].map((task)=>{
                                   return(
                                     <Task key={task.id} id={task.id} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs}/>
                                   )
@@ -278,6 +261,17 @@ class Board extends Component {
     }
   }
 }
+
+
+
+Board.propTypes = {
+  setInfo: PropTypes.func.isRequired,
+  rootId: PropTypes.func.isRequired,
+  setChat: PropTypes.func.isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.object
+  }),
+};
 
 
 export default compose(

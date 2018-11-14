@@ -9,7 +9,7 @@ import {
 } from "react-leaflet";
 import { Query } from "react-apollo";
 import { divIcon } from "leaflet";
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import {Redirect} from "react-router-dom";
 import { ReactLeafletSearch } from 'react-leaflet-search'
 

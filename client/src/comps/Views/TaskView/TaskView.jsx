@@ -59,6 +59,9 @@ class TaskView extends Component {
 
     let obj = {name:'name'};
     let arr = [].push(obj);
+    let _grid
+    let _grnm
+    let _objId
 
     this.props.setTemp({
       variables:{
@@ -66,10 +69,17 @@ class TaskView extends Component {
       }
     });
 
+    if (location.state && location.state.taskId) {
+      _grid = location.state.taskId
+      _grnm = location.state.taskName
+      _objId = location.state.objectId
+    } else {
+      _grid = localStorage.getItem('grid');
+      _grnm = localStorage.getItem('grnm');
+      _objId = localStorage.getItem('ObjectId');
+    }
+
     const { users } = this.state;
-    const _grid = location.state.taskId || localStorage.getItem('grid');
-    const _grnm = location.state.taskName || localStorage.getItem('grnm');
-    const _objId = location.state.objectId || localStorage.getItem('ObjectId');
 
     if(_grid && _grnm){
       this.props.setChat({
