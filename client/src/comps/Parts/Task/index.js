@@ -62,9 +62,9 @@ class Task extends Component {
                 <Svg svg="deps"></Svg>
               </div>
             </div>
-            <div className="linked" onClick={()=>click(id, name)}>
+            {/* <div className="linked" onClick={()=>click(id, name)}>
               открыть
-            </div>
+            </div> */}
             </div>
       )
   }

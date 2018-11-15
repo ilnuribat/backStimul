@@ -19,6 +19,10 @@ div {
     box-sizing: border-box;
 }
 
+a{
+  text-decoration: none;
+  color:#3e75b2;
+}
 #root {
     display: block;
     width: 100%;
@@ -110,6 +114,10 @@ div {
 @import './newcss/tile.css';
 @import './newcss/tileboard.css';
 @import './newcss/chat.css';
+@import './newcss/svg.css';
+@import './newcss/rows.css';
+
+
 .Button {
     width: 140px;
     height: 28px;
