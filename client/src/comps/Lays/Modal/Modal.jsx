@@ -83,7 +83,8 @@ class Modal extends Component {
   }
 
   render() {
-    const { children, big, small, click, close } = this.props;
+    const { children, big, small, click, close, taskInfo, taskId, taskList } = this.props;
+    console.warn(taskInfo);
 
     return (
       <div className="ModalFull">
@@ -97,7 +98,7 @@ class Modal extends Component {
                   Название
                 </ModalBlockName>
                 <InputWrapper>
-
+                  {taskInfo.name}
                 </InputWrapper>
               </ModalCol>
 
@@ -176,5 +177,15 @@ class Modal extends Component {
     )
   }
 }
+
+Modal.propTypes = {
+  close: PropTypes.func,
+  small: PropTypes.func,
+  big: PropTypes.func,
+  click: PropTypes.func,
+  taskInfo: PropTypes.object.isRequired,
+  taskId: PropTypes.string.isRequired,
+  taskList: PropTypes.array
+};
 
 export default Modal

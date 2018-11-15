@@ -11,7 +11,7 @@ mutation{
 }
 `;
 
-export const getObjects = gql`
+export const getObjects = gql `
  query getObjects {
   objects {
     id
@@ -69,8 +69,8 @@ export const getPriority = () => `{
 
 
 export const getById = (id) => {
-  return (
-    `{
+    return (
+        `{
             task(id: ${id}) {
                 id
                 name
@@ -86,7 +86,7 @@ export const getById = (id) => {
 
 
 
-export const cGetChats = gql`
+export const cGetChats = gql `
   query chats{
       chats
   }
@@ -106,7 +106,7 @@ export const allUsers = () => `
     }
 `;
 
-export const USERS_QUERY = gql`
+export const USERS_QUERY = gql `
     query{
       users{
         id
@@ -127,7 +127,7 @@ export const privates = () => `
     }
 `;
 
-export const PRIVS_QUERY = gql`
+export const PRIVS_QUERY = gql `
     query{
       user{
         directs{
@@ -139,7 +139,7 @@ export const PRIVS_QUERY = gql`
     }
 `;
 
-export const TASKS_QUERY = gql`
+export const TASKS_QUERY = gql `
     query{
       user{
         groups{
@@ -172,7 +172,7 @@ export const TASKS_QUERY = gql`
     }
 `;
 
-export const PRIV_QUERY = gql`
+export const PRIV_QUERY = gql `
   query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       direct(id: $id ){
           unreadCount
@@ -197,7 +197,7 @@ export const PRIV_QUERY = gql`
   }
 `;
 
-export const MESSAGE_QUERY = gql`
+export const MESSAGE_QUERY = gql `
   query message($id: ID!){
     message(id: $id ){
           isRead
@@ -206,7 +206,7 @@ export const MESSAGE_QUERY = gql`
   }
 `;
 
-export const GR_QUERY = gql`
+export const GR_QUERY = gql `
   query task($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
     task(id: $id ){
           name
@@ -214,6 +214,8 @@ export const GR_QUERY = gql`
               id
               username
           }
+          parentId
+          objectId
           # files {
           #   id
           #   size
@@ -244,14 +246,14 @@ export const GR_QUERY = gql`
       }
   }
 `;
-export const getObjectInfo= gql`
+export const getObjectInfo = gql `
  query getObjectInfo($id: ID!){
   object (id: $id) {
       name
     }
   }
 `;
-export const ObjectInfo = (id)=>(`
+export const ObjectInfo = (id) => (`
  query{
   object (id: "${id}") {
       name
@@ -260,7 +262,7 @@ export const ObjectInfo = (id)=>(`
   }
 `);
 
-export const GRU_QUERY = gql`
+export const GRU_QUERY = gql `
   query group($id: ID!){
       group(id: $id ){
           users{
@@ -272,7 +274,7 @@ export const GRU_QUERY = gql`
 `;
 
 
-export const QUERY_ROOTID = gql`
+export const QUERY_ROOTID = gql `
 query rootObject($id: ID){
     rootObject(id: $id){
       id
@@ -307,11 +309,11 @@ export const glossaryStatus = () => `
 
 
 
-export const messRead = gql`{
+export const messRead = gql `{
   id
 }`;
 
-export const GroupBid = gql`
+export const GroupBid = gql `
 query group($id: ID!){
     group( id: $id ){
       name
@@ -325,7 +327,7 @@ query group($id: ID!){
   }
 `;
 
-export const getUnreadCount2 = gql`{
+export const getUnreadCount2 = gql `{
     user {
       directs {
         id
@@ -397,7 +399,7 @@ export const getObjectTasks3 = (id) => `
     }
 }`;
 
-export const getObjectTasks = gql`
+export const getObjectTasks = gql `
  query getObjectTasks($id: ID!){
   object (id: $id) {
       name
@@ -435,7 +437,7 @@ export const getObjectTasks = gql`
 `;
 
 
-export const findFiles = gql`
+export const findFiles = gql `
   query($id: ID!) {
     findFiles(id: $id) {
       fileId
@@ -443,15 +445,10 @@ export const findFiles = gql`
   }
 `;
 
-export const findFiles0 = gql`
+export const findFiles0 = gql `
   query($id: ID!) {
     findFiles(id: $id) {
       id
     }
   }
 `;
-
-
-
-
-
