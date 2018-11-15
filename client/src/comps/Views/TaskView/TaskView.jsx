@@ -113,7 +113,7 @@ class TaskView extends Component {
 
     qauf(getObjectTasks3(objectId), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){
-        a.data.object.tasks = a.data.object.tasks.filter((task) => (task.parentId !== taskId && task.id !== taskId ))
+        a.data.object.tasks = a.data.object.tasks.filter((task) => (task.parentId != taskId && task.id != taskId ))
         this.setState({
           allTasks: a.data.object.tasks,
         })
@@ -347,7 +347,6 @@ class TaskView extends Component {
                           </ModalBlockName>
                           <label htmlFor="">
                             <select onChange={(e)=>{this.writeParentId(e, taskId)}} value={data.task.parentId}>
-                              {/* <option value="0">Выбрать задачу</option> */}
                               {
                                 this.state.allTasks.map((e,i)=>{
                                   return(
@@ -372,35 +371,7 @@ class TaskView extends Component {
                         </ModalCol>
                       </ModalCol>
                     </Modal>
-                  // <Modal header="Подробная информация" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
-                  //   <div className="overWrap">
-                  //     <div>
-                  //       {  _.result(_.find(status, (obj)=> {
-                  //         return obj.id === taskInfo.status;
-                  //       }), 'name')
-                  //       }
-
-                  //       <ChangerForm id={taskId} defaults={taskInfo.name} name={"Название"} change={"name"} string={1} />
                   //       <ChangerForm id={taskId} defaults={taskInfo.endDate} defaultText={taskInfo.endDate?taskInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
-                  //       <ChangerForm id={taskId} defaults={taskInfo.status < 1 ? 1 : taskInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[taskInfo.status < 1 ? 1 : taskInfo.status ]} />
-                  //       <ChangerForm id={taskId} defaults={taskInfo.assignedTo && taskInfo.assignedTo.id ? taskInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={taskInfo.assignedTo && taskInfo.assignedTo.username ? {name: taskInfo.assignedTo.username}  : {name: "Не назначен"} } />
-
-                  //       <div className="padded">
-                  //         <select onChange={(e)=>{this.writeParentId(e, taskId)}}>
-                  //           <option value="0">Выбрать задачу</option>
-                  //           {
-                  //             this.state.allTasks.map((e,i)=>{
-                  //               return(
-                  //                 <option key={e.id} value={e.id}>{e.name}</option>
-                  //               )
-                  //             })
-                  //           }
-
-                  //         </select>
-                  //       </div>
-                  //     </div>
-                  //   </div>
-                  // </ Modal>
                   ) : null
 
                   }
