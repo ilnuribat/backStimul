@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import './ModalStyle.css'
+// import './ModalStyle.css'
 import Svg from '../../Parts/SVG'
 
 

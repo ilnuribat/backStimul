@@ -114,6 +114,10 @@ a{
 @import './newcss/tile.css';
 @import './newcss/tileboard.css';
 @import './newcss/chat.css';
+@import './newcss/svg.css';
+@import './newcss/rows.css';
+
+
 .Button {
     width: 140px;
     height: 28px;

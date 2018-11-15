@@ -17,6 +17,7 @@ import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
 import '../../../newcss/task.css';
 import { Svg } from '../../Parts/SVG/index';
+import { ButtonRow } from '../../Parts/Rows/Rows';
 
 
 class Board extends Component {
@@ -224,7 +225,7 @@ class Board extends Component {
                           </Link></div>) : null
                       }
                       <h1>{data.object.name}</h1>
-                      <div className="BoardTopButton"></div>
+                      <ButtonRow icon="plus" iconright="1">Создать задачу</ButtonRow>
                       {/* <p className="small">{data.object.id}</p> */}
                     </div>
                     <div className="Board-Content">
