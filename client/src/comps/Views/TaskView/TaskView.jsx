@@ -3,29 +3,19 @@ import { graphql, compose, Query, Mutation } from "react-apollo";
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import _ from 'lodash';
-// import Autocomplete from 'react-toolbox/lib/autocomplete';
-// import belle from 'belle';
-
-
-import { qauf, _url, colorHash } from '../../../constants';
+import { qauf, _url } from '../../../constants';
 import 'animate.css';
 import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
-import ChangerForm from './ChangerForm';
-import { uploadFile, groupMut, updTask } from '../../../GraphQL/Qur/Mutation';
+import { uploadFile, updTask } from '../../../GraphQL/Qur/Mutation';
 import { selectUser, setChat } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, GR_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
-// import Modal from '../../Lays/Modal';
-import Modal2 from './Modal';
 import '../../../newcss/taskview.css'
 import { ButtonTo, UserRow, FileRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
-// eslint-disable-next-line import/no-duplicates
-// import InputWrapper  from '../../Lays/Modal';
-
 import Svg from '../../Parts/SVG'
 
 
