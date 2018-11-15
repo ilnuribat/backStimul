@@ -113,15 +113,19 @@ class AddNew extends Component {
     return (
       <form className='ChatForm chat-inp' id="addNew" onSubmit={this.submitHandler}>
         <div className="textarea-wrapper">
-          <span className="chat-to" style={{color: colorHash.hex(user)}}>{user}</span>
+          {/* <span className="chat-to" style={{color: colorHash.hex(user)}}>{user}</span> */}
           <textarea id="focus-chpocus" onKeyDown={this.onKeyDown} ref={this.setTextInputRef} name="1" type="text" value={input} placeholder='Сообщение...' onChange={this.changeInput} required />
+          <div className="Smiles">😉</div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 1000 1000">
+            <g><path d="M388.6,196.2v568.4c0,0-8.3,119.3,113.2,119.3c109.5,0,109.5-119.3,109.5-119.3V166.8c0,0,0-156.8-155.9-156.8c-155.9,0-155.9,156.8-155.9,156.8v597.8c0,0,0,225.4,200.5,225.4c200.5,0,200.5-225.4,200.5-225.4V166.8c0-24.5-44.5-24.5-44.5,0v597.8c0,0,16.2,180.9-155.9,180.9c-155.9,0-155.9-180.9-155.9-180.9V166.8c0,0,0-112.3,111.4-112.3c111.4,0,111.4,112.3,111.4,112.3v597.8c0,0,0,70.3-65,70.3c-65,0-68.6-70.3-68.6-70.3V196.2C433.2,171.7,388.6,171.7,388.6,196.2z"/><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></g>
+          </svg>
         </div>
-        <div><button className="noBtn" type="submit" form="addNew">
+        <button className="ChatSend" type="submit" form="addNew">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <path d="M20 8H4V6h16v2zm-2-6H6v2h12V2zm4 10v8c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-8c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2zm-6 4l-6-3.27v6.53L16 16z"/>
             <path fill="none" d="M0 0h24v24H0z"/>
           </svg>
-        </button></div>
+        </button>
       </form>
     );
   }

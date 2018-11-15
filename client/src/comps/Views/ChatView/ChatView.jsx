@@ -86,8 +86,8 @@ class ChatView extends Component {
     // priv ? _query = PRIV_QUERY : null;
 
     return (
-      <div className="ChatParent nChat flexbox2">
-        <header className="ChatHead chat-header col1">
+      <div className="Chat">
+        {/* <header className="ChatHead chat-header col1">
           <section className="chat-header-section">
             <div className="chat-name online">{name ? name : 'Группа'}</div>
             <div className="small">
@@ -96,8 +96,8 @@ class ChatView extends Component {
               {id}
             </div>
           </section>
-        </header>
-        <section id="ChatMessages messageList" ref={this.messageList} className="messages col1">
+        </header> */}
+        <section id="messageList" ref={this.messageList} className="messages ChatMessages">
           <Fetch priv={priv} id={id} {...this.props} />
         </section>
 

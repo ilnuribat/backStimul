@@ -20,23 +20,25 @@
 	width: 100%;
 	padding: 7px;
 	border: none;
-	border-bottom: 1px solid #ddd;
+	/* border-bottom: 1px solid #ddd; */
 	background: transparent;
 	margin-bottom: 10px;
 	font: 16px Arial, Helvetica, sans-serif;
-	height: 45px;
+  height: 45px;
+  color: #fff;
 }
  textarea{
 	resize:none;
-	overflow: auto;
+  overflow: auto;
+  color: #fff;
 }
  input[type="button"], 
  input[type="submit"]{
-	-moz-box-shadow: inset 0px 1px 0px 0px #45D6D6;
-	-webkit-box-shadow: inset 0px 1px 0px 0px #45D6D6;
-	box-shadow: inset 0px 1px 0px 0px #45D6D6;
-	background-color: #2CBBBB;
-	border: 1px solid #27A0A0;
+	/* -moz-box-shadow: inset 0px 1px 0px 0px #45D6D6; */
+	/* -webkit-box-shadow: inset 0px 1px 0px 0px #45D6D6; */
+	/* box-shadow: inset 0px 1px 0px 0px #45D6D6; */
+	/* background-color: #2CBBBB; */
+	/* border: 1px solid #27A0A0; */
 	display: inline-block;
 	cursor: pointer;
 	color: #FFFFFF;
@@ -44,7 +46,10 @@
 	font-size: 14px;
 	padding: 8px 18px;
 	text-decoration: none;
-	text-transform: uppercase;
+  text-transform: uppercase;
+  border: none;
+	/* border-bottom: 1px solid #ddd; */
+	background: transparent;
 }
 
  input[type="button"]:hover, 
@@ -66,10 +71,13 @@ button,
 	padding: 7px;
 	border: none;
 	border: 1px solid #ddd;
+  border: none;
+	/* border-bottom: 1px solid #ddd; */
 	background: transparent;
 	margin-bottom: 10px;
 	font: 16px Arial, Helvetica, sans-serif;
-	height: 45px;
+  height: 45px;
+  color: #fff;
 }
 button.mini{
   border: none;
