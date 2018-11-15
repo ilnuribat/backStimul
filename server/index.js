@@ -1,7 +1,10 @@
+const http = require('http');
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
+const { SubscriptionServer } = require('subscriptions-transport-ws');
+const { execute, subscribe } = require('graphql');
 const connectToMongo = require('./connectDB');
 const { HTTP_PORT, JWT_SECRET } = require('./config');
 const { User } = require('./src/models');
@@ -10,7 +13,7 @@ const typeDefs = require('./src/schema');
 const resolvers = require('./src/resolvers');
 
 
-const server = new ApolloServer({
+const apolloServer = new ApolloServer({
   resolvers,
   typeDefs,
   context: async (args) => {
@@ -75,10 +78,11 @@ const server = new ApolloServer({
 });
 
 const app = express();
+const server = http.createServer(app);
 
 app.use(bodyParser());
 
-server.applyMiddleware({ app, path: '/' });
+apolloServer.applyMiddleware({ app, path: '/' });
 
 async function start() {
   await connectToMongo();
@@ -88,6 +92,17 @@ async function start() {
       logger.info(`server started at port: ${HTTP_PORT}`);
       resolve();
     });
+
+    const subscriptionServer = SubscriptionServer.create({
+      schema: typeDefs,
+      execute,
+      subscribe,
+    }, {
+      server,
+      path: '/graphql',
+    });
+
+    console.log(subscriptionServer);
   });
 }
 
