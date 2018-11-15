@@ -7,6 +7,9 @@ import 'animate.css';
 import { SvgPlusBox } from '../SVG';
 import Tiled from '../Tiled/index';
 import { createObject, changeObject } from '../../../GraphQL/Qur/Mutation/index';
+import Modal from '../../Lays/Modal/Modal';
+import { ButtonRow } from '../Rows/Rows';
+
 
 
 /** TileMaker */
@@ -130,7 +133,8 @@ class TileMaker extends Component {
       }
 
       return (
-        <div className="TileMaker animated flipInY">
+        <Modal close={(e)=>{this.open();edit ? this.props.setEdit() : null}}>
+          <div className="animated flipInY" style={{"width":"90%","margin":"0 auto"}}>
             <Mutation mutation={mutation} variables={variables}>
               {(MakeTile, { data }) => (
                   <form
@@ -192,13 +196,19 @@ class TileMaker extends Component {
                   </form>
               )}
             </Mutation>
-            <button className="mini" onClick={(e)=>{e.preventDefault();this.open();edit ? this.props.setEdit() : null}}>Отмена</button>
+            {/* <ButtonRow сlick={(e)=>{e.preventDefault();this.open();edit ? this.props.setEdit() : null}}>отмена</ButtonRow> */}
+            {/* <button className="mini" onClick={(e)=>{e.preventDefault();this.open();edit ? this.props.setEdit() : null}}>Отмена</button> */}
           </div>
+        </Modal>
       );
-    }else{
-      return children;
-
     }
+    return(
+      <div className="pull animated flipInY" onClick={()=>{this.setState({create: !this.state.create})}}>
+        {
+          children
+        }
+      </div>
+    );
 
   }
 }
