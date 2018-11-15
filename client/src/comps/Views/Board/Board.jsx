@@ -224,9 +224,12 @@ class Board extends Component {
                             <Svg svg="back" /><span>Назад</span>
                           </Link></div>) : null
                       }
-                      <h1>{data.object.name}</h1>
-                      <ButtonRow icon="plus" iconright="1" click={this.state.SOMECLICKFUNCTION}>Создать задачу</ButtonRow>
-                      {/* <p className="small">{data.object.id}</p> */}
+                      <div className="BoardTopCenter">
+                        <h1>{data.object.name}</h1>
+                        <ButtonRow icon="plus" iconright="1" click={this.state.SOMECLICKFUNCTION}>Создать задачу</ButtonRow>
+                        {/* <p className="small">{data.object.id}</p> */}
+                      </div>
+
                     </div>
                     <div className="Board-Content">
                       {/* {console.warn("status2",status)} */}
