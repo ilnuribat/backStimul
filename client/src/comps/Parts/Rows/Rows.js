@@ -12,28 +12,42 @@ export const FileRow = ({ children, id, name, filename, url, fileid, icon, click
     </div>
   )
 }
-export const IconRow = ({ children, id, name, url, icon, click, box })=>{
+export const IconRow = ({ children, id, name, url, icon, click, box, size })=>{
   return(
     <div className={!box ? "IconRow":"IconRow Boxed"} onClick={()=>{click ? click(id,url) : console.log("Row", id,url )}}>
-      { icon ? (<div className="RowIcon" ><Svg svg={icon} /></div>):null}
+      { icon ? (<div className="RowIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>):null}
       <div className="RowName">{name}</div>
     </div>
   )
 }
-export const UserRow = ({ children, id, name, username, url, userid, icon, click, box })=>{
+export const UserRow = ({ children, id, name, username, url, userid, icon, click, box, size })=>{
   return(
     <div className={!box ? "UserRow":"UserRow Boxed"} onClick={()=>{click ? click(userid || id,url) : console.log("file", userid||id,url )}}>
-      { icon ? (<div className="UserIcon"><img src="0" /></div>):null}
+      { icon ? (<div className="UserIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><img src="0" /></div>):null}
       <div className="UserName">{username || name}</div>
     </div>
   )
 }
-export const ButtonRow = ({ children, id, name, url, icon, click, box, iconright })=>{
+export const ButtonRow = ({ children, id, name, url, icon, click, box, iconright, size })=>{
   return(
     <div className={!box ? "ButtonRow":"ButtonRow Boxed"} onClick={()=>{click ? click(id,url) : console.log("file", id,url )}}>
-      {icon && !iconright ? (<div className="ButtonIcon"><Svg svg={icon} /></div>): null}
+      {icon && !iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
       <div className="ButtonName">{children || name}</div>
-      {icon && iconright ? (<div className="ButtonIcon"><Svg svg={icon} /></div>): null}
+      {icon && iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
     </div>
   )
 }
+export const ButtonTo = ({ children, id, name, url, icon, click, box, iconright, size })=>{
+  return(
+    <div className={!box ? "ButtonTo":"ButtonTo Boxed"} onClick={()=>{click ? click(id,url) : console.log("file", id,url )}}>
+      {icon && !iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
+      <div className="ButtonName">{children || name}</div>
+      {icon && iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
+    </div>
+  )
+}
+
+
+// <div className="TaskViewTop">
+// <ButtonTo icon="back">Назад</ButtonTo>
+// </div>
