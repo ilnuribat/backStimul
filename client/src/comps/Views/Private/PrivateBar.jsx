@@ -10,6 +10,7 @@ import Loading from '../../Loading';
 import { PRIVS_QUERY, USERS_QUERY, cGetChats } from '../../../GraphQL/Qur/Query';
 import { MESSAGE_CREATED } from '../../../GraphQL/Qur/Subscr';
 import { createDirect } from '../../../GraphQL/Qur/Mutation';
+import { UserRow } from '../../Parts/Rows/Rows';
 
 
 
@@ -93,7 +94,7 @@ class Private extends React.Component {
 
 
                     return(
-                      <div>{
+                      <div className="PrivateChatsUsers">{
                         data.user.directs.map((e,i, a)=>{
                           //Если не открытый чат
                           if (this.props.getPrivateChat.id !== e.id ) {
@@ -107,10 +108,14 @@ class Private extends React.Component {
                           }
 
                           return(
-                            <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
-                              {e.name}
-                              {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="small-ruond-info">{e.unreadCount}</span>) : null}
-                            </div>
+                            <UserRow key={'users-'+i} icon="1" id={e.id} name={e.name} click={()=>this.openPrivate(e.id, e.name)}>
+                            {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="small-ruond-info">{e.unreadCount}</span>) : null}
+                            </UserRow>
+                            
+                            // <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
+                            //   {e.name}
+                            //   {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="small-ruond-info">{e.unreadCount}</span>) : null}
+                            // </div>
                           )
                         })
                       }</div>
@@ -147,20 +152,24 @@ class Private extends React.Component {
 
                     if(data && data.users){
                       return(
-                        <div>{
+                        <div className="UsersList">{
                           data.users.map((e,i)=>{
                             let Iam;
 
                             if(e.id === localStorage.getItem('userid')){
                               Iam = ' - я';
 
-                              return <span style={{color: colorHash.hex(e.username)}}  key={'usersspan-'+i} >{e.username}<span>{Iam}</span></span>;
+                              return false;
+                              // return <span style={{color: colorHash.hex(e.username)}}  key={'usersspan-'+i} >{e.username}<span>{Iam}</span></span>;
                             }
 
                             return(
-                              <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>
-                                <span style={{color: colorHash.hex(e.username)}}>{e.username}<span>{Iam}</span></span>
-                              </div>
+                              <UserRow key={'users-'+i} icon="1" id={e.id} name={e.username} click={()=>this.CreateNewGroup(e.id,e.username)}></UserRow>
+
+                              // <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>
+                              //   <span style={{color: colorHash.hex(e.username)}}>{e.username}<span>{Iam}</span></span>
+                              // </div>
+
                             )
                           })
                         }</div>

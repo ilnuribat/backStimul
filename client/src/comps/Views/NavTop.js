@@ -24,6 +24,7 @@ export default class NavTop extends Component {
           </Link>
         </div>
         {/* <NavTopInner/> */}
+        {localStorage.getItem('username')}
         {children}
 
       </div>

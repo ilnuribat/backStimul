@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Query } from "react-apollo";
@@ -75,7 +75,7 @@ export default class MessagesList extends Component {
       let l = datas.length;
 
       return(
-        <div>
+        <Fragment>
           {
             datas.map((e,i)=>{
               n++;
@@ -106,6 +106,7 @@ export default class MessagesList extends Component {
               if(id === uid){
                 tr = 'me';
                 username = "Я";
+                username = "";
               }else{
                 if( n === l ){
                   let notread = messageRead_MUT(node.id);
@@ -125,10 +126,11 @@ export default class MessagesList extends Component {
 
               return(
                 <div className={'msg '+ tr} key={'chat-'+i} from={id}>
-                  <div className="msg-flex">
-                    {same ? ('') : (
+                  {/* <div className="msg-flex"> */}
+                    {same ? (<div className="msg-user" style={{color: colorHash.hex(username)}}>
+                        </div>) : (
                       <div className="msg-user" style={{color: colorHash.hex(username)}}>
-                        {username}:</div>)}
+                        {username}</div>)}
                     <blockquote className={"msgs"}>
 
                       <div className="text prewr">{messageText}</div>
@@ -162,12 +164,12 @@ export default class MessagesList extends Component {
                       </div>
 
                     </blockquote>
-                  </div>
+                  {/* </div> */}
                 </div>
               )
             })
           }
-        </div>
+        </Fragment>
       )
     }
   }
