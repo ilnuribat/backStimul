@@ -4,40 +4,48 @@ import './ModalStyle.css'
 import Svg from '../../Parts/SVG'
 
 
-const ModalClose = ({ click })=>{
+export const ModalClose = ({ click })=>{
   return(
     <div className="ModalClose" onClick={()=>{click? click() : console.log("Modal close")}}>
       <Svg svg="close"></Svg>
     </div>
   )
 }
-const ModalCol = ({ children })=>{
+
+export const ModalCol = ({ children })=>{
   return(
     <div className="ModalCol">
       {children}
     </div>
   )
 }
-const ModalBlockName = ({ children })=>{
+
+export const ModalBlockName = ({ children })=>{
   return(
     <div className="ModalBlockName">
       {children}
     </div>
   )
 }
-const ModalRow = ({ children })=>{
+
+export const ModalRow = ({ children })=>{
   return(
     <div className="ModalRow">
       {children}
     </div>
   )
 }
-const InputWrapper = ({ children })=>{
+
+export const InputWrapper = ({ children, name, save, placeholder })=>{
   return(
-    <div className="InputWrapper">
-      <input type="text"/><div className="SaveBtn"><Svg svg="save"/>Сохранить</div>
-      {children}
-    </div>
+    <ModalCol>
+      <ModalBlockName>
+        {children}
+      </ModalBlockName>
+      <div className="InputWrapper">
+        <input type="text" defaultValue={name||""} placeholder={placeholder||""}/><div className="SaveBtn"><Svg svg="save"/>{save||"Сохранить"}</div>
+      </div>
+    </ModalCol>
   )
 }
 
@@ -73,7 +81,7 @@ class Modal extends Component {
     super(props)
 
     this.state = {
-
+      value: "",
     }
   }
 
@@ -83,8 +91,7 @@ class Modal extends Component {
   }
 
   render() {
-    const { children, big, small, click, close, taskInfo, taskId, taskList } = this.props;
-    console.warn(taskInfo);
+    const { children, big, small, click, close } = this.props;
 
     return (
       <div className="ModalFull">
@@ -93,73 +100,8 @@ class Modal extends Component {
           <div className="ModalBig">
             <ModalClose click={()=>{close ? close() : console.log("No close function") }}/>
             <div className="inner">
-              <ModalCol>
-                <ModalBlockName>
-                  Название
-                </ModalBlockName>
-                <InputWrapper>
-                  {taskInfo.name}
-                </InputWrapper>
-              </ModalCol>
 
-              <ModalRow>
-                <ModalCol>
-                  <ModalBlockName>
-                    Статус
-                  </ModalBlockName>
-                  <label htmlFor="">
-                    <select name="" id="">
-                      <option value="">Новое</option>
-                      <option value="">В работе</option>
-                      <option value="">На проверке</option>
-                      <option value="">Завершено</option>
-                    </select>
-                  </label>
-                </ModalCol>
-                <ModalCol>
-                  <ModalBlockName>
-                    Ответственный
-                  </ModalBlockName>
-                  <UserRow id="123" name="В.И. Гашков" />
-                </ModalCol>
-
-              </ModalRow>
-              <ModalRow>
-                <ModalCol>
-                  <div className="ModalBlockName">
-                    Срок истечения
-                  </div>
-                  <label htmlFor="">
-                    <input type="date"/>
-                  </label>
-                </ModalCol>
-
-                <ModalCol>
-                  <ModalBlockName>
-                    Добавить задачу
-                  </ModalBlockName>
-                  <label htmlFor="">
-                    <select name="" id="">
-                      <option value="">1</option>
-                      <option value="">2</option>
-                      <option value="">3</option>
-                      <option value="">4</option>
-                    </select>
-                  </label>
-                </ModalCol>
-              </ModalRow>
-              <ModalCol>
-                <ModalBlockName>
-                  Добавить вложения
-                </ModalBlockName>
-                <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
-                <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
-                <ModalCol>
-                  <div className="files-drop">
-                    <Svg svg="tocloud" inline={0} />переместите файлы сюдa
-                  </div>
-                </ModalCol>
-              </ModalCol>
+              {children}
 
             </div>
           </div>
@@ -183,9 +125,7 @@ Modal.propTypes = {
   small: PropTypes.func,
   big: PropTypes.func,
   click: PropTypes.func,
-  taskInfo: PropTypes.object.isRequired,
-  taskId: PropTypes.string.isRequired,
-  taskList: PropTypes.array
 };
+
 
 export default Modal

@@ -18,10 +18,15 @@ import { allUsers, glossaryStatus, GR_QUERY, getObjectTasks3 } from '../../../Gr
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
-import Modal from '../../Lays/Modal';
+// import Modal from '../../Lays/Modal';
 import Modal2 from './Modal';
 import '../../../newcss/taskview.css'
 import { ButtonTo } from '../../Parts/Rows/Rows';
+import Modal, {InputWrapper, ModalRow, ModalCol, UserRow, ModalBlockName, FileRow} from '../../Lays/Modal/Modal';
+// eslint-disable-next-line import/no-duplicates
+// import InputWrapper  from '../../Lays/Modal';
+
+import Svg from '../../Parts/SVG'
 
 
 
@@ -222,6 +227,11 @@ class TaskView extends Component {
 
   }
 
+  saveStatus(event, taskId) {
+    // this.setState({status: event.target.value});
+    console.warn(event.target.value)
+  }
+
   addressAdd(address){
     let param = `address: "${address}"`;
     const A = groupMut(this.state.taskId, `${param}`);
@@ -248,8 +258,7 @@ class TaskView extends Component {
 
   render() {
     const {upload, allusers, taskName, taskId, modal, status, allTasks } = this.state;
-
-    console.warn("TASKID", taskId)
+    // console.warn("TASKID", taskId)
 
     return(
       taskId ?
@@ -272,7 +281,7 @@ class TaskView extends Component {
                 </div>
               );
             }
-            console.warn("DATA", data)
+            // console.warn("DATA", data)
 
             return(
               <Fragment>
@@ -287,7 +296,81 @@ class TaskView extends Component {
                     </div>
                   </div>
                   {modal ? (
-                    <Modal close={()=>{ this.setState({modal: !modal}) }} taskInfo={ data.task } taskId={ taskId } taskList={ allTasks }/>
+                    <Modal close={()=>{ this.setState({modal: !modal}) }} >
+                      <InputWrapper name={data.task.name }>
+                        Название
+                      </InputWrapper>
+
+                      <ModalRow>
+                        <ModalCol>
+                          <ModalBlockName>
+                            Статус
+                          </ModalBlockName>
+                          <label htmlFor="">
+                            <select onChange={(e)=>{this.saveStatus(e, taskId)}} value={data.task.status}>
+                              {/* <option value="0">Выбрать задачу</option> */}
+                              {
+                                status.map((e)=>(
+                                  <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
+                                    {e.name}
+                                  </option>
+                                )
+                                )
+                              }
+                            </select>
+                            {/* <select name="" id="">
+                      <option value="">Новое</option>
+                      <option value="">В работе</option>
+                      <option value="">На проверке</option>
+                      <option value="">Завершено</option>
+                    </select> */}
+                          </label>
+                        </ModalCol>
+                        <ModalCol>
+                          <ModalBlockName>
+                    Ответственный
+                          </ModalBlockName>
+                          <UserRow id="123" name="В.И. Гашков" />
+                        </ModalCol>
+
+                      </ModalRow>
+                      <ModalRow>
+                        <ModalCol>
+                          <div className="ModalBlockName">
+                    Срок истечения
+                          </div>
+                          <label htmlFor="">
+                            <input type="date"/>
+                          </label>
+                        </ModalCol>
+
+                        <ModalCol>
+                          <ModalBlockName>
+                    Добавить задачу
+                          </ModalBlockName>
+                          <label htmlFor="">
+                            <select name="" id="">
+                              <option value="">1</option>
+                              <option value="">2</option>
+                              <option value="">3</option>
+                              <option value="">4</option>
+                            </select>
+                          </label>
+                        </ModalCol>
+                      </ModalRow>
+                      <ModalCol>
+                        <ModalBlockName>
+                  Добавить вложения
+                        </ModalBlockName>
+                        <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+                        <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
+                        <ModalCol>
+                          <div className="files-drop">
+                            <Svg svg="tocloud" inline={0} />переместите файлы сюдa
+                          </div>
+                        </ModalCol>
+                      </ModalCol>
+                    </Modal>
                   // <Modal header="Подробная информация" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
                   //   <div className="overWrap">
                   //     <div>
