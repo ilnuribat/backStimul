@@ -17,6 +17,8 @@
 }
 .Nav .nav svg{
   fill: #3e75b2;
+  width:24px;
+  height: 24px;
 }
 .NavLinks{
   display:flex;
@@ -30,14 +32,38 @@
   flex:1 1 auto;
   flex-direction: column;
   width: 100%;
-  align-items: flex-start;
-  justify-items: start;
+  align-items: center;
+  /* justify-items: center; */
 }
 .NavTop div{
   display: block;
-  border: 1px solid salmon;
+  /* border: 1px solid rgb(77, 77, 77); */
   width: 58px;
   height:58px;
   overflow: hidden;
   border-radius: 999em;
+  color:#fff;
+}
+.LogoNav{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.LogoNav a{
+  display:block;
+  width:100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  object-fit: contain;
+  color:rgba(170, 170, 170, 0.575);
+  text-decoration: none;
+}
+.LogoNav img{
+  display:block;
+  width:100%;
+  height: 100%;
+  align-self: center;
+  justify-self: center;
 }

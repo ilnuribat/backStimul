@@ -103,7 +103,7 @@ class TileBoard extends Component {
     const { location } = this.props
     // console.warn("LOCATIION!", location.state)
 
-    if(localStorage.getItem('rootId') != 'undefined' || localStorage.getItem('parentId') != 'undefined' ){
+    if(localStorage.getItem('rootId') || localStorage.getItem('parentId')){
       this.setState({
         rootid: localStorage.getItem('rootId') || "",
         parentid: localStorage.getItem('parentId') || "",
@@ -126,15 +126,19 @@ class TileBoard extends Component {
     return(
       <Content>
         <div className="TileBoard">
-          <Query query={QUERY_ROOTID} variables={{id:rootid}}>
+          <Query query={QUERY_ROOTID} variables={{id:rootid || ""}}>
             {
               ({data, loading, refetch, error})=>{
                 ref = refetch
                 if (error){
-                  console.log(error) ;
                   this.cleanStorage();
+                  console.log(error);
 
-                  return <Loading />}
+                  return <Redirect to={{
+                    pathname: '/',
+                    state: { rootid: "" }
+                  }} />
+                }
                 if (loading) return <Loading />;
 
                 if(data){
