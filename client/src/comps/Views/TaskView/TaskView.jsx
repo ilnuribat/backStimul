@@ -21,6 +21,9 @@ import Panel from '../../Lays/Panel/index';
 import Modal from '../../Lays/Modal';
 import Modal2 from './Modal';
 import '../../../newcss/taskview.css'
+import { ButtonTo } from '../../Parts/Rows/Rows';
+
+
 
 class TaskView extends Component {
   constructor(props) {
@@ -275,6 +278,10 @@ class TaskView extends Component {
               <Fragment>
                 <Content>
                   <div className="TaskView">
+                    <div className="TaskViewTop">
+                      <ButtonTo icon="back">Назад</ButtonTo>
+                      <div className="TaskViewTopName"></div>
+                    </div>
                     <div className="TaskViewInner">
                       <ChatView name={taskName} id={taskId} taskInfo={ data.task } priv={0} />
                     </div>
