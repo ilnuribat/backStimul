@@ -224,7 +224,8 @@ class Board extends Component {
                           </Link></div>) : null
                       }
                       <h1>{data.object.name}</h1>
-                      <p className="small">{info.id}</p>
+                      <div className="BoardTopButton"></div>
+                      {/* <p className="small">{data.object.id}</p> */}
                     </div>
                     <div className="Board-Content">
                       {/* {console.warn("status2",status)} */}

@@ -28,3 +28,12 @@ export const UserRow = ({ children, id, name, username, url, userid, icon, click
     </div>
   )
 }
+export const ButtonRow = ({ children, id, name, url, icon, click, box, iconright })=>{
+  return(
+    <div className={!box ? "ButtonRow":"ButtonRow Boxed"} onClick={()=>{click ? click(id,url) : console.log("file", id,url )}}>
+      {icon && !iconright ? <div className="ButtonIcon"><img src="0" /></div>: null}
+      <div className="ButtonName">{children || name}</div>
+      {icon && !iconright ? <div className="ButtonIcon"><img src="0" /></div>: null}
+    </div>
+  )
+}
