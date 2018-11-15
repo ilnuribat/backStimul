@@ -12,7 +12,7 @@ import { SvgBack } from '../../Parts/SVG';
 import { setPlace, getPlace, getChat, setChat } from '../../../GraphQL/Cache';
 import { qauf, _url } from '../../../constants';
 import { deleteObject } from '../../../GraphQL/Qur/Mutation';
-
+import { ButtonTo, ButtonRow } from '../../Parts/Rows/Rows';
 
 let ref;
 
@@ -66,7 +66,8 @@ class TileBoard extends Component {
     });
   }
 
-  query(id, type, name, parentId){
+  query(args){
+    let {id, type, name, parentId} = args;
     // console.log("-------------")
     // console.log(id, type, name, parentId)
     if(id && type === 'AddressObject'){
@@ -144,11 +145,25 @@ class TileBoard extends Component {
                 if(data){
                   return(
                     <Fragment>
-                      {
-                        data.rootObject && data.rootObject.parentId || rootid ? ( <Tiled click={this.query} type="AddressObject" id={data.rootObject.parentId || parentid}>
-                          <SvgBack />
-                        </Tiled> ) : null
-                      }
+                      <div className="TileBoardTop">
+                        
+                        
+                        {
+                          data.rootObject && data.rootObject.parentId || rootid ? (
+                            <ButtonTo click={this.query} id={data.rootObject.parentId || parentid}  type="AddressObject" icon="back">Назад</ButtonTo>
+                          ) : null
+                        }
+                        <div className="TileBoardTopCenter">
+                          {
+                            data.rootObject && data.rootObject.name ? (
+                              <h1>{data.rootObject.name }</h1>
+                            ) : null
+                          }
+                          <ButtonRow icon="plus" iconright="1" click={this.state.SOMECLICKFUNCTION}>Создать </ButtonRow>
+                        </div>
+                      </div>
+                      <div className="TileBoardContent">
+                      
                       {
                         data.rootObject && data.rootObject.addresses && data.rootObject.addresses.map((e)=>{
                           return(
@@ -163,6 +178,7 @@ class TileBoard extends Component {
                           )
                         })
                       }
+                      </div>
                     </Fragment>
                   )
                 }else{
@@ -173,7 +189,7 @@ class TileBoard extends Component {
               }
             }
           </Query>
-          <TileMaker />
+          {/* <TileMaker /> */}
         </div>
       </Content>
     )
