@@ -21,13 +21,12 @@ import Panel from '../../Lays/Panel/index';
 // import Modal from '../../Lays/Modal';
 import Modal2 from './Modal';
 import '../../../newcss/taskview.css'
-import { ButtonTo } from '../../Parts/Rows/Rows';
-import Modal, {InputWrapper, ModalRow, ModalCol, UserRow, ModalBlockName, FileRow} from '../../Lays/Modal/Modal';
+import { ButtonTo, UserRow, FileRow } from '../../Parts/Rows/Rows';
+import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 // eslint-disable-next-line import/no-duplicates
 // import InputWrapper  from '../../Lays/Modal';
 
 import Svg from '../../Parts/SVG'
-
 
 
 class TaskView extends Component {
@@ -314,26 +313,24 @@ class TaskView extends Component {
                                   <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
                                     {e.name}
                                   </option>
-                                )
-                                )
+                                ))
                               }
                             </select>
-                            {/* <select name="" id="">
-                      <option value="">Новое</option>
-                      <option value="">В работе</option>
-                      <option value="">На проверке</option>
-                      <option value="">Завершено</option>
-                    </select> */}
                           </label>
                         </ModalCol>
+
                         <ModalCol>
+
+
                           <ModalBlockName>
-                    Ответственный
+                            Ответственный
                           </ModalBlockName>
-                          <UserRow id="123" name="В.И. Гашков" />
+                          <UserRow id={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : null} name={data.task.assignedTo && data.task.assignedTo.username ? data.task.assignedTo.username : "null"} icon="e" />
                         </ModalCol>
 
                       </ModalRow>
+
+
                       <ModalRow>
                         <ModalCol>
                           <div className="ModalBlockName">
@@ -416,7 +413,9 @@ class TaskView extends Component {
                               (e,i)=>{
                                 return(
                                   <div className="username" role="presentation" key={'usr-'+i} >
-                                    <div className="name" style={{color: colorHash.hex(e.username)}} >{e.username}{localStorage.getItem('userid') === e.id ? (<span className="me"> - это я</span>) : '' }</div>
+                                    {localStorage.getItem('userid') !== e.id ?
+                                      <UserRow id={e.id} name={e.username} icon="e" />
+                                      : null }
                                     <div className="hoverTrigger">
                                       <div className="hover">
                                         <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
