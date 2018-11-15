@@ -134,6 +134,17 @@ class TaskView extends Component {
 
   }
 
+  writeStatus(e, taskId) {
+    // e.preventDefault();
+    console.warn("writeStatus", e.target.value, taskId)
+    qauf(updTask(taskId,`{status: ${e.target.value}}`), _url, localStorage.getItem('auth-token')).then(a=>{
+      console.warn(a)
+    }).catch((e)=>{
+      console.warn(e);
+    })
+
+  }
+
   onStatSelected(e){
 
     qauf(groupMut(this.state.taskId, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -246,6 +257,7 @@ class TaskView extends Component {
 
   glossStatus(){
     qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
+
       this.setState({
         status: [" ",...a.data.glossary.taskStatuses]
       });
@@ -257,7 +269,7 @@ class TaskView extends Component {
 
   render() {
     const {upload, allusers, taskName, taskId, modal, status, allTasks } = this.state;
-    // console.warn("TASKID", taskId)
+    console.warn("TASKID", status)
 
     return(
       taskId ?
@@ -306,7 +318,7 @@ class TaskView extends Component {
                             Статус
                           </ModalBlockName>
                           <label htmlFor="">
-                            <select onChange={(e)=>{this.saveStatus(e, taskId)}} value={data.task.status}>
+                            <select onChange={(e)=>{this.writeStatus(e, taskId)}} value={data.task.status}>
                               {/* <option value="0">Выбрать задачу</option> */}
                               {
                                 status.map((e)=>(
