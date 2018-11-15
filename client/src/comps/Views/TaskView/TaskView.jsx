@@ -280,7 +280,7 @@ class TaskView extends Component {
                   <div className="TaskView">
                     <div className="TaskViewTop">
                       <ButtonTo icon="back">Назад</ButtonTo>
-                      <div className="TaskViewTopName"></div>
+                      <div className="TaskViewTopName"><h1>{taskName}</h1></div>
                     </div>
                     <div className="TaskViewInner">
                       <ChatView name={taskName} id={taskId} taskInfo={ data.task } priv={0} />
