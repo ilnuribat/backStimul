@@ -188,7 +188,13 @@ class Board extends Component {
                 );
               }
               if(data && data.object){
-                if (this.state.curParentId && this.state.showChilds) data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
+                let selected = false;
+                if (this.state.curParentId && this.state.showChilds)
+                { 
+                  data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
+                
+                }
+
                 let arr = _.sortBy(data.object.tasks, 'status');
 
                 arr = _.sortBy(data.object.tasks, 'unreadCount');
@@ -231,8 +237,11 @@ class Board extends Component {
                             <Column key={e.id} id={e.id} status={e.name} name={e.name} >
                               {
                                 cols[e.id].map((task)=>{
+                                  if(this.state.curParentId === task.id ){
+                                    selected = true;
+                                  }
                                   return(
-                                    <Task key={task.id} id={task.id} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs}/>
+                                    <Task key={task.id} id={task.id} selected={selected} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs}/>
                                   )
                                 })
                               }
