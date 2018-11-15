@@ -9,8 +9,6 @@ export const meGet = gql`
     }
 `;
 
-
-
 export const getObjectId = gql`
   query getObjectId{
     currentObjectId @client

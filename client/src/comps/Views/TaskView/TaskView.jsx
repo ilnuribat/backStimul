@@ -11,7 +11,7 @@ import { qauf, _url, colorHash } from '../../../constants';
 import 'animate.css';
 import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
-import Modal from './Modal';
+
 import ChangerForm from './ChangerForm';
 import { uploadFile, groupMut, updTask } from '../../../GraphQL/Qur/Mutation';
 import { selectUser, getCUser, tempObj, setTemp, getTemp, setChat } from '../../../GraphQL/Cache';
@@ -19,6 +19,8 @@ import { allUsers, glossaryStatus, GRU_QUERY, getObjectTasks3 } from '../../../G
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
+import Modal from '../../Lays/Modal';
+import Modal2 from './Modal';
 import '../../../newcss/taskview.css'
 
 let statusName;

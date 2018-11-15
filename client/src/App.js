@@ -9,7 +9,7 @@ import './index.css';
 import Root from './comps/Root';
 import Nav from './comps/Lays/Nav';
 import Map from './comps/Views/Map';
-import Profile from './comps/Views/Profile';
+// import Profile from './comps/Views/Profile';
 import Board from './comps/Views/Board';
 import TaskView from './comps/Views/TaskView';
 import TileBoard from './comps/Views/TileBoard';
@@ -117,7 +117,7 @@ class App extends Component {
                 <Route exact path="/tile" component={TileBoard} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/map" component={Map} />
-                <Route exact path="/profile" component={Profile} />
+                {/* <Route exact path="/profile" component={Login} /> */}
                 <Route exact path="/chat" component={Private} />
                 <Route exact path="/" component={RootLoader} />
               </Switch>

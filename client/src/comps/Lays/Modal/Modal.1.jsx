@@ -62,12 +62,12 @@ class Modal extends Component {
 
   constructor(props) {
     super(props)
-  
+
     this.state = {
-       
+
     }
   }
-  
+
 
   static propTypes = {
 
@@ -75,6 +75,7 @@ class Modal extends Component {
 
   render() {
     let {children, big, small, click, close } = this.props;
+
     return (
       <div className="ModalFull">
         <div className="ModalWrap">
@@ -87,7 +88,7 @@ class Modal extends Component {
                   Название
                 </ModalBlockName>
                 <InputWrapper>
-                  
+
                 </InputWrapper>
               </ModalCol>
 
@@ -141,8 +142,8 @@ class Modal extends Component {
                 <ModalBlockName>
                   Добавить вложения
                 </ModalBlockName>
-                  <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
-                  <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
+                <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+                <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
                 <ModalCol>
                   <div className="files-drop">
                     <Svg svg="tocloud" inline={0} />переместите файлы сюдa
@@ -155,13 +156,13 @@ class Modal extends Component {
           {small?(
             <div className="ModalSmall">
               <div className="inner">
-              <div className="ModalCol"></div>
+                <div className="ModalCol"></div>
               </div>
             </div>
           ): null}
 
         </div>
-        
+
       </div>
     )
   }
