@@ -91,6 +91,15 @@ cursor: pointer;
 .TaskViewTop .TaskViewTopName{
   display: flex;
   width:100%;
+  text-align: center;
   align-self: center;
   justify-self: center;
+  color:#fff;
+  font-size: 24px;
+}
+.TaskViewTop .TaskViewTopName h1{
+  text-align: center;
+  width:100%;
+  color:#fff;
+  font-size: 24px;
 }

@@ -35,7 +35,7 @@ class Tile extends Component {
         <div className="Tile">
           {type === "Object" ? (<div className="Edit" onClick={()=>{this.setState({edit:!edit})}}><SvgEdit /></div>) : null}
           {type === "Object" ? (<div className="Rem" onClick={()=>refetch(id, parentId)}><SvgRem /></div>) : null}
-          <div className="name" onClick={()=>click(id,type,name, parentId)}>{name}</div>
+          <div className="name" onClick={()=>click({id:id,type:type,name:name, parentId:parentId})}>{name}</div>
           <div className="descr">{descr}</div>
           {/* <div className="id">{id}</div> */}
           <div className="type">{type}</div>
