@@ -334,7 +334,7 @@ class TaskView extends Component {
                       <ModalRow>
                         <ModalCol>
                           <div className="ModalBlockName">
-                    Срок истечения
+                      Срок истечения
                           </div>
                           <label htmlFor="">
                             <input type="date"/>
@@ -343,14 +343,18 @@ class TaskView extends Component {
 
                         <ModalCol>
                           <ModalBlockName>
-                    Добавить задачу
+                    Добавить родительскую задачу
                           </ModalBlockName>
                           <label htmlFor="">
-                            <select name="" id="">
-                              <option value="">1</option>
-                              <option value="">2</option>
-                              <option value="">3</option>
-                              <option value="">4</option>
+                            <select onChange={(e)=>{this.writeParentId(e, taskId)}} value={data.task.parentId}>
+                              {/* <option value="0">Выбрать задачу</option> */}
+                              {
+                                this.state.allTasks.map((e,i)=>{
+                                  return(
+                                    <option key={e.id} value={e.id}>{e.name}</option>
+                                  )
+                                })
+                              }
                             </select>
                           </label>
                         </ModalCol>
