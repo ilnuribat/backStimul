@@ -43,7 +43,6 @@ class TaskView extends Component {
       modal: false,
       inputSaver: {},
       newUser: "",
-      newAddress: "",
       addressList: [],
       upload: false
     }
@@ -51,10 +50,7 @@ class TaskView extends Component {
     this.allUserGet = this.allUserGet.bind(this);
     this.userAdd = this.userAdd.bind(this);
     this.glossStatus = this.glossStatus.bind(this);
-    this.onStatSelected = this.onStatSelected.bind(this);
     this.newUser = this.newUser.bind(this);
-    this.newAddress = this.newAddress.bind(this);
-    this.addressAdd = this.addressAdd.bind(this);
 
     this.writeTaskName = this.writeTaskName.bind(this)
     this.writeTaskData = this.writeTaskData.bind(this)
@@ -94,7 +90,6 @@ class TaskView extends Component {
 
     this.allUserGet();
     this.glossStatus();
-
   }
 
   allUserGet(){
@@ -108,7 +103,6 @@ class TaskView extends Component {
       console.warn(e);
     });
   }
-
 
   getTaskLists(){
     // console.warn("GETTASK!!", objectId, taskId)
@@ -148,40 +142,10 @@ class TaskView extends Component {
     })
   }
 
-  onStatSelected(e){
-    qauf(groupMut(this.state.taskId, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.warn(a)
-    })
-      .catch((e)=>{
-        console.warn(e);
-      });
-
-  }
-
-  onUserSelected(e){
-    qauf(groupMut(this.state.taskId, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      // console.log(a)
-    })
-      .catch((e)=>{
-        console.warn(e);
-      });
-
-  }
-
-  changeState(a){
-    return false;
-  }
-
   newUser(e){
     // console.log(e.target)
     this.setState({
       newUser: e.target.value,
-    })
-  }
-
-  newAddress(e){
-    this.setState({
-      newAddress: e.target.value,
     })
   }
 
@@ -237,19 +201,6 @@ class TaskView extends Component {
     }
 
   }
-
-  addressAdd(address){
-    let param = `address: "${address}"`;
-    const A = groupMut(this.state.taskId, `${param}`);
-
-    qauf(A, _url, localStorage.getItem('auth-token')).then(a=>{
-      console.warn(a)
-    })
-      .catch((e)=>{
-        console.warn(e);
-      });
-  }
-
 
   glossStatus(){
     qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -331,16 +282,12 @@ class TaskView extends Component {
                         </ModalCol>
 
                         <ModalCol>
-
-
                           <ModalBlockName>
                             Ответственный
                           </ModalBlockName>
                           <UserRow id={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : null} name={data.task.assignedTo && data.task.assignedTo.username ? data.task.assignedTo.username : "null"} icon="e" />
                         </ModalCol>
-
                       </ModalRow>
-
 
                       <ModalRow>
                         <ModalCol>
@@ -382,9 +329,6 @@ class TaskView extends Component {
                         </ModalCol>
                       </ModalCol>
                     </Modal>
-                    // value = value.replace(/T.*$/gi, "");
-                    // defaultText = defaultText.replace(/T.*$/gi, "");
-                  //       <ChangerForm id={taskId} defaults={taskInfo.endDate} defaultText={taskInfo.endDate?taskInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
                   ) : null
 
                   }
@@ -415,8 +359,6 @@ class TaskView extends Component {
                               }
                             )
                             }
-
-
                           </div>
                         </div>
                       </div>
@@ -510,7 +452,9 @@ class TaskView extends Component {
 
 
 TaskView.propTypes = {
-  selectUser: PropTypes.func.isRequired
+  selectUser: PropTypes.func.isRequired,
+  setChat: PropTypes.func.isRequired,
+  location: PropTypes.object
 };
 
 export default compose(
