@@ -225,7 +225,7 @@ class Board extends Component {
                           </Link></div>) : null
                       }
                       <h1>{data.object.name}</h1>
-                      <ButtonRow icon="plus" iconright="1">Создать задачу</ButtonRow>
+                      <ButtonRow icon="plus" iconright="1" click={this.state.SOMECLICKFUNCTION}>Создать задачу</ButtonRow>
                       {/* <p className="small">{data.object.id}</p> */}
                     </div>
                     <div className="Board-Content">
