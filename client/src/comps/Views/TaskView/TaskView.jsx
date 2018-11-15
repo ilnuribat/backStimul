@@ -13,8 +13,8 @@ import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
 import ChangerForm from './ChangerForm';
 import { uploadFile, groupMut, updTask } from '../../../GraphQL/Qur/Mutation';
-import { selectUser, tempObj, setTemp, getTemp, setChat } from '../../../GraphQL/Cache';
-import { allUsers, glossaryStatus, GRU_QUERY, GR_QUERY,  getObjectTasks3 } from '../../../GraphQL/Qur/Query';
+import { selectUser, setChat } from '../../../GraphQL/Cache';
+import { allUsers, glossaryStatus, GR_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
@@ -33,7 +33,6 @@ class TaskView extends Component {
       taskName: "",
       taskId: "",
       objectId: "",
-      taskInfo: {},
       modal: false,
       inputSaver: {},
       newUser: "",
@@ -58,12 +57,6 @@ class TaskView extends Component {
     let _grid
     let _grnm
     let _objId
-
-    this.props.setTemp({
-      variables:{
-        tempObj:  {stingh: "sa"},
-      }
-    });
 
     if (location.state && location.state.taskId) {
       _grid = location.state.taskId
@@ -251,30 +244,43 @@ class TaskView extends Component {
   }
 
   render() {
-    const {upload, allusers, taskName, taskId, taskInfo, modal, status, allTasks } = this.state;
-    let onlyunicusers;
+    const {upload, allusers, taskName, taskId, modal, status, allTasks } = this.state;
+
+    console.warn("TASKID", taskId)
 
     return(
-      <Fragment>
-        {/* <Bar></Bar> */}
+      taskId ?
         <Query
           query={GR_QUERY}
           variables={{ id: `${taskId}` }}
         >
-          {({ data }) =>{
+          {({ loading, error, data }) => {
+            if (loading){
+              return (
+                <div style={{ paddingTop: 20, margin: "auto"}}>
+                  <Loading />
+                </div>
+              );
+            }
+            if (error){
+              return (
+                <div className="errMess">
+                  {error.message}
+                </div>
+              );
+            }
             console.warn("DATA", data)
 
             return(
-              <Content>
-                <div className="TaskView">
-                  <div className="TaskViewInner">
-                    {
-                      taskId ? <ChatView name={taskName} id={taskId} priv={0} /> : (<div className="errorMessage">Выберите чат</div>)
-                    }
+              <Fragment>
+                <Content>
+                  <div className="TaskView">
+                    <div className="TaskViewInner">
+                      <ChatView name={taskName} id={taskId} taskInfo={ data.task } priv={0} />
+                    </div>
                   </div>
-                </div>
-                {modal ? (
-                  <Modal close={()=>{ this.setState({modal: !modal}) }} taskInfo={ data.task } taskId={ taskId } taskList={ allTasks }/>
+                  {modal ? (
+                    <Modal close={()=>{ this.setState({modal: !modal}) }} taskInfo={ data.task } taskId={ taskId } taskList={ allTasks }/>
                   // <Modal header="Подробная информация" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
                   //   <div className="overWrap">
                   //     <div>
@@ -283,68 +289,40 @@ class TaskView extends Component {
                   //       }), 'name')
                   //       }
 
-                //       <ChangerForm id={taskId} defaults={taskInfo.name} name={"Название"} change={"name"} string={1} />
-                //       <ChangerForm id={taskId} defaults={taskInfo.endDate} defaultText={taskInfo.endDate?taskInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
-                //       <ChangerForm id={taskId} defaults={taskInfo.status < 1 ? 1 : taskInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[taskInfo.status < 1 ? 1 : taskInfo.status ]} />
-                //       <ChangerForm id={taskId} defaults={taskInfo.assignedTo && taskInfo.assignedTo.id ? taskInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={taskInfo.assignedTo && taskInfo.assignedTo.username ? {name: taskInfo.assignedTo.username}  : {name: "Не назначен"} } />
+                  //       <ChangerForm id={taskId} defaults={taskInfo.name} name={"Название"} change={"name"} string={1} />
+                  //       <ChangerForm id={taskId} defaults={taskInfo.endDate} defaultText={taskInfo.endDate?taskInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
+                  //       <ChangerForm id={taskId} defaults={taskInfo.status < 1 ? 1 : taskInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[taskInfo.status < 1 ? 1 : taskInfo.status ]} />
+                  //       <ChangerForm id={taskId} defaults={taskInfo.assignedTo && taskInfo.assignedTo.id ? taskInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={taskInfo.assignedTo && taskInfo.assignedTo.username ? {name: taskInfo.assignedTo.username}  : {name: "Не назначен"} } />
 
-                //       <div className="padded">
-                //         <select onChange={(e)=>{this.writeParentId(e, taskId)}}>
-                //           <option value="0">Выбрать задачу</option>
-                //           {
-                //             this.state.allTasks.map((e,i)=>{
-                //               return(
-                //                 <option key={e.id} value={e.id}>{e.name}</option>
-                //               )
-                //             })
-                //           }
+                  //       <div className="padded">
+                  //         <select onChange={(e)=>{this.writeParentId(e, taskId)}}>
+                  //           <option value="0">Выбрать задачу</option>
+                  //           {
+                  //             this.state.allTasks.map((e,i)=>{
+                  //               return(
+                  //                 <option key={e.id} value={e.id}>{e.name}</option>
+                  //               )
+                  //             })
+                  //           }
 
-                //         </select>
-                //       </div>
-                //     </div>
-                //   </div>
-                // </ Modal>
-                ) : null
+                  //         </select>
+                  //       </div>
+                  //     </div>
+                  //   </div>
+                  // </ Modal>
+                  ) : null
 
-                }
-              </Content>
+                  }
+                </Content>
+                <Panel>
+                  {
+                    taskId ? (
+                      <div className="tab-roll">
+                        <div className="header"><h4>Пользователи</h4></div>
+                        <div className="content">
+                          <div className="content-scroll">
 
-            )}
-          }
-        </Query>
-        <Panel>
-          {
-            taskId ? (
-              <div className="tab-roll">
-                <div className="header"><h4>Пользователи</h4></div>
-                <div className="content">
-                  <div className="content-scroll">
-
-                    <Query query={GRU_QUERY} variables={{ id: taskId }} >
-                      {({ loading, error, data, refetch, subscribeToMore }) => {
-                        if (loading){
-                          return (
-                            <div style={{ paddingTop: 20, margin: "auto"}}>
-                              <Loading />
-                            </div>
-                          );
-                        }
-                        if (error){
-                          return (
-                            <div className="errMess">
-                              {error.message}
-                            </div>
-                          );
-                        }
-
-                        if(data){
-                          let usrs = data.group.users;
-
-                          onlyunicusers = _.differenceWith(allusers, usrs, _.isEqual);
-
-                          return(
-
-                            data.group.users.map(
+                            {data.task.users.map(
                               (e,i)=>{
                                 return(
                                   <div className="username" role="presentation" key={'usr-'+i} >
@@ -359,94 +337,95 @@ class TaskView extends Component {
                                 )
                               }
                             )
-                          )
+                            }
 
-                        }
 
-                        return true;
-                      }}
-                    </Query>
-                  </div>
-                </div>
-              </div>
-            ): null
+                          </div>
+                        </div>
+                      </div>
+                    ): null
+                  }
+                  {
+                    taskId ? (
+                      <div className="tab-roll">
+                        <div className="header"></div>
+                        <div className="content">
+                          <div className="button" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Информация</div>
+                          <div className="content-scroll">
+                          </div>
+                        </div>
+                      </div>
+                    ) : null
+                  }
+                  {
+                    taskId? (
+                      <div className="tab-roll">
+                        <div className="header"><h4>Добавить пользователя</h4></div>
+                        <div className="content">
+                          <div className="content-scroll">
+                            <div>
+
+                              <input type="list" list="users" autoComplete="on" onChange={this.newUser} />
+                              {
+                                this.state.newUser ? (
+                                  <div className="button" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить {this.state.newUser}</div>
+                                ): null
+                              }
+
+                              <datalist id="users">
+                                {
+                                  data.task.users && data.task.users.length > 0 ?  _.differenceWith(allusers, data.task.users, _.isEqual).map((e,i)=>{
+                                    return(
+                                      <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                                    )
+                                  }) : allusers.map((e,i)=>{
+                                    return(
+                                      <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                                    )
+                                  })
+                                }
+                              </datalist>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    ) : null
+                  }
+                  {taskId ? (
+                    !upload ? (
+                      <div className="tab-roll">
+                        <div className="header"></div>
+                        <div className="content">
+                          <div className="button" onClick={()=>{this.setState({upload: !upload})}}>Прикрепить файл</div>
+                          <div className="content-scroll">
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="tab-roll">
+                        <div className="header"></div>
+                        <div className="content">
+                          <Mutation mutation={uploadFile}>
+                            {upload => (
+                              <Dropzone onDrop={([file]) => {upload({ variables: { id: taskId, file } }).then(()=>this.setState({upload: !upload})).catch((err)=>console.warn(err));this.setState({upload: !upload}) }}>
+                                <p>Переместите сюда файлы или нажмите для добавления.</p>
+                              </Dropzone>
+                            )}
+
+                          </Mutation>
+                        </div>
+                      </div>
+                    )
+                  ): null
+                  }
+                </Panel>
+
+              </Fragment>
+            )}
           }
-          {
-            taskId ? (
-              <div className="tab-roll">
-                <div className="header"></div>
-                <div className="content">
-                  <div className="button" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Информация</div>
-                  <div className="content-scroll">
-                  </div>
-                </div>
-              </div>
-            ) : null
-          }
-          {
-            taskId? (
-              <div className="tab-roll">
-                <div className="header"><h4>Добавить пользователя</h4></div>
-                <div className="content">
-                  <div className="content-scroll">
-                    <div>
-
-                      <input type="list" list="users" autoComplete="on" onChange={this.newUser} />
-                      {
-                        this.state.newUser ? (
-                          <div className="button" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить {this.state.newUser}</div>
-                        ): null
-                      }
-
-                      <datalist id="users">
-                        {
-                          onlyunicusers && onlyunicusers.length > 0 ? onlyunicusers.map((e,i)=>{
-                            return(
-                              <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                            )
-                          }) : allusers.map((e,i)=>{
-                            return(
-                              <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                            )
-                          })
-                        }
-                      </datalist>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            ) : null
-          }
-          {taskId ? (
-            !upload ? (
-              <div className="tab-roll">
-                <div className="header"></div>
-                <div className="content">
-                  <div className="button" onClick={()=>{this.setState({upload: !upload})}}>Прикрепить файл</div>
-                  <div className="content-scroll">
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="tab-roll">
-                <div className="header"></div>
-                <div className="content">
-                  <Mutation mutation={uploadFile}>
-                    {upload => (
-                      <Dropzone onDrop={([file]) => {upload({ variables: { id: taskId, file } }).then(()=>this.setState({upload: !upload})).catch((err)=>console.warn(err));this.setState({upload: !upload}) }}>
-                        <p>Переместите сюда файлы или нажмите для добавления.</p>
-                      </Dropzone>
-                    )}
-
-                  </Mutation>
-                </div>
-              </div>
-            )
-          ): null
-          }
-        </Panel>
-      </Fragment>
+        </Query>
+        : <Loading />
     );
   }
 }
@@ -460,9 +439,6 @@ TaskView.propTypes = {
 export default compose(
   graphql(setChat, { name: 'setChat' }),
   graphql(selectUser, { name: 'selectUser' }),
-  graphql(tempObj, { name: 'tempObj' }),
-  graphql(setTemp, { name: 'setTemp' }),
-  graphql(getTemp, { name: 'getTemp' }),
 )(TaskView);
 
 const isArrayEqual = (x, y) => {
