@@ -21,7 +21,8 @@ class Column extends Component {
       return( 
         <div className="Column">
           <div className="Column-Name">{name}</div>
-          <div className="Column-Id">{id}</div>
+          {/* <div className="Column-Id">{id}</div> */}
+          <div className="BottomLine"></div>
           <div className="Column-Content">
             <div className="Column-Content-Inner">
               {children}

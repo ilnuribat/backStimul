@@ -21,3 +21,24 @@
   color:#ffffff;
   margin:0 0 10px 0;
 }
+.Column .BottomLine{
+display: block;
+background: #fff;
+padding:0;
+height: 5px;
+border-radius: 11px;
+width:50%;
+margin:15px 0 30px;
+}
+.Column:nth-child(1) .BottomLine{
+  background: #3e75b2;
+}
+.Column:nth-child(2) .BottomLine{
+  background: #459e64;
+}
+.Column:nth-child(3) .BottomLine{
+  background: #c45c89;
+}
+.Column:nth-child(4) .BottomLine{
+  background: #dedede;
+}
