@@ -188,7 +188,7 @@ class Board extends Component {
                 );
               }
               if(data && data.object){
-                this.state.curParentId && this.state.showChilds ? data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))  : null
+                if (this.state.curParentId && this.state.showChilds) data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
                 let arr = _.sortBy(data.object.tasks, 'status');
 
                 arr = _.sortBy(data.object.tasks, 'unreadCount');

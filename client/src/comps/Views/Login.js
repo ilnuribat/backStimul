@@ -97,7 +97,7 @@ class Login extends Component {
   render() {
 
     const authToken = localStorage.getItem(AUTH_TOKEN);
-    const { loginerror, meid, mename } = this.state;
+    const { loginerror } = this.state;
     // const { history, meGet, meSet } = this.props;
     const { history } = this.props;
 
@@ -105,48 +105,48 @@ class Login extends Component {
 
     return (
       <Content>
-      <div className="LoginPage">
-        {!authToken ? (
-          <div className="auth">
-            <div className="logo">
-            </div>
-            <div><input type="text" placeholder="Email" onChange={(e) => { this.setState({ loginerror: "", email: e.target.value }) }} /></div>
-            <div><input type="password" placeholder="Пароль" onKeyDown={this.onKeyDown} onChange={(e) => { this.setState({ loginerror: "", password: e.target.value }) }} /></div>
-            <div><div className="button" role="presentation" onClick={() => { this._confirm() }}>Войти</div></div>
-            {
-              loginerror ? (<div className="errorMessage">{loginerror}</div>) : ('')
-            }
-          </div>) :
-          (
+        <div className="LoginPage">
+          {!authToken ? (
             <div className="auth">
               <div className="logo">
               </div>
+              <div><input type="text" placeholder="Email" onChange={(e) => { this.setState({ loginerror: "", email: e.target.value }) }} /></div>
+              <div><input type="password" placeholder="Пароль" onKeyDown={this.onKeyDown} onChange={(e) => { this.setState({ loginerror: "", password: e.target.value }) }} /></div>
+              <div><div className="button" role="presentation" onClick={() => { this._confirm() }}>Войти</div></div>
+              {
+                loginerror ? (<div className="errorMessage">{loginerror}</div>) : ('')
+              }
+            </div>) :
+            (
+              <div className="auth">
+                <div className="logo">
+                </div>
 
-              <div className="mess">Вы вошли как: { localStorage.getItem('username') }</div>
-              <div className="mess">Ваш id: { localStorage.getItem('userid') }</div>
+                <div className="mess">Вы вошли как: { localStorage.getItem('username') }</div>
+                <div className="mess">Ваш id: { localStorage.getItem('userid') }</div>
 
-              <div
-                className="button"
-                role="presentation"
-                onClick={() => {
-                  this.props.meSet({variables:{
-                    meid: "",
-                    mename: "",
-                    memail: "",
-                  }
-                  });
+                <div
+                  className="button"
+                  role="presentation"
+                  onClick={() => {
+                    this.props.meSet({variables:{
+                      meid: "",
+                      mename: "",
+                      memail: "",
+                    }
+                    });
 
-                  localStorage.removeItem(AUTH_TOKEN)
-                  localStorage.removeItem('username')
-                  localStorage.removeItem('userid')
-                  history.push(`/`)
-                }}
-              >
+                    localStorage.removeItem(AUTH_TOKEN)
+                    localStorage.removeItem('username')
+                    localStorage.removeItem('userid')
+                    history.push(`/`)
+                  }}
+                >
                   Выйти
+                </div>
               </div>
-            </div>
-          )}
-      </div>
+            )}
+        </div>
       </Content>
     )
   }
