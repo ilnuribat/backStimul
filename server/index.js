@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 const { execute, subscribe } = require('graphql');
+const { makeExecutableSchema } = require('graphql-tools');
 const connectToMongo = require('./connectDB');
 const { HTTP_PORT, JWT_SECRET } = require('./config');
 const { User } = require('./src/models');
@@ -12,10 +13,13 @@ const { logger } = require('./logger');
 const typeDefs = require('./src/schema');
 const resolvers = require('./src/resolvers');
 
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
 
 const apolloServer = new ApolloServer({
-  resolvers,
-  typeDefs,
+  schema,
   context: async (args) => {
     const { req, connection } = args;
 
@@ -88,21 +92,19 @@ async function start() {
   await connectToMongo();
 
   return new Promise((resolve/* , reject */) => {
-    app.listen({ port: HTTP_PORT }, () => {
+    server.listen({ port: HTTP_PORT }, () => {
       logger.info(`server started at port: ${HTTP_PORT}`);
       resolve();
     });
 
-    const subscriptionServer = SubscriptionServer.create({
-      schema: typeDefs,
+    SubscriptionServer.create({
+      schema,
       execute,
       subscribe,
     }, {
       server,
       path: '/graphql',
     });
-
-    console.log(subscriptionServer);
   });
 }
 
