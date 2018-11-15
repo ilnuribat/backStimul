@@ -159,7 +159,7 @@ class TileBoard extends Component {
                               <h1>{data.rootObject.name }</h1>
                             ) : null
                           }
-                          <ButtonRow icon="plus" iconright="1" click={this.state.SOMECLICKFUNCTION}>Создать </ButtonRow>
+                          <ButtonRow icon="plus" iconright="" click={this.state.SOMECLICKFUNCTION}>Создать Объект</ButtonRow>
                         </div>
                       </div>
                       <div className="TileBoardContent">

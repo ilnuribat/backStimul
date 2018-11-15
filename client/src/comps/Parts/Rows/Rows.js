@@ -22,7 +22,7 @@ export const IconRow = ({ children, id, name, url, icon, click, box, size, type 
 }
 export const UserRow = ({ children, id, name, username, url, userid, icon, click, box, size, type })=>{
   return(
-    <div className={!box ? "UserRow":"UserRow Boxed"} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("file", userid||id,url )}}>
+    <div className={!box ? "UserRow":"UserRow Boxed"} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("user", userid||id,url )}}>
       { icon ? (<div className="UserIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><img src="0" /></div>):null}
       <div className="UserName">{username || name}</div>
     </div>
@@ -30,7 +30,7 @@ export const UserRow = ({ children, id, name, username, url, userid, icon, click
 }
 export const ButtonRow = ({ children, id, name, url, icon, click, box, iconright, size, type })=>{
   return(
-    <div className={!box ? "ButtonRow":"ButtonRow Boxed"} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("file", id,url )}}>
+    <div className={!box ? "ButtonRow":"ButtonRow Boxed"} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("button", id,url )}}>
       {icon && !iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
       <div className="ButtonName">{children || name}</div>
       {icon && iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
@@ -39,7 +39,7 @@ export const ButtonRow = ({ children, id, name, url, icon, click, box, iconright
 }
 export const ButtonTo = ({ children, id, name, linkstate, linkurl, url, icon, click, box, iconright, size, type })=>{
   return(
-    <div className={!box ? "ButtonTo":"ButtonTo Boxed"} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("file", id,url,type )}}>
+    <div className={!box ? "ButtonTo":"ButtonTo Boxed"} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("button", id,url,type )}}>
       {
         url ? (<Link to={{pathname: url, state:linkstate||""}} className="toBackLink">
           {icon && !iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
