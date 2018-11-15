@@ -142,3 +142,10 @@ a{
   align-self: center;
   justify-self: center;
 }
+
+button{
+  display: block;
+  border:0 none transparent;
+  margin:0;
+  padding:0;
+}

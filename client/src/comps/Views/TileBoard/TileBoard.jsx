@@ -157,25 +157,27 @@ class TileBoard extends Component {
                               <h1>{data.rootObject.name }</h1>
                             ) : (<h1>Россия</h1>)
                           }
-                          <ButtonRow icon="plus" iconright="" click={this.state.SOMECLICKFUNCTION}>Создать Объект</ButtonRow>
+                          <TileMaker>
+                            <ButtonRow icon="plus" iconright="" click={this.state.SOMECLICKFUNCTION}>Создать Объект</ButtonRow>
+                          </TileMaker>
+                          
                         </div>
                       </div>
                       <div className="TileBoardContent">
-                      
-                      {
-                        data.rootObject && data.rootObject.addresses && data.rootObject.addresses.map((e)=>{
-                          return(
-                            <Tile key={'tile'+e.id} id={e.id} name={e.name} type={e.__typename||'address'} parentId={data.rootObject.id} click={this.query} />
-                          )
-                        })
-                      }
-                      {
-                        data.rootObject && data.rootObject.objects && data.rootObject.objects.map((e)=>{
-                          return(
-                            <Tile key={'tile'+e.id} id={e.id} name={e.name} type={e.__typename||'object'} click={this.query} refetch={this.refetch1} remove={this.remove} addr={e.address.value} parentId={data.rootObject.id} updateObject={this.updateObject} />
-                          )
-                        })
-                      }
+                        {
+                          data.rootObject && data.rootObject.addresses && data.rootObject.addresses.map((e)=>{
+                            return(
+                              <Tile key={'tile'+e.id} id={e.id} name={e.name} type={e.__typename||'address'} parentId={data.rootObject.id} click={this.query} />
+                            )
+                          })
+                        }
+                        {
+                          data.rootObject && data.rootObject.objects && data.rootObject.objects.map((e)=>{
+                            return(
+                              <Tile key={'tile'+e.id} id={e.id} name={e.name} type={e.__typename||'object'} click={this.query} refetch={this.refetch1} remove={this.remove} addr={e.address.value} parentId={data.rootObject.id} updateObject={this.updateObject} />
+                            )
+                          })
+                        }
                       </div>
                     </Fragment>
                   )
@@ -187,7 +189,7 @@ class TileBoard extends Component {
               }
             }
           </Query>
-          {/* <TileMaker /> */}
+          
         </div>
       </Content>
     )
