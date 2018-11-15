@@ -191,7 +191,8 @@ class TileMaker extends Component {
                       </datalist>
                     </div>
                     <div>
-                      <button className="butter" type="submit">Добавить</button>
+                      <ButtonRow><button className="butterNo" type="submit">Добавить</button></ButtonRow>
+                      
                     </div>
                   </form>
               )}
