@@ -55,9 +55,6 @@ class Private extends Component {
 
     return(
       <Fragment>
-        <Bar >
-          <PrivateBar />
-        </Bar>
         <Content>
           <div className="TaskView">
             <div className="TaskViewInner" style={{color: ""}}>
@@ -67,7 +64,9 @@ class Private extends Component {
             </div>
           </div>
         </Content>
-        <Bar></Bar>
+        <Bar >
+          <PrivateBar />
+        </Bar>
       </Fragment>
     );
   }

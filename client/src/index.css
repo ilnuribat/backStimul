@@ -104,6 +104,10 @@ a{
     overflow-x: auto;
 }
 
+.Bar,.Panel{
+  padding: 20px;
+}
+
 @import './newcss/nav.css';
 @import './newcss/bar.css';
 @import './newcss/board.css';
