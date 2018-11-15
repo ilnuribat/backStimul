@@ -1,10 +1,8 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Redirect } from 'react-router';
 import { graphql, compose } from 'react-apollo';
 import { setPlace, setChat, getChat, getPlace } from '../GraphQL/Cache';
-
-
 
 /** RootLoader */
 
@@ -13,7 +11,7 @@ class RootLoader extends Component {
   }
 
   render() {
-    const {children, location} = this.props;
+    const { location } = this.props;
 
     const placeType = this.props.getPlace.place.type;
     const urlsArr = ['map', 'tile', 'top','board','login','profile','private', 'task'];
@@ -26,14 +24,10 @@ class RootLoader extends Component {
       return(
         <Redirect to="/map"/>
       )
-      break;
-
     case placeType && cis >= 0:
       return(
         <Redirect to={`/${placeType}`}/>
       )
-      break;
-
     default:
       location && location.state && location.state.rootId ? rootState = location.state.rootId : null
 
@@ -43,10 +37,21 @@ class RootLoader extends Component {
           state: { rootState }
         }}/>
       )
-      break;
     }
   }
 }
+
+
+RootLoader.propTypes = {
+  setPlace: PropTypes.func.isRequired,
+  setChat: PropTypes.func.isRequired,
+  getChat: PropTypes.object.isRequired,
+  getPlace: PropTypes.object.isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.object
+  }),
+};
+
 
 
 export default compose(

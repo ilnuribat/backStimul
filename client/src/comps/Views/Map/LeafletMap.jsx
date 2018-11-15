@@ -110,10 +110,12 @@ class LeafletMap extends Component {
                       return true
                     }
 
-                    minLat > parseFloat(post.address.coordinates[0]) ? minLat = parseFloat(post.address.coordinates[0]) : null
-                    maxLat < parseFloat(post.address.coordinates[0]) ? maxLat = parseFloat(post.address.coordinates[0]) : null
-                    minLon > parseFloat(post.address.coordinates[1]) ? minLon = parseFloat(post.address.coordinates[1]) : null
-                    maxLon < parseFloat(post.address.coordinates[1]) ? maxLon = parseFloat(post.address.coordinates[1]) : null
+                    if (minLat > parseFloat(post.address.coordinates[0])) minLat = parseFloat(post.address.coordinates[0])
+                    if (maxLat < parseFloat(post.address.coordinates[0])) maxLat = parseFloat(post.address.coordinates[0])
+                    if (minLon > parseFloat(post.address.coordinates[1])) minLon = parseFloat(post.address.coordinates[1])
+                    if (maxLon < parseFloat(post.address.coordinates[1])) maxLon = parseFloat(post.address.coordinates[1])
+
+                    return null
                   })
 
                   centerLon = (minLon + maxLon)/2

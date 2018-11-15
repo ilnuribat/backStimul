@@ -21,12 +21,12 @@ import NavLinks from './comps/Views/NavLinks';
 import NavTop from './comps/Views/NavTop';
 
 
-const Components = [
-  {name:'', link: ''},
-  {name:'', link: ''},
-  {name:'', link: ''},
-  {name:'', link: ''},
-];
+// const Components = [
+//   {name:'', link: ''},
+//   {name:'', link: ''},
+//   {name:'', link: ''},
+//   {name:'', link: ''},
+// ];
 
 class App extends Component {
   constructor(props) {
