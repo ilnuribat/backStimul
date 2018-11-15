@@ -219,8 +219,8 @@ class Board extends Component {
                           <Link to={{
                             pathname: '/tile',
                             state: { rootId: data.object.parentId }
-                          }}>
-                            <Svg svg="back" />
+                          }} className="toBackLink">
+                            <Svg svg="back" /><span>Назад</span>
                           </Link></div>) : null
                       }
                       <h1>{data.object.name}</h1>

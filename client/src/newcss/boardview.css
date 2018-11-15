@@ -44,3 +44,21 @@ background: #2a2c31;
   align-items: flex-start;
   justify-content: flex-start;
 }
+.toBack{
+  padding: 10px;
+}
+.toBack a{
+
+}
+.toBack .toBackLink{
+  color:#3e75b2;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  text-decoration: none;
+}
+.toBack .toBackLink svg{
+  height: 32px;
+  width: 32px;
+}
