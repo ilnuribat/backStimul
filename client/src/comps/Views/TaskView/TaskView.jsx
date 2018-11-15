@@ -11,11 +11,10 @@ import { qauf, _url, colorHash } from '../../../constants';
 import 'animate.css';
 import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
-
 import ChangerForm from './ChangerForm';
 import { uploadFile, groupMut, updTask } from '../../../GraphQL/Qur/Mutation';
-import { selectUser, getCUser, tempObj, setTemp, getTemp, setChat } from '../../../GraphQL/Cache';
-import { allUsers, glossaryStatus, GRU_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
+import { selectUser, tempObj, setTemp, getTemp, setChat } from '../../../GraphQL/Cache';
+import { allUsers, glossaryStatus, GRU_QUERY, GR_QUERY,  getObjectTasks3 } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
@@ -23,13 +22,10 @@ import Modal from '../../Lays/Modal';
 import Modal2 from './Modal';
 import '../../../newcss/taskview.css'
 
-let statusName;
-
 class TaskView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      users: [],
       allTasks:[],
       allusers: [],
       status: [],
@@ -37,7 +33,7 @@ class TaskView extends Component {
       taskName: "",
       taskId: "",
       objectId: "",
-      groupInfo: {},
+      taskInfo: {},
       modal: false,
       inputSaver: {},
       newUser: "",
@@ -57,10 +53,8 @@ class TaskView extends Component {
 
   componentDidMount(){
 
-    const { location, getCUser } = this.props;
+    const { location } = this.props;
 
-    let obj = {name:'name'};
-    let arr = [].push(obj);
     let _grid
     let _grnm
     let _objId
@@ -81,8 +75,6 @@ class TaskView extends Component {
       _objId = localStorage.getItem('ObjectId');
     }
 
-    const { users } = this.state;
-
     if(_grid && _grnm){
       this.props.setChat({
         variables:{
@@ -100,35 +92,6 @@ class TaskView extends Component {
     this.allUserGet();
     this.glossStatus();
 
-    if(getCUser.user  && getCUser.user.groups){
-      let groups = getCUser.user.groups;
-      let thisGrId = _grid;
-      let thisUsers;
-
-      thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
-
-      this.setState({
-        groupInfo: thisUsers,
-      });
-
-      if(thisUsers && thisUsers.users && users){
-        var result1 = isArrayEqual(
-          thisUsers.users,
-          users
-        );
-
-        if( result1 ){
-          return false;
-        }else{
-          this.setState({
-            users: [...thisUsers.users],
-          });
-
-        }
-      }else{
-        return false;
-      }
-    }
   }
 
   allUserGet(){
@@ -150,7 +113,7 @@ class TaskView extends Component {
 
     qauf(getObjectTasks3(objectId), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){
-        a.data.object.tasks = a.data.object.tasks.filter((task) => (task.parentId != taskId && task.id != taskId ))
+        a.data.object.tasks = a.data.object.tasks.filter((task) => (task.parentId !== taskId && task.id !== taskId ))
         this.setState({
           allTasks: a.data.object.tasks,
         })
@@ -195,12 +158,6 @@ class TaskView extends Component {
 
   changeState(a){
     return false;
-  }
-
-  changeGrUsers(a){
-    this.setState({
-      users: [...a],
-    })
   }
 
   newUser(e){
@@ -252,7 +209,6 @@ class TaskView extends Component {
       updateUsersGroup(group: {id: "${this.state.taskId}", delete: ${dels}, users: ["${userId}"]} )
     }`)} ;
 
-    let a = q();
 
     if(typeof q === "function"){
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -270,7 +226,7 @@ class TaskView extends Component {
 
   }
 
-  addressAdd(address, addressList){
+  addressAdd(address){
     let param = `address: "${address}"`;
     const A = groupMut(this.state.taskId, `${param}`);
 
@@ -284,7 +240,6 @@ class TaskView extends Component {
 
 
   glossStatus(){
-
     qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
       this.setState({
         status: [" ",...a.data.glossary.taskStatuses]
@@ -295,98 +250,68 @@ class TaskView extends Component {
       });
   }
 
-  componentDidUpdate(){
-
-    const { getCUser } = this.props;
-    const { users, groupInfo, taskId } = this.state;
-    let _grid = taskId || localStorage.getItem('grid');
-
-    if(getCUser.user  && getCUser.user.groups){
-      let groups = getCUser.user.groups;
-      let thisGrId = taskId || _grid;
-      let thisUsers;
-
-      thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
-
-      if(JSON.stringify(groupInfo) !== JSON.stringify(thisUsers)){
-        this.setState({
-          groupInfo: thisUsers,
-        });
-      }
-
-      if(thisUsers && thisUsers.users && users){
-
-        var result1 = isArrayEqual(
-          thisUsers.users,
-          users
-        );
-
-        if( result1 ){
-        }else{
-          this.setState({
-            users: [...thisUsers.users],
-          });
-        }
-      }else{
-      }
-
-
-
-    }
-  }
-
   render() {
-    const {upload, users, allusers, taskName, taskId, groupInfo, modal, status } = this.state;
-
-    const idObject = taskId
-    // let thisUsers;
+    const {upload, allusers, taskName, taskId, taskInfo, modal, status, allTasks } = this.state;
     let onlyunicusers;
 
     return(
       <Fragment>
         {/* <Bar></Bar> */}
-        <Content>
-          <div className="TaskView">
-            <div className="TaskViewInner">
-              {
-                taskId ? <ChatView name={taskName} id={taskId} priv={0} /> : (<div className="errorMessage">Выберите чат</div>)
-              }
-            </div>
-          </div>
-          {modal ? (
-            <Modal header="Подробная информация" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
-              <div className="overWrap">
-                <div>
-                  {  statusName = _.result(_.find(status, (obj)=> {
-                    return obj.id === groupInfo.status;
-                  }), 'name')
-                  }
+        <Query
+          query={GR_QUERY}
+          variables={{ id: `${taskId}` }}
+        >
+          {({ data }) =>{
+            console.warn("DATA", data)
 
-                  <ChangerForm id={taskId} defaults={groupInfo.name} name={"Название"} change={"name"} string={1} />
-                  <ChangerForm id={taskId} defaults={groupInfo.endDate} defaultText={groupInfo.endDate?groupInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
-                  <ChangerForm id={taskId} defaults={groupInfo.status < 1 ? 1 : groupInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[groupInfo.status < 1 ? 1 : groupInfo.status ]} />
-                  <ChangerForm id={taskId} defaults={groupInfo.assignedTo && groupInfo.assignedTo.id ? groupInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={groupInfo.assignedTo && groupInfo.assignedTo.username ? {name: groupInfo.assignedTo.username}  : {name: "Не назначен"} } />
-
-                  <div className="padded">
-                    <select onChange={(e)=>{this.writeParentId(e, idObject)}}>
-                      <option value="0">Выбрать задачу</option>
-                      {
-                        this.state.allTasks.map((e,i)=>{
-                          return(
-                            <option key={e.id} value={e.id}>{e.name}</option>
-                          )
-                        })
-                      }
-
-                    </select>
+            return(
+              <Content>
+                <div className="TaskView">
+                  <div className="TaskViewInner">
+                    {
+                      taskId ? <ChatView name={taskName} id={taskId} priv={0} /> : (<div className="errorMessage">Выберите чат</div>)
+                    }
                   </div>
                 </div>
-              </div>
-            </ Modal>
-          ) : null
+                {modal ? (
+                  <Modal close={()=>{ this.setState({modal: !modal}) }} taskInfo={ data.task } taskId={ taskId } taskList={ allTasks }/>
+                  // <Modal header="Подробная информация" body="Текст" close={()=>{ this.setState({modal: !modal})}} fullInfo="">
+                  //   <div className="overWrap">
+                  //     <div>
+                  //       {  _.result(_.find(status, (obj)=> {
+                  //         return obj.id === taskInfo.status;
+                  //       }), 'name')
+                  //       }
 
+                //       <ChangerForm id={taskId} defaults={taskInfo.name} name={"Название"} change={"name"} string={1} />
+                //       <ChangerForm id={taskId} defaults={taskInfo.endDate} defaultText={taskInfo.endDate?taskInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
+                //       <ChangerForm id={taskId} defaults={taskInfo.status < 1 ? 1 : taskInfo.status} name={"Статус"} change={"status"} type={"text"} string={0} select={1} options={status} defaultText={status[taskInfo.status < 1 ? 1 : taskInfo.status ]} />
+                //       <ChangerForm id={taskId} defaults={taskInfo.assignedTo && taskInfo.assignedTo.id ? taskInfo.assignedTo.id : null } name={"Ответственный"} change={"assignedTo"} type={"text"} string={1} select={1} options={users} defaultText={taskInfo.assignedTo && taskInfo.assignedTo.username ? {name: taskInfo.assignedTo.username}  : {name: "Не назначен"} } />
+
+                //       <div className="padded">
+                //         <select onChange={(e)=>{this.writeParentId(e, taskId)}}>
+                //           <option value="0">Выбрать задачу</option>
+                //           {
+                //             this.state.allTasks.map((e,i)=>{
+                //               return(
+                //                 <option key={e.id} value={e.id}>{e.name}</option>
+                //               )
+                //             })
+                //           }
+
+                //         </select>
+                //       </div>
+                //     </div>
+                //   </div>
+                // </ Modal>
+                ) : null
+
+                }
+              </Content>
+
+            )}
           }
-        </Content>
+        </Query>
         <Panel>
           {
             taskId ? (
@@ -509,7 +434,7 @@ class TaskView extends Component {
                 <div className="content">
                   <Mutation mutation={uploadFile}>
                     {upload => (
-                      <Dropzone onDrop={([file]) => {upload({ variables: { id: idObject, file } }).then(()=>this.setState({upload: !upload})).catch((err)=>console.warn(err));this.setState({upload: !upload}) }}>
+                      <Dropzone onDrop={([file]) => {upload({ variables: { id: taskId, file } }).then(()=>this.setState({upload: !upload})).catch((err)=>console.warn(err));this.setState({upload: !upload}) }}>
                         <p>Переместите сюда файлы или нажмите для добавления.</p>
                       </Dropzone>
                     )}
@@ -535,7 +460,6 @@ TaskView.propTypes = {
 export default compose(
   graphql(setChat, { name: 'setChat' }),
   graphql(selectUser, { name: 'selectUser' }),
-  graphql(getCUser, { name: 'getCUser' }),
   graphql(tempObj, { name: 'tempObj' }),
   graphql(setTemp, { name: 'setTemp' }),
   graphql(getTemp, { name: 'getTemp' }),
