@@ -66,7 +66,7 @@
   color: #ffffff;
 }
 .Task .TaskChat .ChatMessage{
-  
+
   font-size: 10px;
   font-weight: 300;
   font-style: normal;
@@ -87,7 +87,7 @@
   margin:5px 0;
 }
 .Task .TaskUser{
-  
+
 }
 .Task .TaskUserName{
 
@@ -123,9 +123,9 @@ margin:10px 5px 0;
 }
 
 .Task.Sel{
-  background: #4949493a;
-  border:1px solid #346296;
-  box-shadow: 0 0 8px 0px #00f7ff;
+   background: #4949493a;
+   border:1px solid #346296;
+   box-shadow: 0 0 8px 0px #00f7ff;
 }
 
 .Task.Sel .Bottom svg{

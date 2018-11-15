@@ -154,7 +154,7 @@ class Board extends Component {
   // }
 
   render(){
-    const { objectId, info, status, taskId, toTask, taskName } = this.state;
+    const { objectId, info, status, taskId, toTask, taskName, showChilds } = this.state;
     const { setInfo } = this.props;
     let cols = [[],[],[],[],[],[],[]];
 
@@ -189,10 +189,11 @@ class Board extends Component {
               }
               if(data && data.object){
                 let selected = false;
+
                 if (this.state.curParentId && this.state.showChilds)
-                { 
+                {
                   data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
-                
+
                 }
 
                 let arr = _.sortBy(data.object.tasks, 'status');
@@ -238,8 +239,9 @@ class Board extends Component {
                               {
                                 cols[e.id].map((task)=>{
                                   if(this.state.curParentId === task.id ){
-                                    selected = true;
-                                  }
+                                    selected = showChilds;
+                                  } else { selected = false; }
+
                                   return(
                                     <Task key={task.id} id={task.id} selected={selected} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs}/>
                                   )
