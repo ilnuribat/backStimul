@@ -17,10 +17,9 @@ class Task extends Component {
 
   render() {
 
-    let {children, name, id, endDate, lastMessage, click, childs} = this.props;
-
+    let {children, name, id, endDate, lastMessage, click, childs, selected} = this.props;
       return( 
-            <div className="Task" >
+            <div className={!selected ? "Task" : "Task Sel"} >
             <div style={{"display":"none"}}>
               {
                 id
