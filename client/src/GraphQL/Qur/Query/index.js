@@ -217,6 +217,11 @@ export const GR_QUERY = gql `
           parentId
           objectId
           status
+          endDate
+          assignedTo{
+            id
+            username
+          }
           # files {
           #   id
           #   size

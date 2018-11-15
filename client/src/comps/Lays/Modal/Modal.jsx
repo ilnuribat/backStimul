@@ -36,14 +36,16 @@ export const ModalRow = ({ children })=>{
   )
 }
 
-export const InputWrapper = ({ children, name, save, placeholder })=>{
+export const InputWrapper = ({ children, name, save, placeholder, click })=>{
+  let value = name
+
   return(
     <ModalCol>
       <ModalBlockName>
         {children}
       </ModalBlockName>
       <div className="InputWrapper">
-        <input type="text" defaultValue={name||""} placeholder={placeholder||""}/><div className="SaveBtn"><Svg svg="save"/>{save||"Сохранить"}</div>
+        <input type="text" defaultValue={name||""} placeholder={placeholder||"" } onChange={(e)=>{value = e.target.value}} /><div className="SaveBtn" onClick={()=>{click(value)}}><Svg svg="save"/>{save||"Сохранить"}</div>
       </div>
     </ModalCol>
   )
