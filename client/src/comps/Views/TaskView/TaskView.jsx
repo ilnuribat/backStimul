@@ -55,6 +55,9 @@ class TaskView extends Component {
     this.newUser = this.newUser.bind(this);
     this.newAddress = this.newAddress.bind(this);
     this.addressAdd = this.addressAdd.bind(this);
+
+    this.writeTaskName = this.writeTaskName.bind(this)
+    this.writeTaskData = this.writeTaskData.bind(this)
   }
 
   componentDidMount(){
@@ -123,32 +126,31 @@ class TaskView extends Component {
     })
   }
 
-  writeParentId(e, taskId) {
-    // e.preventDefault();
-    console.warn("writeParentId", e.target.value, taskId)
-    qauf(updTask(taskId,`{parentId: "${e.target.value}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
+  writeTaskName(name) {
+    console.warn("writeName", name, this.state.taskId)
+    qauf(updTask(this.state.taskId,`{name: "${name}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn(a)
     }).catch((e)=>{
       console.warn(e);
     })
-
   }
 
-  writeStatus(e, taskId) {
-    // e.preventDefault();
-    console.warn("writeStatus", e.target.value, taskId)
-    qauf(updTask(taskId,`{status: ${e.target.value}}`), _url, localStorage.getItem('auth-token')).then(a=>{
+  writeTaskData(e, change, quota) {
+    let cap = ""
+    const value = e.target.value
+
+    if (quota) cap = '"';
+    console.warn("writeData", e, change, this.state.taskId)
+    qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn(a)
     }).catch((e)=>{
       console.warn(e);
     })
-
   }
 
   onStatSelected(e){
-
     qauf(groupMut(this.state.taskId, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      // console.log(a)
+      console.warn(a)
     })
       .catch((e)=>{
         console.warn(e);
@@ -157,7 +159,6 @@ class TaskView extends Component {
   }
 
   onUserSelected(e){
-
     qauf(groupMut(this.state.taskId, `status: ${e.target.value}`), _url, localStorage.getItem('auth-token')).then(a=>{
       // console.log(a)
     })
@@ -223,7 +224,7 @@ class TaskView extends Component {
 
     if(typeof q === "function"){
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
-        // console.log("Answer updUsrGr",a)
+        console.warn("Answer updUsrGr",a)
       })
         .then(()=>{
           // this.loadu(this.props.getChat.id)
@@ -235,11 +236,6 @@ class TaskView extends Component {
       return false;
     }
 
-  }
-
-  saveStatus(event, taskId) {
-    // this.setState({status: event.target.value});
-    console.warn(event.target.value)
   }
 
   addressAdd(address){
@@ -257,10 +253,8 @@ class TaskView extends Component {
 
   glossStatus(){
     qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
-
       this.setState({
-        status: [" ",...a.data.glossary.taskStatuses]
-      });
+        status: [" ",...a.data.glossary.taskStatuses]})
     })
       .catch((e)=>{
         console.warn(e);
@@ -269,6 +263,7 @@ class TaskView extends Component {
 
   render() {
     const {upload, allusers, taskName, taskId, modal, status, allTasks } = this.state;
+
     console.warn("TASKID", status)
 
     return(
@@ -293,6 +288,10 @@ class TaskView extends Component {
               );
             }
             // console.warn("DATA", data)
+            let dataValue;
+            let taskStatus = data.task.status
+
+            if (data.task.endDate) dataValue = data.task.endDate.replace(/T.*$/gi, "")
 
             return(
               <Fragment>
@@ -308,7 +307,7 @@ class TaskView extends Component {
                   </div>
                   {modal ? (
                     <Modal close={()=>{ this.setState({modal: !modal}) }} >
-                      <InputWrapper name={data.task.name }>
+                      <InputWrapper name={data.task.name} save="Сохранить" click={this.writeTaskName}>
                         Название
                       </InputWrapper>
 
@@ -318,7 +317,7 @@ class TaskView extends Component {
                             Статус
                           </ModalBlockName>
                           <label htmlFor="">
-                            <select onChange={(e)=>{this.writeStatus(e, taskId)}} value={data.task.status}>
+                            <select onChange={(e)=>{this.writeTaskData(e, "status", false)}} defaultValue={taskStatus}>
                               {/* <option value="0">Выбрать задачу</option> */}
                               {
                                 status.map((e)=>(
@@ -349,7 +348,7 @@ class TaskView extends Component {
                       Срок истечения
                           </div>
                           <label htmlFor="">
-                            <input type="date"/>
+                            <input type="date" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
                           </label>
                         </ModalCol>
 
@@ -358,9 +357,9 @@ class TaskView extends Component {
                     Добавить родительскую задачу
                           </ModalBlockName>
                           <label htmlFor="">
-                            <select onChange={(e)=>{this.writeParentId(e, taskId)}} value={data.task.parentId}>
+                            <select onChange={(e)=>{this.writeTaskData(e, "parentId", true)}} defaultValue={data.task.parentId}>
                               {
-                                this.state.allTasks.map((e,i)=>{
+                                allTasks.map((e,i)=>{
                                   return(
                                     <option key={e.id} value={e.id}>{e.name}</option>
                                   )
@@ -383,6 +382,8 @@ class TaskView extends Component {
                         </ModalCol>
                       </ModalCol>
                     </Modal>
+                    // value = value.replace(/T.*$/gi, "");
+                    // defaultText = defaultText.replace(/T.*$/gi, "");
                   //       <ChangerForm id={taskId} defaults={taskInfo.endDate} defaultText={taskInfo.endDate?taskInfo.endDate:"Не указано"} name={"Дата Завершения"} change={"endDate"} type={"date"} string={1} />
                   ) : null
 
