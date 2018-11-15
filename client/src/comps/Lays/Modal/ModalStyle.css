@@ -70,7 +70,15 @@
   width:90%;
   max-width: 900px;
   height: auto;
-  min-height: 200px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.ModalBig .inner{
+  height: 100%;
+  min-height: 100%;
 }
 .ModalSmall{
   width:90%;
