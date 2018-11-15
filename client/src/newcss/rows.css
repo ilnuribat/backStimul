@@ -121,7 +121,7 @@
 /******************UserRow**************/
 /******************ButtonRow**************/
 
-.ButtonTo{
+.ButtonTo, .ButtonTo a{
   display: flex;
   cursor:pointer;
   text-align: center;

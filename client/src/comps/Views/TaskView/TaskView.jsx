@@ -279,7 +279,7 @@ class TaskView extends Component {
                 <Content>
                   <div className="TaskView">
                     <div className="TaskViewTop">
-                      <ButtonTo icon="back">Назад</ButtonTo>
+                      <ButtonTo url={"/board"} icon="back">Назад</ButtonTo>
                       <div className="TaskViewTopName"><h1>{taskName}</h1></div>
                     </div>
                     <div className="TaskViewInner">

@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 // import './ModalStyle.css'
+import { Link } from 'react-router-dom';
 import Svg from '../../Parts/SVG'
-
 
 export const FileRow = ({ children, id, name, filename, url, fileid, icon, click, box })=>{
   return(
@@ -37,12 +37,22 @@ export const ButtonRow = ({ children, id, name, url, icon, click, box, iconright
     </div>
   )
 }
-export const ButtonTo = ({ children, id, name, url, icon, click, box, iconright, size })=>{
+export const ButtonTo = ({ children, id, name, linkstate, linkurl, url, icon, click, box, iconright, size })=>{
   return(
     <div className={!box ? "ButtonTo":"ButtonTo Boxed"} onClick={()=>{click ? click(id,url) : console.log("file", id,url )}}>
-      {icon && !iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
-      <div className="ButtonName">{children || name}</div>
-      {icon && iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
+      {
+        url ? (<Link to={{pathname: url, state:linkstate||""}} className="toBackLink">
+          {icon && !iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
+          <div className="ButtonName">{children || name}</div>
+          {icon && iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
+        </Link>) : (
+          <Fragment>
+            {icon && !iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
+            <div className="ButtonName">{children || name}</div>
+            {icon && iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
+          </Fragment>
+        )
+      }
     </div>
   )
 }
