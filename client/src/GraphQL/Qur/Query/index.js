@@ -216,6 +216,7 @@ export const GR_QUERY = gql `
           }
           parentId
           objectId
+          status
           # files {
           #   id
           #   size

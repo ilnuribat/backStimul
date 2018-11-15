@@ -13,8 +13,8 @@ import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
 import ChangerForm from './ChangerForm';
 import { uploadFile, groupMut, updTask } from '../../../GraphQL/Qur/Mutation';
-import { selectUser, tempObj, setTemp, getTemp, setChat } from '../../../GraphQL/Cache';
-import { allUsers, glossaryStatus, GRU_QUERY, GR_QUERY,  getObjectTasks3 } from '../../../GraphQL/Qur/Query';
+import { selectUser, setChat } from '../../../GraphQL/Cache';
+import { allUsers, glossaryStatus, GR_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
@@ -57,12 +57,6 @@ class TaskView extends Component {
     let _grid
     let _grnm
     let _objId
-
-    this.props.setTemp({
-      variables:{
-        tempObj:  {stingh: "sa"},
-      }
-    });
 
     if (location.state && location.state.taskId) {
       _grid = location.state.taskId
@@ -445,9 +439,6 @@ TaskView.propTypes = {
 export default compose(
   graphql(setChat, { name: 'setChat' }),
   graphql(selectUser, { name: 'selectUser' }),
-  graphql(tempObj, { name: 'tempObj' }),
-  graphql(setTemp, { name: 'setTemp' }),
-  graphql(getTemp, { name: 'getTemp' }),
 )(TaskView);
 
 const isArrayEqual = (x, y) => {
