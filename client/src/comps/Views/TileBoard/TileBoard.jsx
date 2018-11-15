@@ -146,8 +146,6 @@ class TileBoard extends Component {
                   return(
                     <Fragment>
                       <div className="TileBoardTop">
-                        
-                        
                         {
                           data.rootObject && data.rootObject.parentId || rootid ? (
                             <ButtonTo click={this.query} id={data.rootObject.parentId || parentid}  type="AddressObject" icon="back">Назад</ButtonTo>
@@ -157,7 +155,7 @@ class TileBoard extends Component {
                           {
                             data.rootObject && data.rootObject.name ? (
                               <h1>{data.rootObject.name }</h1>
-                            ) : null
+                            ) : (<h1>Россия</h1>)
                           }
                           <ButtonRow icon="plus" iconright="" click={this.state.SOMECLICKFUNCTION}>Создать Объект</ButtonRow>
                         </div>

@@ -133,3 +133,12 @@ a{
     border: solid 1px rgba(62, 117, 178, 0.7);
     background-color: #3e75b2;
 }
+.Loading{
+  display: flex;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  margin: 0 auto;
+  align-self: center;
+  justify-self: center;
+}
