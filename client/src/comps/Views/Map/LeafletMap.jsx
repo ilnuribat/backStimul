@@ -307,7 +307,7 @@ const Panel = ({ data, type, name, click })  => {
       post.address && post.address.coordinates && post.address.coordinates.length >0 ?
         <Marker key={post.id} position={post.address.coordinates} icon={SwitchIcon(1)}>
           <Popup >
-            <div className="modal" >
+            <div className="mapModal" >
               <ul>
                 <li>Тип объекта: {name}</li>
                 <li>Название объекта: {post.name}</li>
@@ -315,7 +315,7 @@ const Panel = ({ data, type, name, click })  => {
                 <li>Ответственный: <span className="userCloud2">{post.assignedTo ? post.assignedTo.username : null}</span></li>
                 <li>Последнее сообщение от <span className="userCloud2">{post.lastMessage ? post.lastMessage.from.username : null} </span>: <span className="msgCloud">{post.lastMessage ? post.lastMessage.text : null}</span></li>
               </ul>
-              <div className="btn">
+              <div className="button">
                 <NavLink index={post.id} name={post.name} onClick1={click} btnColor={b.btnBlue}>Детальная информация</NavLink>
               </div>
             </div>

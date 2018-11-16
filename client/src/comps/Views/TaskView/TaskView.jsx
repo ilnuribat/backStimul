@@ -336,7 +336,7 @@ class TaskView extends Component {
                                 return(
                                   <div className="username" role="presentation" key={'usr-'+i} >
                                     {localStorage.getItem('userid') !== e.id ?
-                                      <UserRow id={e.id} name={e.username} icon="e" />
+                                      <UserRow id={e.id} name={e.username} icon="1" />
                                       : null }
                                     <div className="hoverTrigger">
                                       <div className="hover">
@@ -472,10 +472,10 @@ class ResponsiblePerson extends React.Component {
 
     return (
       !save ?
-        <UserRow click = {this.handleClick} id={userId} name={userName} icon="e" />
+        <UserRow click = {this.handleClick} id={userId} name={userName} icon="1" />
         :
         <label htmlFor="">
-          <select onChange={(e)=>{this.writeTaskResponsiblePerson(e)}} defaultValue={userName}>
+          <select onChange={(e)=>{this.writeTaskResponsiblePerson(e)}} defaultValue={userName} >
             <option value="0">Выбрать ответственного</option>
             {
               data.users.map((e)=>{
