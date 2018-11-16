@@ -97,6 +97,19 @@ a{
     overflow-y: auto;
 }
 
+.ContentInner{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 300px;
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    /* background: #314964; */
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
 
 .Divs {
     display: block;
@@ -125,7 +138,11 @@ a{
   border-radius: 6px;
   box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
   background-color: #3d4147;
+  padding:20px;
+  overflow: hidden;
+  overflow-y: auto; 
 }
+
 
 
 @import './newcss/nav.css';
@@ -193,4 +210,13 @@ button{
 .OvX{
   overflow-y: hidden;
   overflow-x: auto;
+}
+.Pad{
+  padding: 5px;
+}
+.Pad10{
+  padding: 10px;
+}
+.Pad20{
+  padding: 20px;
 }
