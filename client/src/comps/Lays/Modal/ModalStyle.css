@@ -145,7 +145,7 @@ input{
   background: none transparent;
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  /* align-items: flex-start; */
 }
 .EditForm .Button{
 

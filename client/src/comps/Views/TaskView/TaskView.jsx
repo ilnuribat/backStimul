@@ -17,6 +17,8 @@ import '../../../newcss/taskview.css'
 import { ButtonTo, UserRow, FileRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import Svg from '../../Parts/SVG'
+import InnerBar from '../../Lays/InnerBar/InnerBar';
+
 
 
 class TaskView extends Component {
@@ -235,7 +237,7 @@ class TaskView extends Component {
 
             return(
               <Fragment>
-                <Content>
+                <Content view="Row Pad10">
                   <div className="TaskView">
                     <div className="TaskViewTop">
                       <ButtonTo url={"/board"} icon="back">Назад</ButtonTo>
@@ -322,8 +324,7 @@ class TaskView extends Component {
                   ) : null
 
                   }
-                </Content>
-                <Panel>
+                <InnerBar>
                   {
                     taskId ? (
                       <div className="tab-roll">
@@ -359,7 +360,7 @@ class TaskView extends Component {
                       <div className="tab-roll">
                         <div className="header"></div>
                         <div className="content">
-                          <div className="button" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Информация</div>
+                          <div className="Button2" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Информация</div>
                           <div className="content-scroll">
                           </div>
                         </div>
@@ -371,12 +372,11 @@ class TaskView extends Component {
                       <div className="tab-roll">
                         <div className="header"><h4>Добавить пользователя</h4></div>
                         <div className="content">
-                          <div className="content-scroll">
-                            <div>
-                              <input type="list" list="users" autoComplete="on" onChange={this.newUser} />
+                            <label className="Pad" for="users">
+                              <input type="list" name="users" list="users" autoComplete="on" onChange={this.newUser} />
                               {
                                 this.state.newUser ? (
-                                  <div className="button" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить {this.state.newUser}</div>
+                                  <div className="Button3" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить{/*this.state.newUser*/}</div>
                                 ): null
                               }
 
@@ -391,9 +391,7 @@ class TaskView extends Component {
                                   )
                                 }
                               </datalist>
-                            </div>
-
-                          </div>
+                          </label>
                         </div>
                       </div>
                     ) : null
@@ -425,7 +423,11 @@ class TaskView extends Component {
                     )
                   ): null
                   } */}
-                </Panel>
+                </InnerBar>
+
+
+                </Content>
+
 
               </Fragment>
             )}
