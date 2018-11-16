@@ -298,13 +298,13 @@ class Board extends Component {
                     </div>
                     <div className="Board-Content">
                       {this.state.modalDelete? (
-                        <Modal close={this.changeDelModal} width="350">
+                        <Modal close={this.changeDelModal} size="350">
                           Удалить задачу?
                           <ButtonRow iconright="1" click={this.deleteTask}>Удалить</ButtonRow>
                         </Modal>
                       ) : null }
                       {this.state.modal ? (
-                        <Modal close={this.closeModal} >
+                        <Modal close={this.closeModal}>
                           <InputWrapper name="Ведите название задачи" save="Сохранить" click={this.writeTaskName}>
                       Название
                           </InputWrapper>
