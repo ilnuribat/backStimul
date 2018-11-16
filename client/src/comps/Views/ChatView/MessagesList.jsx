@@ -103,7 +103,7 @@ export default class MessagesList extends Component {
                 username = "none";
               }
 
-              let date = moment(createdAt).format("MMM Do YY")/*.fromNow()*/ || "неизв.";
+              let date = moment(createdAt).format('D MMM, h:mm')/*.fromNow()*/ || "неизв.";
               let messageText = text;
               let read = node.isRead;
 
