@@ -18,7 +18,10 @@ import '../../../newcss/boardview.css';
 import '../../../newcss/task.css';
 import { Svg } from '../../Parts/SVG/index';
 import { ButtonRow } from '../../Parts/Rows/Rows';
+import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
+import { updTask, crTask } from '../../../GraphQL/Qur/Mutation';
 
+let ref;
 
 class Board extends Component {
 
@@ -34,6 +37,7 @@ class Board extends Component {
       toRoot: false,
       toTask: false,
       showChilds: false,
+      modal: false,
     };
 
     this.daTa = this.daTa.bind(this)
@@ -42,6 +46,11 @@ class Board extends Component {
     this.childs = this.childs.bind(this)
     this.toTask = this.toTask.bind(this)
     this.toBack = this.toBack.bind(this)
+
+    this.changeModal = this.changeModal.bind(this)
+    this.closeModal = this.closeModal.bind(this)
+    this.writeTaskName = this.writeTaskName.bind(this)
+    this.writeTaskData = this.writeTaskData.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
@@ -119,6 +128,22 @@ class Board extends Component {
     }
   }
 
+  changeModal () {
+    this.setState({
+      modal: !this.state.modal,
+    });
+  }
+
+  closeModal () {
+    this.setState({
+      modal: false,
+    });
+    this.setState({
+      taskId: "",
+    })
+    ref()
+  }
+
   glossStatus(){
     qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
       this.setState({
@@ -130,32 +155,53 @@ class Board extends Component {
       });
   }
 
-  // about(id){
 
-  //   qauf(ObjectInfo(id), _url, localStorage.getItem('auth-token'))
-  //     .then(a=>{
+  writeTaskName(name) {
+    // console.warn("writeName", name, this.state.taskId)
+    if (!this.state.taskId)
+      qauf(crTask(`{name: "${name}", objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
+        console.warn("create task done", a.data.createTask.id)
+        this.setState({
+          taskId: a.data.createTask.id,
+        })
+      }).catch((e)=>{
+        console.warn(e);
+      })
+    else
+      qauf(updTask(this.state.taskId,`{name: "${name}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
+        console.warn("update task done", a)
+      }).catch((e)=>{
+        console.warn(e);
+      })
+  }
 
-  //       let info = {};
+  writeTaskData(e, change, quota) {
+    let cap = ""
+    const value = e.target.value
 
-  //       info.id = id;
-  //       info.name = a.data.object.name;
+    if (quota) cap = '"';
+    // console.warn("writeData", e, change, this.state.taskId)
 
-  //       if(this.state.info.id == id && this.state.info.name == a.data.object.name){return true}
-  //       else{
-  //         this.setState({
-  //           info: info,
-  //         });
+    if (!this.state.taskId)
+      qauf(crTask(`{name: "Нет названия", ${change}: ${cap}${value}${cap}, objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
+        console.warn("create task done", a.data.createTask.id)
+        this.setState({
+          taskId: a.data.createTask.id,
+        })
+      }).catch((e)=>{
+        console.warn(e);
+      })
+    else
+      qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
+        console.warn("update task done", a)
+      }).catch((e)=>{
+        console.warn(e);
+      })
+  }
 
-  //       }
-
-  //     })
-  //     .catch((e)=>{
-  //       console.warn(e);
-  //     });
-  // }
 
   render(){
-    const { objectId, info, status, taskId, toTask, taskName, showChilds } = this.state;
+    const { objectId, status, taskId, toTask, taskName, showChilds } = this.state;
     const { setInfo } = this.props;
     let cols = [[],[],[],[],[],[],[]];
 
@@ -172,7 +218,7 @@ class Board extends Component {
       return (
         <Content>
           <Query query={getObjectTasks} variables={{ id: objectId}} >
-            {({ loading, error, data }) => {
+            {({ loading, error, data, refetch }) => {
               if (loading){
                 return (
                   <div style={{ paddingTop: 20, margin: "auto"}}>
@@ -188,8 +234,10 @@ class Board extends Component {
                   "error"
                 );
               }
+
               if(data && data.object){
                 let selected = false;
+                ref = refetch
 
                 if (this.state.curParentId && this.state.showChilds)
                 {
@@ -209,9 +257,6 @@ class Board extends Component {
                   }
                 });
 
-                // console.warn("cols",cols)
-                // console.warn("data",data)
-
                 return(
                   <div className="Board">
                     <div className="Board-Top">
@@ -226,12 +271,68 @@ class Board extends Component {
                       }
                       <div className="BoardTopCenter">
                         <h1>{data.object.name}</h1>
-                        <ButtonRow icon="plus" iconright="1" click={this.state.SOMECLICKFUNCTION}>Создать задачу</ButtonRow>
+                        <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
                         {/* <p className="small">{data.object.id}</p> */}
                       </div>
 
                     </div>
                     <div className="Board-Content">
+                      {this.state.modal ? (
+                        <Modal close={this.closeModal} >
+                          <InputWrapper name="Ведите название задачи" save="Сохранить" click={this.writeTaskName}>
+                      Название
+                          </InputWrapper>
+
+                          <ModalRow>
+                            <ModalCol>
+                              <ModalBlockName>
+                          Статус
+                              </ModalBlockName>
+                              <label htmlFor="">
+                                <select onChange={(e)=>{this.writeTaskData(e, "status", false)}} >
+                                  {/* <option value="0">Выбрать статус</option> */}
+                                  {
+                                    status.map((e)=>(
+                                      <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
+                                        {e.name}
+                                      </option>
+                                    ))
+                                  }
+                                </select>
+                              </label>
+                            </ModalCol>
+                          </ModalRow>
+
+                          <ModalRow>
+                            <ModalCol>
+                              <div className="ModalBlockName">
+                    Срок истечения
+                              </div>
+                              <label htmlFor="">
+                                <input type="date" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
+                              </label>
+                            </ModalCol>
+
+                            <ModalCol>
+                              <ModalBlockName>
+                  Добавить родительскую задачу
+                              </ModalBlockName>
+                              <label htmlFor="">
+                                <select onChange={(e)=>{this.writeTaskData(e, "parentId", true)}}>
+                                  <option value="0">Выбрать задачу</option>
+                                  {
+                                    data.object.tasks.map((e)=>{
+                                      return(
+                                        <option key={e.id} value={e.id}>{e.name}</option>
+                                      )
+                                    })
+                                  }
+                                </select>
+                              </label>
+                            </ModalCol>
+                          </ModalRow>
+                        </Modal>
+                      ) : null }
                       {/* {console.warn("status2",status)} */}
                       {
                         status && status.map((e,i)=>{
@@ -260,7 +361,6 @@ class Board extends Component {
                   </div>
                 )
 
-                // return "Data"
               }else{
                 return "data"
               }
