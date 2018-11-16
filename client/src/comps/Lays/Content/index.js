@@ -8,11 +8,10 @@ export default class Content extends Component {
   }
 
   render() {
-    let {children} = this.props;
-
+    let {children, view} = this.props;
 
     return (
-      <div className="Content">
+      <div className={"Content"+` ${view}`}>
         {children}
       </div>
     )

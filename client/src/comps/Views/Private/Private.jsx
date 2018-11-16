@@ -7,6 +7,7 @@ import { getChat, setChat } from '../../../GraphQL/Cache';
 import Content from '../../Lays/Content';
 import Bar from '../../Lays/Bar';
 import PrivateBar from './PrivateBar';
+import InnerBar from '../../Lays/InnerBar/InnerBar';
 
 class Private extends Component {
   constructor(props) {
@@ -55,18 +56,18 @@ class Private extends Component {
 
     return(
       <Fragment>
-        <Content>
-          <div className="TaskView">
+        <Content row="1">
+          <div className="TaskView InnreBarParent">
             <div className="TaskViewInner" style={{color: ""}}>
               {
                 this.props.getchat && this.props.getchat.id ? <ChatView key={this.props.getchat.id} name={this.props.getchat.name} id={this.props.getchat.id} priv={1} /> : (<div className="errorMessage">Выберите чат</div>)
               }
             </div>
+            <InnerBar>
+              <PrivateBar />
+            </InnerBar>
           </div>
         </Content>
-        <Bar >
-          <PrivateBar />
-        </Bar>
       </Fragment>
     );
   }
