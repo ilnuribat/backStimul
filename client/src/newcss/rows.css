@@ -168,3 +168,17 @@
 
 
 /******************UserRow**************/
+
+/* .RowBg{
+  width:100%;
+  background: #0000000f;
+  padding: 2px;
+  margin:2px;
+} */
+.RowBg{
+  width: 100%;
+  /* background: #0000000f; */
+  padding: 2px;
+  margin: 2px;
+  border-bottom: 1px solid #00000017;
+}

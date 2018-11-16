@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import moment from 'moment';
+import momentRu from 'moment/locale/ru';
 import PropTypes from 'prop-types';
 import { Query } from "react-apollo";
 
@@ -8,6 +9,8 @@ import { MESSAGE_READ } from "../../../GraphQL/Qur/Subscr";
 import { MESSAGE_QUERY } from "../../../GraphQL/Qur/Query";
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { MsgDblcheck, MsgDblcheckAck } from "../../../components/Svg";
+
+console.log(moment.locales('momentRu'));
 
 const toBottom = () => {
   if(document.getElementById("messageList")){
@@ -99,7 +102,7 @@ export default class MessagesList extends Component {
                 username = "none";
               }
 
-              let date = moment(createdAt).fromNow() || "none";
+              let date = moment(createdAt).format("MMM Do YY")/*.fromNow()*/ || "неизв.";
               let messageText = text;
               let read = node.isRead;
 
@@ -160,7 +163,9 @@ export default class MessagesList extends Component {
                       ) : null }
 
 
-                      <div className="msg-date">{date}</div>
+                      <div className="msg-date">
+                      {date}
+                      </div>
                     </div>
 
                   </blockquote>

@@ -108,9 +108,11 @@ class Private extends React.Component {
                           }
 
                           return(
+                            <div className="RowBg">
                             <UserRow key={'users-'+i} icon="1" id={e.id} name={e.name} click={()=>this.openPrivate(e.id, e.name)}>
                             {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="small-ruond-info">{e.unreadCount}</span>) : null}
                             </UserRow>
+                            </div>
                             
                             // <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
                             //   {e.name}
@@ -164,8 +166,9 @@ class Private extends React.Component {
                             }
 
                             return(
+                              <div className="RowBg">
                               <UserRow key={'users-'+i} icon="1" id={e.id} name={e.username} click={()=>this.CreateNewGroup(e.id,e.username)}></UserRow>
-
+                              </div>
                               // <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>
                               //   <span style={{color: colorHash.hex(e.username)}}>{e.username}<span>{Iam}</span></span>
                               // </div>
