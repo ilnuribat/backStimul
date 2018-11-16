@@ -4,15 +4,19 @@ import { Link } from 'react-router-dom';
 import { Svg } from '../Parts/SVG/index';
 import Modal from '../Lays/Modal';
 
+const search = ()=>{
+  console.log("Seacrh")
+
+} 
 
 const NavArr = [
-  {name:"search", link:"/", comp:"", svg:"search"},
+  {name:"search", comp:"", svg:"search", click:()=>{search()}},
   {name:"Root", link:"/", comp:"", svg:"tiles"},
   {name:"Private", link:"/chat", comp:"", svg:"private"},
   {name:"Pap", link:"/map", comp:"", svg:"location"},
 ];
 
-export default class NavLinks extends Component {
+class NavLinks extends Component {
   constructor(props) {
     super(props)
   
@@ -42,7 +46,8 @@ export default class NavLinks extends Component {
         {
           NavArr.map((e,i)=>{
             return(
-              <div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click === "modal" ? this.modal() : console.log('No click')} }>
+              //<div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click === "modal" ? this.modal() : console.log('No click')} }>
+              <div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click ? e.click() : console.log('No click')} }>
                 {e.link ? (
                   <Link to={e.link}>
                     <Svg svg={e.svg} />
@@ -60,3 +65,5 @@ export default class NavLinks extends Component {
     )
   }
 }
+
+export default NavLinks;
