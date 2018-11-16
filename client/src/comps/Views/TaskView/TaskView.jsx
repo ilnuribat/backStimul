@@ -124,9 +124,9 @@ class TaskView extends Component {
     const value = e.target.value
 
     if (quota) cap = '"';
-    console.warn("writeData", e, change, this.state.taskId)
+    // console.warn("writeData", e, change, this.state.taskId)
     qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.warn(a)
+      console.warn("update task done", a)
     }).catch((e)=>{
       console.warn(e);
     })
@@ -274,7 +274,8 @@ class TaskView extends Component {
                           <ModalBlockName>
                             Ответственный
                           </ModalBlockName>
-                          <UserRow id={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : null} name={data.task.assignedTo && data.task.assignedTo.username ? data.task.assignedTo.username : "null"} icon="e" />
+                          {/* <UserRow id={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : null} name={data.task.assignedTo && data.task.assignedTo.username ? data.task.assignedTo.username : "null"} icon="e" /> */}
+                          <ResponsiblePerson data={data.task} onClick1={this.writeTaskData}/>
                         </ModalCol>
                       </ModalRow>
 
@@ -435,7 +436,59 @@ class TaskView extends Component {
   }
 }
 
+class ResponsiblePerson extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      save: false,
+      userName: "Не выбран",
+      userId: ""
+    }
+  }
+
+  componentDidMount(){
+    if (this.props.data.assignedTo)
+      this.setState({userName: this.props.data.assignedTo.username, userId: this.props.data.assignedTo.id })
+  }
+
+  handleClick = () => {
+    this.setState({save: !this.state.save})
+  }
+
+  writeTaskResponsiblePerson (e)
+  {
+    // console.warn(e.target.querySelector(`option[value="${e.target.value}"]`).text)
+
+    this.setState({ userId: e.target.value, userName: e.target.querySelector(`option[value="${e.target.value}"]`).text })
+    this.props.onClick1(e, "assignedTo", true);
+    this.handleClick()
+  }
+
+  render() {
+    const { data } = this.props
+    const { save, userName, userId } = this.state
+
+
+    return (
+      !save ?
+        <UserRow click = {this.handleClick} id={userId} name={userName} icon="e" />
+        :
+        <label htmlFor="">
+          <select onChange={(e)=>{this.writeTaskResponsiblePerson(e)}} defaultValue={userName}>
+            <option value="0">Выбрать ответственного</option>
+            {
+              data.users.map((e)=>{
+                return(
+                  <option key={e.id} value={e.id}>{e.username}</option>
+                )
+              })
+            }
+          </select>
+        </label>
+    );
+  }
+}
 
 TaskView.propTypes = {
   selectUser: PropTypes.func.isRequired,
