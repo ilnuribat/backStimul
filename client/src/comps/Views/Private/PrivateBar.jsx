@@ -26,6 +26,17 @@ const subscrMes = (subscribeToMore,idu, refetch)=>{
 };
 
 class Private extends React.Component {
+ constructor(props) {
+   super(props)
+ 
+   this.state = {
+      newUser: "",
+   }
+   this.newUser = this.newUser.bind(this);
+ }
+ 
+
+
   openPrivate(gid, name){
     // console.warn (gid, name)
 
@@ -35,6 +46,15 @@ class Private extends React.Component {
     ref1();
   }
 
+
+
+
+  newUser(e){
+    // console.log(e.target)
+    this.setState({
+      newUser: e.target.value,
+    })
+  }
 
   CreateNewGroup(uid){
     let params = `"${uid}"`;
@@ -59,7 +79,7 @@ class Private extends React.Component {
   }
 
   render(){
-
+    let {newUser} = this.state;
     // console.warn ("REFRESH!!")
 
     return (
@@ -140,7 +160,7 @@ class Private extends React.Component {
             <h4>Создать приватный чай</h4>
           </div>
           <div className="content">
-            <div className="content-scroll">
+            {/* <div className="content-scroll"> */}
               {
                 <Query query={USERS_QUERY}>
                   {({ loading, data }) => {
@@ -154,28 +174,49 @@ class Private extends React.Component {
 
                     if(data && data.users){
                       return(
-                        <div className="UsersList">{
-                          data.users.map((e,i)=>{
-                            let Iam;
 
-                            if(e.id === localStorage.getItem('userid')){
-                              Iam = ' - я';
+                        <div className="tab-roll">
+                        <div className="header"><h4>Добавить пользователя</h4></div>
+                        <div className="content">
+                            <label className="Pad" for="users">
+                              <input type="list" name="users" list="users" autoComplete="on" onChange={(e)=>this.newUser(e, data.users)} />
+                              {
+                                  <div className="Button3" onClick={()=>this.CreateNewGroup()}>Добавить{/*this.state.newUser*/}</div>
+                              }
 
-                              return false;
-                              // return <span style={{color: colorHash.hex(e.username)}}  key={'usersspan-'+i} >{e.username}<span>{Iam}</span></span>;
-                            }
+                              <datalist id="users">
+                                {
+                                  data.users && data.users.map((e)=>(
+                                    <option key={e.id} data-id={e.id} valueid={e.id} value={e.id} valuename={e.username} >{e.username}</option>
+                                    )
+                                  )
+                                }
+                              </datalist>
+                          </label>
+                        </div>
+                      </div>
+                        // <div className="UsersList">{
+                        //   data.users.map((e,i)=>{
+                        //     let Iam;
 
-                            return(
-                              <div className="RowBg">
-                              <UserRow key={'users-'+i} icon="1" id={e.id} name={e.username} click={()=>this.CreateNewGroup(e.id,e.username)}></UserRow>
-                              </div>
-                              // <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>
-                              //   <span style={{color: colorHash.hex(e.username)}}>{e.username}<span>{Iam}</span></span>
-                              // </div>
+                        //     if(e.id === localStorage.getItem('userid')){
+                        //       Iam = ' - я';
 
-                            )
-                          })
-                        }</div>
+                        //       return false;
+                        //       // return <span style={{color: colorHash.hex(e.username)}}  key={'usersspan-'+i} >{e.username}<span>{Iam}</span></span>;
+                        //     }
+
+                        //     return(
+                        //       <div className="RowBg">
+                        //       <UserRow key={'users-'+i} icon="1" id={e.id} name={e.username} click={()=>this.CreateNewGroup(e.id,e.username)}></UserRow>
+                        //       </div>
+                        //       // <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>
+                        //       //   <span style={{color: colorHash.hex(e.username)}}>{e.username}<span>{Iam}</span></span>
+                        //       // </div>
+
+                        //     )
+                        //   })
+                        // }</div>
                       )
                     }else{
                       return(
@@ -186,7 +227,7 @@ class Private extends React.Component {
                   }}
                 </Query>
               }
-            </div>
+            {/* </div> */}
           </div>
         </div>
       </div>

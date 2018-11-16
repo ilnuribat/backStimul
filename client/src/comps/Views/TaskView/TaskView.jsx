@@ -18,7 +18,7 @@ import { ButtonTo, UserRow, FileRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
-
+import ContentInner from '../../Lays/ContentInner/ContentInner';
 
 
 class TaskView extends Component {
@@ -236,95 +236,16 @@ class TaskView extends Component {
             if (data.task.endDate) dataValue = data.task.endDate.replace(/T.*$/gi, "")
 
             return(
-              <Fragment>
-                <Content view="Row Pad10">
-                  <div className="TaskView">
+                <Content view="OvH">
                     <div className="TaskViewTop">
                       <ButtonTo url={"/board"} icon="back">Назад</ButtonTo>
                       <div className="TaskViewTopName"><h1>{taskName}</h1></div>
                     </div>
-                    <div className="TaskViewInner">
+                  <div className="TaskView Row Pad10">
+                    <div className="TaskViewInner" view="">
                       <ChatView name={taskName} id={taskId} taskInfo={ data.task } priv={0} />
                     </div>
-                  </div>
-                  {modal ? (
-                    <Modal close={()=>{ this.setState({modal: !modal}) }} >
-                      <InputWrapper name={data.task.name} save="Сохранить" click={this.writeTaskName}>
-                        Название
-                      </InputWrapper>
-
-                      <ModalRow>
-                        <ModalCol>
-                          <ModalBlockName>
-                            Статус
-                          </ModalBlockName>
-                          <label htmlFor="">
-                            <select onChange={(e)=>{this.writeTaskData(e, "status", false)}} defaultValue={taskStatus}>
-                              {/* <option value="0">Выбрать задачу</option> */}
-                              {
-                                status.map((e)=>(
-                                  <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
-                                    {e.name}
-                                  </option>
-                                ))
-                              }
-                            </select>
-                          </label>
-                        </ModalCol>
-
-                        <ModalCol>
-                          <ModalBlockName>
-                            Ответственный
-                          </ModalBlockName>
-                          {/* <UserRow id={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : null} name={data.task.assignedTo && data.task.assignedTo.username ? data.task.assignedTo.username : "null"} icon="e" /> */}
-                          <ResponsiblePerson data={data.task} onClick1={this.writeTaskData}/>
-                        </ModalCol>
-                      </ModalRow>
-
-                      <ModalRow>
-                        <ModalCol>
-                          <div className="ModalBlockName">
-                      Срок истечения
-                          </div>
-                          <label htmlFor="">
-                            <input type="date" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
-                          </label>
-                        </ModalCol>
-
-                        <ModalCol>
-                          <ModalBlockName>
-                    Добавить родительскую задачу
-                          </ModalBlockName>
-                          <label htmlFor="">
-                            <select onChange={(e)=>{this.writeTaskData(e, "parentId", true)}} defaultValue={data.task.parentId}>
-                              {
-                                allTasks.map((e,i)=>{
-                                  return(
-                                    <option key={e.id} value={e.id}>{e.name}</option>
-                                  )
-                                })
-                              }
-                            </select>
-                          </label>
-                        </ModalCol>
-                      </ModalRow>
-                      <ModalCol>
-                        <ModalBlockName>
-                  Добавить вложения
-                        </ModalBlockName>
-                        <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
-                        <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
-                        <ModalCol>
-                          <div className="files-drop">
-                            <Svg svg="tocloud" inline={0} />переместите файлы сюдa
-                          </div>
-                        </ModalCol>
-                      </ModalCol>
-                    </Modal>
-                  ) : null
-
-                  }
-                <InnerBar>
+                      <InnerBar>
                   {
                     taskId ? (
                       <div className="tab-roll">
@@ -423,13 +344,89 @@ class TaskView extends Component {
                     )
                   ): null
                   } */}
-                </InnerBar>
+                </InnerBar>                    
+                </div>
+                  {modal ? (
+                    <Modal close={()=>{ this.setState({modal: !modal}) }} >
+                      <InputWrapper name={data.task.name} save="Сохранить" click={this.writeTaskName}>
+                        Название
+                      </InputWrapper>
+
+                      <ModalRow>
+                        <ModalCol>
+                          <ModalBlockName>
+                            Статус
+                          </ModalBlockName>
+                          <label htmlFor="">
+                            <select onChange={(e)=>{this.writeTaskData(e, "status", false)}} defaultValue={taskStatus}>
+                              {/* <option value="0">Выбрать задачу</option> */}
+                              {
+                                status.map((e)=>(
+                                  <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
+                                    {e.name}
+                                  </option>
+                                ))
+                              }
+                            </select>
+                          </label>
+                        </ModalCol>
+
+                        <ModalCol>
+                          <ModalBlockName>
+                            Ответственный
+                          </ModalBlockName>
+                          {/* <UserRow id={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : null} name={data.task.assignedTo && data.task.assignedTo.username ? data.task.assignedTo.username : "null"} icon="e" /> */}
+                          <ResponsiblePerson data={data.task} onClick1={this.writeTaskData}/>
+                        </ModalCol>
+                      </ModalRow>
+
+                      <ModalRow>
+                        <ModalCol>
+                          <div className="ModalBlockName">
+                      Срок истечения
+                          </div>
+                          <label htmlFor="">
+                            <input type="date" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
+                          </label>
+                        </ModalCol>
+
+                        <ModalCol>
+                          <ModalBlockName>
+                    Добавить родительскую задачу
+                          </ModalBlockName>
+                          <label htmlFor="">
+                            <select onChange={(e)=>{this.writeTaskData(e, "parentId", true)}} defaultValue={data.task.parentId}>
+                              {
+                                allTasks.map((e,i)=>{
+                                  return(
+                                    <option key={e.id} value={e.id}>{e.name}</option>
+                                  )
+                                })
+                              }
+                            </select>
+                          </label>
+                        </ModalCol>
+                      </ModalRow>
+                      <ModalCol>
+                        <ModalBlockName>
+                  Добавить вложения
+                        </ModalBlockName>
+                        <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+                        <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
+                        <ModalCol>
+                          <div className="files-drop">
+                            <Svg svg="tocloud" inline={0} />переместите файлы сюдa
+                          </div>
+                        </ModalCol>
+                      </ModalCol>
+                    </Modal>
+                  ) : null
+
+                  }
+
 
 
                 </Content>
-
-
-              </Fragment>
             )}
           }
         </Query>

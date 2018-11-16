@@ -196,6 +196,12 @@ button{
 
 .Row{
   display: flex;
+  flex-direction: row !important;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.Row2{
+  display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
@@ -223,4 +229,11 @@ button{
 }
 .Pad20{
   padding: 20px;
+}
+.button:hover,
+.Button:hover,
+.Button2:hover,
+.Button3:hover
+{
+  opacity: 0.5;
 }
