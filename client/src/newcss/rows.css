@@ -69,6 +69,11 @@
   width:  100%;
   fill:#3e74b27c;
 }
+.UserRow.Boxed .UserIcon svg{
+  height: 100%;
+  width:  100%;
+  fill:#3e74b27c;
+}
 .UserRow .UserName{
   flex:2;
   font-size: 12px;

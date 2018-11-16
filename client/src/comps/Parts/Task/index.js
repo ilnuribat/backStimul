@@ -58,9 +58,9 @@ class Task extends Component {
               ) : null
             }
             <div className="Bottom">
-              <div className="TaskUserPhoto">
-                <UserRow icon="1" />
-              </div>
+              {/* <div className="TaskUserPhoto"> */}
+                <UserRow icon="1" box="1"/>
+              {/* </div> */}
               <div className="Childs" onClick={()=>childs(id)}>
                 <Svg svg="deps"></Svg>
               </div>
