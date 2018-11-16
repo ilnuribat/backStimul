@@ -73,7 +73,7 @@ class Modal extends Component {
       <div className="ModalFull">
         <div className="ModalWrap">
 
-          <div className="ModalBig" style={size ? {"maxWidth":size+"px"} : "" }>
+          <div className="ModalBig" style={size ? {"maxWidth":size+"px"} : {} }>
             <ModalClose click={()=>{close ? close() : console.log("No close function") }}/>
             <div className="inner">
 

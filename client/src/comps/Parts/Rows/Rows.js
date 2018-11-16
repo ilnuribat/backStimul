@@ -28,7 +28,7 @@ export const UserRow = ({ children, id, name, username, url, userid, icon, click
   return(
     <div className={`UserRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("user", userid||id,url )}}>
       { icon ? (<div className={box?"UserIcon Boxed":"UserIcon"} style={size ? {"width":size+'px',"maxWidth":size+'px',"maxHeight":size+'px', "height":size+'px'} : null}><img src={icon && icon != 1 ? icon : userDefault} /></div>):null}
-      { username || name ? (<div className="UserName">{username || name}</div>):null}
+      { username || name || children ? (<div className="UserName">{username || name || children}</div>):null}
       {children}
     </div>
   )
