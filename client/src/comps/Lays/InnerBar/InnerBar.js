@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const InnerBar = props => {
+const InnerBar = ({children,view}) => {
   return (
-    <div className={"InnerBar"+" "+props.view}>
-      { props.children }
+    <div className={`InnerBar${view?" "+view:""}`}>
+      { children }
     </div>
   )
 }

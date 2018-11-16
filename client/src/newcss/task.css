@@ -104,13 +104,14 @@
   border-radius: 3px;
 width:36px;
 height:36px;
-border:1px solid #346296;
+/* border:1px solid #346296; */
 margin:10px 5px 0;
 }
-.Task .Bottom svg{
+
+.Task .Bottom{
   width:100%;
   height:100%;
-  fill: #346296;
+  /* fill: #346296; */
   cursor: pointer;
 }
 .linked{
