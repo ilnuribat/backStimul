@@ -8,10 +8,8 @@ import Modal from '../Lays/Modal';
 const NavArr = [
   {name:"search", link:"/", comp:"", svg:"search"},
   {name:"Root", link:"/", comp:"", svg:"tiles"},
-  {name:"3", link:"", comp:"", svg:"svg3"},
   {name:"Private", link:"/chat", comp:"", svg:"private"},
   {name:"Pap", link:"/map", comp:"", svg:"location"},
-  {name:"Modal", link:"", comp:"", svg:"modal", click:"modal"},
 ];
 
 export default class NavLinks extends Component {

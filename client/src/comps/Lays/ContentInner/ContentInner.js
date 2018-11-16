@@ -11,7 +11,7 @@ export default class ContentInner extends Component {
     let {children, view} = this.props;
 
     return (
-      <div className={"ContentInner"+` ${view}`}>
+      <div className={`ContentInner${view?" "+view:""}`}>
         {children}
       </div>
     )
