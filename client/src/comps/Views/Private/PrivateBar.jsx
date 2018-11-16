@@ -49,25 +49,70 @@ class Private extends React.Component {
 
 
 
-  newUser(e){
-    // console.log(e.target)
-    this.setState({
-      newUser: e.target.value,
-    })
+  newUser(e,users){
+    console.log("TARGED");
+    
+    console.log(e.target)
+    console.log(e.target.value)
+    console.log(e.target.text)
+    console.log(e.target.valueid)
+    
+    if(e && e.target && e.target.value){
+      let user = _.find(users, (obj)=> { return obj.username === e.target.value; });
+
+      if(user && user.id){
+        this.setState({
+          newUser: e.target.value,
+          newUserId: user.id,
+        })
+      }else{
+        console.log("Неправильный юзер", user);
+        
+      }
+
+    }
+
   }
 
-  CreateNewGroup(uid){
-    let params = `"${uid}"`;
-    console.log(createDirect(params));
-    qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
-      if(a && a.data){
-        ref1()
-        console.log(a);
+  CreateNewGroup(users){
+    let uid = "";
+    let {newUser} = this.state;
 
+    if(users){
+      if(true){
+        let user = _.find(users, (obj)=> { return obj.username === newUser; });
+  
+        if(user){
+          uid = user.id;
+          console.warn("юзер", user);
+        }else{
+          console.warn("Неправильный юзер");
+          this.setState({
+            newUser:"",
+          })
+          return(false)
+        }
       }
-    }).catch((e)=>{
-      console.warn(e);
-    });
+    }
+
+    let params = `"${uid}"`;
+
+    if(uid){
+      console.log(createDirect(params));
+      return true
+      qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
+        if(a && a.data){
+          ref1()
+          console.log(a);
+  
+        }
+      }).catch((e)=>{
+        console.warn(e);
+      });
+    }else{
+      return(false)
+    }
+
   }
 
   shouldComponentUpdate(nextProp) {
@@ -175,25 +220,22 @@ class Private extends React.Component {
                     if(data && data.users){
                       return(
 
-                        <div className="tab-roll">
-                        <div className="header"><h4>Добавить пользователя</h4></div>
                         <div className="content">
                             <label className="Pad" htmlFor="users">
-                              <input type="list" name="users" list="users" autoComplete="on" onChange={(e)=>this.newUser(e, data.users)} />
+                              <input type="list" name="users" list="users" autoComplete="on" valueid="" onChange={(e)=>this.newUser(e, data.users)} />
                               {
-                                  <div className="Button3" onClick={()=>this.CreateNewGroup()}>Добавить{/*this.state.newUser*/}</div>
+                                  <div className="Button3" onClick={()=>this.CreateNewGroup(data.users)}>Добавить{/*this.state.newUser*/}</div>
                               }
 
                               <datalist id="users">
                                 {
                                   data.users && data.users.map((e)=>(
-                                    <option key={e.id} data-id={e.id} valueid={e.id} value={e.id} valuename={e.username} >{e.username}</option>
+                                    <option key={e.id} data-id={e.id} valueid={e.id} valuename={e.username} >{e.username}</option>
                                     )
                                   )
                                 }
                               </datalist>
                           </label>
-                        </div>
                       </div>
                         // <div className="UsersList">{
                         //   data.users.map((e,i)=>{
