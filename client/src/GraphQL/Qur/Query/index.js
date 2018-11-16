@@ -102,6 +102,7 @@ export const allUsers = () => `
       users{
         id
         username
+        __typename
       }
     }
 `;
