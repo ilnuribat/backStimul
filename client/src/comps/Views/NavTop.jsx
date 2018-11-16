@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
+import { graphql, compose } from "react-apollo";
 // import NavTopInner from './NavTopInner';
 // import Logo from './Logo.jpg'
 import logoImg from '../Img/Logo';
@@ -17,13 +18,11 @@ class NavTop extends Component {
       isRunOnce: false,
     }
   }
-
-    static propTypes = {}
-
     //Подпись на все сообщения, адресованные тебе
     subscribe = (client) => {
+      console.warn("aaa", this.state.countPriv)
       // call the "subscribe" method on Apollo Client
-      this.subscriptionObserver = client.subscribe({
+      client.subscribe({
         query: ALL_MESSAGE_CREATED,
       }).subscribe({
         next(data) {
@@ -31,8 +30,6 @@ class NavTop extends Component {
           // into the existing list of comments
           let equalGroupMessage
           //пишем мессагу в кэш
-
-          console.warn(data.data)
 
           client.mutate({
             mutation: lastMessageCache,
@@ -53,6 +50,7 @@ class NavTop extends Component {
                   const unr = result.data.unr + 1
                   //пишем суумму всех непрочитанных приватов
 
+                  // this.saveCountPrivs(unr)
                   client.mutate({
                     mutation: cSetCountPrivates,
                     variables: {
@@ -94,7 +92,7 @@ class NavTop extends Component {
 
             return null
           })
-
+          this.saveCountPrivs(privs)
           this.props.client.mutate({
             mutation: cSetCountPrivates,
             variables: {
@@ -110,17 +108,15 @@ class NavTop extends Component {
       });
     }
 
-
     componentDidMount (){
       if (!this.isRunOnce) {
-        // this.queryCounterDirects()
+        this.queryCounterDirects()
         this.subscribe(this.props.client)
-        this.setState({isRunOnce : true});
       }
     }
 
     render() {
-      const { children, name, url } = this.props;
+      const { children, name, url, cGetCountPrivates } = this.props;
       let { img } = this.props;
 
       if (!img) {
@@ -130,6 +126,7 @@ class NavTop extends Component {
       return (
         <div className = "NavTop" >
           <div className = "LogoNav" >
+            ++{cGetCountPrivates.unr}
             <Link to = "/login" >
               <img src = { img }
                 alt = { name || "" }
@@ -143,12 +140,10 @@ class NavTop extends Component {
 
 
 NavTop.propTypes = {
-  // setRefGroups: PropTypes.func.isRequired,
+  cGetCountPrivates: PropTypes.object.isRequired,
   client: PropTypes.object.isRequired,
-  // getRefGroups: PropTypes.shape({
-  //   ref: PropTypes.bool
-  // }).isRequired,
 };
 
-
-export default NavTop;
+export default compose(
+  graphql(cGetCountPrivates, { name: 'cGetCountPrivates' }),
+)(NavTop);
