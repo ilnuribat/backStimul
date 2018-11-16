@@ -237,12 +237,64 @@ button{
 {
   opacity: 0.5;
 }
+
+
+
+.maxiCounter{
+  position: relative;
+  top:10px;
+  right:10px;
+  display: flex;
+  text-align: center;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #45586e9f;
+  width: 20px;
+  height: 18px;
+  color:#fff;
+  vertical-align: middle;
+  font-size:10px;
+  align-self: center;
+  justify-self: center;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .miniCounter{
   position: absolute;
   top:-5px;
   right:-5px;
+  display: flex;
+  text-align: center;
+  border-radius: 999em;
+  overflow: hidden;
   background: #3e75b2;
   width: 16px;
   height: 16px;
   color:#fff;
+  vertical-align: middle;
+  font-size:10px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.TopCounter{
+  position: absolute;
+  top:-5px;
+  right:-5px;
+  display: flex;
+  text-align: center;
+  border-radius: 999em;
+  overflow: hidden;
+  background: #3e75b2;
+  width: 16px;
+  height: 16px;
+  color:#fff;
+  vertical-align: middle;
+  font-size:10px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
