@@ -10,6 +10,7 @@ import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED } from '../../GraphQL/Qur/Subscr';
 import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListDirectUpdate, messagesListTaskUpdate } from '../../GraphQL/Cache';
 import { getUnreadCount } from '../../GraphQL/Qur/Query';
+import { UserRow } from '../Parts/Rows/Rows';
 
 class NavTop extends Component {
   constructor(props) {
@@ -117,22 +118,20 @@ class NavTop extends Component {
 
     render() {
       const { children, name, url, cGetCountPrivates } = this.props;
-      let { img } = this.props;
+      let img = this.props;
 
-      if (!img) {
+      if(!img){
         img = logoImg;
       }
 
       return (
         <div className = "NavTop" >
           <div className = "LogoNav" >
-            ++{cGetCountPrivates.unr}
-            <Link to = "/login" >
-              <img src = { img }
-                alt = { name || "" }
-              />
+            {cGetCountPrivates && cGetCountPrivates.unr ? (<div className="TopCounter">+{cGetCountPrivates.unr}</div>) : null }
+            <Link to="/login" >
+              <UserRow icon={logoImg || img} view="Col" name={ name || localStorage.getItem('username') }></UserRow>
             </Link>
-          </div> { /* <NavTopInner/> */ } { localStorage.getItem('username') } { children }
+          </div> { /* <NavTopInner/> */ }  { children }
         </div>
       )
     }

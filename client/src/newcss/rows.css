@@ -188,3 +188,6 @@
   margin: 2px;
   border-bottom: 1px solid #00000017;
 }
+.UserRow.Col>*{
+margin:0 auto 5px;
+}
