@@ -99,7 +99,7 @@ class App extends Component {
         ) : (
           <Fragment>
             <Nav>
-              <NavTop/>
+              <NavTop client={this.props.client} />
               <NavLinks />
             </Nav>
             <Root>

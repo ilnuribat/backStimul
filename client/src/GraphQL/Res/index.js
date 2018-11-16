@@ -9,7 +9,7 @@ export default {
 
       return {ref, __typename: 'ref' };
     },
-    
+
     setPlace: (_, { id, name, type },  { cache }) => {
       cache.writeData({ data: { id: id, name: name, type: type, } });
 
@@ -165,11 +165,11 @@ export default {
 
       return {lastMessage,lastMessageId, lastMessageGroupId, __typename: 'Direct' };
     },
-    messagesListGroupUpdate: (_, {lastMessage, lastMessageId, lastMessageGroupId},  { cache }) => {
+    messagesListTaskUpdate: (_, {lastMessage, lastMessageId, lastMessageGroupId},  { cache }) => {
 
       const query = gql`
         query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
-          group(id: $id ) @client {
+          task(id: $id ) @client {
             messages(messageConnection: $messageConnection) {
               edges {
                 cursor
@@ -202,9 +202,9 @@ export default {
         __typename: "MessageEdge" };
 
       const data = {
-        group: {
+        task: {
           messages:{
-            edges: [...previousState.group.messages.edges, newFeedItem],
+            edges: [...previousState.task.messages.edges, newFeedItem],
             __typename: "MessageConnection",
           },
           __typename: "Group"

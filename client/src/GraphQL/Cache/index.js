@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 
-export const meGet = gql`
+export const meGet = gql `
   query meGet{
       meid @client
       mename @client
@@ -9,19 +9,19 @@ export const meGet = gql`
     }
 `;
 
-export const getObjectId = gql`
+export const getObjectId = gql `
   query getObjectId{
     currentObjectId @client
       currentObjectName @client
   }
 `;
-export const appendUser = gql`
+export const appendUser = gql `
   query appendUser {
     userName @client
     userId @client
   }
 `;
-export const getChat = gql`
+export const getChat = gql `
   query private{
       id @client
       name @client
@@ -29,12 +29,12 @@ export const getChat = gql`
       priv @client
   }
 `;
-export const cGetCountPrivates = gql`
+export const cGetCountPrivates = gql `
   query countPrivates {
     unr @client
   }
 `;
-export const getlastMessageCache = gql`
+export const getlastMessageCache = gql `
   query getlastMessageCache{
       lastMessage @client {
         groupId
@@ -44,38 +44,38 @@ export const getlastMessageCache = gql`
       id @client
   }
 `;
-export const tempObjGet = gql`
+export const tempObjGet = gql `
   query tempObjGet{
         tempObj @client
       }
 `;
 
-export const getRefGroups = gql`
+export const getRefGroups = gql `
   query Ref{
     ref @client
   }
 `;
 
-export const getTemp = gql`
+export const getTemp = gql `
   query getTemp{
         tempObj @client
       }
 `;
 
-export const getActUrl = gql`
+export const getActUrl = gql `
   query getActUrl{
     ActUrl @client
       }
 `;
 
-export const getBar = gql`
+export const getBar = gql `
   query getBar{
     bar @client
     comp @client
       }
 `;
 
-export const getInfo = gql`
+export const getInfo = gql `
           query Info {
             __info @client{
               id
@@ -85,7 +85,7 @@ export const getInfo = gql`
           }
 `;
 
-export const getDashboard = gql`
+export const getDashboard = gql `
   query getDash{
     rootObject @client{
         objects{
@@ -100,7 +100,7 @@ export const getDashboard = gql`
     }
 `;
 
-export const getPlace = gql`
+export const getPlace = gql `
   query getPlace{
       place @client{
         id
@@ -111,7 +111,7 @@ export const getPlace = gql`
 `;
 
 
-export const getCUser = gql`
+export const getCUser = gql `
 query getCUser{
     user @client{
       groups{
@@ -139,7 +139,7 @@ query getCUser{
     }
 }`;
 
-export const getObjectTasksTemp = gql`
+export const getObjectTasksTemp = gql `
  query getObjectTasksTemp($id: ID!){
   object (id: $id) @client{
       tasks{
@@ -154,28 +154,28 @@ export const getObjectTasksTemp = gql`
 
 
 
-export const tempObj = gql`
+export const tempObj = gql `
   mutation tempObj($tempObj: String!){
     tempObj (tempObj: $tempObj) @client{
       tempObj
     }
   }
 `;
-export const setActUrl = gql`
+export const setActUrl = gql `
   mutation setActUrl($ActUrl: String){
     setActUrl(ActUrl: $ActUrl) @client{
       ActUrl
     }
   }
 `;
-export const setDashboard = gql`
+export const setDashboard = gql `
   mutation setBar($Dash: String){
     setDash(Dash: $Dash) @client{
       rootObject
     }
   }
 `;
-export const setPlace = gql`
+export const setPlace = gql `
   mutation setPlace($id: String, $name: String, $type: String ){
     setPlace(id: $id, name: $name, type: $type) @client{
       place{
@@ -186,23 +186,23 @@ export const setPlace = gql`
     }
   }
 `;
-export const setTemp = gql`
+export const setTemp = gql `
   mutation setTemp($tempObj: String){
     setTemp(tempObj: $tempObj) @client{
       tempObj
     }
   }
 `;
-export const messagesListGroupUpdate = gql`
-  mutation messagesListGroupUpdate($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
-    messagesListGroupUpdate(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
+export const messagesListTaskUpdate = gql `
+  mutation messagesListTaskUpdate($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
+    messagesListTaskUpdate(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
       lastMessage
       lastMessageId
       lastMessageGroupId
     }
   }
 `;
-export const messagesListDirectUpdate = gql`
+export const messagesListDirectUpdate = gql `
   mutation messagesListDirectUpdate($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
     messagesListDirectUpdate(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
       lastMessage
@@ -211,14 +211,14 @@ export const messagesListDirectUpdate = gql`
     }
   }
 `;
-export const delInfo = gql`
+export const delInfo = gql `
   mutation delInfo($id: String){
     delInfo(id: $id) @client{
       id
     }
   }
 `;
-export const setInfo = gql`
+export const setInfo = gql `
   mutation setInfo($id: String, $message: String, $type:String){
     setInfo(id: $id, message: $message, type: $type) @client{
       id
@@ -227,7 +227,7 @@ export const setInfo = gql`
     }
   }
 `;
-export const setRefGroups = gql`
+export const setRefGroups = gql `
 mutation Ref($ref: String){
   ref(ref: $ref) @client{
     ref
@@ -236,7 +236,7 @@ mutation Ref($ref: String){
 `;
 
 
-export const setBar = gql`
+export const setBar = gql `
 mutation setBar($bar: Boolean, $comp: String){
   setBar(bar: $bar, comp: $comp,) @client{
     bar
@@ -244,14 +244,14 @@ mutation setBar($bar: Boolean, $comp: String){
   }
 }
 `;
-export const cSetCountPrivates = gql`
+export const cSetCountPrivates = gql `
   mutation countPrivates($unr:Number){
     countPrivates(unr: $unr) @client{
       unr
     }
   }
 `;
-export const selectUser = gql`
+export const selectUser = gql `
   mutation selectUser($userName: String!, $userId: String!) {
     selectUser(userName: $userName, userId: $userId) @client {
       userName
@@ -260,7 +260,7 @@ export const selectUser = gql`
   }
 `;
 
-export const cSetChats = gql`
+export const cSetChats = gql `
   mutation privates($name: String!, $id: String!){
     privates(name: $name, id: $id) @client {
       chats
@@ -268,7 +268,7 @@ export const cSetChats = gql`
   }
 `;
 
-export const setChat = gql`
+export const setChat = gql `
   mutation private($name: String!, $id: String!){
     private(name: $name, id: $id) @client {
       id
@@ -277,7 +277,7 @@ export const setChat = gql`
   }
 `;
 
-export const setObjectId = gql`
+export const setObjectId = gql `
   mutation setObjectId($name: String!, $id: String!){
     setObjectId(name: $name, id: $id) @client {
       id
@@ -285,7 +285,7 @@ export const setObjectId = gql`
     }
   }
 `;
-export const rootId = gql`
+export const rootId = gql `
   mutation rootId($id: String!){
     rootId(id: $id) @client {
       rootId
@@ -293,7 +293,7 @@ export const rootId = gql`
   }
 `;
 
-export const meSet = gql`
+export const meSet = gql `
   mutation meSet($meid: String, $mename: String, $memail: String) {
     meSet(meid: $meid, mename: $mename, memail: $memail) @client {
       meid
@@ -303,7 +303,7 @@ export const meSet = gql`
   }
 `;
 
-export const lastMessageCache = gql`
+export const lastMessageCache = gql `
   mutation lastMessageCache($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
     lastMessageCache(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
       lastMessage
