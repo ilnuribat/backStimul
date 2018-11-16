@@ -128,11 +128,10 @@ class Private extends React.Component {
                           }
 
                           return(
-                            <div className="RowBg">
+                            <div className="RowBg Row" key={'users-'+i}>
                             <UserRow key={'users-'+i} size="32" icon="1" id={e.id} name={e.name} click={()=>this.openPrivate(e.id, e.name)}>
                             </UserRow>
-                            {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="miniCounter">{e.unreadCount}</span>) : null}
-                            <span className="miniCounter">5</span>
+                            {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
                             </div>
                             
                             // <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
@@ -179,7 +178,7 @@ class Private extends React.Component {
                         <div className="tab-roll">
                         <div className="header"><h4>Добавить пользователя</h4></div>
                         <div className="content">
-                            <label className="Pad" for="users">
+                            <label className="Pad" htmlFor="users">
                               <input type="list" name="users" list="users" autoComplete="on" onChange={(e)=>this.newUser(e, data.users)} />
                               {
                                   <div className="Button3" onClick={()=>this.CreateNewGroup()}>Добавить{/*this.state.newUser*/}</div>
