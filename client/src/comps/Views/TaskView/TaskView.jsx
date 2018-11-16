@@ -395,9 +395,10 @@ class TaskView extends Component {
                     Добавить родительскую задачу
                         </ModalBlockName>
                         <label htmlFor="">
-                          <select onChange={(e)=>{this.writeTaskData(e, "parentId", true)}} defaultValue={data.task.parentId} >
+                          <select onChange={(e)=>{e.target.value !=0 ? this.writeTaskData(e, "parentId", true) : null}} defaultValue={data.task.parentId} >
+                            { !data.task.parentId ? <option value="0">Выбрать задачу</option> : null}
                             {
-                              allTasks.map((e,i)=>{
+                              allTasks.map((e)=>{
                                 return(
                                   <option key={e.id} value={e.id} selected={data.task.parentId===e.id ? true: false }>{e.name}</option>
                                 )
