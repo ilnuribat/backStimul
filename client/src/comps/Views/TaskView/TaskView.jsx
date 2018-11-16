@@ -236,64 +236,64 @@ class TaskView extends Component {
             if (data.task.endDate) dataValue = data.task.endDate.replace(/T.*$/gi, "")
 
             return(
-                <Content view="OvH">
-                    <div className="TaskViewTop">
-                      <ButtonTo url={"/board"} icon="back">Назад</ButtonTo>
-                      <div className="TaskViewTopName"><h1>{taskName}</h1></div>
-                    </div>
-                  <div className="TaskView Row Pad10">
-                    <div className="TaskViewInner" view="">
-                      <ChatView name={taskName} id={taskId} taskInfo={ data.task } priv={0} />
-                    </div>
-                      <InnerBar>
-                  {
-                    taskId ? (
-                      <div className="tab-roll">
-                        <div className="header"><h4>Пользователи</h4></div>
-                        <div className="content">
-                          <div className="content-scroll">
+              <Content view="OvH">
+                <div className="TaskViewTop">
+                  <ButtonTo url={"/board"} icon="back">Назад</ButtonTo>
+                  <div className="TaskViewTopName"><h1>{taskName}</h1></div>
+                </div>
+                <div className="TaskView Row Pad10">
+                  <div className="TaskViewInner" view="">
+                    <ChatView name={taskName} id={taskId} taskInfo={ data.task } priv={0} />
+                  </div>
+                  <InnerBar>
+                    {
+                      taskId ? (
+                        <div className="tab-roll">
+                          <div className="header"><h4>Пользователи</h4></div>
+                          <div className="content">
+                            <div className="content-scroll">
 
-                            {data.task.users.map(
-                              (e,i)=>{
-                                return(
-                                  <div className="username" role="presentation" key={'usr-'+i} >
-                                    {localStorage.getItem('userid') !== e.id ?
-                                      <UserRow id={e.id} name={e.username} icon="1" />
-                                      : null }
-                                    <div className="hoverTrigger">
-                                      <div className="hover">
-                                        <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
-                                        <div className="btn v2" onClick={()=>this.userAdd(e.id)}>Удалить {e.username}</div>
+                              {data.task.users.map(
+                                (e,i)=>{
+                                  return(
+                                    <div className="username" role="presentation" key={'usr-'+i} >
+                                      {localStorage.getItem('userid') !== e.id ?
+                                        <UserRow id={e.id} name={e.username} icon="1" />
+                                        : null }
+                                      <div className="hoverTrigger">
+                                        <div className="hover">
+                                          <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
+                                          <div className="btn v2" onClick={()=>this.userAdd(e.id)}>Удалить {e.username}</div>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                )
+                                  )
+                                }
+                              )
                               }
-                            )
-                            }
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ): null
-                  }
-                  {
-                    taskId ? (
-                      <div className="tab-roll">
-                        <div className="header"></div>
-                        <div className="content">
-                          <div className="Button2" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Информация</div>
-                          <div className="content-scroll">
+                      ): null
+                    }
+                    {
+                      taskId ? (
+                        <div className="tab-roll">
+                          <div className="header"></div>
+                          <div className="content">
+                            <div className="Button2" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Информация</div>
+                            <div className="content-scroll">
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ) : null
-                  }
-                  {
-                    taskId? (
-                      <div className="tab-roll">
-                        <div className="header"><h4>Добавить пользователя</h4></div>
-                        <div className="content">
-                            <label className="Pad" for="users">
+                      ) : null
+                    }
+                    {
+                      taskId? (
+                        <div className="tab-roll">
+                          <div className="header"><h4>Добавить пользователя</h4></div>
+                          <div className="content">
+                            <label className="Pad" htmlFor="users">
                               <input type="list" name="users" list="users" autoComplete="on" onChange={this.newUser} />
                               {
                                 this.state.newUser ? (
@@ -312,12 +312,12 @@ class TaskView extends Component {
                                   )
                                 }
                               </datalist>
-                          </label>
+                            </label>
+                          </div>
                         </div>
-                      </div>
-                    ) : null
-                  }
-                  {/* {taskId ? (
+                      ) : null
+                    }
+                    {/* {taskId ? (
                     !upload ? (
                       <div className="tab-roll">
                         <div className="header"></div>
@@ -344,89 +344,89 @@ class TaskView extends Component {
                     )
                   ): null
                   } */}
-                </InnerBar>                    
+                  </InnerBar>
                 </div>
-                  {modal ? (
-                    <Modal close={()=>{ this.setState({modal: !modal}) }} >
-                      <InputWrapper name={data.task.name} save="Сохранить" click={this.writeTaskName}>
+                {modal ? (
+                  <Modal close={()=>{ this.setState({modal: !modal}) }} >
+                    <InputWrapper name={data.task.name} save="Сохранить" click={this.writeTaskName}>
                         Название
-                      </InputWrapper>
+                    </InputWrapper>
 
-                      <ModalRow>
-                        <ModalCol>
-                          <ModalBlockName>
-                            Статус
-                          </ModalBlockName>
-                          <label htmlFor="">
-                            <select onChange={(e)=>{this.writeTaskData(e, "status", false)}} defaultValue={taskStatus}>
-                              {/* <option value="0">Выбрать задачу</option> */}
-                              {
-                                status.map((e)=>(
-                                  <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
-                                    {e.name}
-                                  </option>
-                                ))
-                              }
-                            </select>
-                          </label>
-                        </ModalCol>
-
-                        <ModalCol>
-                          <ModalBlockName>
-                            Ответственный
-                          </ModalBlockName>
-                          {/* <UserRow id={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : null} name={data.task.assignedTo && data.task.assignedTo.username ? data.task.assignedTo.username : "null"} icon="e" /> */}
-                          <ResponsiblePerson data={data.task} onClick1={this.writeTaskData}/>
-                        </ModalCol>
-                      </ModalRow>
-
-                      <ModalRow>
-                        <ModalCol>
-                          <div className="ModalBlockName">
-                      Срок истечения
-                          </div>
-                          <label htmlFor="">
-                            <input type="date" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
-                          </label>
-                        </ModalCol>
-
-                        <ModalCol>
-                          <ModalBlockName>
-                    Добавить родительскую задачу
-                          </ModalBlockName>
-                          <label htmlFor="">
-                            <select onChange={(e)=>{this.writeTaskData(e, "parentId", true)}} defaultValue={data.task.parentId}>
-                              {
-                                allTasks.map((e,i)=>{
-                                  return(
-                                    <option key={e.id} value={e.id}>{e.name}</option>
-                                  )
-                                })
-                              }
-                            </select>
-                          </label>
-                        </ModalCol>
-                      </ModalRow>
+                    <ModalRow>
                       <ModalCol>
                         <ModalBlockName>
-                  Добавить вложения
+                            Статус
                         </ModalBlockName>
-                        <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
-                        <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
-                        <ModalCol>
-                          <div className="files-drop">
-                            <Svg svg="tocloud" inline={0} />переместите файлы сюдa
-                          </div>
-                        </ModalCol>
+                        <label htmlFor="">
+                          <select onChange={(e)=>{this.writeTaskData(e, "status", false)}} defaultValue={taskStatus}>
+                            {/* <option value="0">Выбрать задачу</option> */}
+                            {
+                              status.map((e)=>(
+                                <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
+                                  {e.name}
+                                </option>
+                              ))
+                            }
+                          </select>
+                        </label>
                       </ModalCol>
-                    </Modal>
-                  ) : null
 
-                  }
+                      <ModalCol>
+                        <ModalBlockName>
+                            Ответственный
+                        </ModalBlockName>
+                        {/* <UserRow id={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : null} name={data.task.assignedTo && data.task.assignedTo.username ? data.task.assignedTo.username : "null"} icon="e" /> */}
+                        <ResponsiblePerson data={data.task} onClick1={this.writeTaskData}/>
+                      </ModalCol>
+                    </ModalRow>
+
+                    <ModalRow>
+                      <ModalCol>
+                        <div className="ModalBlockName">
+                      Срок истечения
+                        </div>
+                        <label htmlFor="">
+                          <input type="date" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
+                        </label>
+                      </ModalCol>
+
+                      <ModalCol>
+                        <ModalBlockName>
+                    Добавить родительскую задачу
+                        </ModalBlockName>
+                        <label htmlFor="">
+                          <select onChange={(e)=>{this.writeTaskData(e, "parentId", true)}} defaultValue={data.task.parentId} >
+                            {
+                              allTasks.map((e,i)=>{
+                                return(
+                                  <option key={e.id} value={e.id} selected={data.task.parentId===e.id ? true: false }>{e.name}</option>
+                                )
+                              })
+                            }
+                          </select>
+                        </label>
+                      </ModalCol>
+                    </ModalRow>
+                    <ModalCol>
+                      <ModalBlockName>
+                  Добавить вложения
+                      </ModalBlockName>
+                      <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+                      <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
+                      <ModalCol>
+                        <div className="files-drop">
+                          <Svg svg="tocloud" inline={0} />переместите файлы сюдa
+                        </div>
+                      </ModalCol>
+                    </ModalCol>
+                  </Modal>
+                ) : null
+
+                }
 
 
 
-                </Content>
+              </Content>
             )}
           }
         </Query>
