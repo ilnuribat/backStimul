@@ -54,31 +54,6 @@ const apolloServer = new ApolloServer({
       ...ctx,
     };
   },
-  subscriptions: {
-    async onConnect(connectionParams, websocket, context) {
-      const [type = '', body] = connectionParams.Authorization.split(' ');
-
-      if (type.toLowerCase() !== 'bearer') {
-        throw new Error('its not bearer');
-      }
-
-      const res = jwt.verify(body, JWT_SECRET);
-
-      if (!res || !res.id) {
-        throw new Error('bad payload');
-      }
-
-      const user = await User.findById(res.id);
-
-      if (!user) {
-        throw new Error('no user found');
-      }
-
-      Object.assign(context, { user });
-
-      return context;
-    },
-  },
 });
 
 const app = express();
@@ -97,7 +72,7 @@ async function start() {
       resolve();
     });
 
-    SubscriptionServer.create({
+    const subscriptionServer = SubscriptionServer.create({
       schema,
       execute,
       subscribe,
@@ -105,6 +80,28 @@ async function start() {
       server,
       path: '/graphql',
     });
+
+    subscriptionServer.onConnect = async (connectionParams) => {
+      const [type = '', body] = connectionParams.Authorization.split(' ');
+
+      if (type.toLowerCase() !== 'bearer') {
+        throw new Error('its not bearer');
+      }
+
+      const res = jwt.verify(body, JWT_SECRET);
+
+      if (!res || !res.id) {
+        throw new Error('bad payload');
+      }
+
+      const user = await User.findById(res.id);
+
+      if (!user) {
+        throw new Error('no user found');
+      }
+
+      return user;
+    };
   });
 }
 
@@ -113,7 +110,4 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 
-module.exports = {
-  app,
-  start,
-};
+module.exports = { app };
