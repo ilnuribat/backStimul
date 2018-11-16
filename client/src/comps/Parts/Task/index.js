@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import '../../../newcss/column.css'
 /** Column view */
 import { Svg } from '../../Parts/SVG/index';
+import { UserRow } from '../Rows/Rows';
 
 class Task extends Component {
   constructor(props) {
@@ -57,9 +58,14 @@ class Task extends Component {
               ) : null
             }
             <div className="Bottom">
-              <div className="TaskUserPhoto"></div>
+              <div className="TaskUserPhoto">
+                <UserRow icon="1" />
+              </div>
               <div className="Childs" onClick={()=>childs(id)}>
                 <Svg svg="deps"></Svg>
+              </div>
+              <div className="Childs" onClick={()=>id.deleteTask(id)}>
+                <Svg svg="del"></Svg>
               </div>
             </div>
             {/* <div className="linked" onClick={()=>click(id, name)}>
