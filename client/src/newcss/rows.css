@@ -50,10 +50,10 @@
 }
 .UserRow .UserIcon{
   flex:1 1 auto;
-  height: 48px;
-  width: 48px;
-  max-height: 48px;
-  max-width: 48px;
+  height: 32px;
+  width: 32x;
+  max-height: 32px;
+  max-width: 32px;
   border-radius: 999em;
   background-color: #303338f1;
   margin:0 20px 0 0;

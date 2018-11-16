@@ -140,7 +140,7 @@ export default class MessagesList extends Component {
                     <div className="text prewr">{messageText}</div>
                     <div className="f-row">
                       { id === uid ? (
-                        <div>
+                        <div className="chatIcon">
                           { !read ? (
                             <Query
                               query={MESSAGE_QUERY}
