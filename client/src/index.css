@@ -159,6 +159,7 @@ a{
 @import './newcss/svg.css';
 @import './newcss/rows.css';
 @import './newcss/messages.css';
+@import './newcss/map.css';
 
 
 .Button {
