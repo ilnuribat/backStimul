@@ -65,8 +65,8 @@ export default class MessagesList extends Component {
 
     if(data && priv && data.direct && data.direct.messages && data.direct.messages.edges ){
       datas = data.direct.messages.edges;
-    }else if(data && data.group && data.group.messages && data.group.messages.edges ){
-      datas = data.group.messages.edges;
+    }else if(data && data.task && data.task.messages && data.task.messages.edges ){
+      datas = data.task.messages.edges;
     }else{
       return(<div className="mess">нет данных</div>)
     }
@@ -127,43 +127,43 @@ export default class MessagesList extends Component {
               return(
                 <div className={'msg '+ tr} key={'chat-'+i} from={id}>
                   {/* <div className="msg-flex"> */}
-                    {same ? (<div className="msg-user" style={{color: colorHash.hex(username)}}>
-                        </div>) : (
-                      <div className="msg-user" style={{color: colorHash.hex(username)}}>
-                        {username}</div>)}
-                    <blockquote className={"msgs"}>
+                  {same ? (<div className="msg-user" style={{color: colorHash.hex(username)}}>
+                  </div>) : (
+                    <div className="msg-user" style={{color: colorHash.hex(username)}}>
+                      {username}</div>)}
+                  <blockquote className={"msgs"}>
 
-                      <div className="text prewr">{messageText}</div>
-                      <div className="f-row">
-                        { id === uid ? (
-                          <div>
-                            { !read ? (
-                              <Query
-                                query={MESSAGE_QUERY}
-                                variables={{ id:node.id }}
-                              >
-                                {({ data, subscribeToMore }) => {
-                                  // console.warn("subs", subscribeToMore)
-                                  subscribeToRead(subscribeToMore, node.id);
-                                  // console.log("subscribeToMore_______________________________");
-                                  // console.log(subscribeToMore);
+                    <div className="text prewr">{messageText}</div>
+                    <div className="f-row">
+                      { id === uid ? (
+                        <div>
+                          { !read ? (
+                            <Query
+                              query={MESSAGE_QUERY}
+                              variables={{ id:node.id }}
+                            >
+                              {({ data, subscribeToMore }) => {
+                                // console.warn("subs", subscribeToMore)
+                                subscribeToRead(subscribeToMore, node.id);
+                                // console.log("subscribeToMore_______________________________");
+                                // console.log(subscribeToMore);
 
-                                  return(
-                                    <div className="events">{data.message && data.message.isRead ? <MsgDblcheckAck /> : <MsgDblcheck />}  {
-                                      // console.warn('subs read data',data)
-                                    }</div>
-                                  )}
-                                }
-                              </Query>
-                            ) : ( <MsgDblcheckAck /> ) }
-                          </div>
-                        ) : null }
+                                return(
+                                  <div className="events">{data.message && data.message.isRead ? <MsgDblcheckAck /> : <MsgDblcheck />}  {
+                                    // console.warn('subs read data',data)
+                                  }</div>
+                                )}
+                              }
+                            </Query>
+                          ) : ( <MsgDblcheckAck /> ) }
+                        </div>
+                      ) : null }
 
 
-                        <div className="msg-date">{date}</div>
-                      </div>
+                      <div className="msg-date">{date}</div>
+                    </div>
 
-                    </blockquote>
+                  </blockquote>
                   {/* </div> */}
                 </div>
               )

@@ -204,8 +204,7 @@ class TaskView extends Component {
 
   render() {
     const {upload, allusers, taskName, taskId, modal, status, allTasks } = this.state;
-
-    console.warn("TASKID", status)
+    // console.warn("TASKID", status)
 
     return(
       taskId ?
