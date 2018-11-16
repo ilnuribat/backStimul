@@ -35,6 +35,11 @@ export const crTask = (...params) => { return (`
       }
 `) };
 
+export const deleteTask = (id) => { return (`
+  mutation{
+        deleteTask(id: "${id}")
+      }
+`) };
 
 
 export const MESSAGEREAD_MUT = gql `

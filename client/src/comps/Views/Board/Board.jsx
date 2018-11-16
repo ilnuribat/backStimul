@@ -19,7 +19,7 @@ import '../../../newcss/task.css';
 import { Svg } from '../../Parts/SVG/index';
 import { ButtonRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
-import { updTask, crTask } from '../../../GraphQL/Qur/Mutation';
+import { updTask, crTask, deleteTask } from '../../../GraphQL/Qur/Mutation';
 
 let ref;
 
@@ -38,6 +38,7 @@ class Board extends Component {
       toTask: false,
       showChilds: false,
       modal: false,
+      modalDelete: false
     };
 
     this.daTa = this.daTa.bind(this)
@@ -51,6 +52,8 @@ class Board extends Component {
     this.closeModal = this.closeModal.bind(this)
     this.writeTaskName = this.writeTaskName.bind(this)
     this.writeTaskData = this.writeTaskData.bind(this)
+    this.deleteTask = this.deleteTask.bind(this)
+    this.changeDelModal = this.changeDelModal.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
@@ -145,16 +148,32 @@ class Board extends Component {
   }
 
   glossStatus(){
-    qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
-      this.setState({
-        status: ["",...a.data.glossary.taskStatuses],
-      });
-    })
-      .catch((e)=>{
-        console.warn(e);
-      });
+    if (this.state.status.length === 0)
+      qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
+        this.setState({
+          status: ["",...a.data.glossary.taskStatuses],
+        });
+      })
+        .catch((e)=>{
+          console.warn(e);
+        });
   }
 
+  deleteTask () {
+    qauf(deleteTask(this.state.taskId), _url, localStorage.getItem('auth-token')).then(a=>{
+      console.warn("delete task done", a)
+      this.changeDelModal()
+    }).catch((e)=>{
+      console.warn(e);
+    })
+  }
+
+  changeDelModal (id) {
+    this.setState({
+      taskId: id,
+      modalDelete: !this.state.modalDelete,
+    });
+  }
 
   writeTaskName(name) {
     // console.warn("writeName", name, this.state.taskId)
@@ -216,48 +235,49 @@ class Board extends Component {
 
     if(objectId && status){
       return (
-        <Content>
-          <Query query={getObjectTasks} variables={{ id: objectId}} >
-            {({ loading, error, data, refetch }) => {
-              if (loading){
-                return (
-                  <div style={{ paddingTop: 20, margin: "auto"}}>
-                    <Loading />
-                  </div>
-                );
+        <Query query={getObjectTasks} variables={{ id: objectId}} >
+          {({ loading, error, data, refetch }) => {
+            if (loading){
+              return (
+                <div style={{ paddingTop: 20, margin: "auto"}}>
+                  <Loading />
+                </div>
+              );
+            }
+            if (error){
+              setInfo({variables:{id:"id",message:error.message, type:"error"}})
+              console.warn('Error', error.message)
+
+              return(
+                "error"
+              );
+            }
+
+            if(data && data.object){
+              let selected = false;
+
+              ref = refetch
+
+              if (this.state.curParentId && this.state.showChilds)
+              {
+                data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
               }
-              if (error){
-                setInfo({variables:{id:"id",message:error.message, type:"error"}})
-                console.warn('Error', error.message)
+              console.warn("DATA IS", data.object.tasks)
 
-                return(
-                  "error"
-                );
-              }
+              let arr = _.sortBy(data.object.tasks, 'status');
 
-              if(data && data.object){
-                let selected = false;
-                ref = refetch
-
-                if (this.state.curParentId && this.state.showChilds)
-                {
-                  data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
-
+              arr = _.sortBy(data.object.tasks, 'unreadCount');
+              _.forEach(arr, (result)=>{
+                if(!result.status){
+                  cols[1].push(result);
                 }
+                if(result.status){
+                  cols[result.status].push(result);
+                }
+              });
 
-                let arr = _.sortBy(data.object.tasks, 'status');
-
-                arr = _.sortBy(data.object.tasks, 'unreadCount');
-                _.forEach(arr, (result)=>{
-                  if(!result.status){
-                    cols[1].push(result);
-                  }
-                  if(result.status){
-                    cols[result.status].push(result);
-                  }
-                });
-
-                return(
+              return(
+                <Content>
                   <div className="Board">
                     <div className="Board-Top">
                       {
@@ -277,6 +297,12 @@ class Board extends Component {
 
                     </div>
                     <div className="Board-Content">
+                      {this.state.modalDelete? (
+                        <Modal close={this.changeDelModal} width="350">
+                          Удалить задачу?
+                          <ButtonRow iconright="1" click={this.deleteTask}>Удалить</ButtonRow>
+                        </Modal>
+                      ) : null }
                       {this.state.modal ? (
                         <Modal close={this.closeModal} >
                           <InputWrapper name="Ведите название задачи" save="Сохранить" click={this.writeTaskName}>
@@ -349,7 +375,7 @@ class Board extends Component {
                                   } else { selected = false; }
 
                                   return(
-                                    <Task key={task.id} id={task.id} selected={selected} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs}/>
+                                    <Task key={task.id} id={task.id} selected={selected} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal}/>
                                   )
                                 })
                               }
@@ -359,15 +385,12 @@ class Board extends Component {
                       }
                     </div>
                   </div>
-                )
+                </Content>
+              )
 
-              }else{
-                return "data"
-              }
-
-            }}
-          </Query>
-        </Content>
+            }
+          }}
+        </Query>
       )
     }else{
       // console.warn("status")
