@@ -99,7 +99,7 @@ class Private extends React.Component {
 
     if(uid){
       console.log(createDirect(params));
-      return true
+      // return true
       qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
         if(a && a.data){
           ref1()
