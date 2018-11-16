@@ -127,7 +127,7 @@ class NavTop extends Component {
       return (
         <div className = "NavTop" >
           <div className = "LogoNav" >
-            {cGetCountPrivates && cGetCountPrivates.unr ? (<div className="TopCounter">+5{cGetCountPrivates.unr}</div>) : null }
+            {cGetCountPrivates && cGetCountPrivates.unr ? (<div className="TopCounter">+{cGetCountPrivates.unr}</div>) : null }
             <Link to="/login" >
               <UserRow size="38" icon={logoImg || img} view="Col" name={ name || localStorage.getItem('username') }></UserRow>
             </Link>
