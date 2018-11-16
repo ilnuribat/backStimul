@@ -57,15 +57,23 @@ class Private extends Component {
 
     return(
       <Fragment>
-        <Content view="OvH">
-          <ContentInner view="Row OvH Pad10">
-            {
-              this.props.getchat && this.props.getchat.id ? <ChatView key={this.props.getchat.id} name={this.props.getchat.name} id={this.props.getchat.id} priv={1} /> : (<div className="errorMessage">Выберите чат</div>)
-            }
-            <InnerBar>
-              <PrivateBar />
-            </InnerBar>
-          </ContentInner>
+        <Content view="OvH Row OvH Pad10">
+          {
+            this.props.getchat && this.props.getchat.id ?
+              <ContentInner view="Row OvH Pad10">
+                <ChatView key={this.props.getchat.id} name={this.props.getchat.name} id={this.props.getchat.id} priv={1} />
+              </ContentInner>
+              : 
+              (
+                <ContentInner view="Row OvH Pad10">
+                  <div className="errorMessage">Выберите чат</div>
+                </ContentInner>
+              )
+          }
+          <InnerBar>
+            <PrivateBar />
+          </InnerBar>
+          
         </Content>
       </Fragment>
     );

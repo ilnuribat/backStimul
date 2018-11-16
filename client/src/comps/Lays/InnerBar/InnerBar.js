@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const InnerBar = props => {
   return (
-    <div className="InnerBar">
+    <div className={"InnerBar"+" "+props.view}>
       { props.children }
     </div>
   )
