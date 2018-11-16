@@ -1,13 +1,13 @@
 import gql from 'graphql-tag';
 
 export const updTask = (...params) => {
-  return (`mutation{
+    return (`mutation{
         updateTask(id: "${params[0]}", task: ${params[1]})
       }`)
 };
 
 export const createGroup = (params) => {
-  return (`mutation{
+    return (`mutation{
           createGroup(group: ${params}){
             id
           }
@@ -15,35 +15,35 @@ export const createGroup = (params) => {
 };
 
 export const createDirect = (params) => {
-  return (`mutation{
+    return (`mutation{
           directMessage(id: ${params}){
             id
           }
         }`)
 };
-export const groupMut = (gid,params) =>`
+export const groupMut = (gid, params) => `
   mutation{
     updateGroup(id: "${gid}", group: {${params}})
   }
 `;
 
-export const crTask = (...params) => {return(`
+export const crTask = (...params) => { return (`
   mutation{
-        createTask(${params}){
+        createTask(task: ${params}){
           id
         }
       }
-`)};
+`) };
 
 
 
-export const MESSAGEREAD_MUT = gql`
+export const MESSAGEREAD_MUT = gql `
   mutation message($id: ID!){
     messageRead(id: $id )
   }
 `;
 
-export const createTask = gql`
+export const createTask = gql `
   mutation createTask($name: String, $id: ID!) {
     createTask(task: { name: $name, objectId: $id }) {
       id
@@ -52,13 +52,13 @@ export const createTask = gql`
   }
 `;
 
-export const messageRead_MUT = (id)=> {return(`
+export const messageRead_MUT = (id) => { return (`
 mutation {
   messageRead(id: "${id}" )
 }
-`)};
+`) };
 
-export const createObject = gql`
+export const createObject = gql `
   mutation createObject($name: String, $address: String!) {
     createObject(object: { name: $name, address: $address }) {
       id
@@ -67,14 +67,14 @@ export const createObject = gql`
   }
 `;
 
-export const changeObject = gql`
+export const changeObject = gql `
   mutation changeObject($id: ID!, $name: String, $address: String!) {
     updateObject(id: $id, object: { name: $name, address: $address })
   }
 `;
 
 
-export const deleteObject = (id) =>`
+export const deleteObject = (id) => `
   mutation{
     deleteObject(id: "${id}")
   }
@@ -83,7 +83,7 @@ export const deleteObject = (id) =>`
 
 
 
-export const ADD_MUT = gql`
+export const ADD_MUT = gql `
 mutation Add($id: String!, $text: String! ){
     createMessage(message:{groupId: $id, text: $text}){
       id
@@ -98,7 +98,7 @@ mutation Add($id: String!, $text: String! ){
   }`;
 
 
-export const uploadFile = gql`
+export const uploadFile = gql `
   mutation($file: Upload!, $id: ID!) {
     uploadFile(id: $id, file: $file) {
       id
@@ -107,13 +107,3 @@ export const uploadFile = gql`
     }
   }
 `;
-
-
-
-
-
-
-
-
-
-
