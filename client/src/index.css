@@ -97,6 +97,7 @@ a{
     overflow-y: auto;
 }
 
+
 .Divs {
     display: block;
     border: 5px solid red;
@@ -107,6 +108,25 @@ a{
 .Bar,.Panel{
   padding: 20px;
 }
+
+.InnreBarParent{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row !important;
+}
+.InnerBar{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 300px;
+  height: 100%;
+  border-radius: 6px;
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
+  background-color: #3d4147;
+}
+
 
 @import './newcss/nav.css';
 @import './newcss/bar.css';
@@ -153,4 +173,24 @@ button{
   border:0 none transparent;
   margin:0;
   padding:0;
+}
+
+.Row{
+  display: flex;
+  flex-direction: row;
+}
+.Col{
+  display: flex;
+  flex-direction: column;
+}
+.OvH{
+  overflow: hidden;
+}
+.OvY{
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+.OvX{
+  overflow-y: hidden;
+  overflow-x: auto;
 }
