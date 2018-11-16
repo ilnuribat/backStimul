@@ -9,7 +9,8 @@ export const FileRow = ({ children, id, name, filename, url, fileid, icon, click
   return(
     <div className={`FileRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("file", fileid||id,url )}}>
       { icon ? (<div className="FileIcon"><Svg svg={icon || icon != 1 ? icon : "doc"} inline={1} /></div>):null}
-      <div className="FileName">{filename || name}</div>
+      { filename || name ? (<div className="FileName">{filename || name}</div>):null}
+      {children}
     </div>
   )
 }
@@ -17,7 +18,8 @@ export const IconRow = ({ children, id, name, url, icon, click, box, size, type,
   return(
     <div className={`IconRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("Row", id,url )}}>
       { icon ? (<div className="RowIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>):null}
-      <div className="RowName">{name}</div>
+      {name? (<div className="RowName">{name}</div>):null}
+      {children}
     </div>
   )
 }
@@ -27,6 +29,7 @@ export const UserRow = ({ children, id, name, username, url, userid, icon, click
     <div className={`UserRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("user", userid||id,url )}}>
       { icon ? (<div className={box?"UserIcon Boxed":"UserIcon"} style={size ? {"width":size+'px',"maxWidth":size+'px',"maxHeight":size+'px', "height":size+'px'} : null}><img src={icon && icon != 1 ? icon : userDefault} /></div>):null}
       { username || name ? (<div className="UserName">{username || name}</div>):null}
+      {children}
     </div>
   )
 }
@@ -34,7 +37,7 @@ export const ButtonRow = ({ children, id, name, url, icon, click, box, iconright
   return(
     <div className={`ButtonRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("button", id,url )}}>
       {icon && !iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
-      <div className="ButtonName">{children || name}</div>
+      {children || name ? (<div className="ButtonName">{children || name}</div>):null}
       {icon && iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
     </div>
   )

@@ -237,3 +237,12 @@ button{
 {
   opacity: 0.5;
 }
+.miniCounter{
+  position: absolute;
+  top:-5px;
+  right:-5px;
+  background: #3e75b2;
+  width: 16px;
+  height: 16px;
+  color:#fff;
+}

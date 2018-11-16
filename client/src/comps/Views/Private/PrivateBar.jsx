@@ -130,8 +130,9 @@ class Private extends React.Component {
                           return(
                             <div className="RowBg">
                             <UserRow key={'users-'+i} size="32" icon="1" id={e.id} name={e.name} click={()=>this.openPrivate(e.id, e.name)}>
-                            {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="small-ruond-info">{e.unreadCount}</span>) : null}
                             </UserRow>
+                            {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="miniCounter">{e.unreadCount}</span>) : null}
+                            <span className="miniCounter">5</span>
                             </div>
                             
                             // <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>

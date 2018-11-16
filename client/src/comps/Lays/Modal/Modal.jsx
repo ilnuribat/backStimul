@@ -67,13 +67,13 @@ class Modal extends Component {
   }
 
   render() {
-    const { children, big, small, click, close } = this.props;
+    const { children, big, small, click, close, size } = this.props;
 
     return (
       <div className="ModalFull">
         <div className="ModalWrap">
 
-          <div className="ModalBig">
+          <div className="ModalBig" style={size ? {"maxWidth":size+"px"} : "" }>
             <ModalClose click={()=>{close ? close() : console.log("No close function") }}/>
             <div className="inner">
 
