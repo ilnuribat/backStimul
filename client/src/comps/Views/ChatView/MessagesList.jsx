@@ -10,7 +10,8 @@ import { MESSAGE_QUERY } from "../../../GraphQL/Qur/Query";
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { MsgDblcheck, MsgDblcheckAck } from "../../../components/Svg";
 
-console.log(moment.locales('momentRu'));
+// console.log(moment.locales());
+moment.locale('ru')
 
 const toBottom = () => {
   if(document.getElementById("messageList")){
