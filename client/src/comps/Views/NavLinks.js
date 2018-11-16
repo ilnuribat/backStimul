@@ -3,14 +3,19 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom';
 import { Svg } from '../Parts/SVG/index';
 import Modal from '../Lays/Modal';
+import { graphql, compose } from "react-apollo";
+import { setBar } from '../../GraphQL/Cache';
 
-const search = ()=>{
+const search = (props)=>{
   console.log("Seacrh")
+  console.log(props)
+
+
 
 } 
 
 const NavArr = [
-  {name:"search", comp:"", svg:"search", click:()=>{search()}},
+  {name:"search", comp:"", svg:"search", click:(e)=>{search(e)}},
   {name:"Root", link:"/", comp:"", svg:"tiles"},
   {name:"Private", link:"/chat", comp:"", svg:"private"},
   {name:"Pap", link:"/map", comp:"", svg:"location"},
@@ -33,6 +38,8 @@ class NavLinks extends Component {
     })
   }
 
+
+
   static propTypes = {
   }
 
@@ -47,7 +54,7 @@ class NavLinks extends Component {
           NavArr.map((e,i)=>{
             return(
               //<div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click === "modal" ? this.modal() : console.log('No click')} }>
-              <div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click ? e.click() : console.log('No click')} }>
+              <div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click ? e.click(this.props.setBar) : console.log('No click')} }>
                 {e.link ? (
                   <Link to={e.link}>
                     <Svg svg={e.svg} />
@@ -66,4 +73,6 @@ class NavLinks extends Component {
   }
 }
 
-export default NavLinks;
+export default compose(
+  graphql(setBar, { name: 'setBar' }),
+)(NavLinks);

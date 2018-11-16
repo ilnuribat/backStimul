@@ -30,7 +30,6 @@ export const UserRow = ({ children, id, name, username, url, userid, icon, click
       { icon ? (<div className={box?"UserIcon Boxed":"UserIcon"} style={size ? {"width":size+'px',"maxWidth":size+'px',"maxHeight":size+'px', "height":size+'px'} : null}>
       <img src={icon && icon != 1 ? icon : userDefault} alt={username || name || children} /></div>):null}
       { username || name || children ? (<div className="UserName">{username || name || children}</div>):null}
-      {children}
     </div>
   )
 }

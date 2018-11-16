@@ -7,6 +7,8 @@ import { LoginQuery } from '../../GraphQL/Qur/Query';
 import { meGet, meSet } from '../../GraphQL/Cache';
 import '../../newcss/login.css'
 import Content from '../Lays/Content/index';
+import logoImg from '../Img/Logo';
+import { UserRow } from '../Parts/Rows/Rows';
 
 
 
@@ -109,6 +111,7 @@ class Login extends Component {
           {!authToken ? (
             <div className="auth">
               <div className="logo">
+                <img src={logoImg} alt="АО ГУОВ" />
               </div>
               <div><input type="text" placeholder="Email" onChange={(e) => { this.setState({ loginerror: "", email: e.target.value }) }} /></div>
               <div><input type="password" placeholder="Пароль" onKeyDown={this.onKeyDown} onChange={(e) => { this.setState({ loginerror: "", password: e.target.value }) }} /></div>
@@ -118,13 +121,69 @@ class Login extends Component {
               }
             </div>) :
             (
-              <div className="auth">
-                <div className="logo">
+              <div className="Profile auth">
+              <div className="ProfileInner">
+
+                <div className="authTop">
+                {/* <div className="logo">
+                
+                <img src={logoImg} alt="АО ГУОВ" width="20px"/>
+              </div> */}
+                <UserRow size="160" icon="1" ><h1>{localStorage.getItem('username')}</h1></UserRow>
+
+
                 </div>
+                <div className="authContent">
+                  <div className="authColumn">
+                    <div className="authRow">
+                      <div className="authRowName">Управление</div>
+                      <div className="authRowContent">01.0. Руководство ГУОВ</div>
+                    </div>
+                    <div className="authRow">
+                      <div className="authRowName">Наименование подразделения</div>
+                      <div className="authRowContent">01.0. Руководство ГУОВ</div>
+                    </div>
+                    <div className="authRow">
+                      <div className="authRowName">Должность</div>
+                      <div className="authRowContent">Генеральный директор</div>
+                    </div>
+                    <div className="authRow">
+                      <div className="authRowName">Кабинет</div>
+                      <div className="authRowContent">302-А</div>
+                    </div>
+                    <div className="authRow">
+                      <div className="authRowName">Внутренний телефон</div>
+                      <div className="authRowContent">12-29</div>
+                    </div>
+                    <div className="authRow">
+                      <div className="authRowName">Идентификатор</div>
+                      <div className="authRowContent">{ localStorage.getItem('userid') }</div>
+                    </div>
 
-                <div className="mess">Вы вошли как: { localStorage.getItem('username') }</div>
-                <div className="mess">Ваш id: { localStorage.getItem('userid') }</div>
 
+                  </div>
+                  <div className="authColumn">
+                    <div className="authRow">
+                      <div className="authRowName">Адрес электронной почты</div>
+                      <div className="authRowContent">Gorbachev.EA@guov.ru</div>
+                    </div>
+                    <div className="authRow">
+                      <div className="authRowName">Мобильный телефон</div>
+                      <div className="authRowContent">+7 (999) 999-99-99</div>
+                    </div>
+                    <div className="authRow">
+                      <div className="authRowName">Рабочий телефон</div>
+                      <div className="authRowContent">+7 (495) 495-95-96</div>
+                    </div>
+                    <div className="authRow">
+                      <div className="authRowName">Адрес</div>
+                      <div className="authRowContent">123022, г.Москва, Б.Предтеченский пер., д.30, стр.1</div>
+                    </div>
+
+                  </div>
+
+                </div>
+                <div className="authBottom">
                 <div
                   className="button"
                   role="presentation"
@@ -144,6 +203,11 @@ class Login extends Component {
                 >
                   Выйти
                 </div>
+                </div>
+                </div>
+
+
+
               </div>
             )}
         </div>
