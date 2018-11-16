@@ -9,3 +9,42 @@
   border: solid 1px rgba(62, 117, 178, 0.7);
   background-color: #3e75b2;
 }
+
+.Button2{
+  text-align: center;
+  display: inline-block;
+  max-width: 200px;
+  padding: 8px 10px;
+  background: #5492af;
+  text-align: center;
+  cursor: pointer;
+  background-color: #3e75b2;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.Button3{
+  display: inline-block;
+  display: flex;
+  max-width: 200px;
+  padding: 5px 5px;
+  margin:5px;
+  /* height: auto; */
+  /* width:120px; */
+  background: transparent;
+  text-align: center;
+  cursor: pointer;
+  border:1px solid #ffffff;
+  background-color: transparent;
+  border-radius: 3px;
+  vertical-align: middle;
+  justify-content: center;
+  align-items: center;
+}
+
+.label .Button3{
+
+  /* overflow: hidden; */
+}
+.label{
+
+}

@@ -57,6 +57,10 @@
   
 }
 
+datalist option{
+  background: #061930c9;
+}
+
 input[type="button"],
 input[type="submit"],
 button,

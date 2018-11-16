@@ -359,7 +359,7 @@ class TaskView extends Component {
                       <div className="tab-roll">
                         <div className="header"></div>
                         <div className="content">
-                          <div className="button" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Информация</div>
+                          <div className="Button2" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Информация</div>
                           <div className="content-scroll">
                           </div>
                         </div>
@@ -371,12 +371,11 @@ class TaskView extends Component {
                       <div className="tab-roll">
                         <div className="header"><h4>Добавить пользователя</h4></div>
                         <div className="content">
-                          <div className="content-scroll">
-                            <div>
-                              <input type="list" list="users" autoComplete="on" onChange={this.newUser} />
+                            <label className="Pad" for="users">
+                              <input type="list" name="users" list="users" autoComplete="on" onChange={this.newUser} />
                               {
                                 this.state.newUser ? (
-                                  <div className="button" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить {this.state.newUser}</div>
+                                  <div className="Button3" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить{/*this.state.newUser*/}</div>
                                 ): null
                               }
 
@@ -391,9 +390,7 @@ class TaskView extends Component {
                                   )
                                 }
                               </datalist>
-                            </div>
-
-                          </div>
+                          </label>
                         </div>
                       </div>
                     ) : null
