@@ -17,6 +17,8 @@ import '../../../newcss/taskview.css'
 import { ButtonTo, UserRow, FileRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import Svg from '../../Parts/SVG'
+import InnerBar from '../../Lays/InnerBar/InnerBar';
+
 
 
 class TaskView extends Component {
@@ -235,7 +237,7 @@ class TaskView extends Component {
 
             return(
               <Fragment>
-                <Content>
+                <Content view="Row Pad10">
                   <div className="TaskView">
                     <div className="TaskViewTop">
                       <ButtonTo url={"/board"} icon="back">Назад</ButtonTo>
@@ -322,8 +324,7 @@ class TaskView extends Component {
                   ) : null
 
                   }
-                </Content>
-                <Panel>
+                <InnerBar>
                   {
                     taskId ? (
                       <div className="tab-roll">
@@ -422,7 +423,11 @@ class TaskView extends Component {
                     )
                   ): null
                   } */}
-                </Panel>
+                </InnerBar>
+
+
+                </Content>
+
 
               </Fragment>
             )}
