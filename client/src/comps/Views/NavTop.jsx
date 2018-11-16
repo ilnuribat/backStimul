@@ -5,8 +5,10 @@ import _ from 'lodash';
 // import NavTopInner from './NavTopInner';
 // import Logo from './Logo.jpg'
 import logoImg from '../Img/Logo';
+import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED } from '../../GraphQL/Qur/Subscr';
 import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListDirectUpdate, messagesListTaskUpdate } from '../../GraphQL/Cache';
+import { getUnreadCount } from '../../GraphQL/Qur/Query';
 
 class NavTop extends Component {
   constructor(props) {
@@ -80,6 +82,34 @@ class NavTop extends Component {
         error(err) { console.error('err', err); },
       });
     }
+
+
+    queryCounterDirects () {
+      qauf(getUnreadCount(), _url, localStorage.getItem('auth-token')).then(a=>{
+        if(a && a.data && a.data.user && a.data.user.directs){
+          let privs = 0;
+
+          a.data.user.directs.map((e) => {
+            privs = privs + e.unreadCount
+
+            return null
+          })
+
+          this.props.client.mutate({
+            mutation: cSetCountPrivates,
+            variables: {
+              unr: privs
+            }
+            // update: ({ data }) => { console.warn("DATA IS" ,data)}
+          }).then(result => {
+            if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
+          })
+        }
+      }).catch((e)=>{
+        console.warn(e);
+      });
+    }
+
 
     componentDidMount (){
       if (!this.isRunOnce) {
