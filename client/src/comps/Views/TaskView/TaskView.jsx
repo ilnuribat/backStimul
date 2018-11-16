@@ -172,7 +172,7 @@ class TaskView extends Component {
 
 
     q = () => {return(`mutation{
-      updateUsersGroup(group: {id: "${this.state.taskId}", delete: ${dels}, users: ["${userId}"]} )
+      updateUsersTask(task: {id: "${this.state.taskId}", delete: ${dels}, users: ["${userId}"]} )
     }`)} ;
 
 
@@ -372,7 +372,6 @@ class TaskView extends Component {
                         <div className="content">
                           <div className="content-scroll">
                             <div>
-
                               <input type="list" list="users" autoComplete="on" onChange={this.newUser} />
                               {
                                 this.state.newUser ? (
@@ -382,15 +381,13 @@ class TaskView extends Component {
 
                               <datalist id="users">
                                 {
-                                  data.task.users && data.task.users.length > 0 ?  _.differenceWith(allusers, data.task.users, _.isEqual).map((e,i)=>{
-                                    return(
-                                      <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                                    )
-                                  }) : allusers.map((e,i)=>{
-                                    return(
-                                      <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                                    )
-                                  })
+                                  data.task.users && data.task.users.length > 0 ?  _.differenceWith(allusers, data.task.users, _.isEqual).map((e)=>(
+                                    <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                                  )
+                                  ) : allusers.map((e)=>(
+                                    <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                                  )
+                                  )
                                 }
                               </datalist>
                             </div>
@@ -400,7 +397,7 @@ class TaskView extends Component {
                       </div>
                     ) : null
                   }
-                  {taskId ? (
+                  {/* {taskId ? (
                     !upload ? (
                       <div className="tab-roll">
                         <div className="header"></div>
@@ -426,7 +423,7 @@ class TaskView extends Component {
                       </div>
                     )
                   ): null
-                  }
+                  } */}
                 </Panel>
 
               </Fragment>
@@ -450,7 +447,3 @@ export default compose(
   graphql(setChat, { name: 'setChat' }),
   graphql(selectUser, { name: 'selectUser' }),
 )(TaskView);
-
-const isArrayEqual = (x, y) => {
-  return _(x).differenceWith(y, _.isEqual).isEmpty();
-};
