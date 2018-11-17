@@ -13,7 +13,7 @@
     "migrate:down": "npx sequelize db:migrate:undo",
     "services:up": "docker-compose -f dev/services.yml up -d",
     "services:down": "docker-compose -f dev/services.yml down",
-    "test": "NODE_ENV=test mocha test/init.js --exit test/*"
+    "test": "NODE_ENV=test nyc --reporter=html mocha test/init.js --exit test/*"
   },
   "author": "",
   "license": "ISC",
@@ -55,6 +55,7 @@
     "moment": "^2.22.2",
     "mongoose": "^5.2.9",
     "nodemon": "^1.18.4",
+    "nyc": "^13.1.0",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
     "subscriptions-transport-ws": "^0.9.15",
