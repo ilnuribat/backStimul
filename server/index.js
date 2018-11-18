@@ -21,18 +21,12 @@ const schema = makeExecutableSchema({
 const apolloServer = new ApolloServer({
   schema,
   context: async (args) => {
-    const { req, connection } = args;
-
-    const { context: ctx = {} } = connection || {};
-
-    if (ctx.user) {
-      return ctx;
-    }
+    const { req } = args;
 
     const token = (req.headers.authorization || '').split(' ')[1];
 
     if (!token) {
-      return ctx;
+      return {};
     }
 
     let jwtBody;
@@ -51,7 +45,6 @@ const apolloServer = new ApolloServer({
 
     return {
       user,
-      ...ctx,
     };
   },
 });
@@ -63,51 +56,51 @@ app.use(bodyParser());
 
 apolloServer.applyMiddleware({ app, path: '/' });
 
+const subscriptionServer = SubscriptionServer.create({
+  schema,
+  execute,
+  subscribe,
+}, {
+  server,
+  path: '/graphql',
+});
+
+subscriptionServer.onConnect = async (connectionParams) => {
+  const [type = '', body] = connectionParams.Authorization.split(' ');
+
+  if (type.toLowerCase() !== 'bearer') {
+    throw new Error('its not bearer');
+  }
+
+  const res = jwt.verify(body, JWT_SECRET);
+
+  if (!res || !res.id) {
+    throw new Error('bad payload');
+  }
+
+  const user = await User.findById(res.id);
+
+  if (!user) {
+    throw new Error('no user found');
+  }
+
+  return user;
+};
+
 async function start() {
   await connectToMongo();
 
   return new Promise((resolve/* , reject */) => {
-    server.listen({ port: HTTP_PORT }, () => {
-      logger.info(`server started at port: ${HTTP_PORT}`);
-      resolve();
-    });
-
-    const subscriptionServer = SubscriptionServer.create({
-      schema,
-      execute,
-      subscribe,
-    }, {
-      server,
-      path: '/graphql',
-    });
-
-    subscriptionServer.onConnect = async (connectionParams) => {
-      const [type = '', body] = connectionParams.Authorization.split(' ');
-
-      if (type.toLowerCase() !== 'bearer') {
-        throw new Error('its not bearer');
-      }
-
-      const res = jwt.verify(body, JWT_SECRET);
-
-      if (!res || !res.id) {
-        throw new Error('bad payload');
-      }
-
-      const user = await User.findById(res.id);
-
-      if (!user) {
-        throw new Error('no user found');
-      }
-
-      return user;
-    };
+    /* istanbul ignore if  */
+    if (process.env.NODE_ENV !== 'test') {
+      server.listen({ port: HTTP_PORT }, () => {
+        logger.info(`server started at port: ${HTTP_PORT}`);
+        resolve();
+      });
+    }
   });
 }
 
-if (process.env.NODE_ENV !== 'test') {
-  start();
-}
+start();
 
-
-module.exports = { app };
+module.exports = { app, server };

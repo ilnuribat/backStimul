@@ -4,9 +4,8 @@ const { User } = require('../server/src/models');
 
 describe('login', () => {
   it('correct credentials', async function () {
-    const { data, errors } = await this.requestNoAuth({
-      body: {
-        query: `
+    const { data, errors } = await this.request({
+      query: `
         mutation {
           login(user: {
             email: "${this.email}"
@@ -17,7 +16,6 @@ describe('login', () => {
           }
         }
       `,
-      },
     });
 
     assert.isUndefined(errors, 'empty errors');
@@ -27,9 +25,8 @@ describe('login', () => {
     assert.isString(login.token);
   });
   it('wrong credentials', async function () {
-    const { data, errors } = await this.requestNoAuth({
-      body: {
-        query: `
+    const { data, errors } = await this.request({
+      query: `
         mutation {
           login(user: {
             email: "${this.email}"
@@ -40,7 +37,6 @@ describe('login', () => {
           }
         }
       `,
-      },
     });
 
     assert.isNull(data.login);
@@ -54,9 +50,8 @@ describe('signup', () => {
     this.newUserEmail = 'user@email.new';
     this.newUserPassword = '123123';
 
-    const { data, errors } = await this.requestNoAuth({
-      body: {
-        query: `
+    const { data, errors } = await this.request({
+      query: `
           mutation {
             signup(user: {
               email: "${this.newUserEmail}"
@@ -67,7 +62,6 @@ describe('signup', () => {
             }
           }
         `,
-      },
     });
 
     assert.isUndefined(errors);

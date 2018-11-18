@@ -22,7 +22,7 @@ describe.skip('object', () => {
   });
   it('create', async function () {
     const { data, errors } = await this.request({
-      body: { query: query('test', 'г Москва, ул Бакунинская, д 17/28') },
+      query: query('test', 'г Москва, ул Бакунинская, д 17/28'),
     });
 
     assert.isUndefined(errors);

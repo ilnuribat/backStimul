@@ -9,7 +9,7 @@ const query = `
   }
 `;
 
-describe.only('user', () => {
+describe('user', () => {
   it('get info with token', async function () {
     const { data, errors } = await this.request({ query, token: '' });
 
