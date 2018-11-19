@@ -24,9 +24,16 @@
   align-items: center;
 }
 .FileIcon svg{
+  margin:auto auto;
   height: 24px;
   width: 24px;
   fill:#3e74b27c;
+  display:flex;
+  align-self: center;
+  justify-self: center;
+}
+.FileIcon .Svg svg{
+
 }
 .FileName{
   font-size: 12px;
