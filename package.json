@@ -31,9 +31,6 @@
     "eslint-plugin-import": "^2.14.0"
   },
   "dependencies": {
-    "apollo-client": "^2.4.6",
-    "apollo-link": "^1.2.3",
-    "apollo-link-ws": "^1.0.9",
     "apollo-server": "^2.1.0",
     "apollo-server-express": "^2.2.2",
     "axios": "^0.18.0",
@@ -48,10 +45,8 @@
     "graphql-subscriptions": "^1.0.0",
     "graphql-tools": "^3.1.1",
     "ioredis": "^4.0.0",
-    "iterall": "^1.2.2",
     "jsonwebtoken": "^8.3.0",
     "knex": "^0.15.2",
-    "lodash": "^4.17.10",
     "merge-graphql-schemas": "^1.5.1",
     "mocha": "^5.2.0",
     "moleculer": "^0.13.2",
@@ -60,11 +55,8 @@
     "mongoose": "^5.2.9",
     "nodemon": "^1.18.4",
     "nyc": "^13.1.0",
-    "pg": "^7.4.3",
-    "pg-hstore": "^2.3.2",
+    "pg": "^7.6.1",
     "subscriptions-transport-ws": "^0.9.15",
-    "uuid": "^3.3.2",
-    "winston": "^3.1.0",
-    "ws": "^6.1.2"
+    "winston": "^3.1.0"
   }
 }
