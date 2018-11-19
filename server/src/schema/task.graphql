@@ -10,6 +10,7 @@ type Task {
   endDate: String
   parentId: ID
   objectId: ID
+  files: [File]
 }
 
 input TaskInput {

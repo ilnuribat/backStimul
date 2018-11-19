@@ -1,0 +1,74 @@
+.Tile, .TileMaker,.Tiled{
+  width: 300px;
+  height: 250px;
+  border-radius: 6px;
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
+  background-color: #3d4147;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1em 1em 0 0;
+  padding: 8px;
+  position: relative;
+}
+
+.Tile .name{
+  display: block;
+  font-size: 2em;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -1.3px;
+  color: #ffffff;
+  text-align: center;
+  cursor:pointer;
+}
+.Tile .id{
+  display: block;
+  font-size: 1em;
+  text-align: center;
+  color: #3e75b2;
+}
+.Tile .descr{
+  display: block;
+  font-size: 1em;
+  text-align: center;
+  color: #3e75b2;
+}
+
+.TileMaker{
+
+}
+.TileMaker svg, .Tiled svg{
+  fill: #3e75b2;
+  cursor: pointer;
+  width: 64px;
+  height: 64px;
+}
+.Tile .Edit{
+  position: absolute;
+  right:8px;
+  top:8px;
+}
+.Tile .Rem{
+  position: absolute;
+  right:8px;
+  bottom:8px;
+}
+.Tile svg{
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0.5;
+  border:1px solid #3e75b2;
+  border-radius: 5px;
+  cursor: pointer;
+  fill: #3e75b2;
+}
+.Tile .Rem svg{
+  border:1px solid #b23e51;
+  fill: #b23e51;
+}
+.Tile svg:hover{
+  opacity: 1;
+}

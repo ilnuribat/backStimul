@@ -4,7 +4,6 @@ module.exports = {
       "commonjs": true,
       "es6": true
   },
-  "extends": "eslint:recommended",
   "parser": "babel-eslint",
   "parserOptions": {
       "ecmaFeatures": {
@@ -21,6 +20,13 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended"
   ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
   "rules": {
       "indent": [
           "error",

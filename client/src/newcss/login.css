@@ -1,0 +1,135 @@
+.LoginPage{
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content:center;
+  justify-items: center;
+  width:100%;
+  height:100%;
+}
+.ProfilePage{
+  width:100%;
+  height:100%;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content:center;
+  justify-items: center;
+}
+.Profile{
+  height: auto;
+
+}
+.auth{
+  background: #3d4147;
+  padding: 20px;
+  border-radius: 6px;
+  width:300px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content:center;
+  justify-items: center;
+}
+.Profile.auth
+{
+  background: #3d4147;
+  padding: 20px;
+  border-radius: 6px;
+  width:90%;
+  height: auto;
+  max-height: 90%;
+  max-width: 90%;
+
+}
+.ProfileInner{
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  /* justify-content:center; */
+}
+.Profile.auth .authTop{
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  height:200px;
+}
+.Profile.auth .authContent{
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  
+  /* justify-content: stretch; */
+  align-items: flex-start;
+
+}
+.Profile.auth .authColumn{
+  width:100%;
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.LoginPage .UserName{
+  font-size: 25px;
+  text-transform: capitalize;
+}
+.LoginPage .button{
+}
+
+
+.authRow{
+  width: 100%;
+  margin: 10px 0;
+}
+.authRow .authRowName{
+  font-size: 15px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.4px;
+  color: #a3b6c5;
+}
+.authRow .authRowContent{
+  margin:10px 0 0 20px;
+  font-size: 20px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.6px;
+  color: #ffffff;
+}
+.authBottom{
+  margin:10px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+.authBottom .button{
+  width: 64px;
+  height: 32px;
+  border-radius: 2px;
+  background-color: #c45c5c;
+  font-size: 15px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.4px;
+  color: #ffffff;
+}

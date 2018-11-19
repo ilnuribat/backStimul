@@ -101,7 +101,7 @@ export default class TileMaker extends Component {
   }
 
   render() {
-    const { open,value,addressList, stateName } = this.state;
+    const { open, value, addressList, stateName } = this.state;
     const { editObject, id, name, addr } = this.props
 
 
@@ -136,13 +136,17 @@ export default class TileMaker extends Component {
                     onSubmit={e => {
                       e.preventDefault();
                       if (editObject) {
+                        let addr = value || address.value;
+                        console.log(addr);
+
                         MakeTile({ variables: { id: id, name: input.value, address: address.value } });
+                        this.props.setEdit();
                       } else {
                         MakeTile({ variables: { name: input.value, address: address.value } });
                       }
                       input.value = "";
                       address.value = "";
-                      this.props.setEdit()
+
                     }}
                   >
                     <div>

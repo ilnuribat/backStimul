@@ -21,9 +21,27 @@ const Modal = ({...props})=>{
             {props.children}
           </div>
         </div>
+
+        <div className="padded">
+          <select>
+            <option>Выбрать задачу</option>
+            <option>Задача 1</option>
+            <option>Задача 2</option>
+            <option>Задача 3</option>
+          </select>
+        </div>
+
       </div>
     </div>
   )
 };
 
 export default Modal;
+// compose(
+//   graphql(getPrivateChat, { name: 'getPrivateChat' }),
+//   graphql(selectUser, { name: 'selectUser' }),
+//   graphql(getCUser, { name: 'getCUser' }),
+//   graphql(tempObj, { name: 'tempObj' }),
+//   graphql(setTemp, { name: 'setTemp' }),
+//   graphql(getTemp, { name: 'getTemp' }),
+// )(Modal);
