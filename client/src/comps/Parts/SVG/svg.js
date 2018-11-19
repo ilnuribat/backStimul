@@ -122,7 +122,7 @@ export const SvgBackTo = () => (<svg xmlns="http://www.w3.org/2000/svg" width="2
 
 export const SvgDashBoard = () => (
 <svg width="23px" height="18px" viewBox="0 0 23 18" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <g id="GUOV" stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+    <g id="GUOV" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g fill="#3E75B2">
             <g>
                 <g>
@@ -154,7 +154,7 @@ export const SvgMap = () => (
 );
 export const SvgChat = () => (
 <svg width="23px" height="22px" viewBox="0 0 23 22" version="1.1" xmlns="http://www.w3.org/2000/svg" >
-    <g stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g fill="#3E75B2">
             <g>
                 <g>
@@ -169,7 +169,7 @@ export const SvgChat = () => (
 
 export const SvgFind = () => (
 <svg width="20px" height="21px" viewBox="0 0 20 21" version="1.1" xmlns="http://www.w3.org/2000/svg" >
-    <g stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g transform="translate(-50.000000, -292.000000)" fill="#3E75B2">
             <g transform="translate(-1.000000, 0.000000)">
                 <path d="M70.6368999,310.806861 L66.514531,306.536592 C67.6742255,305.008576 68.3720455,303.086126 68.3720455,300.996843 C68.3720455,296.036039 64.4756055,292 59.6865792,292 C54.8964399,292 51,296.036039 51,300.996843 C51,305.956542 54.8964399,309.992582 59.6865792,309.992582 C61.5630139,309.992582 63.2981038,309.365023 64.7204546,308.3132 L68.8817768,312.624349 C69.1244001,312.875151 69.441591,313 69.7598948,313 C70.0770857,313 70.3942767,312.875151 70.6368999,312.624349 C71.1210334,312.122744 71.1210334,311.30957 70.6368999,310.806861 L70.6368999,310.806861 Z M52.4984201,300.996927 C52.4984201,296.915871 55.7238892,293.595798 59.6867556,293.595798 C63.6496221,293.595798 66.8725128,296.915871 66.8725128,300.996927 C66.8725128,305.077983 63.6496221,308.396784 59.6867556,308.396784 C55.7238892,308.396784 52.4984201,305.077983 52.4984201,300.996927 L52.4984201,300.996927 Z" id="search-icon"></path>
@@ -180,7 +180,7 @@ export const SvgFind = () => (
 );
 export const SvgDocs = () => (
 <svg width="18px" height="22px" viewBox="0 0 18 22" version="1.1" xmlns="http://www.w3.org/2000/svg" >
-    <g stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g transform="translate(-51.000000, -441.000000)" fill="#3E75B2">
             <g transform="translate(-1.000000, 0.000000)">
                 <g transform="translate(52.000000, 441.000000)">
@@ -198,7 +198,7 @@ export const SvgDocs = () => (
 );
 export const SvgSettings = () => (
 <svg width="21px" height="21px" viewBox="0 0 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <g stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g transform="translate(-50.000000, -595.000000)" fill="#3E75B2">
             <g transform="translate(-1.000000, 0.000000)">
                 <g transform="translate(51.000000, 595.000000)">
@@ -212,7 +212,7 @@ export const SvgSettings = () => (
 );
 export const SvgUpload = () => (
 <svg width="15px" height="13px" viewBox="0 0 15 13" version="1.1" xmlns="http://www.w3.org/2000/svg" >
-    <g stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g transform="translate(-567.000000, -630.000000)" fill="#3E75B2">
             <g transform="translate(0.000000, -1.000000)">
                 <g transform="translate(364.000000, 110.000000)">
@@ -231,7 +231,7 @@ export const SvgUpload = () => (
 );
 export const SvgUploads = () => (
 <svg width="15px" height="13px" viewBox="0 0 15 13" version="1.1" xmlns="http://www.w3.org/2000/svg" >
-    <g stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g transform="translate(-567.000000, -630.000000)" fill="#3E75B2">
             <g transform="translate(0.000000, -1.000000)">
                 <g transform="translate(364.000000, 110.000000)">
@@ -251,7 +251,7 @@ export const SvgUploads = () => (
 
 export const SvgCancel = () => (
 <svg width="7px" height="7px" viewBox="0 0 7 7" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <g stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g transform="translate(-1853.000000, -470.000000)" fill="#C45C5C">
             <g transform="translate(1638.000000, 0.000000)">
                 <g transform="translate(26.000000, 327.000000)">

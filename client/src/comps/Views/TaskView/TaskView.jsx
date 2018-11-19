@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react';
-import { graphql, compose, Query, Mutation } from "react-apollo";
+import React, { Component } from 'react';
+import { graphql, compose, Query } from "react-apollo";
 import PropTypes from 'prop-types';
-import Dropzone from 'react-dropzone';
+// import Dropzone from 'react-dropzone';
 import _ from 'lodash';
 import { qauf, _url } from '../../../constants';
 import 'animate.css';
@@ -12,13 +12,13 @@ import { selectUser, setChat } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, GR_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
-import Panel from '../../Lays/Panel/index';
+// import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
 import { ButtonTo, UserRow, FileRow, TextRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
-import ContentInner from '../../Lays/ContentInner/ContentInner';
+// import ContentInner from '../../Lays/ContentInner/ContentInner';
 
 
 
@@ -108,7 +108,7 @@ class TaskView extends Component {
 
     qauf(getObjectTasks3(objectId), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){
-        a.data.object.tasks = a.data.object.tasks.filter((task) => (task.parentId != taskId && task.id != taskId ))
+        a.data.object.tasks = a.data.object.tasks.filter((task) => (task.parentId !== taskId && task.id !== taskId ))
         this.setState({
           allTasks: a.data.object.tasks,
         })
@@ -240,7 +240,7 @@ class TaskView extends Component {
   }
 
   render() {
-    const {upload, allusers, taskName, taskId, modal, status, allTasks } = this.state;
+    const {/*upload,*/ allusers, taskName, taskId, modal, status, allTasks } = this.state;
     // console.warn("TASKID", status)
 
     return(
@@ -294,7 +294,7 @@ class TaskView extends Component {
                       </TextRow>
                       <TextRow name="" view="cgr Pad510 s">
                         {
-                          this.state.status.find(x => x.id == taskStatus).name
+                          this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Статуса нет"
                         }
                       </TextRow>
                       <TextRow name="" view="cgr Pad510 s">
@@ -455,12 +455,12 @@ class TaskView extends Component {
                     Добавить родительскую задачу
                         </ModalBlockName>
                         <label htmlFor="">
-                          <select onChange={(e)=>{e.target.value !=0 ? this.writeTaskData(e, "parentId", true) : null}} defaultValue={data.task.parentId} >
+                          <select onChange={(e)=>{e.target.value !==0 ? this.writeTaskData(e, "parentId", true) : null}} defaultValue={data.task.parentId} >
                             { !data.task.parentId ? <option value="0">Выбрать задачу</option> : null}
                             {
                               allTasks.map((e)=>{
                                 return(
-                                  <option key={e.id} value={e.id} selected={data.task.parentId===e.id ? true: false }>{e.name}</option>
+                                  <option key={e.id} value={e.id} /*selected={data.task.parentId===e.id ? true: false }*/>{e.name}</option>
                                 )
                               })
                             }

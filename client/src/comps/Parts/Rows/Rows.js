@@ -18,7 +18,7 @@ export const FileRow = ({ children, id, name, filename, url, fileid, icon, click
 
 export const TextRow = ({ children, name, text, view })=>{
   return(
-    <div className={!view ? "TextRow" : "TextRow"+" "+view }>
+    <div className={!view ? "TextRow" : "TextRow "+view }>
       {name ? (<div className="TextRowName">{name}</div>):null}
       {text ? (<div className="TextRowText">{text}</div>):null}
       {children ? children :null}
