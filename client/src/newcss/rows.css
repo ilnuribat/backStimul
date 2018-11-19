@@ -242,3 +242,14 @@ margin:0 auto 5px;
 .MB10{
   margin-bottom:10px;
 }
+
+.FakeLink{
+  width: 100%;
+  padding:10px;
+  font-size: 12px;
+  color: #a3b6c5;
+  text-align: center;
+  text-decoration: underline;
+  border-radius: 5px;
+  border: 1px dashed #a3b6c570;
+}

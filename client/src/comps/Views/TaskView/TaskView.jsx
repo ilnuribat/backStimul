@@ -333,6 +333,7 @@ class TaskView extends Component {
                               )
                               }
                             </div>
+                            <div className="FakeLink">Показать все</div>
                           </div>
                         </div>
                       ): null
@@ -353,6 +354,7 @@ class TaskView extends Component {
                                 <div>
                                     <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
                                     <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
+                                    <div className="FakeLink">Показать все</div>
                                 </div>
                               )
                               }
