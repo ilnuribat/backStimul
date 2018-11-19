@@ -112,11 +112,11 @@ module.exports = {
     },
   },
   Mutation: {
-    async uploadFile(parent, { id: taskId, file }) {
-      const loadedFile = await file;
-      const fileSaved = await storeUpload({ ...loadedFile, taskId });
+    // async uploadFile(parent, { id: taskId, file }) {
+    //   const loadedFile = await file;
+    //   const fileSaved = await storeUpload({ ...loadedFile, taskId });
 
-      return fileSaved;
-    },
+    //   return fileSaved;
+    // },
   },
 };

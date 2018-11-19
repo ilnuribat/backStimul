@@ -6,6 +6,6 @@ type File {
   date: String
 }
 
-type Mutation {
-  uploadFile(id: ID!, file: Upload!): File!
-}
+# type Mutation {
+#   uploadFile(id: ID!, file: Upload!): File!
+# }
