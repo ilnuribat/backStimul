@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { qauf, _url } from '../../../constants';
 import 'animate.css';
+import moment from 'moment';
+import momentRu from 'moment/locale/ru';
 import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
 import { uploadFile, updTask } from '../../../GraphQL/Qur/Mutation';
@@ -20,7 +22,7 @@ import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 // import ContentInner from '../../Lays/ContentInner/ContentInner';
 
-
+moment.locale('ru')
 
 
 
@@ -289,12 +291,12 @@ class TaskView extends Component {
                       </TextRow>
                       <TextRow name="" view="cgr Pad510 s">
                         {
-                          dataValue
+                          dataValue ? moment(dataValue).format('D MMMM, h:mm') : null
                         }
                       </TextRow>
                       <TextRow name="" view="cgr Pad510 s">
                         {
-                          this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Статуса нет"
+                          this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Новая"
                         }
                       </TextRow>
                       <TextRow name="" view="cgr Pad510 s">
