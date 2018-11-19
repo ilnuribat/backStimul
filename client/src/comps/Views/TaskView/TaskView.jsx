@@ -16,7 +16,7 @@ import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 // import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
-import { ButtonTo, UserRow, FileRow, TextRow } from '../../Parts/Rows/Rows';
+import { ButtonTo, UserRow, FileRow, TextRow, IconRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
@@ -337,6 +337,32 @@ class TaskView extends Component {
                         </div>
                       ): null
                     }
+                    {
+                      taskId ? (
+                        <div className="tab-roll">
+                          <div className="header"><h4>Документы</h4></div>
+                          <div className="content">
+                            <div className="content-scroll">
+                              {data.task.docs ? data.task.docs.map(
+                                (e,i)=>{
+                                  return(
+                                    <FileRow name={e.name} id={e.id} icon="doc" />
+                                  )
+                                }
+                              ) : (
+                                <div>
+                                    <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+                                    <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
+                                </div>
+                              )
+                              }
+                            </div>
+                          </div>
+                        </div>
+                      ): null
+                    }
+
+
 
                     {
                       // taskId? (
