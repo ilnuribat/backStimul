@@ -248,4 +248,7 @@ option{
   background: #2f3136;
 }
 
-
+.ModalMessage{
+  color: #3165b3;
+  margin:10px auto;
+}

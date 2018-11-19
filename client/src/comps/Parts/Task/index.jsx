@@ -63,11 +63,11 @@ class Task extends Component {
           <UserRow icon="1" box="1"/>
           {/* </div> */}
           <div className="Childs" onClick={()=>childs(id)}>
-            <Svg svg="deps"></Svg>
+            <Svg svg="childs"></Svg>
           </div>
-          <div className="Delete" onClick={()=>deleteTask(id)}>
-            <Svg svg="del"></Svg>
-          </div>
+        </div>
+        <div className="Delete" onClick={()=>deleteTask(id)}>
+            <Svg svg="cancel" size="12"></Svg>
         </div>
         {/* <div className="linked" onClick={()=>click(id, name)}>
               открыть

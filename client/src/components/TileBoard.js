@@ -11,6 +11,7 @@ import { SvgBack } from './Svg';
 // import { getCUser, setObjectId, getTemp, setTemp, delInfo, setInfo, getPlace } from '../graph/querys';
 import { setObjectId, deleteObject, setInfo, getDashboard, setDashboard, QUERY_ROOTID, getPlace } from '../graph/querys';
 import { qauf, _url } from '../constants';
+import { Svg } from '../comps/Parts/SVG';
 
 
 let ref;
@@ -171,7 +172,7 @@ class Top extends React.Component {
                     {data.rootObject ? (
                       <div className="makeTile" onClick={()=>this.backToThePast(data.rootObject.parentId)}>
                         <div className="inner" >
-                          <SvgBack />
+                          <Svg svg="backto" />
                         </div>
                       </div>
                     ) : null}

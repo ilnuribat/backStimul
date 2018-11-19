@@ -14,6 +14,17 @@ export const FileRow = ({ children, id, name, filename, url, fileid, icon, click
     </div>
   )
 }
+
+
+export const TextRow = ({ children, name, text, view })=>{
+  return(
+    <div className={!view ? "TextRow" : "TextRow"+" "+view }>
+      {name ? (<div className="TextRowName">{name}</div>):null}
+      {text ? (<div className="TextRowText">{text}</div>):null}
+      {children ? children :null}
+    </div>
+  )
+}
 export const IconRow = ({ children, id, name, url, icon, click, box, size, type, view })=>{
   return(
     <div className={`IconRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("Row", id,url )}}>

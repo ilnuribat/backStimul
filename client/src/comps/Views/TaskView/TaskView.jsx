@@ -14,11 +14,14 @@ import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
-import { ButtonTo, UserRow, FileRow } from '../../Parts/Rows/Rows';
+import { ButtonTo, UserRow, FileRow, TextRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 import ContentInner from '../../Lays/ContentInner/ContentInner';
+
+
+
 
 
 class TaskView extends Component {
@@ -36,7 +39,9 @@ class TaskView extends Component {
       inputSaver: {},
       newUser: "",
       addressList: [],
-      upload: false
+      upload: false,
+      modalMessage:"",
+      modalMessageShow:false,
     }
 
     this.allUserGet = this.allUserGet.bind(this);
@@ -46,6 +51,7 @@ class TaskView extends Component {
 
     this.writeTaskName = this.writeTaskName.bind(this)
     this.writeTaskData = this.writeTaskData.bind(this)
+    this.modalMessage = this.modalMessage.bind(this)
   }
 
   componentDidMount(){
@@ -129,6 +135,7 @@ class TaskView extends Component {
     // console.warn("writeData", e, change, this.state.taskId)
     qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn("update task done", a)
+      this.modalMessage(a.data.updateTask);
     }).catch((e)=>{
       console.warn(e);
     })
@@ -139,6 +146,33 @@ class TaskView extends Component {
     this.setState({
       newUser: e.target.value,
     })
+  }
+
+  modalMessage(e){
+    // console.log(e.target)
+    if(e === true){
+      this.setState({
+        modalMessageShow: true,
+        modalMessage: "Изменения сохранены",
+      })
+    }else if(typeof e === "string"){
+      this.setState({
+        modalMessageShow: true,
+        modalMessage: e,
+      })
+    }else{
+      this.setState({
+        modalMessageShow: true,
+        modalMessage: "Произошла ошибка",
+      })
+    }
+    setTimeout(()=>{
+      this.setState({
+        modalMessageShow: false,
+        modalMessage: "",
+      })
+    }, 5000)
+
   }
 
   userSelect(n,i){
@@ -181,6 +215,7 @@ class TaskView extends Component {
     if(typeof q === "function"){
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("Answer updUsrGr",a)
+        this.modalMessage(a.data.updateTask);
       })
         .then(()=>{
           // this.loadu(this.props.getChat.id)
@@ -246,6 +281,30 @@ class TaskView extends Component {
                     <ChatView name={taskName} id={taskId} taskInfo={ data.task } priv={0} />
                   </div>
                   <InnerBar>
+                    <TextRow name="Информация" view="BigName">
+                      <TextRow name="" view="Pad510 MT10">
+                        {
+                          data.task.name
+                        }
+                      </TextRow>
+                      <TextRow name="" view="cgr Pad510 s">
+                        {
+                          dataValue
+                        }
+                      </TextRow>
+                      <TextRow name="" view="cgr Pad510 s">
+                        {
+                          this.state.status.find(x => x.id == taskStatus).name
+                        }
+                      </TextRow>
+                      <TextRow name="" view="cgr Pad510 s">
+                        <UserRow size="24" id={data.task.assignedTo.id} name={data.task.assignedTo.username} icon="1" />
+                      </TextRow>
+                      {
+                        console.log(data.task.assignedTo.username)
+                      }
+                    </TextRow>
+
                     {
                       taskId ? (
                         <div className="tab-roll">
@@ -276,43 +335,44 @@ class TaskView extends Component {
                         </div>
                       ): null
                     }
+
+                    {
+                      // taskId? (
+                      //   <div className="tab-roll">
+                      // <div className="header"><h4>Добавить пользователя</h4></div>
+                      // <div className="content">
+                      //   <label className="Pad" htmlFor="users">
+                      //     <input type="list" name="users" list="users" autoComplete="on" onChange={this.newUser} />
+                      //     {
+                      //       this.state.newUser ? (
+                      //         <div className="Button3" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить{/*this.state.newUser*/}</div>
+                      //       ): null
+                      //     }
+
+                      //     <datalist id="users">
+                      //       {
+                      //         data.task.users && data.task.users.length > 0 ?  _.differenceWith(allusers, data.task.users, _.isEqual).map((e)=>(
+                      //           <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                      //         )
+                      //         ) : allusers.map((e)=>(
+                      //           <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                      //         )
+                      //         )
+                      //       }
+                      //     </datalist>
+                      //   </label>
+                      // </div>
+                      //   </div>
+                      // ) : null
+                    }
                     {
                       taskId ? (
                         <div className="tab-roll">
                           <div className="header"></div>
                           <div className="content">
-                            <div className="Button2" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Информация</div>
+                            <div className="Button2" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
                             <div className="content-scroll">
                             </div>
-                          </div>
-                        </div>
-                      ) : null
-                    }
-                    {
-                      taskId? (
-                        <div className="tab-roll">
-                          <div className="header"><h4>Добавить пользователя</h4></div>
-                          <div className="content">
-                            <label className="Pad" htmlFor="users">
-                              <input type="list" name="users" list="users" autoComplete="on" onChange={this.newUser} />
-                              {
-                                this.state.newUser ? (
-                                  <div className="Button3" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить{/*this.state.newUser*/}</div>
-                                ): null
-                              }
-
-                              <datalist id="users">
-                                {
-                                  data.task.users && data.task.users.length > 0 ?  _.differenceWith(allusers, data.task.users, _.isEqual).map((e)=>(
-                                    <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                                  )
-                                  ) : allusers.map((e)=>(
-                                    <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                                  )
-                                  )
-                                }
-                              </datalist>
-                            </label>
                           </div>
                         </div>
                       ) : null
@@ -347,7 +407,7 @@ class TaskView extends Component {
                   </InnerBar>
                 </div>
                 {modal ? (
-                  <Modal close={()=>{ this.setState({modal: !modal}) }} >
+                  <Modal close={()=>{ this.setState({modal: !modal}) }} small="" message={this.state.modalMessageShow?this.state.modalMessage:""}>
                     <InputWrapper name={data.task.name} save="Сохранить" click={this.writeTaskName}>
                         Название
                     </InputWrapper>
@@ -406,6 +466,35 @@ class TaskView extends Component {
                             }
                           </select>
                         </label>
+                      </ModalCol>
+                      </ModalRow>
+                      <ModalRow>
+                      <ModalCol>
+                        <ModalBlockName>
+                          Добавить пользователя
+                        </ModalBlockName>
+                          <div className="content">
+                            <label className="" htmlFor="users">
+                              <input type="list" name="users" list="users" autoComplete="on" onChange={this.newUser} />
+                              {
+                                this.state.newUser ? (
+                                  <div className="Button3" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить{/*this.state.newUser*/}</div>
+                                ): null
+                              }
+
+                              <datalist id="users">
+                                {
+                                  data.task.users && data.task.users.length > 0 ?  _.differenceWith(allusers, data.task.users, _.isEqual).map((e)=>(
+                                    <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                                  )
+                                  ) : allusers.map((e)=>(
+                                    <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                                  )
+                                  )
+                                }
+                              </datalist>
+                            </label>
+                          </div>
                       </ModalCol>
                     </ModalRow>
                     <ModalCol>

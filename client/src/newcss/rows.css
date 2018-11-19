@@ -191,3 +191,40 @@
 .UserRow.Col>*{
 margin:0 auto 5px;
 }
+
+
+.TextRow{
+  display: block;
+  width: 100%;
+}
+.TextRow .TextRowName{
+  font-size: 12px;
+}
+.TextRow .TextRowContent{
+  margin:10px 0;
+  padding:0 0 0 20px;
+}
+.Small,.s,.small{
+  font-size: 12px;
+}
+.grey, .cgr{
+  color: #a3b6c5;
+}
+.BigName, .BigName .TextRowName{
+  font-size: 100%;
+}
+.noPad, .noPad>*{
+  padding: 0 !important;
+}
+.noMar, .noMar>*{
+  margin: 0 !important;
+}
+.Pad510{
+  padding: 5px 10px;
+}
+.MT10{
+  margin-top:10px;
+}
+.MB10{
+  margin-bottom:10px;
+}

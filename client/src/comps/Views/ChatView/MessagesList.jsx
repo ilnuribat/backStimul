@@ -8,7 +8,9 @@ import { qauf, _url, colorHash } from '../../../constants';
 import { MESSAGE_READ } from "../../../GraphQL/Qur/Subscr";
 import { MESSAGE_QUERY } from "../../../GraphQL/Qur/Query";
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
-import { MsgDblcheck, MsgDblcheckAck } from "../../../components/Svg";
+import { Svg } from '../../Parts/SVG/index';
+
+
 
 // console.log(moment.locales());
 moment.locale('ru')
@@ -153,13 +155,13 @@ export default class MessagesList extends Component {
                                 // console.log(subscribeToMore);
 
                                 return(
-                                  <div className="events">{data.message && data.message.isRead ? <MsgDblcheckAck /> : <MsgDblcheck />}  {
+                                  <div className="events">{data.message && data.message.isRead ? <Svg svg="dblcheckack" /> : <Svg svg="dblcheck" />}  {
                                     // console.warn('subs read data',data)
                                   }</div>
                                 )}
                               }
                             </Query>
-                          ) : ( <MsgDblcheckAck /> ) }
+                          ) : ( <Svg svg="dblcheckack" /> ) }
                         </div>
                       ) : null }
 

@@ -16,9 +16,9 @@ const search = (props)=>{
 
 const NavArr = [
   {name:"search", comp:"", svg:"search", click:(e)=>{search(e)}},
-  {name:"Root", link:"/", comp:"", svg:"tiles"},
-  {name:"Private", link:"/chat", comp:"", svg:"private"},
-  {name:"Pap", link:"/map", comp:"", svg:"location"},
+  {name:"Root", link:"/", comp:"", svg:"dash"},
+  {name:"Private", link:"/chat", comp:"", svg:"chat"},
+  {name:"Pap", link:"/map", comp:"", svg:"map"},
 ];
 
 class NavLinks extends Component {
@@ -67,7 +67,7 @@ class NavLinks extends Component {
             )
           })
         }
-        {modal ? (<Modal close={this.modal} small=""/>) : null}
+        {modal ? (<Modal close={this.modal}/>) : null}
       </div>
     )
   }

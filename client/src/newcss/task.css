@@ -136,3 +136,10 @@ margin:10px 5px 0;
 border:1px solid #346296;
 box-shadow: 0 0 8px 0px #00f7ff;
 }
+.Task{
+  position: relative;
+}
+.Task .Delete{
+  position: absolute;
+  right: 10px;
+}

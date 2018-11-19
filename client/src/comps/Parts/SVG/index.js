@@ -1,4 +1,6 @@
 import React from 'react'
+import Svg from './svg'
+
 
 export const SvgPlusBox = ()=>{
   return(
@@ -97,116 +99,6 @@ export const SvgPlus = ()=>{
     )
 }
 
-const svgs = [
-  {
-    name:'plus',
-    body:()=>(<SvgPlus/>),
-  },
-  {
-    name:'search',
-    body:()=>(<SvgSearch/>),
-  },
-  {
-    name:'tocloud',
-    body:()=>(<SvgToCloud/>),
-  },
-  {
-    name:'doc',
-    body:()=>(<SvgDoc/>),
-  },
-  {
-    name:'img',
-    body:()=>(<SvgImg/>),
-  },
-  {
-    name:'bug',
-    body:()=>{return('2')},
-  },
-  {
-    name:'close',
-    body:()=>{return(<SvgClose/>)},
-  },
-  {
-    name:'location',
-    body:()=>{return(<SvgLocation/>)},
-  },
-  {
-    name:'tile',
-    body:()=>{return(<SvgLocation/>)},
-  },
-  {
-    name:'map',
-    body:()=>{return(<SvgLocation/>)},
-  },
-  {
-    name:'board',
-    body:()=>{return(<SvgLocation/>)},
-  },
-  {
-    name:'back',
-    body:()=>{return(<SvgBack/>)},
-  },
-  {
-    name:'del',
-    body:()=>{return(<SvgDel/>)},
-  },
-  {
-    name:'rem',
-    body:()=>{return(<SvgRem/>)},
-  },
-  {
-    name:'plusbox',
-    body:()=>{return(<SvgPlusBox/>)},
-  },
-  {
-    name:'plus',
-    body:()=>{return(<SvgPlusBox/>)},
-  },
-  {
-    name:'edit',
-    body:()=>{return(<SvgEdit/>)},
-  },
-  {
-    name:'chat',
-    body:()=>{return(<SvgEdit/>)},
-  },
-  {
-    name:'private',
-    body:()=>{return(<SvgPriv/>)},
-  },
-  {
-    name:'tiles',
-    body:()=>{return(<SvgTiles/>)},
-  },
-  {
-    name:'deps',
-    body:()=>{return(<SvgDeps/>)},
-  },
-  {
-    name:'save',
-    body:()=>{return(<SvgSave/>)},
-  },
-];
 
-export const Svg = ({svg, inline, view})=>{
-  let a = svgs.find(x => x.name === svg);
-  let Class = " Box";
-  if(inline){
-    Class = " Inline";
-  }
-  if(a && a.body){
-    return(
-      <div className={`Svg${view?" "+view:""}`}>
-        {a.body()}
-      </div>
-  )
-  }else{
-    return(
-      <div className={`Svg${view?" "+view:""}`}>
-        <svg className="aaa" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z"/></svg>
-      </div>
-    )
-  }
-
-}
+export {Svg}
 export default Svg
