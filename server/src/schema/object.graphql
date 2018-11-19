@@ -29,7 +29,7 @@ type Object {
   id: ID
   name: String
   address: Address
-  tasks: [Group]
+  tasks: [Task]
   parentId: String
 }
 

@@ -8,12 +8,14 @@ type Task {
   assignedTo: UserTaskRole
   lastMessage: Message
   endDate: String
-  address: Address
+  parentId: ID
+  objectId: ID
 }
 
 input TaskInput {
   name: String
   objectId: ID
+  parentId: ID
   status: Int
   assignedTo: ID
   endDate: String
@@ -46,6 +48,7 @@ type UserTaskRole {
 type UserTaskAction {
   action: UserTaskActionEnum
   user: UserTaskRole
+  task: Task
 }
 
 type Query {
@@ -61,5 +64,5 @@ type Mutation {
 
 type Subscription {
   taskUpdated(id: ID!): Task
-  userTaskUpdated(id: ID!): UserTaskAction
+  userTaskUpdated: UserTaskAction
 }
