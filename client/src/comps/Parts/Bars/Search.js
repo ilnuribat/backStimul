@@ -31,9 +31,11 @@ export class Search extends Component {
     let {children} = this.props;
     let {value} = this.state;
 
-    let Search = gql `
-    query search($string: String){
-      search(string: $string ){
+
+
+    let SearchGql = `
+    query search($query: String){
+      search(query: $query ){
         Objects{
           name
         }
@@ -51,6 +53,20 @@ export class Search extends Component {
         }
       }
     }
+    `;
+
+    SearchGql = `
+    query search($text: String){
+      search(text: $text ){
+        __typename
+        ... on Object{
+          name
+        }
+      }
+    }
+    `;
+    let Search = gql`
+      ${SearchGql}
   `;
 
     return(
@@ -78,51 +94,77 @@ export class Search extends Component {
                     console.log(data)
 
                     if(data){
-
+                      let ObjectTypes;
                       console.log(data)
+                      data.map((e,i)=>{
 
+                        switch (e.__typename) {
+                        case 'User':
+                          ObjectTypes = 'Сотрудники';
+                          break;
+                        case 'Task':
+                          ObjectTypes = 'Задачи';
+                          break;
+                        case 'Object':
+                          ObjectTypes = 'Объекты';
+                          break;
+                        case 'Message':
+                          ObjectTypes = 'Сообщения';
+                          break;
+                        
+                        default:
+                          break;
+                        }
+
+
+                        return(
+                          <div>
+                            {e.__typename}
+                          </div>
+                        )
+                      })
                       return "data"
                     }
-                    if(data.Objects){
-                      return(
-                        <div>
-                          <div>Объекты</div>
-                          <div>{}</div>
-                        </div>
-                      )
-                    }
-                    if(data.Tasks){
-                      return(
-                        <div>
-                          <div>Задачи</div>
-                          <div>{}</div>
-                        </div>
-                      )
-                    }
-                    if(data.Users){
-                      return(
-                        <div>
-                          <div>Пользователи</div>
-                          <div>{}</div>
-                        </div>
-                      )
-                    }
-                    if(data.Chats){
-                      return(
-                        <div>
-                          <div>Чаты</div>
-                          <div>{}</div>
-                        </div>
-                      )
-                    }
-                    if(data.Docs){
-                      return(
-                        <div>
-                          <div>Документы</div>
-                          <div>{}</div>
-                        </div>
-                      )
-                    }
+                    // if(data.Objects){
+                    //   return(
+                    //     <div>
+                    //       <div>Объекты</div>
+                    //       <div>{}</div>
+                    //     </div>
+                    //   )
+                    // }
+                    // if(data.Tasks){
+                    //   return(
+                    //     <div>
+                    //       <div>Задачи</div>
+                    //       <div>{}</div>
+                    //     </div>
+                    //   )
+                    // }
+                    // if(data.Users){
+                    //   return(
+                    //     <div>
+                    //       <div>Пользователи</div>
+                    //       <div>{}</div>
+                    //     </div>
+                    //   )
+                    // }
+                    // if(data.Chats){
+                    //   return(
+                    //     <div>
+                    //       <div>Чаты</div>
+                    //       <div>{}</div>
+                    //     </div>
+                    //   )
+                    // }
+                    // if(data.Docs){
+                    //   return(
+                    //     <div>
+                    //       <div>Документы</div>
+                    //       <div>{}</div>
+                    //     </div>
+                    //   )
+                    // }
                       return(
                         "ничего не найдено"
                       )

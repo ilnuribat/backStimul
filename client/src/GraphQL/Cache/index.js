@@ -182,6 +182,7 @@ export const setDashboard = gql `
     }
   }
 `;
+
 export const setPlace = gql `
   mutation setPlace($id: String, $name: String, $type: String ){
     setPlace(id: $id, name: $name, type: $type) @client{
@@ -193,6 +194,7 @@ export const setPlace = gql `
     }
   }
 `;
+
 export const setTemp = gql `
   mutation setTemp($tempObj: String){
     setTemp(tempObj: $tempObj) @client{

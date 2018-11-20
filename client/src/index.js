@@ -68,7 +68,7 @@ const stateLink = withClientState({
     barType: "search",
     place:{
       id: "no",
-      name: "no",
+      name: "Root",
       type: "no",
       __typename: "place",
     },
