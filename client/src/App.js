@@ -25,6 +25,8 @@ import { graphql } from 'react-apollo';
 import { gBar } from './GraphQL/Cache';
 import 'animate.css';
 import { BarInner } from './comps/Parts/Bars/BarInner';
+import { DocsView } from './comps/Views/DocsView/DocsView';
+
 
 // const Components = [
 //   {name:'', link: ''},
@@ -125,6 +127,7 @@ class App extends Component {
                   // })
                 }
                 <Route exact path="/task" component={TaskView} />
+                <Route exact path="/docs" component={DocsView} />
                 <Route exact path="/board" component={Board} />
                 <Route exact path="/tile" component={TileBoard} />
                 <Route exact path="/login" component={Login} />

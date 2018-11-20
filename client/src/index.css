@@ -170,6 +170,7 @@ a{
 @import './newcss/map.css';
 @import './newcss/svg.css';
 @import './newcss/rows.css';
+@import './newcss/fakeselect.css';
 
 .Button {
     width: 140px;

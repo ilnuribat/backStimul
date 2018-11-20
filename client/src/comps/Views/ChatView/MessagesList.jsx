@@ -11,9 +11,6 @@ import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { Svg } from '../../Parts/SVG/index';
 import { UserRow } from "../../Parts/Rows/Rows";
 
-
-
-// console.log(moment.locales());
 moment.locale('ru')
 
 const toBottom = () => {

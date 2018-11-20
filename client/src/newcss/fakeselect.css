@@ -1,0 +1,51 @@
+.FakeSelect{
+  position: relative;
+  /* overflow: hidden; */
+  background: #3d4147;
+  width:100%;
+  height: 40px;
+  border-radius: 3px;
+  z-index: 1;
+}
+.FakeSelect:after{
+  position: absolute;
+  content: "V";
+  right:10px;
+  top:10px;
+}
+.FakeSelect .FakeOptionsContainer{
+  position: absolute;
+  /* bottom:-100%; */
+  top:42px;
+  z-index:9;
+  width:100%;
+}
+.FakeSelect .FakeOption{
+  padding: 10px 5px;
+  position: relative;
+  background: #3d4147;
+  width:100%;
+  height: 40px;
+  margin:2px 0;
+  border-radius: 3px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.FakeSelect .FakeOption .FakeIcon{
+  width:36px;
+  height:36px;
+  min-width:36px;
+  min-height:36px;
+  background: #232529;
+  margin: 0 5px 0 0;
+  overflow: hidden;
+  border-radius: 3px;
+}
+.FakeSelect .FakeOption .FakeContent{
+  width:auto;
+}
+.FakeSelect .FakeSelected{
+  width:100%;
+  text-align: left;
+}

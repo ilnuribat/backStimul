@@ -22,6 +22,7 @@ import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lay
 import { updTask, crTask, deleteTask } from '../../../GraphQL/Qur/Mutation';
 import Panel from '../../Lays/Panel/index';
 import { Fragment } from 'react';
+import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
 
 let ref;
 
@@ -425,7 +426,7 @@ class Board extends Component {
                                 <div>
                                     <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
                                     <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
-                                    <div className="FakeLink">Показать все</div>
+                                    <div className="FakeLink"><Link to="/docs">Показать все</Link></div>
                                 </div>
                               )
                               }
@@ -433,6 +434,9 @@ class Board extends Component {
                       }
                     </TextRow>
                   </TextRow>
+                  <FakeSelect>
+                    
+                  </FakeSelect>
 
                 </Panel>
                 </Fragment>
