@@ -136,13 +136,13 @@ export default class MessagesList extends Component {
                   {/* <div className="msg-flex"> */}
                   {same ? (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
-                      <UserRow name={username} icon="1" view="Col" />
+                      {/* <UserRow name={username} icon="1" view="Col" /> */}
                     </div>
                   
                   
                   ) : (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
-                      <UserRow name={username} icon="1" view="Col" />
+                      {id !== uid ? (<UserRow name={username} icon="1" view="Col" />) : null}
                     </div>
                   )}
                   <blockquote className={"msgs"}>
