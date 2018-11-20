@@ -24,6 +24,7 @@ import { compose } from 'react-apollo';
 import { graphql } from 'react-apollo';
 import { gBar } from './GraphQL/Cache';
 import 'animate.css';
+import { BarInner } from './comps/Parts/Bars/BarInner';
 
 // const Components = [
 //   {name:'', link: ''},
@@ -107,7 +108,7 @@ class App extends Component {
               <NavLinks />
             </Nav>
             <Root>
-              { this.props.gBar && this.props.gBar.barShow ? (<Bar view="animated fadeInLeft" type={this.props.gBar.barType } />) : null }
+              { this.props.gBar && this.props.gBar.barShow ? (<Bar view="animated fadeInLeft" type={this.props.gBar.barType } ><BarInner /></Bar>) : null }
 
               <Switch>
                 {
