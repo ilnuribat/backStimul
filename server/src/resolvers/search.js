@@ -21,4 +21,9 @@ module.exports = {
       }];
     },
   },
+  SearchResult: {
+    __resolveType() {
+      return null;
+    },
+  },
 };
