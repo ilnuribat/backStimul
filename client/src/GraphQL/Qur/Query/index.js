@@ -223,13 +223,13 @@ export const GR_QUERY = gql `
             id
             username
           }
-          # files {
-          #   id
-          #   size
-          #   name
-          #   mimeType
-          #   date
-          # }
+          files {
+            id
+            size
+            name
+            mimeType
+            date
+          }
           messages(messageConnection: $messageConnection) {
               edges {
                   cursor
