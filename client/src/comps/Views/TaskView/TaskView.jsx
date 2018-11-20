@@ -124,7 +124,8 @@ class TaskView extends Component {
   writeTaskName(name) {
     console.warn("writeName", name, this.state.taskId)
     qauf(updTask(this.state.taskId,`{name: "${name}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.warn(a)
+      console.warn(a.data)
+      this.modalMessage(a.data.updateTask);
     }).catch((e)=>{
       console.warn(e);
     })
@@ -152,30 +153,42 @@ class TaskView extends Component {
   }
 
   modalMessage(e){
-    // console.log(e.target)
-    if(e === true){
-      this.setState({
-        modalMessageShow: true,
-        modalMessage: "Изменения сохранены",
-      })
-    }else if(typeof e === "string"){
+    const type = typeof e;
+
+    switch (type) {
+    case "boolean":
+      e ?
+        this.setState({
+          modalMessageShow: true,
+          modalMessage: "Изменения сохранены",
+        }) :
+        this.setState({
+          modalMessageShow: true,
+          modalMessage: "Произошла ошибка",
+        })
+      break;
+    case "string":
       this.setState({
         modalMessageShow: true,
         modalMessage: e,
       })
-    }else{
+      break;
+    case "object":
       this.setState({
         modalMessageShow: true,
-        modalMessage: "Произошла ошибка",
+        modalMessage: `Файл ${e.name} размером ${e.size} загружен!`,
       })
+      break;
+    default:
+      console.warn("FUCK")
+      setTimeout(()=>{
+        this.setState({
+          modalMessageShow: false,
+          modalMessage: "",
+        })
+      }, 5000)
+      break;
     }
-    setTimeout(()=>{
-      this.setState({
-        modalMessageShow: false,
-        modalMessage: "",
-      })
-    }, 5000)
-
   }
 
   userSelect(n,i){
@@ -217,12 +230,9 @@ class TaskView extends Component {
 
     if(typeof q === "function"){
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
-        console.warn("Answer updUsrGr",a)
-        this.modalMessage(a.data.updateTask);
+        // console.warn("Answer updUsrGr",a.data)
+        this.modalMessage(a.data.updateUsersTask);
       })
-        .then(()=>{
-          // this.loadu(this.props.getChat.id)
-        })
         .catch((e)=>{
           console.warn(e);
         });
@@ -245,7 +255,7 @@ class TaskView extends Component {
   downloadFile (file) {
     console.warn("FILE is", file)
     axios({
-      url: `http://localhost:8500/download/${file.id}`,
+      url: `http://${_url}/download/${file.id}`,
       method: 'GET',
       responseType: 'blob', // important
     }).then((response) => {
@@ -570,13 +580,15 @@ class TaskView extends Component {
                       <ModalCol>
                         {/* <div className="files-drop"> */}
                         {/* <Svg svg="tocloud" inline={0} />переместите файлы сюдa */}
-                        <Mutation mutation={uploadFile}>
+                        <Mutation mutation={uploadFile} onCompleted={(data) => {
+                          console.warn(data)
+                          this.modalMessage(data.uploadFile);
+                        }}>
                           {upload => (
                             <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
                               <p>Переместите сюда файлы или нажмите для добавления.</p>
                             </Dropzone>
                           )}
-
                         </Mutation>
                         {/* </div> */}
                       </ModalCol>
