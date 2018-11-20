@@ -1,6 +1,6 @@
 const moment = require('moment');
 const { withFilter } = require('apollo-server');
-const { Group } = require('../models');
+const { Group, UserGroup } = require('../models');
 const {
   pubsub, TASK_UPDATED, USER_TASK_UPDATED,
 } = require('../services/constants');
@@ -15,6 +15,14 @@ module.exports = {
     messages: groupService.getMessages,
     unreadCount: groupService.unreadCount,
     endDate: ({ endDate }) => (endDate ? moment(endDate).format() : null),
+    parentId: ({ parentId }) => {
+      if (parentId) {
+        return parentId.toString();
+      }
+
+      return null;
+    },
+    objectId: ({ objectId }) => objectId.toString(),
   },
   Query: {
     task(parent, { id }) {
@@ -24,20 +32,38 @@ module.exports = {
   Mutation: {
     createTask: taskService.createTask,
     updateTask: taskService.updateTask,
-    updateUsersGroup: taskService.updateUsersGroup,
     deleteTask: taskService.deleteTask,
+    updateUsersTask: taskService.updateUsersTask,
   },
   Subscription: {
     taskUpdated: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([TASK_UPDATED]),
-        ({ taskUpdated: { _id: mId } }, { id }) => mId.toString() === id,
+        async ({ taskUpdated: { _id: mId } }, args, { id }) => {
+          const res = await UserGroup.findOne({
+            groupId: mId,
+            userId: id,
+          });
+
+          return !!res;
+        },
       ),
     },
     userTaskUpdated: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([USER_TASK_UPDATED]),
-        () => true,
+        async ({ userTaskUpdated }, args, { user }) => {
+          if (user._id.equals(userTaskUpdated.user.id)) {
+            return true;
+          }
+
+          const ug = await UserGroup.findOne({
+            userId: user.id,
+            groupId: userTaskUpdated.task.id,
+          });
+
+          return !!ug;
+        },
       ),
     },
   },

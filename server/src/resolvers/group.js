@@ -27,7 +27,7 @@ module.exports = {
       return taskService.deleteTask(parent, { id });
     },
     updateUsersGroup(parent, { group }) {
-      return taskService.updateUsersGroup(parent, { group });
+      return taskService.updateUsersGroup(parent, { task: group });
     },
   },
 };

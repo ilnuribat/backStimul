@@ -1,4 +1,4 @@
-const { PubSub } = require('apollo-server');
+const { PubSub } = require('graphql-subscriptions');
 
 
 const pubsub = new PubSub();
@@ -14,9 +14,9 @@ const TASK_STATUSES = [{
   id: 1,
   name: 'Новое',
 }, {
-  id: 2,
-  name: 'Неназначенное',
-}, {
+//   id: 2,
+//   name: 'Неназначенное',
+// }, {
   id: 3,
   name: 'В работе',
 }, {

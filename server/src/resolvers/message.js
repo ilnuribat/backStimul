@@ -153,14 +153,14 @@ module.exports = {
     messageAdded: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([MESSAGE_ADDED]),
-        async ({ messageAdded: { groupId: mGroupId } }, { groupId }, ctx) => {
+        async ({ messageAdded: { groupId: mGroupId } }, { groupId }, user) => {
           if (groupId) {
             return mGroupId.toString() === groupId;
           }
 
           const userGroup = await UserGroup.findOne({
             groupId: mGroupId,
-            userId: ctx.user.id,
+            userId: user.id,
           });
 
           if (userGroup) {
