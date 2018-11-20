@@ -157,10 +157,7 @@ export default class MessagesList extends Component {
                               variables={{ id:node.id }}
                             >
                               {({ data, subscribeToMore }) => {
-                                // console.warn("subs", subscribeToMore)
                                 subscribeToRead(subscribeToMore, node.id);
-                                // console.log("subscribeToMore_______________________________");
-                                // console.log(subscribeToMore);
 
                                 return(
                                   <div className="events">{data.message && data.message.isRead ? <Svg svg="dblcheckack" /> : <Svg svg="dblcheck" />}  {
@@ -173,10 +170,9 @@ export default class MessagesList extends Component {
                         </div>
                       ) : null }
 
-
-                      <div className="msg-date">
+                      {date ? (<div className="msg-date">
                       {date}
-                      </div>
+                      </div>):null}
                     </div>
 
                   </blockquote>
