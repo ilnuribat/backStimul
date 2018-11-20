@@ -20,6 +20,8 @@ import { Svg } from '../../Parts/SVG/index';
 import { ButtonRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import { updTask, crTask, deleteTask } from '../../../GraphQL/Qur/Mutation';
+import Panel from '../../Lays/Panel/index';
+import { Fragment } from 'react';
 
 let ref;
 
@@ -277,6 +279,7 @@ class Board extends Component {
               });
 
               return(
+                <Fragment>
                 <Content>
                   <div className="Board">
                     <div className="Board-Top">
@@ -386,6 +389,8 @@ class Board extends Component {
                     </div>
                   </div>
                 </Content>
+                <Panel></Panel>
+                </Fragment>
               )
 
             }

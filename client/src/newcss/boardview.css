@@ -53,6 +53,8 @@ align-content: center;
   display: flex;
   flex-direction: column;
   height:100%;
+  width:auto;
+  overflow: hidden;
 }
 .Board-Content{
   display: flex;
