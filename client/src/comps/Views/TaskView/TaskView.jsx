@@ -6,7 +6,7 @@ import _ from 'lodash';
 import axios from 'axios';
 import 'animate.css';
 import moment from 'moment';
-import momentRu from 'moment/locale/ru';
+// import momentRu from 'moment/locale/ru';
 import { qauf, _url } from '../../../constants';
 import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
@@ -17,16 +17,14 @@ import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 // import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
-import { ButtonTo, UserRow, FileRow, TextRow, IconRow } from '../../Parts/Rows/Rows';
+import { ButtonTo, UserRow, FileRow, TextRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
-import Svg from '../../Parts/SVG'
+// import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 
 // import ContentInner from '../../Lays/ContentInner/ContentInner';
 
 moment.locale('ru')
-
-
 
 class TaskView extends Component {
   constructor(props) {
@@ -253,7 +251,7 @@ class TaskView extends Component {
   }
 
   downloadFile (file) {
-    console.warn("FILE is", file)
+    // console.warn("FILE is", file)
     axios({
       url: `http://${_url}/download/${file.id}`,
       method: 'GET',
@@ -396,38 +394,6 @@ class TaskView extends Component {
                         </div>
                       ): null
                     }
-
-
-
-                    {
-                      // taskId? (
-                      //   <div className="tab-roll">
-                      // <div className="header"><h4>Добавить пользователя</h4></div>
-                      // <div className="content">
-                      //   <label className="Pad" htmlFor="users">
-                      //     <input type="list" name="users" list="users" autoComplete="on" onChange={this.newUser} />
-                      //     {
-                      //       this.state.newUser ? (
-                      //         <div className="Button3" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить{/*this.state.newUser*/}</div>
-                      //       ): null
-                      //     }
-
-                      //     <datalist id="users">
-                      //       {
-                      //         data.task.users && data.task.users.length > 0 ?  _.differenceWith(allusers, data.task.users, _.isEqual).map((e)=>(
-                      //           <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                      //         )
-                      //         ) : allusers.map((e)=>(
-                      //           <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                      //         )
-                      //         )
-                      //       }
-                      //     </datalist>
-                      //   </label>
-                      // </div>
-                      //   </div>
-                      // ) : null
-                    }
                     {
                       taskId ? (
                         <div className="tab-roll">
@@ -440,33 +406,6 @@ class TaskView extends Component {
                         </div>
                       ) : null
                     }
-                    {/* {taskId ? (
-                      !upload ? (
-                        <div className="tab-roll">
-                          <div className="header"></div>
-                          <div className="content">
-                            <div className="button" onClick={()=>{this.setState({upload: !upload})}}>Прикрепить файл</div>
-                            <div className="content-scroll">
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="tab-roll">
-                          <div className="header"></div>
-                          <div className="content">
-                            <Mutation mutation={uploadFile}>
-                              {upload => (
-                                <Dropzone onDrop={([file]) => {upload({ variables: { id: taskId, file } }).then(()=>this.setState({upload: !upload})).catch((err)=>console.warn(err));this.setState({upload: !upload}) }}>
-                                  <p>Переместите сюда файлы или нажмите для добавления.</p>
-                                </Dropzone>
-                              )}
-
-                            </Mutation>
-                          </div>
-                        </div>
-                      )
-                    ): null
-                    } */}
                   </InnerBar>
                 </div>
                 {modal ? (
@@ -571,8 +510,6 @@ class TaskView extends Component {
                       }
                       ) : (
                         <div>
-                          {/* <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
-                                  <FileRow name="Фото подвала.jpg" id="id1237" icon="img" /> */}
                           <div className="FakeLink">Файлов нет</div>
                         </div>
                       )
@@ -595,11 +532,7 @@ class TaskView extends Component {
                     </ModalCol>
                   </Modal>
                 ) : null
-
                 }
-
-
-
               </Content>
             )}
           }
