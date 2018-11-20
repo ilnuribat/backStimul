@@ -4,9 +4,9 @@ async function download(id) {
   if (!ObjectId.isValid(id)) {
     throw new Error('not valid object id');
   }
-  const bucket = new GridFSBucket(connection.db, { bucketName: 'gridfsdownload' });
-  // const CHUNKS_COLL = 'gridfsdownload.chunks';
-  const FILES_COLL = 'gridfsdownload.files';
+  const bucket = new GridFSBucket(connection.db, { bucketName: 'gridfs' });
+  // const CHUNKS_COLL = 'gridfs.chunks';
+  const FILES_COLL = 'gridfs.files';
   const collection = connection.db.collection(FILES_COLL);
   const chunksQuery = await collection.findOne({ _id: ObjectId(id) });
 
