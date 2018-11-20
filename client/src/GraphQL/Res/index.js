@@ -112,6 +112,11 @@ export default {
 
       return {id, name, __typename: 'chat' };
     },
+    sBar: (_, { barType, barShow },  { cache }) => {
+      cache.writeData({ data: { barType: barType, barShow: barShow } });
+
+      return {barType, barShow, __typename: 'Bar' };
+    },
     messagesListDirectUpdate: (_, {lastMessage, lastMessageId, lastMessageGroupId},  { cache }) => {
       const query = gql`
         query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
