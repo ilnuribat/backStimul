@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 // import PropTypes from 'prop-types'
 // import { gBar } from '../../../GraphQL/Cache/index';
 // import { compose, graphql } from 'react-apollo';
-import { Mutation } from 'react-apollo';
+import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import Loading from '../../Loading';
 
@@ -16,7 +16,7 @@ export class Search extends Component {
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value.toUpperCase()});
+    this.setState({value: event.target.value});
   }
 
   handleSubmit(event) {
@@ -32,7 +32,7 @@ export class Search extends Component {
     let {value} = this.state;
 
     let Search = gql `
-    mutation search($string: String){
+    query search($string: String){
       search(string: $string ){
         Objects{
           name
@@ -66,14 +66,17 @@ export class Search extends Component {
         <div className="SearchBody">
           {
             value ? (
-              <Mutation mutation={Search} variables={{value}}>
+              <Query query={Search} variables={{value}}>
                 {
                   ({data, loading, error})=>{
-                    if(error) return error.message
+                    if(error) {
+                      console.log(error)
+                      return error.message}
                     if(loading) return "загрузка"
                     
+                    console.log(error)
                     console.log(data)
-                    
+
                     if(data){
 
                       console.log(data)
@@ -86,7 +89,7 @@ export class Search extends Component {
                     }
                   }
                 }
-              </Mutation>
+              </Query>
             ) : ("Введите название, Имя, документ, шифр")
           }
 
