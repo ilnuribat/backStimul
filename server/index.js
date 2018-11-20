@@ -79,7 +79,7 @@ app.get('/download/:id', (req, res) => {
 
 const server = http.createServer(app);
 
-app.use(bodyParser());
+app.use(bodyParser.json());
 
 apolloServer.applyMiddleware({ app, path: '/' });
 

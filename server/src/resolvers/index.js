@@ -7,6 +7,7 @@ const glossary = require('./glossary');
 const files = require('./files');
 const object = require('./object');
 const task = require('./task');
+const search = require('./search');
 
 module.exports = mergeResolvers([
   user,
@@ -17,4 +18,5 @@ module.exports = mergeResolvers([
   files,
   object,
   task,
+  search,
 ]);
