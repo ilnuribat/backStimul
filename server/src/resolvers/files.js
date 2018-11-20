@@ -18,7 +18,7 @@ const storeUpload = ({
   taskId,
   mimetype,
 }) => {
-  const bucket = new GridFSBucket(connection.db, { bucketName: 'gridfsdownload' });
+  const bucket = new GridFSBucket(connection.db, { bucketName: 'gridfs' });
   const uploadStream = bucket.openUploadStream(name);
 
   return new Promise((resolve, reject) => stream
@@ -58,7 +58,7 @@ module.exports = {
         },
       }, {
         $lookup: {
-          from: 'gridfsdownload.files',
+          from: 'gridfs.files',
           localField: 'fileIdObject',
           foreignField: '_id',
           as: 'fileBody',
@@ -85,8 +85,6 @@ module.exports = {
         },
       }]);
 
-      console.log('aaa', file);
-
       return file;
     },
   },
@@ -96,6 +94,11 @@ module.exports = {
       const fileSaved = await storeUpload({ ...loadedFile, taskId });
 
       return fileSaved;
+    },
+    async deleteFile(parent, { id }) {
+      const res = await Files.deleteOne({ _id: id });
+
+      return res.n;
     },
   },
 };

@@ -7,7 +7,8 @@ type File {
 }
 
 type Mutation {
-  uploadFile(id: ID!, file: Upload!): File!
+  uploadFile(id: ID!, file: Upload!): File!,
+  deleteFile(id: ID!): Boolean!,
 }
 
 
