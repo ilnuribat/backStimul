@@ -9,6 +9,7 @@ import { MESSAGE_READ } from "../../../GraphQL/Qur/Subscr";
 import { MESSAGE_QUERY } from "../../../GraphQL/Qur/Query";
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { Svg } from '../../Parts/SVG/index';
+import { UserRow } from "../../Parts/Rows/Rows";
 
 
 
@@ -133,10 +134,17 @@ export default class MessagesList extends Component {
               return(
                 <div className={'msg '+ tr} key={'chat-'+i} from={id}>
                   {/* <div className="msg-flex"> */}
-                  {same ? (<div className="msg-user" style={{color: colorHash.hex(username)}}>
-                  </div>) : (
+                  {same ? (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
-                      {username}</div>)}
+                      <UserRow name={username} icon="1" view="Col" />
+                    </div>
+                  
+                  
+                  ) : (
+                    <div className="msg-user" style={{color: colorHash.hex(username)}}>
+                      <UserRow name={username} icon="1" view="Col" />
+                    </div>
+                  )}
                   <blockquote className={"msgs"}>
 
                     <div className="text prewr">{messageText}</div>

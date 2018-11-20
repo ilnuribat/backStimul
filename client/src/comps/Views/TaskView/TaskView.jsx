@@ -247,7 +247,7 @@ class TaskView extends Component {
 
     return(
       taskId ?
-        <Query
+        (<Query
           query={GR_QUERY}
           variables={{ id: `${taskId}` }}
         >
@@ -299,11 +299,16 @@ class TaskView extends Component {
                           this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Новая"
                         }
                       </TextRow>
+
+                      
                       <TextRow name="" view="cgr Pad510 s">
-                        <UserRow size="24" id={data.task && data.task.assignedTo ? data.task.assignedTo.id : null} name={data.task && data.task.assignedTo ? data.task.assignedTo.username : null} icon="1" />
+                      {data.task && data.task.assignedTo && data.task.assignedTo.id && data.task.assignedTo.username ? (
+                        <UserRow size="24" id={data.task.assignedTo.id} name={data.task.assignedTo.username ? data.task.assignedTo.username : "Нет имени"} icon="1" />
+                        ): "Ответственный не назначен"}
                       </TextRow>
+                     
                       {
-                        console.log(data.task && data.task.assignedTo ? data.task.assignedTo.username : null)
+                        console.log(data.task)
                       }
                     </TextRow>
 
@@ -549,9 +554,9 @@ class TaskView extends Component {
               </Content>
             )}
           }
-        </Query>
-        : <Loading />
-    );
+        </Query>)
+        : (<Loading />)
+    )
   }
 }
 
