@@ -82,15 +82,55 @@ export class Search extends Component {
                       console.log(data)
 
                       return "data"
-                    }else{
+                    }
+                    if(data.Objects){
+                      return(
+                        <div>
+                          <div>Объекты</div>
+                          <div>{}</div>
+                        </div>
+                      )
+                    }
+                    if(data.Tasks){
+                      return(
+                        <div>
+                          <div>Задачи</div>
+                          <div>{}</div>
+                        </div>
+                      )
+                    }
+                    if(data.Users){
+                      return(
+                        <div>
+                          <div>Пользователи</div>
+                          <div>{}</div>
+                        </div>
+                      )
+                    }
+                    if(data.Chats){
+                      return(
+                        <div>
+                          <div>Чаты</div>
+                          <div>{}</div>
+                        </div>
+                      )
+                    }
+                    if(data.Docs){
+                      return(
+                        <div>
+                          <div>Документы</div>
+                          <div>{}</div>
+                        </div>
+                      )
+                    }
                       return(
                         "ничего не найдено"
                       )
-                    }
+
                   }
                 }
               </Query>
-            ) : ("Введите название, Имя, документ, шифр")
+            ) : ("Введите название, адрес, Имя, документ, шифр")
           }
 
         </div>
