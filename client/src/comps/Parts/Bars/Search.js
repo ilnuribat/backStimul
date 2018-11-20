@@ -64,19 +64,32 @@ export class Search extends Component {
           
         </div>
         <div className="SearchBody">
-          <Mutation mutation={Search} variables={value}>
-            {
-              ({data, loading, error})=>{
-                if(error) return error.message
-                if(loading) return "загрузка"
+          {
+            value ? (
+              <Mutation mutation={Search} variables={{value}}>
+                {
+                  ({data, loading, error})=>{
+                    if(error) return error.message
+                    if(loading) return "загрузка"
+                    
+                    console.log(data)
+                    
+                    if(data){
 
-                if(data){
-                  console.log(data)
-                  return "data"
+                      console.log(data)
+
+                      return "data"
+                    }else{
+                      return(
+                        "ничего не найдено"
+                      )
+                    }
+                  }
                 }
-              }
-            }
-          </Mutation>
+              </Mutation>
+            ) : ("Введите название, Имя, документ, шифр")
+          }
+
         </div>
         {children}
       </div>
