@@ -17,7 +17,7 @@ import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
 import '../../../newcss/task.css';
 import { Svg } from '../../Parts/SVG/index';
-import { ButtonRow } from '../../Parts/Rows/Rows';
+import { ButtonRow, TextRow, FileRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import { updTask, crTask, deleteTask } from '../../../GraphQL/Qur/Mutation';
 import Panel from '../../Lays/Panel/index';
@@ -335,7 +335,7 @@ class Board extends Component {
                           <ModalRow>
                             <ModalCol>
                               <div className="ModalBlockName">
-                    Срок истечения
+                                Срок истечения
                               </div>
                               <label htmlFor="">
                                 <input type="date" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
@@ -344,7 +344,7 @@ class Board extends Component {
 
                             <ModalCol>
                               <ModalBlockName>
-                  Добавить родительскую задачу
+                                Добавить родительскую задачу
                               </ModalBlockName>
                               <label htmlFor="">
                                 <select onChange={(e)=>{this.writeTaskData(e, "parentId", true)}}>
@@ -389,7 +389,52 @@ class Board extends Component {
                     </div>
                   </div>
                 </Content>
-                <Panel></Panel>
+                <Panel>
+                  <TextRow name="Информация" view="Pad510 BigName">
+                    <TextRow name="" view="Pad510 MT10">
+                      {data.object.name}
+                    </TextRow>
+                    <TextRow name="" view="cgr Pad510 s">
+                      {data.object.address.value}
+                      <p>
+                        "{data.object.address.coordinates[0]}, {data.object.address.coordinates[1]}"
+                      </p>
+                      
+                    </TextRow>
+                    <TextRow name="" view="cgr Pad510 s">
+                    Задачи: {data.object.tasks.length} штуки
+                    </TextRow>
+                    <TextRow name="" view="cgr Pad510 s">
+                        {
+                          console.log(data.object)
+                        }
+                      </TextRow>
+
+                    <TextRow name="Документы" view="Pad510">
+                      {
+                      data.object ? (
+                            <div>
+                              {
+                                data.object.docs ? data.object.docs.map(
+                                (e,i)=>{
+                                  return(
+                                    <FileRow name={e.name} id={e.id} icon="doc" />
+                                  )
+                                }
+                              ) : (
+                                <div>
+                                    <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+                                    <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
+                                    <div className="FakeLink">Показать все</div>
+                                </div>
+                              )
+                              }
+                            </div>) : null
+                      }
+                    </TextRow>
+                  </TextRow>
+
+                </Panel>
                 </Fragment>
               )
 
