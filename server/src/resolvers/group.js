@@ -11,6 +11,7 @@ module.exports = {
     messages: groupService.getMessages,
     unreadCount: groupService.unreadCount,
     endDate: ({ endDate }) => (endDate ? moment(endDate).format() : null),
+    id: ({ _id }) => _id.toString(),
   },
   Query: {
     groups: () => Group.find({ code: null }),
