@@ -1,0 +1,5 @@
+union SearchResult = Task | Object | User | Message
+
+type Query {
+  search(text: String) : [SearchResult]
+}
