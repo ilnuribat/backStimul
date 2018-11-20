@@ -50,9 +50,9 @@ class Task extends Component {
                 }
               </div>
               <div className="ChatMessage">
-                {
-                  lastMessage.text
-                }
+                "{
+                  lastMessage.text.substring(0, 50) + "..." 
+                }"
               </div>
 
             </div>
