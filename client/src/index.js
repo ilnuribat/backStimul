@@ -66,6 +66,7 @@ const stateLink = withClientState({
     currentObjectName: "",
     barShow: false,
     barType: "search",
+    placename:"Root",
     place:{
       id: "no",
       name: "Root",

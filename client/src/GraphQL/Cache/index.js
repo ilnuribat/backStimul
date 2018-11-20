@@ -109,6 +109,7 @@ export const getDashboard = gql `
 
 export const getPlace = gql `
   query getPlace{
+      placename
       place @client{
         id
         name

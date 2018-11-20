@@ -60,7 +60,9 @@ class NavLinks extends Component {
 
     this.props.setPlace({
       variables:{
+        id: "no",
         name: place,
+        type: place,
       }
     })
   }
@@ -80,7 +82,7 @@ class NavLinks extends Component {
           NavArr.map((e,i)=>{
             return(
               //<div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click === "modal" ? this.modal() : console.log('No click')} }>
-              <div className={getPlace && getPlace.place.name == e.name ? "nav selected" : "nav"} key={"nav"+i+e.link} onClick={()=>{e.click && typeof e.click === 'function' ? e.click() : console.log('No click')} }>
+              <div className={getPlace && getPlace.placename == e.name ? "nav selected" : "nav"} key={"nav"+i+e.link} onClick={()=>{e.click && typeof e.click === 'function' ? e.click() : console.log('No click')} }>
                 {e.link ? (
                   <Link to={e.link}>
                     <Svg svg={e.svg} />

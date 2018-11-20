@@ -11,7 +11,12 @@ export default {
     },
 
     setPlace: (_, { id, name, type },  { cache }) => {
-      cache.writeData({ data: { id: id, name: name, type: type, } });
+      cache.writeData({
+        data:{
+          id: id, placename: name, name:name, type: type,
+          place:{ id: id, name: name, type: type }
+        }
+      });
 
       return {id, name, type, __typename: 'place' };
     },
