@@ -39,15 +39,6 @@ schema.virtual('id').get(function () {
   return this._id.toString();
 });
 
-schema.index({ code: 1 }, {
-  unique: true,
-  partialFilterExpression: {
-    code: {
-      $exists: true,
-    },
-  },
-});
-
 schema.static('getGroupedLevel', async function (level = 0, parentId = null) {
   const res = await this.aggregate([{
     $project: {

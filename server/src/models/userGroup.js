@@ -9,6 +9,4 @@ const schema = new Schema({
   },
 });
 
-schema.index({ userId: 1, groupId: 1 }, { unique: true });
-
 module.exports = schema;

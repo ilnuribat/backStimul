@@ -12,4 +12,11 @@ module.exports = {
   UserGroup: mongoose.model('userGroups', userGroup),
   Message: mongoose.model('messages', message),
   Files: mongoose.model('files', files),
+  Schemas: {
+    Group: group,
+    User: user,
+    UserGroup: userGroup,
+    Message: message,
+    Files: files,
+  },
 };
