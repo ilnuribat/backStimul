@@ -266,15 +266,15 @@ export const SvgCancel = () => (
 export const SvgChilds = () => (
 <svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" >
                                 <g id="subtasks" transform="translate(5.000000, 5.000000)">
-                                    <path d="M6.5,1.5 L6.5,11.5" id="Line-2" stroke="#3E75B2" stroke-linecap="round" stroke-linejoin="bevel"></path>
+                                    <path d="M6.5,1.5 L6.5,11.5" id="Line-2" stroke="#3E75B2" strokeLinecap="round" strokeLinejoin="bevel"></path>
                                     <rect id="Rectangle" fill="#3E75B2" x="0" y="5" width="4" height="3" rx="0.5"></rect>
-                                    <path d="M4.5,6.5 L5.5,6.5" id="Line-4" stroke="#3E75B2" stroke-linecap="square"></path>
-                                    <path d="M6.5,1.5 L9.5,1.5" id="Line" stroke="#3E75B2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M4.5,6.5 L5.5,6.5" id="Line-4" stroke="#3E75B2" strokeLinecap="square"></path>
+                                    <path d="M6.5,1.5 L9.5,1.5" id="Line" stroke="#3E75B2" strokeLinecap="round" strokeLinejoin="round"></path>
                                     <rect id="Rectangle" fill="#3E75B2" x="9" y="0" width="4" height="3" rx="0.5"></rect>
                                     <rect id="Rectangle-Copy" fill="#3E75B2" x="9" y="10" width="4" height="3" rx="0.5"></rect>
-                                    <path d="M6.5,11.5 L9.5,11.5" id="Line-3" stroke="#3E75B2" stroke-linecap="round" stroke-linejoin="bevel"></path>
+                                    <path d="M6.5,11.5 L9.5,11.5" id="Line-3" stroke="#3E75B2" strokeLinecap="round" strokeLinejoin="bevel"></path>
                                     <rect id="Rectangle-Copy-2" fill="#3E75B2" x="9" y="5" width="4" height="3" rx="0.5"></rect>
-                                    <path d="M6.5,6.5 L9.5,6.5" id="Line-3-Copy" stroke="#3E75B2" stroke-linecap="square"></path>
+                                    <path d="M6.5,6.5 L9.5,6.5" id="Line-3-Copy" stroke="#3E75B2" strokeLinecap="square"></path>
                                 </g>
 </svg>
 );

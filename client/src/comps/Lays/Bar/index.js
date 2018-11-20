@@ -10,11 +10,11 @@ export default class Bar extends Component {
   render() {
 
     console.log(this.props)
-    let {children} = this.props;
+    let {children, view} = this.props;
 
 
     return (
-      <div className="Bar">
+      <div className={!view ? "Bar" : "Bar "+view}>
         {children}
       </div>
     )

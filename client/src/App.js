@@ -19,7 +19,11 @@ import Login from './comps/Views/Login';
 import RootLoader from './comps/RootLoader';
 import NavLinks from './comps/Views/NavLinks';
 import NavTop from './comps/Views/NavTop';
-
+import Bar from './comps/Lays/Bar/index';
+import { compose } from 'react-apollo';
+import { graphql } from 'react-apollo';
+import { gBar } from './GraphQL/Cache';
+import 'animate.css';
 
 // const Components = [
 //   {name:'', link: ''},
@@ -103,8 +107,9 @@ class App extends Component {
               <NavLinks />
             </Nav>
             <Root>
-              <Switch>
+              { this.props.gBar && this.props.gBar.barShow ? (<Bar view="animated bounceInLeft" type={this.props.gBar.barType } />) : null }
 
+              <Switch>
                 {
                   // Components.map((e,i)=>{
                   //   return(
@@ -130,7 +135,10 @@ class App extends Component {
   }
 }
 
-export default withRouter(App);
+
+export default compose(
+  graphql(gBar, { name: 'gBar' }),
+)(withRouter(App));
 
 
 

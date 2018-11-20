@@ -4,14 +4,11 @@ import { Link } from 'react-router-dom';
 import { Svg } from '../Parts/SVG/index';
 import Modal from '../Lays/Modal';
 import { graphql, compose } from "react-apollo";
-import { setBar } from '../../GraphQL/Cache';
+import { sBar, gBar } from '../../GraphQL/Cache';
 
 const search = (props)=>{
   console.log("Seacrh")
   console.log(props)
-
-
-
 } 
 
 const NavArr = [
@@ -26,10 +23,17 @@ class NavLinks extends Component {
     super(props)
   
     this.state = {
-       modal: false,
+      modal: false,
+      NavArr: [
+        {name:"search", comp:"", svg:"search", click:()=>{this.search()}},
+        {name:"Root", link:"/", comp:"", svg:"dash"},
+        {name:"Private", link:"/chat", comp:"", svg:"chat"},
+        {name:"Pap", link:"/map", comp:"", svg:"map"},
+      ],
     }
 
     this.modal = this.modal.bind(this)
+    this.search = this.search.bind(this)
   }
   
   modal(){
@@ -38,14 +42,24 @@ class NavLinks extends Component {
     })
   }
 
+  search(){
+    console.log('Search click')
+
+    this.props.sBar({
+      variables:{
+        barType: 'Search',
+        barShow: !this.props.gBar.barShow,
+      }
+    })
+  }
 
 
   static propTypes = {
   }
 
   render() {
-    let {children} = this.props;
-    let {modal} = this.state;
+    let {children, sBar} = this.props;
+    let {modal, NavArr} = this.state;
 
     return (
       <div className="NavLinks">
@@ -54,7 +68,7 @@ class NavLinks extends Component {
           NavArr.map((e,i)=>{
             return(
               //<div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click === "modal" ? this.modal() : console.log('No click')} }>
-              <div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click ? e.click(this.props.setBar) : console.log('No click')} }>
+              <div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click && typeof e.click === 'function' ? e.click() : console.log('No click')} }>
                 {e.link ? (
                   <Link to={e.link}>
                     <Svg svg={e.svg} />
@@ -74,5 +88,6 @@ class NavLinks extends Component {
 }
 
 export default compose(
-  graphql(setBar, { name: 'setBar' }),
+  graphql(sBar, { name: 'sBar' }),
+  graphql(gBar, { name: 'gBar' }),
 )(NavLinks);

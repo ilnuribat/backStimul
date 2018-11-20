@@ -75,6 +75,13 @@ export const getBar = gql `
       }
 `;
 
+export const gBar = gql `
+  query gBar{
+    barShow @client
+    barType @client
+      }
+`;
+
 export const getInfo = gql `
           query Info {
             __info @client{
@@ -299,6 +306,14 @@ export const meSet = gql `
       meid
       mename
       memail
+    }
+  }
+`;
+export const sBar = gql `
+  mutation sBar($barType: String, $barShow: Bool) {
+    sBar(barType: $barType, barShow: $barShow) @client {
+      barType
+      barShow
     }
   }
 `;
