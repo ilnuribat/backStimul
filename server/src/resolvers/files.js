@@ -21,7 +21,6 @@ const storeUpload = ({
   const bucket = new GridFSBucket(connection.db, { bucketName: 'gridfsdownload' });
   const uploadStream = bucket.openUploadStream(name);
 
-  // download(ObjectId('5bdc50d4d1531833206a7ed0'));
   return new Promise((resolve, reject) => stream
     .pipe(uploadStream)
     .on('finish', async () => {

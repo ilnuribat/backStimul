@@ -52,6 +52,13 @@ const apolloServer = new ApolloServer({
 
 const app = express();
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 app.param('id', (req, res, next, id) => {
   req.context = { id };
 
@@ -60,13 +67,12 @@ app.param('id', (req, res, next, id) => {
 
 app.get('/download/:id', (req, res) => {
   download(req.context.id)
-    .then(({ stream, filename }) => {
+    .then(({ stream }) => {
       stream.pipe(res);
-      // res.json({ ok: true, filename });
     })
     .catch((err) => {
       console.error(err);
-      res.json({ ok: false });
+      // res.json({ ok: false });
     });
 });
 

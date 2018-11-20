@@ -7,7 +7,7 @@ import userDefault from '../../Img/UserDefault';
 
 export const FileRow = ({ children, id, name, filename, url, fileid, icon, click, box, type, view  })=>{
   return(
-    <div className={`FileRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("file", fileid||id,url )}}>
+    <div className={`FileRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,name:name,url:url,type:type}) : console.log("file", fileid||id,url )}}>
       { icon ? (<div className="FileIcon"><Svg svg={icon || icon != 1 ? icon : "doc"} inline={1} /></div>):null}
       { filename || name ? (<div className="FileName">{filename || name}</div>):null}
       {children}

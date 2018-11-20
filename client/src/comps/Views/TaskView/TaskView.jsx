@@ -3,6 +3,7 @@ import { graphql, compose, Query, Mutation } from "react-apollo";
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import _ from 'lodash';
+import axios from 'axios';
 import 'animate.css';
 import moment from 'moment';
 import momentRu from 'moment/locale/ru';
@@ -20,6 +21,7 @@ import { ButtonTo, UserRow, FileRow, TextRow, IconRow } from '../../Parts/Rows/R
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
+
 // import ContentInner from '../../Lays/ContentInner/ContentInner';
 
 moment.locale('ru')
@@ -41,7 +43,6 @@ class TaskView extends Component {
       inputSaver: {},
       newUser: "",
       addressList: [],
-      upload: false,
       modalMessage:"",
       modalMessageShow:false,
     }
@@ -241,8 +242,25 @@ class TaskView extends Component {
       });
   }
 
+  downloadFile (file) {
+    console.warn("FILE is", file)
+    axios({
+      url: `http://localhost:8500/download/${file.id}`,
+      method: 'GET',
+      responseType: 'blob', // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data], {type: file.mimeType}));
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.setAttribute('download', file.name);
+      document.body.appendChild(link);
+      link.click();
+    });
+  }
+
   render() {
-    const { upload, allusers, taskName, taskId, modal, status, allTasks } = this.state;
+    const { allusers, taskName, taskId, modal, status, allTasks } = this.state;
     // console.warn("TASKID", status)
 
     return(
@@ -352,7 +370,7 @@ class TaskView extends Component {
                               {data.task.files && data.task.files.length > 0 ? data.task.files.map(
                                 (e)=>{
                                   return(
-                                    <FileRow key={e.id} name={e.name} id={e.id} icon="doc" />
+                                    <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" click={this.downloadFile} />
                                   )
                                 }
                               ) : (
@@ -538,7 +556,7 @@ class TaskView extends Component {
                       </ModalBlockName>
                       {data.task.files && data.task.files.length > 0 ? data.task.files.map((e)=>{
                         return(
-                          <FileRow key={e.id} name={e.name} id={e.id} icon="doc" />
+                          <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" click={this.downloadFile} />
                         )
                       }
                       ) : (
