@@ -253,3 +253,8 @@ margin:0 auto 5px;
   border-radius: 5px;
   border: 1px dashed #a3b6c570;
 }
+.UserRow.Col{
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}

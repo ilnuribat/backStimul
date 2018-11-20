@@ -39,7 +39,7 @@
   background-color: #3d4147;
   border-radius: 6px;
   display: block;
-  padding:10px;
+  padding:5px;
   overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
@@ -145,6 +145,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  
+}
+.msg-user .Col{
+  width: 50px;
+  padding:2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .msg.me{
