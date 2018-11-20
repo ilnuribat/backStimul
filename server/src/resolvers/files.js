@@ -1,30 +1,10 @@
-const fs = require('fs');
+
 const filesize = require('filesize');
 const { GraphQLUpload } = require('apollo-upload-server');
 const { connection, mongo: { GridFSBucket } } = require('mongoose');
 const {
   Files,
 } = require('../models');
-
-
-const download = async function (id) {
-  const bucket = new GridFSBucket(connection.db, { bucketName: 'gridfsdownload' });
-  // const CHUNKS_COLL = 'gridfsdownload.chunks';
-  const FILES_COLL = 'gridfsdownload.files';
-  const collection = connection.db.collection(FILES_COLL);
-  const chunksQuery = await collection.findOne(id);
-
-  // bucket.openDownloadStreamByName('blanks.pdf').
-  bucket.openDownloadStream(id)
-    .pipe(fs.createWriteStream(chunksQuery.filename))
-    .on('error', (error) => {
-      console.log(error);
-    })
-    .on('finish', () => {
-      // resolve(); console.log('done!');
-    });
-};
-
 
 const fileUpload = async ({ taskId, fileId, mimetype }) => Files.create({
   taskId,

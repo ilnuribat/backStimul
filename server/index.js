@@ -12,6 +12,7 @@ const { User } = require('./src/models');
 const { logger } = require('./logger');
 const typeDefs = require('./src/schema');
 const resolvers = require('./src/resolvers');
+const { download } = require('./src/services/files');
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -50,6 +51,26 @@ const apolloServer = new ApolloServer({
 });
 
 const app = express();
+
+app.param('id', (req, res, next, id) => {
+  req.context = { id };
+
+  return next();
+});
+
+app.get('/download/:id', (req, res) => {
+  download(req.context.id)
+    .then(({ stream, filename }) => {
+      stream.pipe(res);
+      // res.json({ ok: true, filename });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.json({ ok: false });
+    });
+});
+
+
 const server = http.createServer(app);
 
 app.use(bodyParser());
