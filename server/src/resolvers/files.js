@@ -1,10 +1,11 @@
 const fs = require('fs');
 const filesize = require('filesize');
+const { GraphQLUpload } = require('apollo-upload-server');
 const { connection, mongo: { GridFSBucket } } = require('mongoose');
 const {
   Files,
 } = require('../models');
-// const { GraphQLUpload } = require('apollo-server');
+
 
 const download = async function (id) {
   const bucket = new GridFSBucket(connection.db, { bucketName: 'gridfsdownload' });
@@ -57,54 +58,53 @@ const storeUpload = ({
 };
 
 module.exports = {
+  Upload: GraphQLUpload,
   Task: {
     files: async ({ id }) => {
-      const file = await Files.aggregate([
-        {
-          $match: {
-            taskId: id,
-          },
-        }, {
-          $project: {
-            _id: 0,
-            fileId: 1,
-            mimetype: 1,
-          },
-        }, {
-          $addFields: {
-            fileIdObject: {
-              $toObjectId: '$fileId',
-            },
-          },
-        }, {
-          $lookup: {
-            from: 'gridfsdownload.files',
-            localField: 'fileIdObject',
-            foreignField: '_id',
-            as: 'fileBody',
-          },
-        }, {
-          $unwind: {
-            path: '$fileBody',
-          },
-        }, {
-          $addFields: {
-            id: '$fileId',
-            size: '$fileBody.length',
-            name: '$fileBody.filename',
-            date: {
-              $toString: '$fileBody.uploadDate',
-            },
-            mimeType: '$mimetype',
-          },
-        }, {
-          $project: {
-            fileBody: 0,
-            fileIdObject: 0,
-            fileId: 0,
+      const file = await Files.aggregate([{
+        $match: {
+          taskId: id,
+        },
+      }, {
+        $project: {
+          _id: 0,
+          fileId: 1,
+          mimetype: 1,
+        },
+      }, {
+        $addFields: {
+          fileIdObject: {
+            $toObjectId: '$fileId',
           },
         },
-      ]);
+      }, {
+        $lookup: {
+          from: 'gridfsdownload.files',
+          localField: 'fileIdObject',
+          foreignField: '_id',
+          as: 'fileBody',
+        },
+      }, {
+        $unwind: {
+          path: '$fileBody',
+        },
+      }, {
+        $addFields: {
+          id: '$fileId',
+          size: '$fileBody.length',
+          name: '$fileBody.filename',
+          date: {
+            $toString: '$fileBody.uploadDate',
+          },
+          mimeType: '$mimetype',
+        },
+      }, {
+        $project: {
+          fileBody: 0,
+          fileIdObject: 0,
+          fileId: 0,
+        },
+      }]);
 
       console.log('aaa', file);
 
@@ -112,11 +112,11 @@ module.exports = {
     },
   },
   Mutation: {
-    // async uploadFile(parent, { id: taskId, file }) {
-    //   const loadedFile = await file;
-    //   const fileSaved = await storeUpload({ ...loadedFile, taskId });
+    async uploadFile(parent, { id: taskId, file }) {
+      const loadedFile = await file;
+      const fileSaved = await storeUpload({ ...loadedFile, taskId });
 
-    //   return fileSaved;
-    // },
+      return fileSaved;
+    },
   },
 };
