@@ -52,7 +52,7 @@ const apolloServer = new ApolloServer({
 const app = express();
 const server = http.createServer(app);
 
-app.use(bodyParser());
+app.use(bodyParser.json());
 
 apolloServer.applyMiddleware({ app, path: '/' });
 
