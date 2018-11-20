@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { graphql, compose, Query } from "react-apollo";
+import { graphql, compose, Query, Mutation } from "react-apollo";
 import PropTypes from 'prop-types';
-// import Dropzone from 'react-dropzone';
+import Dropzone from 'react-dropzone';
 import _ from 'lodash';
-import { qauf, _url } from '../../../constants';
 import 'animate.css';
 import moment from 'moment';
 import momentRu from 'moment/locale/ru';
+import { qauf, _url } from '../../../constants';
 import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
 import { uploadFile, updTask } from '../../../GraphQL/Qur/Mutation';
@@ -242,7 +242,7 @@ class TaskView extends Component {
   }
 
   render() {
-    const {/*upload,*/ allusers, taskName, taskId, modal, status, allTasks } = this.state;
+    const { upload, allusers, taskName, taskId, modal, status, allTasks } = this.state;
     // console.warn("TASKID", status)
 
     return(
@@ -300,16 +300,16 @@ class TaskView extends Component {
                         }
                       </TextRow>
 
-                      
+
                       <TextRow name="" view="cgr Pad510 s">
-                      {data.task && data.task.assignedTo && data.task.assignedTo.id && data.task.assignedTo.username ? (
-                        <UserRow size="24" id={data.task.assignedTo.id} name={data.task.assignedTo.username ? data.task.assignedTo.username : "Нет имени"} icon="1" />
+                        {data.task && data.task.assignedTo && data.task.assignedTo.id && data.task.assignedTo.username ? (
+                          <UserRow size="24" id={data.task.assignedTo.id} name={data.task.assignedTo.username ? data.task.assignedTo.username : "Нет имени"} icon="1" />
                         ): "Ответственный не назначен"}
                       </TextRow>
-                     
-                      {
+
+                      {/* {
                         console.log(data.task)
-                      }
+                      } */}
                     </TextRow>
 
                     {
@@ -349,17 +349,17 @@ class TaskView extends Component {
                           <div className="header"><h4>Документы</h4></div>
                           <div className="content">
                             <div className="content-scroll">
-                              {data.task.docs ? data.task.docs.map(
-                                (e,i)=>{
+                              {data.task.files && data.task.files.length > 0 ? data.task.files.map(
+                                (e)=>{
                                   return(
-                                    <FileRow name={e.name} id={e.id} icon="doc" />
+                                    <FileRow key={e.id} name={e.name} id={e.id} icon="doc" />
                                   )
                                 }
                               ) : (
                                 <div>
-                                    <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
-                                    <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
-                                    <div className="FakeLink">Показать все</div>
+                                  {/* <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+                                  <FileRow name="Фото подвала.jpg" id="id1237" icon="img" /> */}
+                                  <div className="FakeLink">Файлов нет</div>
                                 </div>
                               )
                               }
@@ -413,32 +413,32 @@ class TaskView extends Component {
                       ) : null
                     }
                     {/* {taskId ? (
-                    !upload ? (
-                      <div className="tab-roll">
-                        <div className="header"></div>
-                        <div className="content">
-                          <div className="button" onClick={()=>{this.setState({upload: !upload})}}>Прикрепить файл</div>
-                          <div className="content-scroll">
+                      !upload ? (
+                        <div className="tab-roll">
+                          <div className="header"></div>
+                          <div className="content">
+                            <div className="button" onClick={()=>{this.setState({upload: !upload})}}>Прикрепить файл</div>
+                            <div className="content-scroll">
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="tab-roll">
-                        <div className="header"></div>
-                        <div className="content">
-                          <Mutation mutation={uploadFile}>
-                            {upload => (
-                              <Dropzone onDrop={([file]) => {upload({ variables: { id: taskId, file } }).then(()=>this.setState({upload: !upload})).catch((err)=>console.warn(err));this.setState({upload: !upload}) }}>
-                                <p>Переместите сюда файлы или нажмите для добавления.</p>
-                              </Dropzone>
-                            )}
+                      ) : (
+                        <div className="tab-roll">
+                          <div className="header"></div>
+                          <div className="content">
+                            <Mutation mutation={uploadFile}>
+                              {upload => (
+                                <Dropzone onDrop={([file]) => {upload({ variables: { id: taskId, file } }).then(()=>this.setState({upload: !upload})).catch((err)=>console.warn(err));this.setState({upload: !upload}) }}>
+                                  <p>Переместите сюда файлы или нажмите для добавления.</p>
+                                </Dropzone>
+                              )}
 
-                          </Mutation>
+                            </Mutation>
+                          </div>
                         </div>
-                      </div>
-                    )
-                  ): null
-                  } */}
+                      )
+                    ): null
+                    } */}
                   </InnerBar>
                 </div>
                 {modal ? (
@@ -502,46 +502,65 @@ class TaskView extends Component {
                           </select>
                         </label>
                       </ModalCol>
-                      </ModalRow>
-                      <ModalRow>
+                    </ModalRow>
+                    <ModalRow>
                       <ModalCol>
                         <ModalBlockName>
                           Добавить пользователя
                         </ModalBlockName>
-                          <div className="content">
-                            <label className="" htmlFor="users">
-                              <input type="list" name="users" list="users" autoComplete="on" onChange={this.newUser} />
-                              {
-                                this.state.newUser ? (
-                                  <div className="Button3" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить{/*this.state.newUser*/}</div>
-                                ): null
-                              }
+                        <div className="content">
+                          <label className="" htmlFor="users">
+                            <input type="list" name="users" list="users" autoComplete="on" onChange={this.newUser} />
+                            {
+                              this.state.newUser ? (
+                                <div className="Button3" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить{/*this.state.newUser*/}</div>
+                              ): null
+                            }
 
-                              <datalist id="users">
-                                {
-                                  data.task.users && data.task.users.length > 0 ?  _.differenceWith(allusers, data.task.users, _.isEqual).map((e)=>(
-                                    <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                                  )
-                                  ) : allusers.map((e)=>(
-                                    <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
-                                  )
-                                  )
-                                }
-                              </datalist>
-                            </label>
-                          </div>
+                            <datalist id="users">
+                              {
+                                data.task.users && data.task.users.length > 0 ?  _.differenceWith(allusers, data.task.users, _.isEqual).map((e)=>(
+                                  <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                                )
+                                ) : allusers.map((e)=>(
+                                  <option key={e.id} data-id={e.id} valueid={e.id} >{e.username}</option>
+                                )
+                                )
+                              }
+                            </datalist>
+                          </label>
+                        </div>
                       </ModalCol>
                     </ModalRow>
                     <ModalCol>
                       <ModalBlockName>
                   Добавить вложения
                       </ModalBlockName>
-                      <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
-                      <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
-                      <ModalCol>
-                        <div className="files-drop">
-                          <Svg svg="tocloud" inline={0} />переместите файлы сюдa
+                      {data.task.files && data.task.files.length > 0 ? data.task.files.map((e)=>{
+                        return(
+                          <FileRow key={e.id} name={e.name} id={e.id} icon="doc" />
+                        )
+                      }
+                      ) : (
+                        <div>
+                          {/* <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+                                  <FileRow name="Фото подвала.jpg" id="id1237" icon="img" /> */}
+                          <div className="FakeLink">Файлов нет</div>
                         </div>
+                      )
+                      }
+                      <ModalCol>
+                        {/* <div className="files-drop"> */}
+                        {/* <Svg svg="tocloud" inline={0} />переместите файлы сюдa */}
+                        <Mutation mutation={uploadFile}>
+                          {upload => (
+                            <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
+                              <p>Переместите сюда файлы или нажмите для добавления.</p>
+                            </Dropzone>
+                          )}
+
+                        </Mutation>
+                        {/* </div> */}
                       </ModalCol>
                     </ModalCol>
                   </Modal>
