@@ -300,10 +300,10 @@ class TaskView extends Component {
                         }
                       </TextRow>
                       <TextRow name="" view="cgr Pad510 s">
-                        <UserRow size="24" id={data.task.assignedTo.id} name={data.task.assignedTo.username} icon="1" />
+                        <UserRow size="24" id={data.task && data.task.assignedTo ? data.task.assignedTo.id : null} name={data.task && data.task.assignedTo ? data.task.assignedTo.username : null} icon="1" />
                       </TextRow>
                       {
-                        console.log(data.task.assignedTo.username)
+                        console.log(data.task && data.task.assignedTo ? data.task.assignedTo.username : null)
                       }
                     </TextRow>
 
