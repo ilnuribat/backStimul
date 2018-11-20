@@ -19,6 +19,7 @@ module.exports = async function () {
 
     mongoose.connect(MONGODB_HOST, {
       useNewUrlParser: true,
+      autoIndex: false,
     });
   });
 };
