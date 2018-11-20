@@ -107,7 +107,7 @@ class App extends Component {
               <NavLinks />
             </Nav>
             <Root>
-              { this.props.gBar && this.props.gBar.barShow ? (<Bar view="animated bounceInLeft" type={this.props.gBar.barType } />) : null }
+              { this.props.gBar && this.props.gBar.barShow ? (<Bar view="animated fadeInLeft" type={this.props.gBar.barType } />) : null }
 
               <Switch>
                 {

@@ -5,6 +5,7 @@
   flex-direction: column;
   width: 100%;
   overflow: hidden;
+  justify-content: space-between;
 }
 .TaskViewInner{
   box-sizing: border-box;
@@ -16,6 +17,7 @@
   /* padding: 0 0 20px; */
   width: 100%;
   /* max-width: 500px; */
+  min-width: 300px;
 }
 .TaskViewInner0 > div{
   display: flex;
@@ -109,4 +111,7 @@ cursor: pointer;
 }
 .tab-roll .header{
   padding:20px 0 10px;
+}
+.TaskView .InnerBar{
+  min-width: 300px;
 }
