@@ -57,6 +57,7 @@ export class FakeSelect extends Component {
 
     return (
       <div className="FakeSelect">
+        
         <div className="FakeSelected" onClick={this.openSelect}>
           <FakeRow icon={selected.icon} id={selected.id}>{selected.name}</FakeRow>
         </div>
