@@ -267,7 +267,7 @@ class TaskView extends Component {
           variables:{
             action: "addUser",
             value: userId,
-            userName: "TEST",
+            userName: this.state.newUser,
             taskId: this.state.taskId,
           }
         })
