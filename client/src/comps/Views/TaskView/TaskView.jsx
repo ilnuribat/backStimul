@@ -21,6 +21,7 @@ import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lay
 import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 // import ContentInner from '../../Lays/ContentInner/ContentInner';
+import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
 
 moment.locale('ru')
 
@@ -135,7 +136,8 @@ class TaskView extends Component {
 
   writeTaskData(e, change, quota) {
     let cap = ""
-    const value = e.target.value
+    // const value = e.target.value
+    const value = e;
 
     if (quota) cap = '"';
     // console.warn("writeData", e, change, this.state.taskId)
@@ -482,7 +484,7 @@ class TaskView extends Component {
                     <ModalRow>
                       <ModalCol>
                         <div className="ModalBlockName">
-                      Срок истечения
+                          Срок истечения
                         </div>
                         <label htmlFor="">
                           <input type="date" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
@@ -491,7 +493,7 @@ class TaskView extends Component {
 
                       <ModalCol>
                         <ModalBlockName>
-                    Добавить родительскую задачу
+                          Добавить родительскую задачу
                         </ModalBlockName>
                         <label htmlFor="">
                           <select onChange={(e)=>{e.target.value !==0 ? this.writeTaskData(e, "parentId", true) : null}} defaultValue={data.task.parentId} >
@@ -520,7 +522,7 @@ class TaskView extends Component {
                                   <div className="Button3" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить{/*this.state.newUser*/}</div>
                                 ): null
                               }
-
+                              
                               <datalist id="users">
                                 {
                                   data.task.users && data.task.users.length > 0 ?  _.differenceWith(allusers, data.task.users, _.isEqual).map((e)=>(
@@ -573,6 +575,8 @@ class ResponsiblePerson extends React.Component {
       userName: "Не выбран",
       userId: ""
     }
+
+    this.writeTaskResponsiblePersonByFakeSelect = this.writeTaskResponsiblePersonByFakeSelect.bind(this)
   }
 
   componentDidMount(){
@@ -592,6 +596,14 @@ class ResponsiblePerson extends React.Component {
     this.props.onClick1(e, "assignedTo", true);
     this.handleClick()
   }
+  writeTaskResponsiblePersonByFakeSelect(id, name)
+  {
+    // console.warn(e.target.querySelector(`option[value="${e.target.value}"]`).text)
+
+    this.setState({ userId: id, userName: name })
+    this.props.onClick1(id, "assignedTo", true);
+    this.handleClick()
+  }
 
   render() {
     const { data } = this.props
@@ -599,21 +611,23 @@ class ResponsiblePerson extends React.Component {
 
 
     return (
-      !save ?
+      !save ? (
         <UserRow click = {this.handleClick} size="32" id={userId} name={userName} icon="1" />
-        :
-        <label htmlFor="">
-          <select onChange={(e)=>{this.writeTaskResponsiblePerson(e)}} defaultValue={userName} >
-            <option value="0">Выбрать ответственного</option>
-            {
-              data.users.map((e)=>{
-                return(
-                  <option key={e.id} value={e.id}>{e.username}</option>
-                )
-              })
-            }
-          </select>
-        </label>
+      ) : ( <FakeSelect onselect={this.writeTaskResponsiblePersonByFakeSelect} array={data.users}/>
+          // <label htmlFor="">
+          //   <select onChange={(e)=>{this.writeTaskResponsiblePerson(e)}} defaultValue={userName} >
+          //     <option value="0">Выбрать ответственного</option>
+          //     {
+          //       data.users.map((e)=>{
+          //         return(
+          //           <option key={e.id} value={e.id}>{e.username}</option>
+          //         )
+          //       })
+          //     }
+          //   </select>
+          // </label>
+        )
+
     );
   }
 }

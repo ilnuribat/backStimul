@@ -36,10 +36,10 @@ export class FakeSelect extends Component {
   }
 
   runAfter(id, name, icon){
-    let {run} = this.props;
+    let {run, onselect} = this.props;
 
-    if(typeof run === 'function'){
-      run(id, name, icon)
+    if(typeof onselect === 'function'){
+      onselect(id, name, icon)
     }else{
       return false;
     }
@@ -72,12 +72,17 @@ export class FakeSelect extends Component {
 
     const {selected, open} = this.state;
     const {array, view} = this.props;
+    const arr = array || [
+      {id:'1', name:'Option 1', icon:'1'},
+      {id:'2', name:'Option 2'},
+      {id:'3', name:'Option 3', icon:'1'},
+    ];
 
     return (
-      <div className={!view ? "FakeSelect" : "FakeSelect "+view}>
+      <div className={!view ? "FakeSelect" : "FakeSelect "+view} onClick={this.openSelect}>
         {!open ? (<Svg svg="expose" />):(<Svg svg="inpose" />)}
         
-        <div className="FakeSelected" onClick={this.openSelect}>
+        <div className="FakeSelected">
           <FakeRow icon={selected.icon} id={selected.id}>{selected.name}</FakeRow>
         </div>
         {open ? (
@@ -86,21 +91,19 @@ export class FakeSelect extends Component {
             
 
             {
-              array ? array.map((e,i)=>{
+              arr ? arr.map((e,i)=>{
 
                 let id = e.id || '';
                 let icon = e.icon || '';
-                let name = e.username || e.username || '';
+                let name = e.name || e.username || '';
 
                 return(
-                  <FakeRow icon={icon} click={()=>this.select(id, name, icon)}>{name}</FakeRow>
+                  <FakeRow key={e.id || e.name + i} icon={icon} click={()=>this.select(id, name, icon)}>{name}</FakeRow>
                 )
               }) : null
             }
 
-            <FakeRow icon="1" click={()=>this.select("1", "Option 1", "icon")}>Option 1</FakeRow>
-            <FakeRow icon="" click={()=>this.select("2", "Option 2", "")}>Option 2</FakeRow>
-            <FakeRow icon="1" click={()=>this.select("3", "Option 3", "icon")}>Option 3</FakeRow>
+
           
           </div>
           ) : null}
