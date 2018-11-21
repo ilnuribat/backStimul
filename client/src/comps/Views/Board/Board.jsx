@@ -434,9 +434,8 @@ class Board extends Component {
                       }
                     </TextRow>
                   </TextRow>
-                  <p className="Pad20">факнутый селект FakeSelect</p>
-                  <FakeSelect>
 
+                  <FakeSelect view="Mar5">
                   </FakeSelect>
 
                 </Panel>
