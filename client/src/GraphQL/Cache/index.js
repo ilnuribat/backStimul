@@ -235,8 +235,8 @@ export const messagesListDirectUpdate = gql `
   }
 `;
 export const taskCacheUpdate = gql `
-  mutation taskCacheUpdate($action: String!, $name: String, $status: Int, $endDate: String, $userId: String, $userName: String, $taskId: String!) {
-    taskCacheUpdate(action: $action, name: $name, status: $status, endDate: $endDate, userId: $userId, userName: $userName, taskId: $taskId) @client
+  mutation taskCacheUpdate($action: String!, $value: String, $userName: String, $taskId: String!) {
+    taskCacheUpdate(action: $action, value: $value, userName: $userName, taskId: $taskId) @client
   }
 `;
 export const delInfo = gql `

@@ -130,7 +130,7 @@ class TaskView extends Component {
       this.props.taskCacheUpdate({
         variables:{
           action: "name",
-          name: name,
+          value: name,
           taskId: this.state.taskId,
         }
       })
@@ -155,31 +155,20 @@ class TaskView extends Component {
         this.props.taskCacheUpdate({
           variables:{
             action: change,
-            userId: value,
+            value: value,
             userName: userName,
             taskId: this.state.taskId,
           }
         })
         break;
-      case "endDate":
-        this.props.taskCacheUpdate({
-          variables:{
-            endDate: value,
-            action: change,
-            taskId: this.state.taskId,
-          }
-        })
-        break;
-      case "status":
-        this.props.taskCacheUpdate({
-          variables:{
-            status: parseInt(value),
-            action: change,
-            taskId: this.state.taskId,
-          }
-        })
-        break;
       default:
+        this.props.taskCacheUpdate({
+          variables:{
+            value: value,
+            action: change,
+            taskId: this.state.taskId,
+          }
+        })
         break;
       }
     }).catch((e)=>{
@@ -274,6 +263,14 @@ class TaskView extends Component {
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
         // console.warn("Answer updUsrGr",a.data)
         this.modalMessage(a.data.updateUsersTask);
+        this.props.taskCacheUpdate({
+          variables:{
+            action: "addUser",
+            value: userId,
+            userName: "TEST",
+            taskId: this.state.taskId,
+          }
+        })
       })
         .catch((e)=>{
           console.warn(e);
@@ -500,7 +497,7 @@ class TaskView extends Component {
                         <ModalBlockName>
                           Добавить родительскую задачу
                         </ModalBlockName>
-                            {console.log("data.task.parentId",data.task.parentId)}
+                        {console.log("data.task.parentId",data.task.parentId)}
                         <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.task.parentId} />
                       </ModalCol>
                     </ModalRow>

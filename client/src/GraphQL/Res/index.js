@@ -238,9 +238,10 @@ export default {
 
       return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'Task' };
     },
-    taskCacheUpdate: (_, { name, endDate, status, userId, userName, action, taskId },  { cache }) => {
+    taskCacheUpdate: (_, { value, userName, action, taskId },  { cache }) => {
       let data;
       let query;
+      let previousState;
 
       switch (action) {
       case "name":
@@ -254,7 +255,23 @@ export default {
       `;
         data = {
           task: {
-            name: name,
+            name: value,
+            __typename: "Task"
+          }
+        };
+        break;
+      case "parentId":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              parentId
+              __typename
+            }
+          }
+      `;
+        data = {
+          task: {
+            parentId: value,
             __typename: "Task"
           }
         };
@@ -270,7 +287,7 @@ export default {
       `;
         data = {
           task: {
-            endDate: endDate,
+            endDate: value,
             __typename: "Task"
           }
         };
@@ -286,7 +303,7 @@ export default {
       `;
         data = {
           task: {
-            status: status,
+            status: parseInt(value),
             __typename: "Task"
           }
         };
@@ -304,10 +321,39 @@ export default {
             }
           }
         `;
+        data = {
+          task: {
+            assignedTo: {id: value, username: userName, __typename: "UserTaskRole"},
+            __typename: "Task"
+          }
+        };
+        break;
+      case "addUser":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              users {
+                id
+                username
+                __typename
+              }
+              __typename
+            }
+          }
+        `;
+
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": taskId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        console.warn("prevstate is", previousState)
 
         data = {
           task: {
-            assignedTo: {id: userId, username: userName, __typename: "UserTaskRole"},
+            users: [...previousState.task.users, {id: value, username: userName, __typename: "User"}],
             __typename: "Task"
           }
         };
