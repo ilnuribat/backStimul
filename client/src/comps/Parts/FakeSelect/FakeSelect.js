@@ -79,7 +79,7 @@ export class FakeSelect extends Component {
         this.setState({
           selected: {
             id: selected.id || '',
-            name: selected.name || '',
+            name: selected.name || selected.username || '',
             icon: selected.icon || '',
           }
         })

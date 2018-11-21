@@ -625,7 +625,7 @@ class ResponsiblePerson extends React.Component {
     return (
       !save ? (
         <UserRow click = {this.handleClick} size="32" id={userId} name={userName} icon="1" />
-      ) : ( <FakeSelect onselect={this.writeTaskResponsiblePerson} array={data.users}/>
+      ) : ( <FakeSelect onselect={this.writeTaskResponsiblePerson} defaultid={userId} array={data.users}/>
       // <label htmlFor="">
       //   <select onChange={(e)=>{this.writeTaskResponsiblePerson(e)}} defaultValue={userName} >
       //     <option value="0">Выбрать ответственного</option>
