@@ -21,7 +21,7 @@ class NavTop extends Component {
   }
     //Подпись на все сообщения, адресованные тебе
     subscribe = (client) => {
-      console.warn("aaa", this.state.countPriv)
+      console.warn("countPriv", this.state.countPriv)
       // call the "subscribe" method on Apollo Client
       client.subscribe({
         query: ALL_MESSAGE_CREATED,
