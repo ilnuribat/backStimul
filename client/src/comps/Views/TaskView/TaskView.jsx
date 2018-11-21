@@ -143,10 +143,10 @@ class TaskView extends Component {
     let cap = "";
     let value;
 
-    change === "assignedTo" ||  change === "status" ? value = e.target.value : value = e
+    value = e
 
     if (quota) cap = '"';
-    console.warn("writeData", e, change, this.state.taskId, e.target.value)
+    console.warn("writeData", e, change, this.state.taskId)
     qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn("update task done", a)
       this.modalMessage(a.data.updateTask);
@@ -408,7 +408,7 @@ class TaskView extends Component {
                               )
                               }
                             </div>
-                            
+
                             <div className="FakeLinkSvg"><Svg svg="expose" size="32" /></div>
                           </div>
                         </div>
