@@ -22,7 +22,7 @@ import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lay
 import { updTask, crTask, deleteTask } from '../../../GraphQL/Qur/Mutation';
 import Panel from '../../Lays/Panel/index';
 import { Fragment } from 'react';
-import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
+// import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
 
 let ref;
 
@@ -435,8 +435,7 @@ class Board extends Component {
                     </TextRow>
                   </TextRow>
 
-                  <FakeSelect view="Mar5">
-                  </FakeSelect>
+
 
                 </Panel>
                 </Fragment>
