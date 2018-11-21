@@ -5,42 +5,75 @@ const { searchUsers } = require('../services/user');
 
 module.exports = {
   Query: {
-    async search(parent, { query, type }, { user }) {
-      let result = [];
+    async search(parent, { query, type, limit = 10 }, { user }) {
+      const result = [];
+      let tempRes;
       const words = query.split(/\s/);
       const regExQuery = new RegExp(words.join('|'), 'i');
 
-      switch (type) {
-        case 'MESSAGES':
-          result = await searchMessages(user, regExQuery);
+      if (type) {
+        switch (type) {
+          case 'MESSAGES':
+            tempRes = await searchMessages(user, regExQuery);
 
-          return result.map(m => ({
-            __typename: 'Message',
-            ...m,
-          }));
-        case 'OBJECTS':
-          result = await searchObjects(user, regExQuery);
+            result.push(...tempRes.map(m => ({
+              __typename: 'Message',
+              ...m,
+            })));
+            break;
+          case 'OBJECTS':
+            tempRes = await searchObjects(user, regExQuery);
 
-          return result.map(r => ({
-            __typename: 'Object',
-            ...r,
-          }));
-        case 'TASKS':
-          result = await searchTasks(user, regExQuery);
+            result.push(...tempRes.map(r => ({
+              __typename: 'Object',
+              ...r,
+            })));
+            break;
+          case 'TASKS':
+            tempRes = await searchTasks(user, regExQuery);
 
-          return result.map(t => ({
-            __typename: 'Task',
-            ...t,
-          }));
-        case 'USERS':
-          result = await searchUsers(user, regExQuery);
+            result.push(...tempRes.map(t => ({
+              __typename: 'Task',
+              ...t,
+            })));
+            break;
+          case 'USERS':
+            tempRes = await searchUsers(user, regExQuery);
 
-          return result.map(u => ({
+            result.push(...tempRes.map(u => ({
+              __typename: 'User',
+              ...u,
+            })));
+            break;
+          default:
+            break;
+        }
+      } else {
+        const [users, tasks, objects, messages] = await Promise.all([
+          searchUsers(user, regExQuery, limit),
+          searchTasks(user, regExQuery, limit),
+          searchObjects(user, regExQuery, limit),
+          searchMessages(user, regExQuery, limit),
+        ]);
+
+        return [
+          ...users.map(u => ({
             __typename: 'User',
             ...u,
-          }));
-        default:
-          break;
+          })),
+          ...tasks.map(t => ({
+            __typename: 'Task',
+            ...t,
+          })),
+          ...objects.map(o => ({
+            __typename: 'Object',
+            ...o,
+          })),
+          ...messages.map(m => ({
+            __typename: 'Message',
+            ...m,
+          })),
+        ];
       }
 
       return result;

@@ -15,6 +15,6 @@ type SearchType {
 }
 
 type Query {
-  search(query: String!, type: SEARCH_TYPE!) : [SearchResult]
+  search(query: String!, type: SEARCH_TYPE, limit: Int) : [SearchResult]
   previewSearch(query: String!, limit: Int): SearchType
 }
