@@ -11,7 +11,7 @@ import { qauf, _url } from '../../../constants';
 import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
 import { uploadFile, updTask } from '../../../GraphQL/Qur/Mutation';
-import { selectUser, setChat } from '../../../GraphQL/Cache';
+import { selectUser, setChat, taskCacheUpdate } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, GR_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
@@ -57,12 +57,7 @@ class TaskView extends Component {
   }
 
   componentDidMount(){
-
-
-
     const { location } = this.props;
-
-
 
     let _grid
     let _grnm
@@ -129,21 +124,63 @@ class TaskView extends Component {
     qauf(updTask(this.state.taskId,`{name: "${name}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn(a.data)
       this.modalMessage(a.data.updateTask);
+      localStorage.setItem('grnm',name);
+      this.setState({taskName: name})
+      this.props.taskCacheUpdate({
+        variables:{
+          action: "name",
+          name: name,
+          taskId: this.state.taskId,
+        }
+      })
     }).catch((e)=>{
       console.warn(e);
     })
   }
 
-  writeTaskData(e, change, quota) {
-    let cap = ""
-    // const value = e.target.value
-    const value = e;
+  writeTaskData(e, change, quota, userName) {
+    let cap = "";
+    let value;
+
+    change === "assignedTo" ||  change === "status" ? value = e.target.value : value = e
 
     if (quota) cap = '"';
-    // console.warn("writeData", e, change, this.state.taskId)
+    console.warn("writeData", e, change, this.state.taskId, e.target.value)
     qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn("update task done", a)
       this.modalMessage(a.data.updateTask);
+      switch (change) {
+      case "assignedTo":
+        this.props.taskCacheUpdate({
+          variables:{
+            action: change,
+            userId: value,
+            userName: userName,
+            taskId: this.state.taskId,
+          }
+        })
+        break;
+      case "endDate":
+        this.props.taskCacheUpdate({
+          variables:{
+            endDate: value,
+            action: change,
+            taskId: this.state.taskId,
+          }
+        })
+        break;
+      case "status":
+        this.props.taskCacheUpdate({
+          variables:{
+            status: parseInt(value),
+            action: change,
+            taskId: this.state.taskId,
+          }
+        })
+        break;
+      default:
+        break;
+      }
     }).catch((e)=>{
       console.warn(e);
     })
@@ -298,7 +335,7 @@ class TaskView extends Component {
                 </div>
               );
             }
-            // console.warn("DATA", data)
+            console.warn("DATA", data.task)
             let dataValue;
             let taskStatus = data.task.status
 
@@ -308,11 +345,11 @@ class TaskView extends Component {
               <Content view="OvH">
                 <div className="TaskViewTop">
                   <ButtonTo url={"/board"} icon="back">Назад</ButtonTo>
-                  <div className="TaskViewTopName"><h1>{taskName}</h1></div>
+                  <div className="TaskViewTopName"><h1>{data.task.name}</h1></div>
                 </div>
                 <div className="TaskView Row Pad10">
                   <div className="TaskViewInner" view="">
-                    <ChatView name={taskName} id={taskId} taskInfo={ data.task } priv={0} />
+                    <ChatView name={data.task.name} id={taskId} taskInfo={ data.task } priv={0} />
                   </div>
                   <InnerBar>
                     <TextRow name="Информация" view="BigName">
@@ -584,7 +621,7 @@ class ResponsiblePerson extends React.Component {
     // console.warn(e.target.querySelector(`option[value="${e.target.value}"]`).text)
 
     this.setState({ userId: id, userName: name })
-    this.props.onClick1(id, "assignedTo", true);
+    this.props.onClick1(id, "assignedTo", true, name);
     this.handleClick()
   }
 
@@ -618,10 +655,12 @@ class ResponsiblePerson extends React.Component {
 TaskView.propTypes = {
   selectUser: PropTypes.func.isRequired,
   setChat: PropTypes.func.isRequired,
+  taskCacheUpdate: PropTypes.func.isRequired,
   location: PropTypes.object
 };
 
 export default compose(
   graphql(setChat, { name: 'setChat' }),
+  graphql(taskCacheUpdate, { name: 'taskCacheUpdate' }),
   graphql(selectUser, { name: 'selectUser' }),
 )(TaskView);

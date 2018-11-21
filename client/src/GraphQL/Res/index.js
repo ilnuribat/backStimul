@@ -225,7 +225,7 @@ export default {
             edges: [...previousState.task.messages.edges, newFeedItem],
             __typename: "MessageConnection",
           },
-          __typename: "Group"
+          __typename: "Task"
         }
       };
 
@@ -236,7 +236,94 @@ export default {
       });
 
 
-      return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'Group' };
+      return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'Task' };
+    },
+    taskCacheUpdate: (_, { name, endDate, status, userId, userName, action, taskId },  { cache }) => {
+      let data;
+      let query;
+
+      switch (action) {
+      case "name":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              name
+              __typename
+            }
+          }
+      `;
+        data = {
+          task: {
+            name: name,
+            __typename: "Task"
+          }
+        };
+        break;
+      case "endDate":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              endDate
+              __typename
+            }
+          }
+      `;
+        data = {
+          task: {
+            endDate: endDate,
+            __typename: "Task"
+          }
+        };
+        break;
+      case "status":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              status
+              __typename
+            }
+          }
+      `;
+        data = {
+          task: {
+            status: status,
+            __typename: "Task"
+          }
+        };
+        break;
+      case "assignedTo":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              assignedTo {
+                id
+                username
+                __typename
+              }
+              __typename
+            }
+          }
+        `;
+
+        data = {
+          task: {
+            assignedTo: {id: userId, username: userName, __typename: "UserTaskRole"},
+            __typename: "Task"
+          }
+        };
+        break;
+      default:
+        break;
+      }
+
+
+      cache.writeQuery({
+        query,
+        data,
+        variables: {"id": taskId}
+      });
+
+      return true;
     },
   },
   Query: {
