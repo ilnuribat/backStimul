@@ -31,10 +31,8 @@ export class Search extends Component {
     let {children} = this.props;
     let {value} = this.state;
 
-
-
     let SearchGql = `
-    query search($query: String){
+    query search($query: String, limit: 5){
       search(query: $query ){
         Objects{
           name

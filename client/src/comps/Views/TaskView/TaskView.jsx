@@ -464,6 +464,8 @@ class TaskView extends Component {
                           Добавить родительскую задачу
                         </ModalBlockName>
                         <label htmlFor="">
+                          <FakeSelect array={allTasks} onselect={this.writeTaskData} />
+
                           <select onChange={(e)=>{e.target.value !==0 ? this.writeTaskData(e, "parentId", true) : null}} defaultValue={data.task.parentId} >
                             { !data.task.parentId ? <option value="0">Выбрать задачу</option> : null}
                             {
@@ -474,6 +476,7 @@ class TaskView extends Component {
                               })
                             }
                           </select>
+
                         </label>
                       </ModalCol>
                     </ModalRow>
