@@ -57,7 +57,11 @@ class TaskView extends Component {
 
   componentDidMount(){
 
+
+
     const { location } = this.props;
+
+
 
     let _grid
     let _grnm

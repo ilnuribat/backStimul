@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Svg } from '../Parts/SVG/index';
 import Modal from '../Lays/Modal';
 import { graphql, compose } from "react-apollo";
-import { sBar, gBar } from '../../GraphQL/Cache';
+import { sBar, gBar, setPlaceName, getPlaceName } from '../../GraphQL/Cache';
 
 const search = (props)=>{
   console.log("Seacrh")
@@ -26,14 +26,15 @@ class NavLinks extends Component {
       modal: false,
       NavArr: [
         {name:"search", comp:"", svg:"search", click:()=>{this.search()}},
-        {name:"Root", link:"/", comp:"", svg:"dash"},
-        {name:"Private", link:"/chat", comp:"", svg:"chat"},
-        {name:"Pap", link:"/map", comp:"", svg:"map"},
+        {name:"Root", link:"/", comp:"", svg:"dash", click:()=>{this.place('Root')}},
+        {name:"Private", link:"/chat", comp:"", svg:"chat", click:()=>{this.place('Private')}},
+        {name:"Map", link:"/map", comp:"", svg:"map", click:()=>{this.place('Map')}},
       ],
     }
 
     this.modal = this.modal.bind(this)
     this.search = this.search.bind(this)
+    this.place = this.place.bind(this)
   }
   
   modal(){
@@ -45,10 +46,21 @@ class NavLinks extends Component {
   search(){
     console.log('Search click')
 
+
     this.props.sBar({
       variables:{
         barType: 'Search',
         barShow: !this.props.gBar.barShow,
+      }
+    })
+  }
+
+  place(place){
+    console.log('Place click', place)
+
+    this.props.setPlaceName({
+      variables:{
+        name: place,
       }
     })
   }
@@ -58,7 +70,7 @@ class NavLinks extends Component {
   }
 
   render() {
-    let {children, sBar} = this.props;
+    let {children, sBar, getPlaceName} = this.props;
     let {modal, NavArr} = this.state;
 
     return (
@@ -68,7 +80,7 @@ class NavLinks extends Component {
           NavArr.map((e,i)=>{
             return(
               //<div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click === "modal" ? this.modal() : console.log('No click')} }>
-              <div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click && typeof e.click === 'function' ? e.click() : console.log('No click')} }>
+              <div className={getPlaceName && getPlaceName.placename == e.name ? "nav selected" : "nav"} key={"nav"+i+e.link} onClick={()=>{e.click && typeof e.click === 'function' ? e.click() : console.log('No click')} }>
                 {e.link ? (
                   <Link to={e.link}>
                     <Svg svg={e.svg} />
@@ -90,4 +102,6 @@ class NavLinks extends Component {
 export default compose(
   graphql(sBar, { name: 'sBar' }),
   graphql(gBar, { name: 'gBar' }),
+  graphql(setPlaceName, { name: 'setPlaceName' }),
+  graphql(getPlaceName, { name: 'getPlaceName' }),
 )(NavLinks);

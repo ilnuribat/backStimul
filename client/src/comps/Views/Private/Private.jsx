@@ -3,7 +3,7 @@ import 'animate.css';
 import { graphql, compose  } from "react-apollo";
 import PropTypes from 'prop-types';
 import ChatView from '../ChatView/ChatView';
-import { getChat, setChat } from '../../../GraphQL/Cache';
+import { getChat, setChat, setPlaceName, getPlaceName } from '../../../GraphQL/Cache';
 import Content from '../../Lays/Content';
 import Bar from '../../Lays/Bar';
 import PrivateBar from './PrivateBar';
@@ -34,7 +34,19 @@ class Private extends Component {
 
   componentDidMount(){
 
-    let {getchat} = this.props;
+    const {getchat, getPlaceName} = this.props;
+    let { setPlaceName } = this.props;
+
+    let place = 'Private';
+
+    if(getPlaceName && getPlaceName.placename != place){
+      setPlaceName({
+        variables:{
+          name: place,
+        }
+      })
+    }
+
 
     this.setStateProps(getchat)
   }
@@ -89,4 +101,6 @@ Private.propTypes = {
 export default compose(
   graphql(getChat, { name: 'getchat' }),
   graphql(setChat, { name: 'setChat' }),
+  graphql(setPlaceName, { name: 'setPlaceName' }),
+  graphql(getPlaceName, { name: 'getPlaceName' }),
 )(Private);
