@@ -21,6 +21,7 @@
   width:100%;
 }
 .FakeSelect .FakeOption{
+  cursor: pointer;
   padding: 10px 5px;
   position: relative;
   background: #3d4147;
