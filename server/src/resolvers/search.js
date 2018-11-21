@@ -55,13 +55,6 @@ module.exports = {
         searchMessages(user, regExQuery, limit),
       ]);
 
-      console.log({
-        users,
-        tasks,
-        objects,
-        messages,
-      });
-
       return {
         users,
         tasks,
