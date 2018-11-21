@@ -24,6 +24,7 @@ import InnerBar from '../../Lays/InnerBar/InnerBar';
 
 // import ContentInner from '../../Lays/ContentInner/ContentInner';
 import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
+import Svg from '../../Parts/SVG';
 
 moment.locale('ru')
 
@@ -370,7 +371,8 @@ class TaskView extends Component {
                               )
                               }
                             </div>
-                            <div className="FakeLink">Показать все</div>
+                            
+                            <div className="FakeLinkSvg"><Svg svg="expose" size="32" /></div>
                           </div>
                         </div>
                       ): null

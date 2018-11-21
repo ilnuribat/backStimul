@@ -254,6 +254,23 @@ margin:0 auto 5px;
   border: 1px dashed #a3b6c570;
   cursor: pointer;
 }
+.FakeLinkSvg{
+  width: 100%;
+  padding:0px;
+  font-size: 12px;
+  /* color: #a3b6c5; */
+  text-align: center;
+  /* text-decoration: underline; */
+  border-radius: 5px;
+  background: #6d6d6d25;
+  cursor: pointer;
+}
+.FakeLinkSvg .Svg{
+  margin:0 auto;
+}
+.FakeLinkSvg .Svg svg{
+  fill: #3e75b2;
+}
 .UserRow.Col{
   justify-content: center;
   align-items: center;
