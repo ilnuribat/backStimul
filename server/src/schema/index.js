@@ -15,4 +15,5 @@ module.exports = mergeTypes([
   getSchema('files'),
   getSchema('object'),
   getSchema('task'),
+  getSchema('search'),
 ]);

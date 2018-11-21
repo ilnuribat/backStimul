@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { graphql, compose } from "react-apollo";
 import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus, getCUser, setTemp, getTemp, getPlace, setPlace } from '../graph/querys';
-import { SvgBackTo } from './Svg';
+import Svg from './Svg';
 import { savePlace } from '../constants';
 
 class BtnBack extends Component {
@@ -73,7 +73,7 @@ class BtnBack extends Component {
       return (
         <div className="svgBackBtn" onClick={this.backToTheFuture}>
           <Link to="/board">
-            <SvgBackTo />
+            <Svg svg="backto" />
           </Link>
         </div>
       )
@@ -81,7 +81,7 @@ class BtnBack extends Component {
       return (
         <div className="svgBackBtn" onClick={this.backToTheFuture}>
           <Link to="/">
-            <SvgBackTo />
+            <Svg svg="backto" />
           </Link>
         </div>
       )

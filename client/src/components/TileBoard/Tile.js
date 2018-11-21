@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import TileMaker from './TileMaker';
+import { SvgEdit } from '../../comps/Parts/SVG';
 
 
 export default class Tile extends Component {
@@ -24,18 +25,19 @@ export default class Tile extends Component {
     if(edit){
       console.warn("EEEDIT")
 
-      return <TileMaker editObject={true} addr={addr} id={_id} name={name} parentId={parentId} setEdit={this.setEdit}/>
+      return <TileMaker edit={true} addr={addr} id={_id} name={name} parentId={parentId} setEdit={this.setEdit}/>
     }else{
 
 
       return(
         <div key={_id} className="tile">
+          {type === "Object" ? (<SvgEdit />) : null}
           <div onClick={()=>click(_id,type,name, parentId)}>
             {name ? (<div className="tile-name">{name}</div>) : null }
             {addr ? (<div className="tile-addr">{addr}</div>) : null }
             {_id ? (<div className="tile-id">{_id}</div>) : null }
           </div>
-          {type === 'object' ? (
+          {type === 'Object' ? (
             <div className="pWrapper">
               <div className="button" onClick={()=>refetch(_id, parentId)} >Удалить</div>
               <div className="button" onClick={this.setEdit} >Редактировать</div>

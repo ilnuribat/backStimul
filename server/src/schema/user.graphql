@@ -6,7 +6,7 @@ input AuthUserInput {
 
 
 type User {
-  id: String! # unique id for the user
+  id: ID! # unique id for the user
   email: String! # we will also require a unique email per user
   username: String
   messages: [Message]

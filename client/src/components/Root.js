@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { graphql, compose } from "react-apollo";
-import { TASKS_QUERY, getPrivateChat, setPrivateChat, glossaryStatus, getCUser, setTemp, getTemp, setPlace, getPlace } from '../graph/querys';
-import { SvgBackTo } from './Svg';
-import TileBoard from './TileBoard';
+import { getPrivateChat, setPrivateChat, setPlace, getPlace } from '../graph/querys';
 const {Redirect} = require('react-router');
 
 class Root extends Component {
@@ -40,8 +38,6 @@ class Root extends Component {
   }
 
   render() {
-    console.log("this.props.getPlace");
-    console.log(this.props.getPlace);
     
     let placeType = this.props.getPlace.place.type;
     let urlsArr = ['map','top','board','login','profile','private', 'task'];
@@ -68,18 +64,6 @@ class Root extends Component {
         break;
     }
 
-    // if(this.props.getPlace && this.props.getPlace.place.id || this.props.getPlace.place.id === "no"){
-    //   return(
-    //     <Redirect to='/Top'/>
-    //   )
-    // }
-    // else{
-    //   return(
-    //     <div>
-    //       -----------------ROOT
-    //     </div>
-    //   )
-    // }
   }
 }
 

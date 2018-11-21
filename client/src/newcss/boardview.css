@@ -1,0 +1,83 @@
+.Board-Top{
+display: flex;
+flex-direction: row;
+height: 60px;
+background: #2a2c31;
+justify-content: center;
+align-content: center;
+}
+
+.Board-Top h1{
+  padding:0 0 0;
+  font-size: 38px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -1.1px;
+  color: #ffffff;
+}
+
+.Board-Top .BoardTopCenter{
+  display: flex;
+  width:100%;
+  flex-direction: row;
+  padding:0 0 0;
+  color: #ffffff;
+  align-self: center;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+.Board-Top .BoardTopCenter > *{
+  margin:0;
+  margin:0 20px 0;
+}
+
+.toBack{
+  display:flex;
+  width: auto;
+  height: auto;
+  cursor: pointer;
+  align-self: center;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+}
+.toBack svg{
+  /* width: 64px; */
+  height: 64px;
+  fill: #3e75b2;
+}
+.Board{
+  display: flex;
+  flex-direction: column;
+  height:100%;
+}
+.Board-Content{
+  display: flex;
+  flex:1 1 auto;
+  flex-direction: row;
+  overflow-y:hidden;
+  overflow-x:auto;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.toBack{
+  padding: 10px;
+}
+.toBack a{
+
+}
+.toBack .toBackLink{
+  color:#3e75b2;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  text-decoration: none;
+}
+.toBack .toBackLink svg{
+  height: 32px;
+  width: 32px;
+}

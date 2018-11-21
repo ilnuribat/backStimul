@@ -1,33 +1,37 @@
 import React, { Component, Fragment } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { withRouter } from 'react-router';
-import LeftNav from './components/LeftNav';
-import Login from './components/Login';
-import Profile from './components/Profile';
-import TaskView from './components/TaskView';
-import BoardView from './components/BoardView';
-import Root from './components/Root';
-import Private from './components/Private';
-import Map from './components/Map/LeafletMapBuild';
 import { AUTH_TOKEN } from './constants';
-import TileBoard from './components/TileBoard';
 
+import 'tachyons';
+import './index.css';
 
-// export const qf = (_url, ...params) => {
-//   return fetch(_url, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Accept': 'application/json',
-//     },
-//     body: JSON.stringify({
-//       params
-//     })
-//   })
-//     .then(r => r.json())
-//     .then(data => console.warn("quf data", data))
-//     .then(data => data)
-// };
+import Root from './comps/Root';
+import Nav from './comps/Lays/Nav';
+import Map from './comps/Views/Map';
+// import Profile from './comps/Views/Profile';
+import Board from './comps/Views/Board';
+import TaskView from './comps/Views/TaskView';
+import TileBoard from './comps/Views/TileBoard';
+import Private from './comps/Views/Private';
+import Login from './comps/Views/Login';
+
+import RootLoader from './comps/RootLoader';
+import NavLinks from './comps/Views/NavLinks';
+import NavTop from './comps/Views/NavTop';
+import Bar from './comps/Lays/Bar/index';
+import { compose } from 'react-apollo';
+import { graphql } from 'react-apollo';
+import { gBar } from './GraphQL/Cache';
+import 'animate.css';
+import { BarInner } from './comps/Parts/Bars/BarInner';
+
+// const Components = [
+//   {name:'', link: ''},
+//   {name:'', link: ''},
+//   {name:'', link: ''},
+//   {name:'', link: ''},
+// ];
 
 class App extends Component {
   constructor(props) {
@@ -99,17 +103,31 @@ class App extends Component {
           <Login lookft={this.lookft} />
         ) : (
           <Fragment>
-            <LeftNav lstate={this._lbarstate} client={this.props.client} />
-            <Switch>
-              <Route exact path="/task" component={TaskView} />
-              <Route exact path="/board" component={BoardView} />
-              <Route exact path="/top" component={TileBoard} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/map" component={Map} />
-              <Route exact path="/" render={(props) => <Root {...props} />} />
-              <Route exact path="/profile" component={Profile} />
-              <Route exact path="/private" render={(props) => <Private {...props} />} />
-            </Switch>
+            <Nav>
+              <NavTop client={this.props.client} />
+              <NavLinks />
+            </Nav>
+            <Root>
+              { this.props.gBar && this.props.gBar.barShow ? (<Bar view="animated fadeInLeft" type={this.props.gBar.barType } ><BarInner /></Bar>) : null }
+
+              <Switch>
+                {
+                  // Components.map((e,i)=>{
+                  //   return(
+                  //     <Route exact path={e.link} component={e.name} />
+                  //   )
+                  // })
+                }
+                <Route exact path="/task" component={TaskView} />
+                <Route exact path="/board" component={Board} />
+                <Route exact path="/tile" component={TileBoard} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/map" component={Map} />
+                {/* <Route exact path="/profile" component={Login} /> */}
+                <Route exact path="/chat" component={Private} />
+                <Route exact path="/" component={RootLoader} />
+              </Switch>
+            </Root>
           </Fragment>
         )
         }
@@ -118,7 +136,10 @@ class App extends Component {
   }
 }
 
-export default withRouter(App);
+
+export default compose(
+  graphql(gBar, { name: 'gBar' }),
+)(withRouter(App));
 
 
 

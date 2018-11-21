@@ -12,8 +12,4 @@ const schema = new Schema({
   isDirect: Boolean,
 });
 
-// schema.virtual('createdAt').get(function () {
-//   return this.createdAt_.toString();
-// });
-
 module.exports = schema;

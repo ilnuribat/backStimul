@@ -8,9 +8,9 @@ type Task {
   assignedTo: UserTaskRole
   lastMessage: Message
   endDate: String
-  files: [File]
   parentId: ID
   objectId: ID
+  files: [File]
 }
 
 input TaskInput {

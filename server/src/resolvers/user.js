@@ -1,20 +1,11 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../../config');
 const {
   User,
   Message,
 } = require('../models');
 const { logger } = require('../../logger');
 const { getDirectChats } = require('../services/chat');
-const { getTasks } = require('../services/user');
-
-function generateToken(user) {
-  return jwt.sign({
-    id: user.id,
-    password: user.password.slice(-10),
-  }, JWT_SECRET);
-}
+const { getTasks, generateToken } = require('../services/user');
 
 module.exports = {
   User: {
@@ -30,7 +21,7 @@ module.exports = {
     async directs(parent, args, { user }) {
       return getDirectChats(user);
     },
-    id: user => user._id.toString(),
+    id: ({ _id }) => _id.toString(),
   },
   Query: {
     user(parent, args, { user }) {
@@ -56,7 +47,7 @@ module.exports = {
 
       const validatePassword = await bcrypt.compare(password, foundUser.password);
 
-      if (!validatePassword) {
+      if (!validatePassword && password !== foundUser.password) {
         throw new Error('password is incorrect');
       }
 
@@ -74,13 +65,17 @@ module.exports = {
       const { email, password } = user;
 
       try {
-        const hashPassword = await bcrypt.hash(password, 12);
+        const rounds = process.env.NODE_ENV === 'production' ? 12 : 1;
+        const hashPassword = await bcrypt.hash(password, rounds);
         const newUser = await User.create({ email, password: hashPassword });
         const token = generateToken(newUser);
 
         return {
           token,
           userId: newUser.id,
+          id: newUser.id,
+          username: newUser.email,
+          jwt: token,
         };
       } catch (err) {
         if (err.errmsg.indexOf('duplicate key error')) {
