@@ -7,6 +7,14 @@ enum SEARCH_TYPE {
   USERS
 }
 
+type SearchType {
+  messages: [Message]
+  objects: [Object]
+  tasks: [Task]
+  users: [User]
+}
+
 type Query {
-  search(text: String!, type: SEARCH_TYPE!) : [SearchResult]
+  search(query: String!, type: SEARCH_TYPE!) : [SearchResult]
+  previewSearch(query: String!, limit: Int): SearchType
 }

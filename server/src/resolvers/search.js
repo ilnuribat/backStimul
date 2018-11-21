@@ -5,9 +5,9 @@ const { searchUsers } = require('../services/user');
 
 module.exports = {
   Query: {
-    async search(parent, { text, type }, { user }) {
+    async search(parent, { query, type }, { user }) {
       let result = [];
-      const words = text.split(/\s/);
+      const words = query.split(/\s/);
       const regExQuery = new RegExp(words.join('|'), 'i');
 
       switch (type) {
@@ -44,6 +44,30 @@ module.exports = {
       }
 
       return result;
+    },
+    async previewSearch(parent, { query, limit = 3 }, { user }) {
+      const words = query.split(/\s/);
+      const regExQuery = new RegExp(words.join('|'), 'i');
+      const [users, tasks, objects, messages] = await Promise.all([
+        searchUsers(user, regExQuery, limit),
+        searchTasks(user, regExQuery, limit),
+        searchObjects(user, regExQuery, limit),
+        searchMessages(user, regExQuery, limit),
+      ]);
+
+      console.log({
+        users,
+        tasks,
+        objects,
+        messages,
+      });
+
+      return {
+        users,
+        tasks,
+        objects,
+        messages,
+      };
     },
   },
   SearchResult: {

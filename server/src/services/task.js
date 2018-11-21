@@ -118,7 +118,7 @@ async function deleteTask(parent, { id }) {
   return res.n;
 }
 
-async function searchTasks(user, regExp) {
+async function searchTasks(user, regExp, limit = 10) {
   const res = await UserGroup.aggregate([{
     $match: {
       userId: user._id,
@@ -140,6 +140,8 @@ async function searchTasks(user, regExp) {
     $match: {
       'tasks.name': regExp,
     },
+  }, {
+    $limit: limit,
   }]);
 
   return res.map(r => r.tasks);

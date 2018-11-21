@@ -101,7 +101,7 @@ async function getDirectChats(user) {
   return res.filter(r => r.name);
 }
 
-async function searchMessages(user, regExp) {
+async function searchMessages(user, regExp, limit = 10) {
   const res = await UserGroup.aggregate([{
     $match: {
       userId: user._id,
@@ -120,6 +120,8 @@ async function searchMessages(user, regExp) {
     $match: {
       'messages.text': regExp,
     },
+  }, {
+    $limit: limit,
   }]);
 
   return res.map(r => r.messages);

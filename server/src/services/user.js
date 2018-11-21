@@ -20,10 +20,10 @@ function generateToken(user) {
   }, JWT_SECRET);
 }
 
-async function searchUsers(user, regExp) {
+async function searchUsers(user, regExp, limit = 10) {
   return User.find({
     email: regExp,
-  }).lean();
+  }).lean().limit(limit);
 }
 
 module.exports = {

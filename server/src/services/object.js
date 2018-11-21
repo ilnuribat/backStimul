@@ -32,7 +32,7 @@ async function rootObjectQuery(parent, { id: addressId }) {
   };
 }
 
-async function searchObjects(user, regExp) {
+async function searchObjects(user, regExp, limit = 10) {
   const res = await UserGroup.aggregate([{
     $match: {
       userId: user._id,
@@ -58,6 +58,8 @@ async function searchObjects(user, regExp) {
         'objects.address.value': regExp,
       }],
     },
+  }, {
+    $limit: limit,
   }]);
 
   return res.map(r => r.objects);
