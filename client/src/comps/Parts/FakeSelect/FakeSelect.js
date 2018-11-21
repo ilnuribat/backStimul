@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import 'animate.css'
+import Svg from '../SVG/svg';
 
-
-const FakeRow = ({children,name,icon, click})=>{
+const FakeRow = ({children, name, icon, click})=>{
   return(
     <div className="FakeOption" fakevalue="3" fakename="Option 3" onClick={click}>
-      {icon ? (<div className="FakeIcon">{icon}</div>) : null}
+      {icon ? (<div className="FakeIcon"><img src={icon} alt={'no'}></img></div>) : null}
       {children || name ? (<div className="FakeContent">{children || name}</div>) : null}
     </div>
   )
@@ -75,6 +75,7 @@ export class FakeSelect extends Component {
 
     return (
       <div className={!view ? "FakeSelect" : "FakeSelect "+view}>
+        {!open ? (<Svg svg="expose" />):(<Svg svg="inpose" />)}
         
         <div className="FakeSelected" onClick={this.openSelect}>
           <FakeRow icon={selected.icon} id={selected.id}>{selected.name}</FakeRow>
@@ -82,6 +83,7 @@ export class FakeSelect extends Component {
         {open ? (
 
           <div className="FakeOptionsContainer animated fadeIn">
+            
 
             {
               array ? array.map((e,i)=>{
