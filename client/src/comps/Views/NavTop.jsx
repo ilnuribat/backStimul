@@ -88,12 +88,16 @@ class NavTop extends Component {
         if(a && a.data && a.data.user && a.data.user.directs){
           let privs = 0;
 
-          a.data.user.directs.map((e) => {
-            privs = privs + e.unreadCount
+          a.data && a.data.user && a.data.user.directs && a.data.user.directs.map((e) => {
+            if(e && e.unreadCount){
+              privs = privs + e.unreadCount
+            }
+            
 
             return null
           })
-          this.saveCountPrivs(privs)
+          // this.saveCountPrivs(privs)
+
           this.props.client.mutate({
             mutation: cSetCountPrivates,
             variables: {
@@ -117,7 +121,7 @@ class NavTop extends Component {
     }
 
     render() {
-      const { children, name, url, cGetCountPrivates } = this.props;
+      const { children, name, /*url,*/ cGetCountPrivates } = this.props;
       let img = this.props;
 
       if(!img){

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { Query,compose, graphql  } from 'react-apollo';
 import { Redirect } from 'react-router';
 import Tile from '../../Parts/Tile';
@@ -7,9 +7,9 @@ import Content from '../../Lays/Content';
 import TileMaker from '../../Parts/TileMaker';
 import { QUERY_ROOTID } from '../../../GraphQL/Qur/Query';
 import Loading from '../../Loading';
-import Tiled from '../../Parts/Tiled';
-import { SvgBack } from '../../Parts/SVG';
-import { setPlace, getPlace, getChat, setChat } from '../../../GraphQL/Cache';
+// import Tiled from '../../Parts/Tiled';
+// import { SvgBack } from '../../Parts/SVG';
+import { setPlaceName, getPlaceName, getChat, setChat } from '../../../GraphQL/Cache';
 import { qauf, _url } from '../../../constants';
 import { deleteObject } from '../../../GraphQL/Qur/Mutation';
 import { ButtonTo, ButtonRow } from '../../Parts/Rows/Rows';
@@ -199,6 +199,6 @@ class TileBoard extends Component {
 export default compose(
   graphql(getChat, { name: 'getChat' }),
   graphql(setChat, { name: 'setChat' }),
-  graphql(getPlace, { name: 'getPlace' }),
-  graphql(setPlace, { name: 'setPlace' }),
+  graphql(getPlaceName, { name: 'getPlaceName' }),
+  graphql(setPlaceName, { name: 'setPlaceName' }),
 )(TileBoard);
