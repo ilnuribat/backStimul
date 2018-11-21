@@ -101,8 +101,33 @@ async function getDirectChats(user) {
   return res.filter(r => r.name);
 }
 
+async function searchMessages(user, regExp) {
+  const res = await UserGroup.aggregate([{
+    $match: {
+      userId: user._id,
+    },
+  }, {
+    $graphLookup: {
+      from: 'messages',
+      startWith: '$groupId',
+      connectFromField: 'groupId',
+      connectToField: 'groupId',
+      as: 'messages',
+    },
+  }, {
+    $unwind: '$messages',
+  }, {
+    $match: {
+      'messages.text': regExp,
+    },
+  }]);
+
+  return res.map(r => r.messages);
+}
+
 module.exports = {
   getPageInfo,
   formWhere,
   getDirectChats,
+  searchMessages,
 };
