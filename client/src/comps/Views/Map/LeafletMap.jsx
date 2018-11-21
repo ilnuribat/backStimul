@@ -19,7 +19,7 @@ import  "./LeafletMap.css";
 import { getObjects } from '../../../GraphQL/Qur/Query/index';
 import Loading from '../../Loading';
 import Content from '../../Lays/Content';
-import { getPlace, setPlace } from "../../../GraphQL/Cache";
+import { getPlaceName, setPlaceName } from "../../../GraphQL/Cache";
 
 const { BaseLayer, Overlay } = LayersControl;
 
@@ -56,16 +56,15 @@ class LeafletMap extends Component {
 
 
   componentDidMount () {
-    const {getPlace} = this.props;
-    let { setPlace } = this.props;
+    const {getPlaceName} = this.props;
+    let { setPlaceName } = this.props;
 
     let place = 'Map';
 
-    if(getPlace && getPlace.placename != place){
-      setPlace({
+    if(getPlaceName && getPlaceName.placename != place){
+      setPlaceName({
         variables:{
           name: place,
-          placename: place,
         }
       })
     }
@@ -382,6 +381,6 @@ const SwitchIcon = (status)   => {
 
 export default
 compose(
-  graphql(getPlace, {name: 'getPlace'}),
-  graphql(setPlace, {name: 'setPlace'}),
+  graphql(getPlaceName, {name: 'getPlaceName'}),
+  graphql(setPlaceName, {name: 'setPlaceName'}),
 )(LeafletMap);

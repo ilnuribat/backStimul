@@ -109,12 +109,17 @@ export const getDashboard = gql `
 
 export const getPlace = gql `
   query getPlace{
-      placename
       place @client{
         id
         name
         type
+        # __typename
       }
+    }
+`;
+export const getPlaceName = gql `
+  query getPlaceName{
+      placename @client
     }
 `;
 
@@ -193,6 +198,14 @@ export const setPlace = gql `
         type
       }
     }
+  }
+`;
+
+export const setPlaceName = gql `
+  mutation setPlaceName( $name: String ){
+    setPlaceName( name: $name ) @client{
+        name
+     }
   }
 `;
 

@@ -13,12 +13,20 @@ export default {
     setPlace: (_, { id, name, type },  { cache }) => {
       cache.writeData({
         data:{
-          id: id, placename: name, name:name, type: type,
           place:{ id: id, name: name, type: type }
         }
       });
 
       return {id, name, type, __typename: 'place' };
+    },
+    setPlaceName: (_, { name },  { cache }) => {
+      cache.writeData({
+        data:{
+          placename: name,
+        }
+      });
+
+      return {name, __typename: 'PlaceName'};
     },
     setInfo: (_, { id, message, type },  { cache }) => {
 

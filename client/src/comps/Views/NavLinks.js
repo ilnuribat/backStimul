@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Svg } from '../Parts/SVG/index';
 import Modal from '../Lays/Modal';
 import { graphql, compose } from "react-apollo";
-import { sBar, gBar, setPlace, getPlace } from '../../GraphQL/Cache';
+import { sBar, gBar, setPlaceName, getPlaceName } from '../../GraphQL/Cache';
 
 const search = (props)=>{
   console.log("Seacrh")
@@ -58,11 +58,9 @@ class NavLinks extends Component {
   place(place){
     console.log('Place click', place)
 
-    this.props.setPlace({
+    this.props.setPlaceName({
       variables:{
-        id: "no",
         name: place,
-        type: place,
       }
     })
   }
@@ -72,7 +70,7 @@ class NavLinks extends Component {
   }
 
   render() {
-    let {children, sBar, getPlace} = this.props;
+    let {children, sBar, getPlaceName} = this.props;
     let {modal, NavArr} = this.state;
 
     return (
@@ -82,7 +80,7 @@ class NavLinks extends Component {
           NavArr.map((e,i)=>{
             return(
               //<div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click === "modal" ? this.modal() : console.log('No click')} }>
-              <div className={getPlace && getPlace.placename == e.name ? "nav selected" : "nav"} key={"nav"+i+e.link} onClick={()=>{e.click && typeof e.click === 'function' ? e.click() : console.log('No click')} }>
+              <div className={getPlaceName && getPlaceName.placename == e.name ? "nav selected" : "nav"} key={"nav"+i+e.link} onClick={()=>{e.click && typeof e.click === 'function' ? e.click() : console.log('No click')} }>
                 {e.link ? (
                   <Link to={e.link}>
                     <Svg svg={e.svg} />
@@ -104,6 +102,6 @@ class NavLinks extends Component {
 export default compose(
   graphql(sBar, { name: 'sBar' }),
   graphql(gBar, { name: 'gBar' }),
-  graphql(setPlace, { name: 'setPlace' }),
-  graphql(getPlace, { name: 'getPlace' }),
+  graphql(setPlaceName, { name: 'setPlaceName' }),
+  graphql(getPlaceName, { name: 'getPlaceName' }),
 )(NavLinks);
