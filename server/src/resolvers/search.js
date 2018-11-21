@@ -1,4 +1,7 @@
 const { searchMessages } = require('../services/chat');
+const { searchObjects } = require('../services/object');
+const { searchTasks } = require('../services/task');
+const { searchUsers } = require('../services/user');
 
 module.exports = {
   Query: {
@@ -11,84 +14,36 @@ module.exports = {
         case 'MESSAGES':
           result = await searchMessages(user, regExQuery);
 
-          result = result.map(m => ({
+          return result.map(m => ({
             __typename: 'Message',
             ...m,
           }));
-          break;
+        case 'OBJECTS':
+          result = await searchObjects(user, regExQuery);
 
+          return result.map(r => ({
+            __typename: 'Object',
+            ...r,
+          }));
+        case 'TASKS':
+          result = await searchTasks(user, regExQuery);
+
+          return result.map(t => ({
+            __typename: 'Task',
+            ...t,
+          }));
+        case 'USERS':
+          result = await searchUsers(user, regExQuery);
+
+          return result.map(u => ({
+            __typename: 'User',
+            ...u,
+          }));
         default:
           break;
       }
 
-
       return result;
-
-      // USER BLOCK
-
-      // const users = await User.find({
-      //   email: regExQuery,
-      // }).lean().limit(5);
-
-
-      // users.forEach((u) => {
-      //   result.push({
-      //     __typename: 'User',
-      //     ...u,
-      //   });
-      // });
-
-      // TASK BLOCK
-      // const tasks = await Group.find({
-      //   name: regExQuery,
-      //   type: 'TASK',
-      // }).lean().limit(3);
-
-      // tasks.forEach((t) => {
-      //   result.push({
-      //     __typename: 'Task',
-      //     id: t._id.toString(),
-      //     ...t,
-      //   });
-      // });
-
-      // OBJECT BLOCK
-      // const objects = await Group.find({
-      //   type: 'OBJECT',
-      //   $or: [{
-      //     name: regExQuery,
-      //   }, {
-      //     'address.value': regExQuery,
-      //   }],
-      // }).lean().limit(3);
-
-      // objects.forEach((o) => {
-      //   result.push({
-      //     __typename: 'Object',
-      //     id: o._id.toString(),
-      //     ...o,
-      //   });
-      // });
-
-
-      // [{
-      //   _id: 'asdf1',
-      //   id: 'asdf2',
-      //   email: 'Ilnur1',
-      //   __typename: 'User',
-      // }, {
-      //   __typename: 'Task',
-      //   id: 'asdf',
-      //   name: 'new task',
-      // }, {
-      //   __typename: 'Object',
-      //   id: 'address id',
-      //   name: 'Ufa',
-      // }, {
-      //   __typename: 'Message',
-      //   id: 'message id',
-      //   text: 'some message text',
-      // }];
     },
   },
   SearchResult: {

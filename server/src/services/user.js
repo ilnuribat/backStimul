@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { Group, UserGroup } = require('../models');
+const { Group, UserGroup, User } = require('../models');
 const { JWT_SECRET } = require('../../config');
 
 async function getTasks(userId) {
@@ -20,7 +20,14 @@ function generateToken(user) {
   }, JWT_SECRET);
 }
 
+async function searchUsers(user, regExp) {
+  return User.find({
+    email: regExp,
+  }).lean();
+}
+
 module.exports = {
   getTasks,
   generateToken,
+  searchUsers,
 };

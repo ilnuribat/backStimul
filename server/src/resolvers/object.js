@@ -4,6 +4,7 @@ const addressService = require('../services/address');
 
 module.exports = {
   Object: {
+    id: object => object._id.toString(),
     async tasks(parent, args, { user }) {
       const userGroups = await UserGroup.find({
         userId: user.id,
