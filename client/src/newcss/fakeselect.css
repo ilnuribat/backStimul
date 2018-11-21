@@ -33,6 +33,10 @@
   justify-content: flex-start;
   align-items: center;
 }
+.FakeSelect .FakeOptionsContainer .FakeOption:hover{
+  background: #316bc2;
+}
+
 .FakeSelect .FakeOption .FakeIcon{
   width:36px;
   height:36px;

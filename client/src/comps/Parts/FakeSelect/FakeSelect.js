@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import 'animate.css'
+import _ from 'lodash';
+
 import Svg from '../SVG/svg';
+
 
 const FakeRow = ({children, name, icon, click})=>{
   return(
@@ -60,18 +63,61 @@ export class FakeSelect extends Component {
     this.setState({
       open: !this.state.open,
       selected: {
-        id: id,
-        name: name,
-        icon: icon,
+        id: id || '',
+        name: name || '',
+        icon: icon || '',
       }
     })
     this.runAfter(id, name, icon)
   }
 
+  setDefault(array, defaultid){
+    if(array && defaultid && defaultid !== this.state.selected.id){
+      let selected = array.find(o => o.id === defaultid);
+      
+      if(selected){
+        this.setState({
+          selected: {
+            id: selected.id || '',
+            name: selected.name || '',
+            icon: selected.icon || '',
+          }
+        })
+      }
+    }
+  }
+
+  componentWillUpdate(){
+  }
+
+  componentDidMount(){
+  }
+
+  componentWillReceiveProps(){
+  }
+
+  shouldComponentUpdate(prevProp, prevState){
+    if(prevState.selected.id !== this.state.selected.id && prevState.selected.name !== this.state.selected.name){
+      return true
+    }
+    if(_.isEqual(prevProp, this.props) && _.isEqual(prevState, this.state)){
+      return false
+    }
+    return true
+  }
+
+  componentWillMount(){
+  }
+
   render() {
 
     const {selected, open} = this.state;
-    const {array, view} = this.props;
+    const {array, view, defaultid} = this.props;
+    
+    if(defaultid && !selected || defaultid && !selected.id ){
+      this.setDefault(array, defaultid);
+    }
+
     const arr = array || [
       {id:'1', name:'Option 1', icon:'1'},
       {id:'2', name:'Option 2'},
@@ -83,13 +129,11 @@ export class FakeSelect extends Component {
         {!open ? (<Svg svg="expose" />):(<Svg svg="inpose" />)}
         
         <div className="FakeSelected">
-          <FakeRow icon={selected.icon} id={selected.id}>{selected.name}</FakeRow>
+          {selected ? (<FakeRow icon={selected.icon} id={selected.id}>{selected.name}</FakeRow>) : null }
         </div>
         {open ? (
 
           <div className="FakeOptionsContainer animated fadeIn">
-            
-
             {
               arr ? arr.map((e,i)=>{
 
@@ -102,11 +146,8 @@ export class FakeSelect extends Component {
                 )
               }) : null
             }
-
-
-          
           </div>
-          ) : null}
+        ) : null}
 
       </div>
     )

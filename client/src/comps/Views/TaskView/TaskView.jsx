@@ -428,7 +428,7 @@ class TaskView extends Component {
                             Статус
                         </ModalBlockName>
                         <label htmlFor="">
-                          <select onChange={(e)=>{this.writeTaskData(e, "status", false)}} defaultValue={taskStatus}>
+                          <select onChange={(e)=>{this.writeTaskData(e.target.value, "status", false)}} defaultValue={taskStatus}>
                             {/* <option value="0">Выбрать задачу</option> */}
                             {
                               status.map((e)=>(
@@ -455,7 +455,7 @@ class TaskView extends Component {
                           Срок истечения
                         </div>
                         <label htmlFor="">
-                          <input type="date" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
+                          <input type="date" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
                         </label>
                       </ModalCol>
 
@@ -463,21 +463,8 @@ class TaskView extends Component {
                         <ModalBlockName>
                           Добавить родительскую задачу
                         </ModalBlockName>
-                        <label htmlFor="">
-                          <FakeSelect array={allTasks} onselect={this.writeTaskData} />
-
-                          <select onChange={(e)=>{e.target.value !==0 ? this.writeTaskData(e, "parentId", true) : null}} defaultValue={data.task.parentId} >
-                            { !data.task.parentId ? <option value="0">Выбрать задачу</option> : null}
-                            {
-                              allTasks.map((e)=>{
-                                return(
-                                  <option key={e.id} value={e.id} /*selected={data.task.parentId===e.id ? true: false }*/>{e.name}</option>
-                                )
-                              })
-                            }
-                          </select>
-
-                        </label>
+                            {console.log("data.task.parentId",data.task.parentId)}
+                        <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.task.parentId} />
                       </ModalCol>
                     </ModalRow>
                     <ModalRow>
