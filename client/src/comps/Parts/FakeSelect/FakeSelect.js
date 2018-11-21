@@ -126,14 +126,15 @@ export class FakeSelect extends Component {
 
     return (
       <div className={!view ? "FakeSelect" : "FakeSelect "+view} onClick={this.openSelect}>
-        {!open ? (<Svg svg="expose" />):(<Svg svg="inpose" />)}
+        
         
         <div className="FakeSelected">
           {selected ? (<FakeRow icon={selected.icon} id={selected.id}>{selected.name}</FakeRow>) : null }
         </div>
+        {!open ? (<Svg svg="expose" />):(<Svg svg="inpose" />)}
         {open ? (
 
-          <div className="FakeOptionsContainer animated fadeIn">
+          <div className="FakeOptionsContainer animated fadeIn" onMouseLeave={this.openSelect}>
             {
               arr ? arr.map((e,i)=>{
 
