@@ -460,6 +460,10 @@ class TaskView extends Component {
                           console.log(status)
                           
                         }
+                        {
+                          console.log(taskStatus)
+                          
+                        }
                         {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus}/> : null}
                       </ModalCol>
 
