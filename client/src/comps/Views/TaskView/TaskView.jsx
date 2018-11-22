@@ -468,11 +468,11 @@ class TaskView extends Component {
                         </ModalBlockName>
                         {
                           console.log(status)
-                          
+
                         }
                         {
                           console.log(taskStatus)
-                          
+
                         }
                         {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus}/> : null}
                       </ModalCol>
@@ -624,7 +624,7 @@ class ResponsiblePerson extends React.Component {
 
     return (
       !save ? (
-        <UserRow click = {this.handleClick} size="32" id={userId} name={userName} icon="1" />
+        <UserRow click = {this.handleClick} size="32" id={userId} name={userName} icon="1" ondelete={(id)=>{console.log(id)}} />
       ) : ( <FakeSelect onselect={this.writeTaskResponsiblePerson} defaultid={userId} array={data.users}/>
       // <label htmlFor="">
       //   <select onChange={(e)=>{this.writeTaskResponsiblePerson(e)}} defaultValue={userName} >
