@@ -238,6 +238,48 @@ export default {
 
       return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'Task' };
     },
+    objectCacheUpdate: (_, { value, action, objectId, taskId, object },  { cache }) => {
+      let data;
+      let query;
+      let previousState;
+
+      switch (action) {
+      case "createName":
+        query = gql`
+                  query object($id: ID!) {
+                    object(id: $id ) @client {
+                      __typename
+                      tasks {
+                        id
+                        name
+                      }
+                    }
+                  }
+              `;
+        data = {
+          object: {
+            tasks: {
+              id: taskId,
+              name: value,
+              __typename: "Task"
+            },
+            __typename: "Object"
+          }
+        };
+        break;
+      default:
+        break;
+      }
+
+      cache.writeQuery({
+        query,
+        data,
+        variables: {"id": objectId}
+      });
+
+      return true;
+
+    },
     taskCacheUpdate: (_, { value, userName, action, taskId, object },  { cache }) => {
       let data;
       let query;

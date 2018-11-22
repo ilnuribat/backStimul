@@ -12,7 +12,7 @@ import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
 import { uploadFile, removeFile, updTask } from '../../../GraphQL/Qur/Mutation';
 import { selectUser, setChat, taskCacheUpdate } from '../../../GraphQL/Cache';
-import { allUsers, glossaryStatus, GR_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
+import { allUsers, glossaryStatus, GR_QUERY, getObjectTasksSmall } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 // import Panel from '../../Lays/Panel/index';
@@ -108,7 +108,7 @@ class TaskView extends Component {
     // console.warn("GETTASK!!", objectId, taskId)
     const { objectId, taskId } = this.state
 
-    qauf(getObjectTasks3(objectId), _url, localStorage.getItem('auth-token')).then(a=>{
+    qauf(getObjectTasksSmall(objectId), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){
         a.data.object.tasks = a.data.object.tasks.filter((task) => (task.parentId !== taskId && task.id !== taskId ))
         this.setState({
