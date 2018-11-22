@@ -243,8 +243,6 @@ export default {
       let query;
       let previousState;
 
-      console.warn("OBJECT IS", object)
-
       switch (action) {
       case "name":
         // eslint-disable-next-line no-case-declarations
