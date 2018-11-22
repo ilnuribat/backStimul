@@ -17,7 +17,7 @@ import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 // import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
-import { ButtonTo, UserRow, FileRow, TextRow } from '../../Parts/Rows/Rows';
+import { ButtonTo, UserRow, FileRow, TextRow, ResponsibleRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 // import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
@@ -485,11 +485,13 @@ class TaskView extends Component {
                         Название
                     </InputWrapper>
 
+
                     <ModalRow>
                       <ModalCol>
                         <ModalBlockName>
                             Статус
                         </ModalBlockName>
+
                         {
                           console.log(status)
 
@@ -498,7 +500,10 @@ class TaskView extends Component {
                           console.log(taskStatus)
 
                         }
-                        {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus}/> : null}
+                        <ResponsibleRow >
+                          <UserRow id="1" name="name" icon='1' />
+                          {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus}/> : null}
+                        </ResponsibleRow>
                       </ModalCol>
 
                       <ModalCol>
@@ -559,7 +564,7 @@ class TaskView extends Component {
                     </ModalRow>
                     <ModalCol>
                       <ModalBlockName>
-                  Добавить вложения
+                        Добавить вложения
                       </ModalBlockName>
                       {data.task.files && data.task.files.length > 0 ? data.task.files.map((e)=>{
                         return(
@@ -600,6 +605,8 @@ class TaskView extends Component {
     )
   }
 }
+
+
 
 class ResponsiblePerson extends React.Component {
 
