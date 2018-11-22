@@ -91,14 +91,15 @@ export class ResponsibleRow extends Component {
     const { children, view, close } = this.props;
 
     if(open){
-      return(<div className={!view ? 'ResponsibleRow' : 'ResponsibleRow '+view} onClick={()=>this.setState({open: !open})}>{children[1]}</div>)
-    }else{
       return (
         <div className={!view ? 'ResponsibleRow' : 'ResponsibleRow '+view}>
-          { children[0] }
+          { children[1] }
           <Svg svg="cancel" view="ondelete" click={()=>this.setState({open: !open})} />
         </div>
       )
+    }else{
+      return(<div className={!view ? 'ResponsibleRow' : 'ResponsibleRow '+view} onClick={()=>this.setState({open: !open})}>{children[0]}</div>)
+
     }
   }
 }
