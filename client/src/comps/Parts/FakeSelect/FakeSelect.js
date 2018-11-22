@@ -73,7 +73,7 @@ export class FakeSelect extends Component {
 
   setDefault(array, defaultid){
     if(array && typeof array === 'object' && defaultid && defaultid !== this.state.selected.id){
-      let selected = array.find(o => o && o.id && o.id == defaultid.toString());
+      let selected = array.find(o => o && o.id && o.id.toString() === defaultid.toString());
       
       if(selected){
         this.setState({
