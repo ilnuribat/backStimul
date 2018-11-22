@@ -53,13 +53,11 @@ export class FakeSelect extends Component {
   }
 
   openSelect(){
-    console.log("Select Faker")
     this.setState({
       open: !this.state.open,
     })
   }
   select(id, name, icon){
-    console.log("Select Faker2")
     this.setState({
       open: !this.state.open,
       selected: {
@@ -135,9 +133,6 @@ export class FakeSelect extends Component {
         {open ? (
 
           <div className="FakeOptionsContainer animated fadeIn" onMouseLeave={this.openSelect}>
-            {
-              console.log("ARRAY",arr)
-            }
             {
               arr && typeof arr === 'object' && arr.map((e,i)=>{
                 if(!e || !e.id) return true;
