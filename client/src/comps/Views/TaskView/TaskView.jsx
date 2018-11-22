@@ -438,13 +438,8 @@ class TaskView extends Component {
                     }
                     {
                       taskId ? (
-                        <div className="tab-roll">
-                          <div className="header"></div>
-                          <div className="content">
-                            <div className="Button2" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
-                            <div className="content-scroll">
-                            </div>
-                          </div>
+                        <div className="content">
+                          <div className="Btn v1" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
                         </div>
                       ) : null
                     }
