@@ -9,6 +9,7 @@ const groupService = require('../services/group');
 
 module.exports = {
   Task: {
+    id: task => task._id.toString(),
     assignedTo: groupService.assignedTo,
     lastMessage: groupService.lastMessage,
     users: groupService.getMembers,

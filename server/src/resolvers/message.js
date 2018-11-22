@@ -8,7 +8,7 @@ const { MESSAGE_READ, pubsub, MESSAGE_ADDED } = require('../services/constants')
 
 module.exports = {
   Message: {
-    id: ({ _id }) => _id.toString(),
+    id: message => message._id.toString(),
     from(parent) {
       const { userId } = parent;
 

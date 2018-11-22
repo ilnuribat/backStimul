@@ -77,7 +77,7 @@ async function getDirectChats(user) {
     code: {
       $exists: true,
     },
-  }).sort({ lastMessageAt: -1 });
+  }).sort({ lastMessageAt: -1 }).lean();
 
   const directs = directsRaw.map(d => ({
     ...d,
@@ -85,6 +85,7 @@ async function getDirectChats(user) {
       .split('|')
       .filter(dId => dId !== user.id)[0] || user.id,
     id: d._id.toString(),
+    _id: d._id,
   }));
 
   const users = await User.find({
@@ -101,8 +102,35 @@ async function getDirectChats(user) {
   return res.filter(r => r.name);
 }
 
+async function searchMessages(user, regExp, limit = 10) {
+  const res = await UserGroup.aggregate([{
+    $match: {
+      userId: user._id,
+    },
+  }, {
+    $graphLookup: {
+      from: 'messages',
+      startWith: '$groupId',
+      connectFromField: 'groupId',
+      connectToField: 'groupId',
+      as: 'messages',
+    },
+  }, {
+    $unwind: '$messages',
+  }, {
+    $match: {
+      'messages.text': regExp,
+    },
+  }, {
+    $limit: limit,
+  }]);
+
+  return res.map(r => r.messages);
+}
+
 module.exports = {
   getPageInfo,
   formWhere,
   getDirectChats,
+  searchMessages,
 };

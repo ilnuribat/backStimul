@@ -1,90 +1,99 @@
-const { User, Group, Message } = require('../models');
+const { searchMessages } = require('../services/chat');
+const { searchObjects } = require('../services/object');
+const { searchTasks } = require('../services/task');
+const { searchUsers } = require('../services/user');
 
 module.exports = {
   Query: {
-    async search(parent, { text }, { user }) {
+    async search(parent, { query, type, limit = 10 }, { user }) {
       const result = [];
-      const words = text.split(/\s/);
+      let tempRes;
+      const words = query.split(/\s/);
       const regExQuery = new RegExp(words.join('|'), 'i');
-      // USER BLOCK
 
-      const users = await User.find({
-        email: regExQuery,
-      }).lean().limit(5);
+      if (type) {
+        switch (type) {
+          case 'MESSAGES':
+            tempRes = await searchMessages(user, regExQuery);
 
+            result.push(...tempRes.map(m => ({
+              __typename: 'Message',
+              ...m,
+            })));
+            break;
+          case 'OBJECTS':
+            tempRes = await searchObjects(user, regExQuery);
 
-      users.forEach((u) => {
-        result.push({
-          __typename: 'User',
-          ...u,
-        });
-      });
+            result.push(...tempRes.map(r => ({
+              __typename: 'Object',
+              ...r,
+            })));
+            break;
+          case 'TASKS':
+            tempRes = await searchTasks(user, regExQuery);
 
-      // TASK BLOCK
-      const tasks = await Group.find({
-        name: regExQuery,
-        type: 'TASK',
-      }).lean().limit(3);
+            result.push(...tempRes.map(t => ({
+              __typename: 'Task',
+              ...t,
+            })));
+            break;
+          case 'USERS':
+            tempRes = await searchUsers(user, regExQuery);
 
-      tasks.forEach((t) => {
-        result.push({
-          __typename: 'Task',
-          id: t._id.toString(),
-          ...t,
-        });
-      });
+            result.push(...tempRes.map(u => ({
+              __typename: 'User',
+              ...u,
+            })));
+            break;
+          default:
+            break;
+        }
+      } else {
+        const [users, tasks, objects, messages] = await Promise.all([
+          searchUsers(user, regExQuery, limit),
+          searchTasks(user, regExQuery, limit),
+          searchObjects(user, regExQuery, limit),
+          searchMessages(user, regExQuery, limit),
+        ]);
 
-      // OBJECT BLOCK
-      const objects = await Group.find({
-        type: 'OBJECT',
-        $or: [{
-          name: regExQuery,
-        }, {
-          'address.value': regExQuery,
-        }],
-      }).lean().limit(3);
-
-      objects.forEach((o) => {
-        result.push({
-          __typename: 'Object',
-          id: o._id.toString(),
-          ...o,
-        });
-      });
-
-      // MESSAGE BLOCK
-      const messages = await Message.find({
-        text: regExQuery,
-        userId: user.id,
-      }).lean().limit(3);
-
-      messages.forEach((m) => {
-        result.push({
-          __typename: 'Message',
-          ...m,
-        });
-      });
-
+        return [
+          ...users.map(u => ({
+            __typename: 'User',
+            ...u,
+          })),
+          ...tasks.map(t => ({
+            __typename: 'Task',
+            ...t,
+          })),
+          ...objects.map(o => ({
+            __typename: 'Object',
+            ...o,
+          })),
+          ...messages.map(m => ({
+            __typename: 'Message',
+            ...m,
+          })),
+        ];
+      }
 
       return result;
-      // [{
-      //   _id: 'asdf1',
-      //   id: 'asdf2',
-      //   email: 'Ilnur1',
-      //   __typename: 'User',
-      // }, {
-      //   __typename: 'Task',
-      //   id: 'asdf',
-      //   name: 'new task',
-      // }, {
-      //   __typename: 'Object',
-      //   id: 'address id',
-      //   name: 'Ufa',
-      // }, {
-      //   __typename: 'Message',
-      //   id: 'message id',
-      //   text: 'some message text',
-      // }];
+    },
+    async previewSearch(parent, { query, limit = 3 }, { user }) {
+      const words = query.split(/\s/);
+      const regExQuery = new RegExp(words.join('|'), 'i');
+      const [users, tasks, objects, messages] = await Promise.all([
+        searchUsers(user, regExQuery, limit),
+        searchTasks(user, regExQuery, limit),
+        searchObjects(user, regExQuery, limit),
+        searchMessages(user, regExQuery, limit),
+      ]);
+
+      return {
+        users,
+        tasks,
+        objects,
+        messages,
+      };
     },
   },
   SearchResult: {

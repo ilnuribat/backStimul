@@ -1,4 +1,4 @@
-const { Group } = require('../models');
+const { Group, UserGroup } = require('../models');
 
 const uuidRegEx = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
@@ -32,6 +32,40 @@ async function rootObjectQuery(parent, { id: addressId }) {
   };
 }
 
+async function searchObjects(user, regExp, limit = 10) {
+  const res = await UserGroup.aggregate([{
+    $match: {
+      userId: user._id,
+    },
+  }, {
+    $graphLookup: {
+      from: 'groups',
+      startWith: '$groupId',
+      connectFromField: '_id',
+      connectToField: '_id',
+      as: 'objects',
+      restrictSearchWithMatch: {
+        type: 'OBJECT',
+      },
+    },
+  }, {
+    $unwind: '$objects',
+  }, {
+    $match: {
+      $or: [{
+        'objects.name': regExp,
+      }, {
+        'objects.address.value': regExp,
+      }],
+    },
+  }, {
+    $limit: limit,
+  }]);
+
+  return res.map(r => r.objects);
+}
+
 module.exports = {
   rootObjectQuery,
+  searchObjects,
 };
