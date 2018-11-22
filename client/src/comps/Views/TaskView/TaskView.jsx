@@ -491,10 +491,7 @@ class TaskView extends Component {
                         <ModalBlockName>
                             Статус
                         </ModalBlockName>
-                        <ResponsibleRow >
-                          <UserRow id="1" name="name" icon='1' />
-                          <UserRow id="2" name="name2" icon='1' />
-                        </ResponsibleRow>
+
                         {
                           console.log(status)
 
@@ -503,7 +500,10 @@ class TaskView extends Component {
                           console.log(taskStatus)
 
                         }
-                        {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus}/> : null}
+                        <ResponsibleRow >
+                          <UserRow id="1" name="name" icon='1' />
+                          {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus}/> : null}
+                        </ResponsibleRow>
                       </ModalCol>
 
                       <ModalCol>
