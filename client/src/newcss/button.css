@@ -43,9 +43,25 @@
 }
 
 .label .Button3{
-
   /* overflow: hidden; */
 }
 .label{
 
+}
+
+.Panel .Btn,
+.InnerBar .Btn{
+  width:auto;
+  height:60px;
+  margin:10px auto;
+  text-align: center;
+  background: #5492af;
+  width: 90%;
+  height: 40px;
+  border-radius: 5px;
+  background-color: #3d4147;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }

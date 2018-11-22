@@ -11,9 +11,22 @@ export default {
     },
 
     setPlace: (_, { id, name, type },  { cache }) => {
-      cache.writeData({ data: { id: id, name: name, type: type, } });
+      cache.writeData({
+        data:{
+          place:{ id: id, name: name, type: type }
+        }
+      });
 
       return {id, name, type, __typename: 'place' };
+    },
+    setPlaceName: (_, { name },  { cache }) => {
+      cache.writeData({
+        data:{
+          placename: name,
+        }
+      });
+
+      return {name, __typename: 'PlaceName'};
     },
     setInfo: (_, { id, message, type },  { cache }) => {
 
@@ -212,7 +225,7 @@ export default {
             edges: [...previousState.task.messages.edges, newFeedItem],
             __typename: "MessageConnection",
           },
-          __typename: "Group"
+          __typename: "Task"
         }
       };
 
@@ -223,7 +236,250 @@ export default {
       });
 
 
-      return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'Group' };
+      return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'Task' };
+    },
+    taskCacheUpdate: (_, { value, userName, action, taskId, object },  { cache }) => {
+      let data;
+      let query;
+      let previousState;
+
+      switch (action) {
+      case "name":
+        // eslint-disable-next-line no-case-declarations
+        const params = `name`
+
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              ${params}
+              __typename
+            }
+          }
+      `;
+        data = {
+          task: {
+            name: value,
+            __typename: "Task"
+          }
+        };
+        break;
+      case "parentId":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              parentId
+              __typename
+            }
+          }
+      `;
+        data = {
+          task: {
+            parentId: value,
+            __typename: "Task"
+          }
+        };
+        break;
+      case "endDate":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              endDate
+              __typename
+            }
+          }
+      `;
+        data = {
+          task: {
+            endDate: value,
+            __typename: "Task"
+          }
+        };
+        break;
+      case "status":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              status
+              __typename
+            }
+          }
+      `;
+        data = {
+          task: {
+            status: parseInt(value),
+            __typename: "Task"
+          }
+        };
+        break;
+      case "assignedTo":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              assignedTo {
+                id
+                username
+                __typename
+              }
+              __typename
+            }
+          }
+        `;
+        // eslint-disable-next-line no-case-declarations
+        let param = {id: value, username: userName, __typename: "UserTaskRole"}
+
+        if (!value) param = null
+
+        data = {
+          task: {
+            assignedTo: param,
+            __typename: "Task"
+          }
+        };
+        break;
+      case "addUser":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              users {
+                id
+                username
+                __typename
+              }
+              __typename
+            }
+          }
+        `;
+
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": taskId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        console.warn("prevstate is", previousState)
+
+        data = {
+          task: {
+            users: [...previousState.task.users, {id: value, username: userName, __typename: "User"}],
+            __typename: "Task"
+          }
+        };
+        break;
+      case "delUser":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              users {
+                id
+                username
+                __typename
+              }
+              __typename
+            }
+          }
+        `;
+
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": taskId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        console.warn("prevstate is", previousState)
+
+        data = {
+          task: {
+            users: [...previousState.task.users.filter(users => users.id !== value)],
+            __typename: "Task"
+          }
+        };
+        break;
+      case "uploadFile":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              files {
+                id
+                date
+                mimeType
+                name
+                size
+                __typename
+              }
+              __typename
+            }
+          }
+        `;
+
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": taskId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        console.warn("prevstate is", previousState)
+
+        data = {
+          task: {
+            files: [...previousState.task.files, {
+              id: object.id,
+              date: new Date(),
+              mimeType: object.mimeType,
+              name: object.name,
+              size: object.size,
+              __typename: "File"
+            }],
+            __typename: "Task"
+          }
+        };
+        break;
+      case "deleteFile":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              files {
+                id
+                date
+                mimeType
+                name
+                size
+                __typename
+              }
+              __typename
+            }
+          }
+        `;
+
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": taskId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        console.warn("prevstate is", previousState)
+
+        data = {
+          task: {
+            files: [...previousState.task.files.filter(files => files.id !== value)],
+            __typename: "Task"
+          }
+        };
+        break;
+      default:
+        break;
+      }
+
+      cache.writeQuery({
+        query,
+        data,
+        variables: {"id": taskId}
+      });
+
+      return true;
     },
   },
   Query: {

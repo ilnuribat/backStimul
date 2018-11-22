@@ -11,9 +11,6 @@ import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { Svg } from '../../Parts/SVG/index';
 import { UserRow } from "../../Parts/Rows/Rows";
 
-
-
-// console.log(moment.locales());
 moment.locale('ru')
 
 const toBottom = () => {
@@ -136,13 +133,13 @@ export default class MessagesList extends Component {
                   {/* <div className="msg-flex"> */}
                   {same ? (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
-                      <UserRow name={username} icon="1" view="Col" />
+                      {/* <UserRow name={username} icon="1" view="Col" /> */}
                     </div>
                   
                   
                   ) : (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
-                      <UserRow name={username} icon="1" view="Col" />
+                      {id !== uid ? (<UserRow name={username} icon="1" view="Col" />) : null}
                     </div>
                   )}
                   <blockquote className={"msgs"}>
@@ -157,10 +154,7 @@ export default class MessagesList extends Component {
                               variables={{ id:node.id }}
                             >
                               {({ data, subscribeToMore }) => {
-                                // console.warn("subs", subscribeToMore)
                                 subscribeToRead(subscribeToMore, node.id);
-                                // console.log("subscribeToMore_______________________________");
-                                // console.log(subscribeToMore);
 
                                 return(
                                   <div className="events">{data.message && data.message.isRead ? <Svg svg="dblcheckack" /> : <Svg svg="dblcheck" />}  {
@@ -173,10 +167,9 @@ export default class MessagesList extends Component {
                         </div>
                       ) : null }
 
-
-                      <div className="msg-date">
+                      {date ? (<div className="msg-date">
                       {date}
-                      </div>
+                      </div>):null}
                     </div>
 
                   </blockquote>

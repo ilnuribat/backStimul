@@ -45,7 +45,7 @@ const MessagesListData = ({ query, id, priv }) => (
       //         return Object.assign({}, prev, {
       //           group: {
       //             messages:{
-      //               edges: [...prev.group.messages.edges, newFeedItem],
+      //               edges: [...prev.task.messages.edges, newFeedItem],
       //               __typename: "MessageConnection"
       //             },
       //             __typename: "Group"

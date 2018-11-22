@@ -29,7 +29,7 @@ const storeUpload = ({
       return resolve({
         id: uploadStream.id.toString(),
         name,
-        mimetype,
+        mimeType: mimetype,
         size: filesize(uploadStream.length),
       });
     })
@@ -96,7 +96,7 @@ module.exports = {
       return fileSaved;
     },
     async deleteFile(parent, { id }) {
-      const res = await Files.deleteOne({ _id: id });
+      const res = await Files.deleteOne({ fileId: id });
 
       return res.n;
     },

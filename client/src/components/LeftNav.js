@@ -108,7 +108,7 @@ class LeftNav extends Component {
     let {getRefGroups, setRefGroups} = this.props;
     const __back = localStorage.getItem("back")
     if(__back != this.state.__back){
-      
+
       this.setState({__back: __back})
     }
     console.log(this.props.getInfo)
@@ -140,7 +140,7 @@ class LeftNav extends Component {
 
   // componentWillUpdate(){
 
-    
+
   //   console.log(this.props.getInfo)
   //   this.setState({
   //     __info: this.props.getInfo.__info
@@ -191,7 +191,7 @@ class LeftNav extends Component {
           <Top />
           {/* {localStorage.getItem('back') ? <ObjEdit /> : null} */}
           <BtnBack />
-          
+
           <Query query={TASKS_QUERY} >
             {({ loading, error, data, refetch, subscribeToMore }) => {
               if (loading){
@@ -210,7 +210,7 @@ class LeftNav extends Component {
               }
 
               if(data){
-                data.user.groups.map((e)=>{
+                data.user.tasks.map((e)=>{
                   let id = e.id;
                   // return(
                   //         <Subscription

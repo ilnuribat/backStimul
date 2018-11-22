@@ -10,19 +10,21 @@ import moment from 'moment';
 import { qauf, _url } from '../../../constants';
 import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
-import { uploadFile, updTask } from '../../../GraphQL/Qur/Mutation';
-import { selectUser, setChat } from '../../../GraphQL/Cache';
+import { uploadFile, removeFile, updTask } from '../../../GraphQL/Qur/Mutation';
+import { selectUser, setChat, taskCacheUpdate } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, GR_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 // import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
-import { ButtonTo, UserRow, FileRow, TextRow } from '../../Parts/Rows/Rows';
+import { ButtonTo, UserRow, FileRow, TextRow, ResponsibleRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 // import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 
 // import ContentInner from '../../Lays/ContentInner/ContentInner';
+import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
+import Svg from '../../Parts/SVG';
 
 moment.locale('ru')
 
@@ -56,7 +58,6 @@ class TaskView extends Component {
   }
 
   componentDidMount(){
-
     const { location } = this.props;
 
     let _grid
@@ -124,20 +125,77 @@ class TaskView extends Component {
     qauf(updTask(this.state.taskId,`{name: "${name}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn(a.data)
       this.modalMessage(a.data.updateTask);
+      localStorage.setItem('grnm',name);
+      this.setState({taskName: name})
+      this.props.taskCacheUpdate({
+        variables:{
+          action: "name",
+          value: name,
+          taskId: this.state.taskId,
+        }
+      })
     }).catch((e)=>{
       console.warn(e);
     })
   }
 
-  writeTaskData(e, change, quota) {
-    let cap = ""
-    const value = e.target.value
+  updateCacheFile (data) {
+    this.props.taskCacheUpdate({
+      variables:{
+        object: data,
+        action: "uploadFile",
+        taskId: this.state.taskId,
+      }
+    })
+  }
+
+  deleteFile (id) {
+    qauf(removeFile(id), _url, localStorage.getItem('auth-token')).then((a)=>{
+      console.warn(a)
+      this.props.taskCacheUpdate({
+        variables:{
+          value: id,
+          action: "deleteFile",
+          taskId: this.state.taskId,
+        }
+      })
+    }).catch((e)=>{
+      console.warn(e);
+    });
+  }
+
+  writeTaskData(e, change, quota, userName) {
+    let cap = "";
+    let value;
+
+    value = e
 
     if (quota) cap = '"';
-    // console.warn("writeData", e, change, this.state.taskId)
+    console.warn("writeData", e, change, this.state.taskId)
     qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn("update task done", a)
       this.modalMessage(a.data.updateTask);
+      switch (change) {
+      case "assignedTo":
+        this.props.taskCacheUpdate({
+          variables:{
+            action: change,
+            value: value,
+            userName: userName,
+            taskId: this.state.taskId,
+          }
+        })
+        break;
+      default:
+        this.props.taskCacheUpdate({
+          variables:{
+            value: value,
+            action: change,
+            taskId: this.state.taskId,
+          }
+        })
+        break;
+      }
     }).catch((e)=>{
       console.warn(e);
     })
@@ -230,6 +288,23 @@ class TaskView extends Component {
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
         // console.warn("Answer updUsrGr",a.data)
         this.modalMessage(a.data.updateUsersTask);
+        !dels ?
+          this.props.taskCacheUpdate({
+            variables:{
+              action: "addUser",
+              value: userId,
+              userName: this.state.newUser,
+              taskId: this.state.taskId,
+            }
+          })
+          :
+          this.props.taskCacheUpdate({
+            variables:{
+              action: "delUser",
+              value: userId,
+              taskId: this.state.taskId,
+            }
+          })
       })
         .catch((e)=>{
           console.warn(e);
@@ -268,7 +343,7 @@ class TaskView extends Component {
   }
 
   render() {
-    const { allusers, taskName, taskId, modal, status, allTasks } = this.state;
+    const { allusers, taskId, modal, status, allTasks } = this.state;
     // console.warn("TASKID", status)
 
     return(
@@ -292,8 +367,13 @@ class TaskView extends Component {
                 </div>
               );
             }
-            // console.warn("DATA", data)
+            console.warn("DATA", data.task)
+
+            if (!data || !data.task)
+              return null
+
             let dataValue;
+
             let taskStatus = data.task.status
 
             if (data.task.endDate) dataValue = data.task.endDate.replace(/T.*$/gi, "")
@@ -302,11 +382,11 @@ class TaskView extends Component {
               <Content view="OvH">
                 <div className="TaskViewTop">
                   <ButtonTo url={"/board"} icon="back">Назад</ButtonTo>
-                  <div className="TaskViewTopName"><h1>{taskName}</h1></div>
+                  <div className="TaskViewTopName"><h1>{data.task.name}</h1></div>
                 </div>
                 <div className="TaskView Row Pad10">
                   <div className="TaskViewInner" view="">
-                    <ChatView name={taskName} id={taskId} taskInfo={ data.task } priv={0} />
+                    <ChatView name={data.task.name} id={taskId} taskInfo={ data.task } priv={0} />
                   </div>
                   <InnerBar>
                     <TextRow name="Информация" view="BigName">
@@ -350,7 +430,7 @@ class TaskView extends Component {
                                   return(
                                     <div className="username" role="presentation" key={'usr-'+i} >
                                       {localStorage.getItem('userid') !== e.id ?
-                                        <UserRow id={e.id} name={e.username} icon="1" />
+                                        <UserRow id={e.id} name={e.username} icon="1" ondelete={(id)=>this.userAdd(id, false)} />
                                         : null }
                                       <div className="hoverTrigger">
                                         <div className="hover">
@@ -364,7 +444,8 @@ class TaskView extends Component {
                               )
                               }
                             </div>
-                            <div className="FakeLink">Показать все</div>
+
+                            <div className="FakeLinkSvg"><Svg svg="expose" size="32" /></div>
                           </div>
                         </div>
                       ): null
@@ -378,7 +459,7 @@ class TaskView extends Component {
                               {data.task.files && data.task.files.length > 0 ? data.task.files.map(
                                 (e)=>{
                                   return(
-                                    <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" click={this.downloadFile} />
+                                    <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
                                   )
                                 }
                               ) : (
@@ -396,13 +477,8 @@ class TaskView extends Component {
                     }
                     {
                       taskId ? (
-                        <div className="tab-roll">
-                          <div className="header"></div>
-                          <div className="content">
-                            <div className="Button2" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
-                            <div className="content-scroll">
-                            </div>
-                          </div>
+                        <div className="content">
+                          <div className="Btn v1" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
                         </div>
                       ) : null
                     }
@@ -414,60 +490,51 @@ class TaskView extends Component {
                         Название
                     </InputWrapper>
 
+
                     <ModalRow>
                       <ModalCol>
                         <ModalBlockName>
                             Статус
                         </ModalBlockName>
-                        <label htmlFor="">
-                          <select onChange={(e)=>{this.writeTaskData(e, "status", false)}} defaultValue={taskStatus}>
-                            {/* <option value="0">Выбрать задачу</option> */}
-                            {
-                              status.map((e)=>(
-                                <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
-                                  {e.name}
-                                </option>
-                              ))
-                            }
-                          </select>
-                        </label>
+
+                        <ResponsibleRow >
+                          <UserRow id={taskStatus} name={this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Новая"}/>
+                          {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus}/> : null}
+                        </ResponsibleRow>
+
                       </ModalCol>
 
                       <ModalCol>
                         <ModalBlockName>
                             Ответственный
                         </ModalBlockName>
-                        {/* <UserRow id={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : null} name={data.task.assignedTo && data.task.assignedTo.username ? data.task.assignedTo.username : "null"} icon="e" /> */}
-                        <ResponsiblePerson data={data.task} onClick1={this.writeTaskData}/>
+                        <ResponsibleRow >
+                          <UserRow id={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : "0"} name={data.task.assignedTo && data.task.assignedTo.username ? data.task.assignedTo.username : "не указано"} ondelete={()=>this.writeTaskData(null, "assignedTo", false, null)}/>
+                          <FakeSelect array={data.task.users} onselect={(id,name,icon)=>{this.writeTaskData(id, "assignedTo",true, name)}} defaultid={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : "0"} />
+                        </ResponsibleRow>
                       </ModalCol>
                     </ModalRow>
 
                     <ModalRow>
                       <ModalCol>
                         <div className="ModalBlockName">
-                      Срок истечения
+                          Срок истечения
                         </div>
                         <label htmlFor="">
-                          <input type="date" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
+                          <input type="date" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
                         </label>
                       </ModalCol>
 
                       <ModalCol>
                         <ModalBlockName>
-                    Добавить родительскую задачу
+                          Добавить родительскую задачу
                         </ModalBlockName>
-                        <label htmlFor="">
-                          <select onChange={(e)=>{e.target.value !==0 ? this.writeTaskData(e, "parentId", true) : null}} defaultValue={data.task.parentId} >
-                            { !data.task.parentId ? <option value="0">Выбрать задачу</option> : null}
-                            {
-                              allTasks.map((e)=>{
-                                return(
-                                  <option key={e.id} value={e.id} /*selected={data.task.parentId===e.id ? true: false }*/>{e.name}</option>
-                                )
-                              })
-                            }
-                          </select>
-                        </label>
+                        <ResponsibleRow >
+                          <UserRow id={data.task.parentId} name={allTasks.find(x => x.id == data.task.parentId) ? allTasks.find(x => x.id == data.task.parentId).name : "не указано"} ondelete={()=>this.writeTaskData(null, "parentId", false)}/>
+                          <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.task.parentId} />
+                        </ResponsibleRow>
+
+                        {/* <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.task.parentId} /> */}
                       </ModalCol>
                     </ModalRow>
                     <ModalRow>
@@ -497,15 +564,16 @@ class TaskView extends Component {
                             </datalist>
                           </label>
                         </div>
+
                       </ModalCol>
                     </ModalRow>
                     <ModalCol>
                       <ModalBlockName>
-                  Добавить вложения
+                        Добавить вложения
                       </ModalBlockName>
                       {data.task.files && data.task.files.length > 0 ? data.task.files.map((e)=>{
                         return(
-                          <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" click={this.downloadFile} />
+                          <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
                         )
                       }
                       ) : (
@@ -520,6 +588,7 @@ class TaskView extends Component {
                         <Mutation mutation={uploadFile} onCompleted={(data) => {
                           console.warn(data)
                           this.modalMessage(data.uploadFile);
+                          this.updateCacheFile(data.uploadFile)
                         }}>
                           {upload => (
                             <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
@@ -542,67 +611,15 @@ class TaskView extends Component {
   }
 }
 
-class ResponsiblePerson extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      save: false,
-      userName: "Не выбран",
-      userId: ""
-    }
-  }
-
-  componentDidMount(){
-    if (this.props.data.assignedTo)
-      this.setState({userName: this.props.data.assignedTo.username, userId: this.props.data.assignedTo.id })
-  }
-
-  handleClick = () => {
-    this.setState({save: !this.state.save})
-  }
-
-  writeTaskResponsiblePerson (e)
-  {
-    // console.warn(e.target.querySelector(`option[value="${e.target.value}"]`).text)
-
-    this.setState({ userId: e.target.value, userName: e.target.querySelector(`option[value="${e.target.value}"]`).text })
-    this.props.onClick1(e, "assignedTo", true);
-    this.handleClick()
-  }
-
-  render() {
-    const { data } = this.props
-    const { save, userName, userId } = this.state
-
-
-    return (
-      !save ?
-        <UserRow click = {this.handleClick} size="32" id={userId} name={userName} icon="1" />
-        :
-        <label htmlFor="">
-          <select onChange={(e)=>{this.writeTaskResponsiblePerson(e)}} defaultValue={userName} >
-            <option value="0">Выбрать ответственного</option>
-            {
-              data.users.map((e)=>{
-                return(
-                  <option key={e.id} value={e.id}>{e.username}</option>
-                )
-              })
-            }
-          </select>
-        </label>
-    );
-  }
-}
-
 TaskView.propTypes = {
   selectUser: PropTypes.func.isRequired,
   setChat: PropTypes.func.isRequired,
+  taskCacheUpdate: PropTypes.func.isRequired,
   location: PropTypes.object
 };
 
 export default compose(
   graphql(setChat, { name: 'setChat' }),
+  graphql(taskCacheUpdate, { name: 'taskCacheUpdate' }),
   graphql(selectUser, { name: 'selectUser' }),
 )(TaskView);

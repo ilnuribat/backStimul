@@ -84,8 +84,8 @@ class GroupList extends Component {
     this.allUserGet();
     this.glossStatus();
 
-    if(getCUser.user  && getCUser.user.groups){
-      let groups = getCUser.user.groups;
+    if(getCUser.user  && getCUser.user.tasks){
+      let groups = getCUser.user.tasks;
       let thisGrId = getPrivateChat.id || _grid;
       let thisUsers;
 
@@ -156,14 +156,14 @@ class GroupList extends Component {
     const {getPrivateChat, getCUser} = this.props;
     let thisUsers;
 
-    if(_grid !== g ){
+    if (_grid !== g ){
       this.setState({
         _grid: g,
       });
     }
 
-    if(getCUser.user  && getCUser.user.groups){
-      let groups = getCUser.user.groups;
+    if (getCUser.user && getCUser.user.tasks){
+      let groups = getCUser.user.tasks;
       let thisGrId = getPrivateChat.id || _grid;
 
       thisUsers = _.find(groups, (o)=>{ return o.id == thisGrId; });
@@ -308,8 +308,8 @@ class GroupList extends Component {
     const { users, groupInfo } = this.state;
     let _grid = getPrivateChat.id || localStorage.getItem('grid');
 
-    if(getCUser.user  && getCUser.user.groups){
-      let groups = getCUser.user.groups;
+    if(getCUser.user  && getCUser.user.tasks){
+      let groups = getCUser.user.tasks;
       let thisGrId = getPrivateChat.id || _grid;
       let thisUsers;
 
@@ -387,13 +387,13 @@ class GroupList extends Component {
                           subsUser(getPrivateChat.id, subscribeToMore, refetch);
 
                           if(data){
-                            let usrs = data.group.users;
+                            let usrs = data.task.users;
 
                             onlyunicusers = _.differenceWith(allusers, usrs, _.isEqual);
 
                             return(
 
-                              data.group.users.map(
+                              data.task.users.map(
                                 (e,i)=>{
                                   return(
                                     <div className="username" role="presentation" key={'usr-'+i} >

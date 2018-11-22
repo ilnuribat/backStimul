@@ -7,7 +7,7 @@ import {
   Popup,
   TileLayer
 } from "react-leaflet";
-import { Query } from "react-apollo";
+import { Query, compose, graphql } from "react-apollo";
 import { divIcon } from "leaflet";
 // import PropTypes from 'prop-types';
 import {Redirect} from "react-router-dom";
@@ -19,7 +19,7 @@ import  "./LeafletMap.css";
 import { getObjects } from '../../../GraphQL/Qur/Query/index';
 import Loading from '../../Loading';
 import Content from '../../Lays/Content';
-
+import { getPlaceName, setPlaceName } from "../../../GraphQL/Cache";
 
 const { BaseLayer, Overlay } = LayersControl;
 
@@ -56,6 +56,18 @@ class LeafletMap extends Component {
 
 
   componentDidMount () {
+    const {getPlaceName} = this.props;
+    let { setPlaceName } = this.props;
+
+    let place = 'Map';
+
+    if(getPlaceName && getPlaceName.placename != place){
+      setPlaceName({
+        variables:{
+          name: place,
+        }
+      })
+    }
     this.setState({
       offsetWidth: this.myInput.current.offsetWidth,
       offsetHeight: this.myInput.current.offsetHeight
@@ -367,4 +379,8 @@ const SwitchIcon = (status)   => {
   });
 };
 
-export default LeafletMap;
+export default
+compose(
+  graphql(getPlaceName, {name: 'getPlaceName'}),
+  graphql(setPlaceName, {name: 'setPlaceName'}),
+)(LeafletMap);

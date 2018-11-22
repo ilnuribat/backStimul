@@ -54,17 +54,21 @@ class Top extends React.Component {
 
   query(e, type, name, parentId){
 
+
+
+
+    console.log(e, type, name, parentId);
+    // return true
+
+    if(!!e && type !== 'object'){
     localStorage.setItem('back',e);
     localStorage.setItem('placeParent', parentId );
 
-    if(e){
-      this.setState({rootId: e,
+      this.setState({
+        rootId: e,
         parentId: parentId,
       });
-    }
-
-
-    if(type === 'object'){
+    }else if(!!e && type === 'object'){
       // console.error({ e, type, name})
 
       this.props.setObjectId({
@@ -74,13 +78,15 @@ class Top extends React.Component {
         }
       });
       this.setState({
+        rootId: e,
+        parentId: parentId,
         object: true,
       })
 
     }else if(type === 'task'){
-
+      return true
     }else{
-
+      return true
     }
 
   }
@@ -94,7 +100,10 @@ class Top extends React.Component {
 
     let placeid = placeParent || __back;
 
-    this.setState({rootId: placeid});
+    if(!!placeid){
+      this.setState({rootId: placeid});
+    }
+
     // localStorage.setItem('back','');
 
   }

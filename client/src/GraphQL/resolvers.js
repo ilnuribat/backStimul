@@ -9,7 +9,7 @@ export default {
 
       return {ref, __typename: 'ref' };
     },
-    
+
     setPlace: (_, { id, name, type },  { cache }) => {
       cache.writeData({ data: { id: id, name: name, type: type, } });
 
@@ -198,7 +198,7 @@ export default {
       const data = {
         group: {
           messages:{
-            edges: [...previousState.group.messages.edges, newFeedItem],
+            edges: [...previousState.task.messages.edges, newFeedItem],
             __typename: "MessageConnection",
           },
           __typename: "Group"
@@ -216,6 +216,52 @@ export default {
     },
   },
   Query: {
-    isLiked: () => false,
+    getObjectTasksChild: (_, {objectId, parentId},  { cache }) => {
+      console.warn("INIT!!",objectId, parentId )
+      const query = gql`
+      query ($id: ID!){
+       object (id: $id) @client{
+           tasks{
+              id
+              name
+              endDate
+              unreadCount
+              status
+              parentId
+              objectId
+              users {
+                id
+                username
+              }
+              assignedTo {
+                id
+                username
+              }
+              lastMessage {
+                from {
+                  id
+                  username
+                }
+                text
+              }
+           }
+         }
+     }`;
+
+      let previousState;
+
+      try {
+        previousState = cache.readQuery({ query, variables: { id: objectId } });
+      } catch (error) {
+        console.warn("cache is empty!")
+
+        return null
+      }
+
+      previousState.object.tasks = previousState.object.tasks.filter((task) => task.parentId === parentId);
+
+      return previousState
+
+    }
   }
 };

@@ -113,7 +113,13 @@ export const getPlace = gql `
         id
         name
         type
+        # __typename
       }
+    }
+`;
+export const getPlaceName = gql `
+  query getPlaceName{
+      placename @client
     }
 `;
 
@@ -182,6 +188,7 @@ export const setDashboard = gql `
     }
   }
 `;
+
 export const setPlace = gql `
   mutation setPlace($id: String, $name: String, $type: String ){
     setPlace(id: $id, name: $name, type: $type) @client{
@@ -193,6 +200,15 @@ export const setPlace = gql `
     }
   }
 `;
+
+export const setPlaceName = gql `
+  mutation setPlaceName( $name: String ){
+    setPlaceName( name: $name ) @client{
+        name
+     }
+  }
+`;
+
 export const setTemp = gql `
   mutation setTemp($tempObj: String){
     setTemp(tempObj: $tempObj) @client{
@@ -216,6 +232,11 @@ export const messagesListDirectUpdate = gql `
       lastMessageId
       lastMessageGroupId
     }
+  }
+`;
+export const taskCacheUpdate = gql `
+  mutation taskCacheUpdate($action: String!, $value: String, $userName: String, $taskId: String!, $object: Object) {
+    taskCacheUpdate(action: $action, value: $value, userName: $userName, taskId: $taskId, object: $object) @client
   }
 `;
 export const delInfo = gql `
