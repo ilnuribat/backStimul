@@ -361,6 +361,36 @@ export default {
           }
         };
         break;
+      case "delUser":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              users {
+                id
+                username
+                __typename
+              }
+              __typename
+            }
+          }
+        `;
+
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": taskId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        console.warn("prevstate is", previousState)
+
+        data = {
+          task: {
+            users: [...previousState.task.users.filter(users => users.id !== value)],
+            __typename: "Task"
+          }
+        };
+        break;
       case "uploadFile":
         query = gql`
           query task($id: ID!) {
