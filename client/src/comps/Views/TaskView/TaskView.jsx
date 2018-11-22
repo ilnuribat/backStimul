@@ -367,8 +367,13 @@ class TaskView extends Component {
                 </div>
               );
             }
-            // console.warn("DATA", data.task)
+            console.warn("DATA", data.task)
+
+            if (!data || !data.task)
+              return null
+
             let dataValue;
+
             let taskStatus = data.task.status
 
             if (data.task.endDate) dataValue = data.task.endDate.replace(/T.*$/gi, "")
@@ -492,25 +497,21 @@ class TaskView extends Component {
                             Статус
                         </ModalBlockName>
 
-                        {
-                          console.log(status)
-
-                        }
-                        {
-                          console.log(taskStatus)
-
-                        }
                         <ResponsibleRow >
-                          <UserRow id="1" name="name" icon='1' />
+                          <UserRow id={taskStatus} name={this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Новая"}/>
                           {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus}/> : null}
                         </ResponsibleRow>
+
                       </ModalCol>
 
                       <ModalCol>
                         <ModalBlockName>
                             Ответственный
                         </ModalBlockName>
-                        <ResponsiblePerson data={data.task} onClick1={this.writeTaskData}/>
+                        <ResponsibleRow >
+                          <UserRow id={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : "0"} name={data.task.assignedTo && data.task.assignedTo.username ? data.task.assignedTo.username : "не указано"} ondelete={()=>this.writeTaskData(null, "assignedTo", false, null)}/>
+                          <FakeSelect array={data.task.users} onselect={(id,name,icon)=>{this.writeTaskData(id, "assignedTo",true, name)}} defaultid={data.task.assignedTo && data.task.assignedTo.id ? data.task.assignedTo.id : "0"} />
+                        </ResponsibleRow>
                       </ModalCol>
                     </ModalRow>
 
@@ -528,8 +529,12 @@ class TaskView extends Component {
                         <ModalBlockName>
                           Добавить родительскую задачу
                         </ModalBlockName>
-                        {console.log("data.task.parentId",data.task.parentId)}
-                        <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.task.parentId} />
+                        <ResponsibleRow >
+                          <UserRow id={data.task.parentId} name={allTasks.find(x => x.id == data.task.parentId) ? allTasks.find(x => x.id == data.task.parentId).name : "не указано"} ondelete={()=>this.writeTaskData(null, "parentId", false)}/>
+                          <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.task.parentId} />
+                        </ResponsibleRow>
+
+                        {/* <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.task.parentId} /> */}
                       </ModalCol>
                     </ModalRow>
                     <ModalRow>
@@ -603,74 +608,6 @@ class TaskView extends Component {
         </Query>)
         : (<Loading />)
     )
-  }
-}
-
-
-
-class ResponsiblePerson extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      save: false,
-      userName: "Не выбран",
-      userId: ""
-    }
-
-    this.writeTaskResponsiblePerson = this.writeTaskResponsiblePerson.bind(this)
-  }
-
-  componentDidMount(){
-    if (this.props.data.assignedTo)
-      this.setState({userName: this.props.data.assignedTo.username, userId: this.props.data.assignedTo.id })
-  }
-
-  handleClick = () => {
-    this.setState({save: !this.state.save})
-  }
-
-  writeTaskResponsiblePersonOld (e)
-  {
-    // console.warn(e.target.querySelector(`option[value="${e.target.value}"]`).text)
-
-    this.setState({ userId: e.target.value, userName: e.target.querySelector(`option[value="${e.target.value}"]`).text })
-    this.props.onClick1(e, "assignedTo", true);
-    this.handleClick()
-  }
-  writeTaskResponsiblePerson(id, name)
-  {
-    // console.warn(e.target.querySelector(`option[value="${e.target.value}"]`).text)
-
-    this.setState({ userId: id, userName: name })
-    this.props.onClick1(id, "assignedTo", true, name);
-    this.handleClick()
-  }
-
-  render() {
-    const { data } = this.props
-    const { save, userName, userId } = this.state
-
-
-    return (
-      !save ? (
-        <UserRow click = {this.handleClick} size="32" id={userId} name={userName} icon="1" ondelete={(id)=>{console.log(id)}} />
-      ) : ( <FakeSelect onselect={this.writeTaskResponsiblePerson} defaultid={userId} array={data.users}/>
-      // <label htmlFor="">
-      //   <select onChange={(e)=>{this.writeTaskResponsiblePerson(e)}} defaultValue={userName} >
-      //     <option value="0">Выбрать ответственного</option>
-      //     {
-      //       data.users.map((e)=>{
-      //         return(
-      //           <option key={e.id} value={e.id}>{e.username}</option>
-      //         )
-      //       })
-      //     }
-      //   </select>
-      // </label>
-      )
-
-    );
   }
 }
 

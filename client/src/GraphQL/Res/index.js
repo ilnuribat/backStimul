@@ -324,9 +324,14 @@ export default {
             }
           }
         `;
+        // eslint-disable-next-line no-case-declarations
+        let param = {id: value, username: userName, __typename: "UserTaskRole"}
+
+        if (!value) param = null
+
         data = {
           task: {
-            assignedTo: {id: value, username: userName, __typename: "UserTaskRole"},
+            assignedTo: param,
             __typename: "Task"
           }
         };
