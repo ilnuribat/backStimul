@@ -256,7 +256,6 @@ export default {
             }
           }
       `;
-
         data = {
           task: {
             name: value,
@@ -363,6 +362,46 @@ export default {
         };
         break;
       case "uploadFile":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              files {
+                id
+                date
+                mimeType
+                name
+                size
+                __typename
+              }
+              __typename
+            }
+          }
+        `;
+
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": taskId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        console.warn("prevstate is", previousState)
+
+        data = {
+          task: {
+            files: [...previousState.task.files, {
+              id: object.id,
+              date: new Date(),
+              mimeType: object.mimeType,
+              name: object.name,
+              size: object.size,
+              __typename: "File"
+            }],
+            __typename: "Task"
+          }
+        };
+        break;
+      case "deleteFile":
         query = gql`
           query task($id: ID!) {
             task(id: $id ) @client {
