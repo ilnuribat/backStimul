@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 
-describe.only('search', () => {
+describe('search', () => {
   describe('user', () => {
     it('exactly', async function () {
       const { data, errors } = await this.request({
