@@ -77,7 +77,7 @@ async function getDirectChats(user) {
     code: {
       $exists: true,
     },
-  }).sort({ lastMessageAt: -1 });
+  }).sort({ lastMessageAt: -1 }).lean();
 
   const directs = directsRaw.map(d => ({
     ...d,
@@ -85,6 +85,7 @@ async function getDirectChats(user) {
       .split('|')
       .filter(dId => dId !== user.id)[0] || user.id,
     id: d._id.toString(),
+    _id: d._id,
   }));
 
   const users = await User.find({

@@ -2,10 +2,10 @@ const { Types: { ObjectId } } = require('mongoose');
 const {
   Group, Message, User, UserGroup,
 } = require('../models');
-const GroupResolver = require('./group');
 const {
   getPageInfo, formWhere, getDirectChats,
 } = require('../services/chat');
+const groupService = require('../services/group');
 
 
 module.exports = {
@@ -23,8 +23,8 @@ module.exports = {
 
       return anotherUser.email;
     },
-    users: parent => GroupResolver.Group.users(parent),
-    unreadCount: (parent, args, ctx) => GroupResolver.Group.unreadCount(parent, args, ctx),
+    users: groupService.getMembers,
+    unreadCount: groupService.unreadCount,
     messages: async (parent, { messageConnection }) => {
       const { id } = parent;
       const group = await Group.findById(id);
