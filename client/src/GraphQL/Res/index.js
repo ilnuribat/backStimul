@@ -238,21 +238,27 @@ export default {
 
       return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'Task' };
     },
-    taskCacheUpdate: (_, { value, userName, action, taskId },  { cache }) => {
+    taskCacheUpdate: (_, { value, userName, action, taskId, object },  { cache }) => {
       let data;
       let query;
       let previousState;
 
+      console.warn("OBJECT IS", object)
+
       switch (action) {
       case "name":
+        // eslint-disable-next-line no-case-declarations
+        const params = `name`
+
         query = gql`
           query task($id: ID!) {
             task(id: $id ) @client {
-              name
+              ${params}
               __typename
             }
           }
       `;
+
         data = {
           task: {
             name: value,
@@ -358,10 +364,49 @@ export default {
           }
         };
         break;
+      case "uploadFile":
+        query = gql`
+          query task($id: ID!) {
+            task(id: $id ) @client {
+              files {
+                id
+                date
+                mimeType
+                name
+                size
+                __typename
+              }
+              __typename
+            }
+          }
+        `;
+
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": taskId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        console.warn("prevstate is", previousState)
+
+        data = {
+          task: {
+            files: [...previousState.task.files, {
+              id: object.id,
+              date: new Date(),
+              mimeType: object.mimeType,
+              name: object.name,
+              size: object.size,
+              __typename: "File"
+            }],
+            __typename: "Task"
+          }
+        };
+        break;
       default:
         break;
       }
-
 
       cache.writeQuery({
         query,
