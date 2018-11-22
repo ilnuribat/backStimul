@@ -29,7 +29,7 @@ const storeUpload = ({
       return resolve({
         id: uploadStream.id.toString(),
         name,
-        mimetype,
+        mimeType: mimetype,
         size: filesize(uploadStream.length),
       });
     })

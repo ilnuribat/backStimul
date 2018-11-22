@@ -109,6 +109,7 @@ export const uploadFile = gql `
       id
       name
       size
+      mimeType
     }
   }
 `;

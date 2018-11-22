@@ -139,6 +139,16 @@ class TaskView extends Component {
     })
   }
 
+  updateCacheFile (data) {
+    this.props.taskCacheUpdate({
+      variables:{
+        object: data,
+        action: "uploadFile",
+        taskId: this.state.taskId,
+      }
+    })
+  }
+
   writeTaskData(e, change, quota, userName) {
     let cap = "";
     let value;
@@ -309,7 +319,7 @@ class TaskView extends Component {
   }
 
   render() {
-    const { allusers, taskName, taskId, modal, status, allTasks } = this.state;
+    const { allusers, taskId, modal, status, allTasks } = this.state;
     // console.warn("TASKID", status)
 
     return(
@@ -545,6 +555,7 @@ class TaskView extends Component {
                         <Mutation mutation={uploadFile} onCompleted={(data) => {
                           console.warn(data)
                           this.modalMessage(data.uploadFile);
+                          this.updateCacheFile(data.uploadFile)
                         }}>
                           {upload => (
                             <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
