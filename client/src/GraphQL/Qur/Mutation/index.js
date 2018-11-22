@@ -1,13 +1,19 @@
 import gql from 'graphql-tag';
 
 export const updTask = (...params) => {
-    return (`mutation{
+  return (`mutation{
         updateTask(id: "${params[0]}", task: ${params[1]})
       }`)
 };
 
+export const removeFile = (id) => {
+  return (`mutation{
+      deleteFile(id: "${id}")
+    }`)
+};
+
 export const createGroup = (params) => {
-    return (`mutation{
+  return (`mutation{
           createGroup(group: ${params}){
             id
           }
@@ -15,7 +21,7 @@ export const createGroup = (params) => {
 };
 
 export const createDirect = (params) => {
-    return (`mutation{
+  return (`mutation{
           directMessage(id: ${params}){
             id
           }

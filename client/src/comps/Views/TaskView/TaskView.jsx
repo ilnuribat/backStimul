@@ -10,7 +10,7 @@ import moment from 'moment';
 import { qauf, _url } from '../../../constants';
 import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
-import { uploadFile, updTask } from '../../../GraphQL/Qur/Mutation';
+import { uploadFile, removeFile, updTask } from '../../../GraphQL/Qur/Mutation';
 import { selectUser, setChat, taskCacheUpdate } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, GR_QUERY, getObjectTasks3 } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
@@ -149,6 +149,21 @@ class TaskView extends Component {
     })
   }
 
+  deleteFile (id) {
+    qauf(removeFile(id), _url, localStorage.getItem('auth-token')).then((a)=>{
+      console.warn(a)
+      this.props.taskCacheUpdate({
+        variables:{
+          value: id,
+          action: "deleteFile",
+          taskId: this.state.taskId,
+        }
+      })
+    }).catch((e)=>{
+      console.warn(e);
+    });
+  }
+
   writeTaskData(e, change, quota, userName) {
     let cap = "";
     let value;
@@ -273,14 +288,23 @@ class TaskView extends Component {
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
         // console.warn("Answer updUsrGr",a.data)
         this.modalMessage(a.data.updateUsersTask);
-        this.props.taskCacheUpdate({
-          variables:{
-            action: "addUser",
-            value: userId,
-            userName: this.state.newUser,
-            taskId: this.state.taskId,
-          }
-        })
+        !dels ?
+          this.props.taskCacheUpdate({
+            variables:{
+              action: "addUser",
+              value: userId,
+              userName: this.state.newUser,
+              taskId: this.state.taskId,
+            }
+          })
+          :
+          this.props.taskCacheUpdate({
+            variables:{
+              action: "delUser",
+              value: userId,
+              taskId: this.state.taskId,
+            }
+          })
       })
         .catch((e)=>{
           console.warn(e);
@@ -401,7 +425,7 @@ class TaskView extends Component {
                                   return(
                                     <div className="username" role="presentation" key={'usr-'+i} >
                                       {localStorage.getItem('userid') !== e.id ?
-                                        <UserRow id={e.id} name={e.username} icon="1" ondelete={(id)=>console.log(id)} />
+                                        <UserRow id={e.id} name={e.username} icon="1" ondelete={(id)=>this.userAdd(id, false)} />
                                         : null }
                                       <div className="hoverTrigger">
                                         <div className="hover">
@@ -430,7 +454,7 @@ class TaskView extends Component {
                               {data.task.files && data.task.files.length > 0 ? data.task.files.map(
                                 (e)=>{
                                   return(
-                                    <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{console.log(id)}} click={this.downloadFile} />
+                                    <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
                                   )
                                 }
                               ) : (
@@ -545,7 +569,7 @@ class TaskView extends Component {
                       </ModalBlockName>
                       {data.task.files && data.task.files.length > 0 ? data.task.files.map((e)=>{
                         return(
-                          <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{console.log(id)}} click={this.downloadFile} />
+                          <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
                         )
                       }
                       ) : (
