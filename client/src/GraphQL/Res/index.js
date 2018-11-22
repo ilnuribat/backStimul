@@ -429,14 +429,7 @@ export default {
 
         data = {
           task: {
-            files: [...previousState.task.files, {
-              id: object.id,
-              date: new Date(),
-              mimeType: object.mimeType,
-              name: object.name,
-              size: object.size,
-              __typename: "File"
-            }],
+            files: [...previousState.task.files.filter(files => files.id !== value)],
             __typename: "Task"
           }
         };
