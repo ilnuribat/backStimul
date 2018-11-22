@@ -276,3 +276,22 @@ margin:0 auto 5px;
   align-items: center;
   text-align: center;
 }
+.IconRow,
+.FileRow,
+.TextRow,
+.UserRow
+{
+  max-width: 300px;
+}
+.IconRow .Svg.ondelete,
+.FileRow .Svg.ondelete,
+.TextRow .Svg.ondelete,
+.UserRow .Svg.ondelete
+{
+  width:10px;
+  height:10px;
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}

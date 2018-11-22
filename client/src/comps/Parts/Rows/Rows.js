@@ -5,42 +5,46 @@ import { Link } from 'react-router-dom';
 import Svg from '../../Parts/SVG'
 import userDefault from '../../Img/UserDefault';
 
-export const FileRow = ({ children, id, name, filename, url, fileid, icon, click, box, type, view  })=>{
+export const FileRow = ({ children, id, name, filename, url, fileid, icon, click, box, type, view, ondelete })=>{
   return(
     <div className={`FileRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,name:name,url:url,type:type}) : console.log("file", fileid||id,url )}}>
       { icon ? (<div className="FileIcon"><Svg svg={icon || icon != 1 ? icon : "doc"} inline={1} /></div>):null}
       { filename || name ? (<div className="FileName">{filename || name}</div>):null}
       {children}
+      { ondelete && typeof ondelete === 'function' ? (<Svg svg="cancel" view="ondelete" click={()=>ondelete(id)} />) : null}
     </div>
   )
 }
 
 
-export const TextRow = ({ children, name, text, view })=>{
+export const TextRow = ({ children, name, text, view, ondelete, id })=>{
   return(
     <div className={!view ? "TextRow" : "TextRow "+view }>
       {name ? (<div className="TextRowName">{name}</div>):null}
       {text ? (<div className="TextRowText">{text}</div>):null}
       {children ? children :null}
+      { ondelete && typeof ondelete === 'function' ? (<Svg svg="cancel" view="ondelete" click={()=>ondelete(id)} />) : null}
     </div>
   )
 }
-export const IconRow = ({ children, id, name, url, icon, click, box, size, type, view })=>{
+export const IconRow = ({ children, id, name, url, icon, click, box, size, type, view, ondelete })=>{
   return(
     <div className={`IconRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("Row", id,url )}}>
       { icon ? (<div className="RowIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>):null}
       {name? (<div className="RowName">{name}</div>):null}
       {children}
+      { ondelete && typeof ondelete === 'function' ? (<Svg svg="cancel" view="ondelete" click={()=>ondelete(id)} />) : null}
     </div>
   )
 }
-export const UserRow = ({ children, id, name, username, url, userid, icon, click, box, size, type, view })=>{
+export const UserRow = ({ children, id, name, username, url, userid, icon, click, box, size, type, view, ondelete })=>{
 
   return(
     <div className={`UserRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("user", userid||id,url )}}>
       { icon ? (<div className={box?"UserIcon Boxed":"UserIcon"} style={size ? {"width":size+'px',"maxWidth":size+'px',"maxHeight":size+'px', "height":size+'px'} : null}>
-      <img src={icon && icon != 1 ? icon : userDefault} alt={username || name || children} /></div>):null}
+        <img src={icon && icon != 1 ? icon : userDefault} alt={username || name || children} /></div>):null}
       { username || name || children ? (<div className="UserName">{username || name || children}</div>):null}
+      { ondelete && typeof ondelete === 'function' ? (<Svg svg="cancel" view="ondelete" click={()=>ondelete(id)} />) : null}
     </div>
   )
 }
