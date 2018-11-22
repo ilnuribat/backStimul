@@ -1,7 +1,8 @@
 module.exports = {
   "extends": "airbnb-base",
   "env": {
-    "es6": true
+    "es6": true,
+    "mocha": true
   },
   "rules": {
     "padding-line-between-statements": [
@@ -17,6 +18,6 @@ module.exports = {
     ],
     "func-names": ["off"],
     "class-methods-use-this": ["off"],
-    "no-underscore-dangle": ["error", { "allow": ["_id"] }]
+    "no-underscore-dangle": ["error", {"allow": ["_id", "__typename"]}]
   }
 };
