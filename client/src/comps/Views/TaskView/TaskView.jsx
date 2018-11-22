@@ -367,7 +367,7 @@ class TaskView extends Component {
                 </div>
               );
             }
-            console.warn("DATA", data.task)
+            // console.warn("DATA", data.task)
             let dataValue;
             let taskStatus = data.task.status
 
@@ -540,7 +540,6 @@ class TaskView extends Component {
                                 <div className="Button3" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить{/*this.state.newUser*/}</div>
                               ): null
                             }
-
 
                             <datalist id="users">
                               {
