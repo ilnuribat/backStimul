@@ -401,7 +401,7 @@ class TaskView extends Component {
                                   return(
                                     <div className="username" role="presentation" key={'usr-'+i} >
                                       {localStorage.getItem('userid') !== e.id ?
-                                        <UserRow id={e.id} name={e.username} icon="1" />
+                                        <UserRow id={e.id} name={e.username} icon="1" ondelete={(id)=>console.log(id)} />
                                         : null }
                                       <div className="hoverTrigger">
                                         <div className="hover">
@@ -430,7 +430,7 @@ class TaskView extends Component {
                               {data.task.files && data.task.files.length > 0 ? data.task.files.map(
                                 (e)=>{
                                   return(
-                                    <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" click={this.downloadFile} />
+                                    <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{console.log(id)}} click={this.downloadFile} />
                                   )
                                 }
                               ) : (
@@ -540,7 +540,7 @@ class TaskView extends Component {
                       </ModalBlockName>
                       {data.task.files && data.task.files.length > 0 ? data.task.files.map((e)=>{
                         return(
-                          <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" click={this.downloadFile} />
+                          <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{console.log(id)}} click={this.downloadFile} />
                         )
                       }
                       ) : (
