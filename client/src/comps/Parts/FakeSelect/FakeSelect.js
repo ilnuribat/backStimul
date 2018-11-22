@@ -72,8 +72,8 @@ export class FakeSelect extends Component {
   }
 
   setDefault(array, defaultid){
-    if(array && defaultid && defaultid !== this.state.selected.id){
-      let selected = array.find(o => o.id === defaultid);
+    if(array && typeof array === 'object' && defaultid && defaultid !== this.state.selected.id){
+      let selected = array.find(o => o && o.id && o.id === defaultid);
       
       if(selected){
         this.setState({
@@ -136,7 +136,11 @@ export class FakeSelect extends Component {
 
           <div className="FakeOptionsContainer animated fadeIn" onMouseLeave={this.openSelect}>
             {
-              arr ? arr.map((e,i)=>{
+              console.log("ARRAY",arr)
+            }
+            {
+              arr && typeof arr === 'object' && arr.map((e,i)=>{
+                if(!e || !e.id) return true;
 
                 let id = e.id || '';
                 let icon = e.icon || '';
@@ -145,7 +149,7 @@ export class FakeSelect extends Component {
                 return(
                   <FakeRow key={e.id || e.name + i} icon={icon} click={()=>this.select(id, name, icon)}>{name}</FakeRow>
                 )
-              }) : null
+              })
             }
           </div>
         ) : null}

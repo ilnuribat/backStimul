@@ -456,18 +456,11 @@ class TaskView extends Component {
                         <ModalBlockName>
                             Статус
                         </ModalBlockName>
-                        <label htmlFor="">
-                          <select onChange={(e)=>{this.writeTaskData(e.target.value, "status", false)}} defaultValue={taskStatus}>
-                            {/* <option value="0">Выбрать задачу</option> */}
-                            {
-                              status.map((e)=>(
-                                <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
-                                  {e.name}
-                                </option>
-                              ))
-                            }
-                          </select>
-                        </label>
+                        {
+                          console.log(status)
+                          
+                        }
+                        {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus}/> : null}
                       </ModalCol>
 
                       <ModalCol>
