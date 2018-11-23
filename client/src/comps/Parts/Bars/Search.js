@@ -8,6 +8,7 @@ import Loading from '../../Loading';
 import { checkServerIdentity } from 'tls';
 import {UserRow} from '../../Parts/Rows/Rows';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 
 export class Search extends Component {
@@ -169,45 +170,53 @@ export class Search extends Component {
                           { Search.tasks ? <h3 className="BlockHeader">Задачи</h3> : null}
                           { Search.tasks ? <div className="BlockContent">{
                             Search.tasks.map((e)=>(
-                              <div className="SearchTask"  key={e.id}>
-                                <div className="SearchTaskTop"  key={e.id}>
-                                  {e.name ? <span className="SearchName">{e.name}</span> : null}
-                                  {e.endDate ? <span className={moment(e.endDate).fromNow() ? "SearchEndDate" : "SearchEndDate" } >{ moment(e.endDate).format('D MMM, h:mm')}</span> : null}
-                                  {
-                                    // (()=>{
-                                    //   if(e.status){
-                                    //     let a = statuses.find((x)=>x.status == e.status).name;
-                                    //       console.log("sssssssssssssssssssss",a)
-                                    //     return a
+                              <Link to={{pathname: "/task", state:{taskId: e.id }}} >
+                                <div className="SearchTask"  key={e.id}>
+                                  <div className="SearchTaskTop"  key={e.id}>
+                                    {e.name ? <span className="SearchName">{e.name}</span> : null}
+                                    {e.endDate ? <span className={moment(e.endDate).fromNow() ? "SearchEndDate" : "SearchEndDate" } >{ moment(e.endDate).format('D MMM, h:mm')}</span> : null}
+                                    {
+                                      // (()=>{
+                                      //   if(e.status){
+                                      //     let a = statuses.find((x)=>x.status == e.status).name;
+                                      //       console.log("sssssssssssssssssssss",a)
+                                      //     return a
 
-                                    //   } 
-                                    // })()
-                                  }
-                                 
-                                  <span className="SearchStatus">{ e.status ? statuses.find((x)=>x.status == e.status).name : "Новая" }</span>
+                                      //   } 
+                                      // })()
+                                    }
+                                  
+                                    <span className="SearchStatus">{ e.status ? statuses.find((x)=>x.status == e.status).name : "Новая" }</span>
+                                  </div>
+                                  {e.assignedTo ? <UserRow view="Boxed" id={e.assignedTo.id} icon="1" name={e.assignedTo.username} key={e.assignedTo.id} /> : null}
                                 </div>
-                                {e.assignedTo ? <UserRow view="Boxed" id={e.assignedTo.id} icon="1" name={e.assignedTo.username} key={e.assignedTo.id} /> : null}
-                              </div>
+                              </Link>
                             )) }</div>:  null
                           }
                           { Search.objects ? <h3 className="BlockHeader">Объекты</h3> : null}
                           { Search.objects ? <div className="BlockContent">{
                             Search.objects.map((e)=>(
-                              <div className="SearchObjects"  key={e.id}>
-                                <span className="SearchName">{e.name} </span>{e.address && e.address.value ? <span className="SearchStatus">{e.address.value}</span> : null}                           
-                              </div>
+                              <Link to={{pathname: "/board", state:{objectId: e.id }}} >
+                                <div className="SearchObjects"  key={e.id}>
+                                  <span className="SearchName">{e.name} </span>{e.address && e.address.value ? <span className="SearchStatus">{e.address.value}</span> : null}                           
+                                </div>
+                              </Link>
                             )) }</div>:  null
                           }
                           { Search.users ? <h3 className="BlockHeader">Пользователи</h3> : null}
                           { Search.users ? <div className="BlockContent">{
                             Search.users.map((e)=>(
-                              <UserRow view="Boxed" id={e.id} icon="1" name={e.username} key={e.id} />
+                              <Link to={{pathname: "/profile", state:"id"}} >
+                                <UserRow view="Boxed" id={e.id} icon="1" name={e.username} key={e.id} />
+                              </Link>
                             )) }</div>:  null
                           }
                           { Search.messages ? <h3 className="BlockHeader">Сообщения</h3> : null}
                           { Search.messages ? <div className="BlockContent">{
                             Search.messages.map((e)=>(
-                              <div className="SearchMessage" key={e.id}>{e.text}</div>
+                              <Link to={{pathname: "/profile", state:"id"}} >
+                                <div className="SearchMessage" key={e.id}>{e.text}</div>
+                              </Link>
                             )) }</div>:  null
                           }
 
