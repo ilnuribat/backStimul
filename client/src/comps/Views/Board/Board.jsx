@@ -11,7 +11,7 @@ import Task from '../../Parts/Task';
 import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
-import { setChat, setInfo, rootId } from '../../../GraphQL/Cache';
+import { setChat, setInfo, rootId, objectCacheUpdate } from '../../../GraphQL/Cache';
 import { getObjectTasks, glossaryStatus, TASKS_QUERY } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
