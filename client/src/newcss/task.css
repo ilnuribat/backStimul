@@ -107,7 +107,7 @@
   border-radius: 3px;
   width:36px;
   height:36px;
-  border:1px solid #346296;
+  /* border:1px solid #346296; */
   margin:10px 5px 0;
 }
 
@@ -124,20 +124,31 @@
 .Task.Sel{
   background: #3e75b2;
   border: solid 1px #3e75b2;
+  color:#fff;
 }
 
 .Task.Sel{
-   background: #4949493a;
-   border:1px solid #346296;
-   box-shadow: 0 0 8px 0px #00f7ff;
+   /* background: #4949493a; */
+   /* border:1px solid #346296; */
+   /* box-shadow: 0 0 8px 0px #00f7ff; */
 }
 
 .Task.Sel .Bottom svg{
   fill: #346296;
 }
 .Task.Sel .Bottom > div.Childs{
-border:1px solid #346296;
-box-shadow: 0 0 8px 0px #00f7ff;
+/* border:1px solid #346296; */
+/* box-shadow: 0 0 8px 0px #00f7ff; */
+
+}
+.Task .Bottom > div.Childs .Svg svg{
+  border:1px solid #346296;
+}
+.Task.Sel .Bottom .Svg svg{
+/* border:1px solid #346296; */
+/* box-shadow: 0 0 8px 0px #00f7ff; */
+  /* background: #3e75b2 */
+  fill: #123155;
 }
 .Task{
   position: relative;

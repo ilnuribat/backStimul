@@ -194,7 +194,7 @@ export class Search extends Component {
                           { Search.objects ? <div className="BlockContent">{
                             Search.objects.map((e)=>(
                               <div className="SearchObjects"  key={e.id}>
-                              <span className="SearchName">{e.name} </span>{e.address && e.address.value ? <span className="SearchStatus">{e.address.value}</span> : null}                           
+                                <span className="SearchName">{e.name} </span>{e.address && e.address.value ? <span className="SearchStatus">{e.address.value}</span> : null}                           
                               </div>
                             )) }</div>:  null
                           }
