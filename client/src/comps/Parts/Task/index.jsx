@@ -36,7 +36,7 @@ class Task extends Component {
         {
           endDate ? (
             <div className="endDate">
-                    <span className="Pad">истекает:</span> 
+              <span className="Pad">истекает:</span> 
               { moment(endDate).format('D MMMM, h:mm')}
             </div>
           ): null
