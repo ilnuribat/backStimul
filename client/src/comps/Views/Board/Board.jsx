@@ -385,7 +385,7 @@ class Board extends Component {
                                     } else { selected = false; }
 
                                     return(
-                                      <Task key={task.id} id={task.id} selected={selected} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal}/>
+                                      <Task showother={this.state.showChilds} key={task.id} id={task.id} selected={selected} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal}/>
                                     )
                                   })
                                 }
