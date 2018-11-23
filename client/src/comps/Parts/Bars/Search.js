@@ -7,7 +7,7 @@ import gql from 'graphql-tag';
 import Loading from '../../Loading';
 import { checkServerIdentity } from 'tls';
 import {UserRow} from '../../Parts/Rows/Rows';
-
+import moment from 'moment';
 
 
 export class Search extends Component {
@@ -39,15 +39,25 @@ export class Search extends Component {
     query previewSearch($query: String!){
         previewSearch(query: $query){
           objects{
+            id
             name
           }
           tasks{
+            id
             name
+            assignedTo{
+              id
+              username
+            }
+            endDate
+            status
           }
           users{
+            id
             username
           }
           messages{
+            id
             text
           }
       }
@@ -144,39 +154,30 @@ export class Search extends Component {
 
                       Search ? console.log("Search", Search) : null
 
-
-                      if(Search){
-                        for(let prop in Search) {
-                          console.log("Search." + prop + " = " + Search[prop]);
-                          switch (prop) {
-                          case "tasks":
-
-                            break;
-
-                          case "objects":
-
-                            break;
-
-                          case "users":
-
-                            break;
-
-                          case "messages":
-
-                            break;
-
-                          default:
-                            break;
-                          }
-                        }
-                      }
-
+                      // Search ? (
                       return(
                         <div id="SeacrhInner">
                           { Search.tasks ? <h3 className="BlockHeader">Задачи</h3> : null}
                           { Search.tasks ? <div className="BlockContent">{
                             Search.tasks.map((e)=>(
-                              <div className="SearchTask"  key={e.id}>{e.name}</div>
+                              <div className="SearchTask"  key={e.id}>
+                                <div className="SearchTaskTop"  key={e.id}>
+                                  {e.name ? <span className="SearchName">{e.name}</span> : null}
+                                  {e.endDate ? <span className="SearchEndDate" >{ moment(e.endDate).format('D MMM, h:mm')}</span> : null}
+                                  {e.endDate ? <span className="SearchEndDate" >{ moment(e.endDate).hours()}</span> : null}
+                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment(e.endDate).unix()}</span> : null} */}
+                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment().unix()}</span> : null} */}
+                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment().unix() - moment(e.endDate).unix()}</span> : null} */}
+                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment(e.endDate).unix() - moment().unix() }</span> : null} */}
+                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment(moment(e.endDate).unix() - moment().unix()).hours() }</span> : null} */}
+                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment(moment().unix() - moment(e.endDate).unix()).hours() }</span> : null} */}
+                                  {e.endDate ? <span className="SearchEndDate" >{ moment().format('D MMM, h:mm') }</span> : null}
+                                  {e.endDate ? <span className="SearchEndDate" >{ moment(e.endDate).format('D MMM, h:mm').diff(moment().format('D MMM, h:mm')) }</span> : null}
+
+                                  <span className="SearchStatus">{ e.status ? e.status : "Новая" }</span>
+                                </div>
+                                {e.assignedTo ? <UserRow view="Boxed" id={e.assignedTo.id} icon="1" name={e.assignedTo.username} key={e.assignedTo.id} /> : null}
+                              </div>
                             )) }</div>:  null
                           }
                           { Search.objects ? <h3 className="BlockHeader">Объекты</h3> : null}
@@ -201,6 +202,7 @@ export class Search extends Component {
 
                         </div>
                       )
+                      // ) : ("Нет данных")
                     }
 
                     return(
