@@ -93,7 +93,7 @@ export class Search extends Component {
                 {
                   checks.map((e,i)=>{
                     return(
-                      <label className="searchTag" htmlFor={"check"+i} key={"check"+i}>
+                      <label className={i === 0 ? "searchTag sel" : "searchTag"} htmlFor={"check"+i} key={"check"+i}>
                         <input type="checkbox" name={"check"+i}/>
                         <span className="searchTagText">{e.name}</span>
                       </label>
@@ -101,19 +101,18 @@ export class Search extends Component {
                   })
                 }
 
-
-                <div className="searchTag sel">Все</div>
-                <div className="searchTag">Объекты</div>
-                <div className="searchTag">Задачи</div>
-                <div className="searchTag">Пользователи</div>
-                <div className="searchTag">Сообщения</div>
-                <div className="searchTag">Вложения</div>
               </div>
               <div className="searchTagsRow">
-                <div className="searchTag">Новые</div>
-                <div className="searchTag">В работе</div>
-                <div className="searchTag">На проверке</div>
-                <div className="searchTag">Заверщенные</div>
+                {
+                  true ? checksTasks.map((e,i)=>{
+                    return(
+                      <label className={i === 0 ? "searchTag sel" : "searchTag"} htmlFor={"check"+i} key={"check"+i}>
+                        <input type="checkbox" name={"check"+i}/>
+                        <span className="searchTagText">{e.name}</span>
+                      </label>
+                    )
+                  }) : null
+                }
               </div>
 
             </div>
