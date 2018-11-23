@@ -240,8 +240,8 @@ export const taskCacheUpdate = gql `
   }
 `;
 export const objectCacheUpdate = gql `
-  mutation objectCacheUpdate($action: String!, $value: String, $objectId: String!, $taskId: String!, $object: Object) {
-    objectCacheUpdate(action: $action, value: $value, objectId: $objectId, taskId: $taskId, object: $object) @client
+  mutation objectCacheUpdate($action: String!, $value: Object, $objectId: String!, $taskId: String!) {
+    objectCacheUpdate(action: $action, value: $value, objectId: $objectId, taskId: $taskId) @client
   }
 `;
 export const delInfo = gql `

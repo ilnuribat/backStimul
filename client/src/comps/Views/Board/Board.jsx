@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { graphql, compose, Query } from "react-apollo";
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -21,10 +21,7 @@ import { ButtonRow, TextRow, FileRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import { updTask, crTask, deleteTask } from '../../../GraphQL/Qur/Mutation';
 import Panel from '../../Lays/Panel/index';
-import { Fragment } from 'react';
 // import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
-
-let ref;
 
 class Board extends Component {
 
@@ -53,7 +50,6 @@ class Board extends Component {
 
     this.changeModal = this.changeModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
-    this.writeTaskName = this.writeTaskName.bind(this)
     this.writeTaskData = this.writeTaskData.bind(this)
     this.deleteTask = this.deleteTask.bind(this)
     this.changeDelModal = this.changeDelModal.bind(this)
@@ -82,6 +78,7 @@ class Board extends Component {
       this.setState({
         objectId: id,
       });
+      this.glossStatus(id)
     }
   }
 
@@ -147,7 +144,6 @@ class Board extends Component {
     this.setState({
       taskId: "",
     })
-    ref()
   }
 
   glossStatus(){
@@ -165,7 +161,14 @@ class Board extends Component {
   deleteTask () {
     qauf(deleteTask(this.state.taskId), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn("delete task done", a)
-      this.changeDelModal()
+      this.props.objectCacheUpdate({
+        variables:{
+          action: "deleteTask",
+          taskId: this.state.taskId,
+          objectId: this.state.objectId
+        }
+      })
+      this.changeDelModal("")
     }).catch((e)=>{
       console.warn(e);
     })
@@ -178,35 +181,30 @@ class Board extends Component {
     });
   }
 
-  writeTaskName(name) {
-    // console.warn("writeName", name, this.state.taskId)
-    if (!this.state.taskId)
-      qauf(crTask(`{name: "${name}", objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
-        console.warn("create task done", a.data.createTask.id)
-        this.setState({
-          taskId: a.data.createTask.id,
-        })
-      }).catch((e)=>{
-        console.warn(e);
-      })
-    else
-      qauf(updTask(this.state.taskId,`{name: "${name}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
-        console.warn("update task done", a)
-      }).catch((e)=>{
-        console.warn(e);
-      })
-  }
-
   writeTaskData(e, change, quota) {
+    const value = e
     let cap = ""
-    const value = e.target.value
 
     if (quota) cap = '"';
-    // console.warn("writeData", e, change, this.state.taskId)
+
+    let changes = `${change}: ${cap}${value}${cap}`;
+
+
+    if (change !== "name"){
+      changes = `name: "Нет названия", ${change}: ${cap}${value}${cap}`
+    }
 
     if (!this.state.taskId)
-      qauf(crTask(`{name: "Нет названия", ${change}: ${cap}${value}${cap}, objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
+      qauf(crTask(`{${changes}, objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("create task done", a.data.createTask.id)
+        this.props.objectCacheUpdate({
+          variables:{
+            value: {[change] : value},
+            action: "createTask",
+            taskId: a.data.createTask.id,
+            objectId: this.state.objectId
+          }
+        })
         this.setState({
           taskId: a.data.createTask.id,
         })
@@ -216,16 +214,23 @@ class Board extends Component {
     else
       qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("update task done", a)
+        this.props.objectCacheUpdate({
+          variables:{
+            value: {value : value, key : change},
+            action: "updateTask",
+            taskId: this.state.taskId,
+            objectId: this.state.objectId
+          }
+        })
       }).catch((e)=>{
         console.warn(e);
       })
   }
 
-
   render(){
     const { objectId, status, taskId, toTask, taskName, showChilds } = this.state;
     const { setInfo } = this.props;
-    let cols = [[],[],[],[],[],[],[]];
+
 
     // if(toRoot) return <Redirect to={{
     //   pathname: '/',
@@ -236,10 +241,12 @@ class Board extends Component {
       state: { taskId: taskId, taskName: taskName, objectId: objectId }
     }} />
 
-    if(objectId && status){
-      return (
+    // console.warn(" current states is", objectId, status)
+
+    return (
+      objectId && status ?
         <Query query={getObjectTasks} variables={{ id: objectId}} >
-          {({ loading, error, data, refetch }) => {
+          {({ loading, error, data }) => {
             if (loading){
               return (
                 <div style={{ paddingTop: 20, margin: "auto"}}>
@@ -259,15 +266,14 @@ class Board extends Component {
             if(data && data.object){
               let selected = false;
 
-              ref = refetch
-
               if (this.state.curParentId && this.state.showChilds)
               {
                 data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
               }
-              console.warn("DATA IS", data.object.tasks)
+              // console.warn("DATA IS", data.object.tasks)
 
               let arr = _.sortBy(data.object.tasks, 'status');
+              let cols = [[],[],[],[],[],[],[]];
 
               arr = _.sortBy(data.object.tasks, 'unreadCount');
               _.forEach(arr, (result)=>{
@@ -309,7 +315,7 @@ class Board extends Component {
                         ) : null }
                         {this.state.modal ? (
                           <Modal close={this.closeModal}>
-                            <InputWrapper name="Ведите название задачи" save="Сохранить" click={this.writeTaskName}>
+                            <InputWrapper name="Ведите название задачи" save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
                       Название
                             </InputWrapper>
 
@@ -319,7 +325,7 @@ class Board extends Component {
                           Статус
                                 </ModalBlockName>
                                 <label htmlFor="">
-                                  <select onChange={(e)=>{this.writeTaskData(e, "status", false)}} >
+                                  <select onChange={(e)=>{this.writeTaskData(e.target.value, "status", false)}} >
                                     {/* <option value="0">Выбрать статус</option> */}
                                     {
                                       status.map((e)=>(
@@ -339,7 +345,7 @@ class Board extends Component {
                                 Срок истечения
                                 </div>
                                 <label htmlFor="">
-                                  <input type="date" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
+                                  <input type="date" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
                                 </label>
                               </ModalCol>
 
@@ -348,7 +354,7 @@ class Board extends Component {
                                 Добавить родительскую задачу
                                 </ModalBlockName>
                                 <label htmlFor="">
-                                  <select onChange={(e)=>{this.writeTaskData(e, "parentId", true)}}>
+                                  <select onChange={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
                                     <option value="0">Выбрать задачу</option>
                                     {
                                       data.object.tasks.map((e)=>{
@@ -443,14 +449,8 @@ class Board extends Component {
 
             }
           }}
-        </Query>
-      )
-    }else{
-      // console.warn("status")
-      this.glossStatus(objectId);
-
-      return <Loading/>
-    }
+        </Query> : <Loading/>
+    )
   }
 }
 
@@ -460,6 +460,7 @@ Board.propTypes = {
   setInfo: PropTypes.func.isRequired,
   rootId: PropTypes.func.isRequired,
   setChat: PropTypes.func.isRequired,
+  objectCacheUpdate: PropTypes.func.isRequired,
   location: PropTypes.shape({
     state: PropTypes.object
   }),
@@ -470,4 +471,7 @@ export default compose(
   graphql(rootId, { name: 'rootId' }),
   graphql(setInfo, { name: 'setInfo' }),
   graphql(setChat, { name: 'setChat' }),
+  graphql(objectCacheUpdate, { name: 'objectCacheUpdate' }),
 )(Board);
+
+

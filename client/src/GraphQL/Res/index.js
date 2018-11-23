@@ -238,31 +238,125 @@ export default {
 
       return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'Task' };
     },
-    objectCacheUpdate: (_, { value, action, objectId, taskId, object },  { cache }) => {
+    objectCacheUpdate: (_, { value, action, objectId, taskId },  { cache }) => {
       let data;
       let query;
       let previousState;
 
+      // console.warn("ДАННЫЕ!", taskId, objectId, action, value);
+
       switch (action) {
-      case "createName":
+      case "updateTask":
         query = gql`
-                  query object($id: ID!) {
-                    object(id: $id ) @client {
-                      __typename
-                      tasks {
-                        id
-                        name
-                      }
-                    }
-                  }
-              `;
+          query object($id: ID!) {
+            object(id: $id ) @client {
+              __typename
+              tasks {
+                id
+                name
+                assignedTo
+                endDate
+                lastMessage
+                parentId
+                status
+                unreadCount
+                users
+              }
+            }
+          }
+        `;
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": objectId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        console.warn("prevstate is", previousState)
+
+        Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { [value.key]: value.value });
+
         data = {
           object: {
-            tasks: {
-              id: taskId,
-              name: value,
-              __typename: "Task"
-            },
+            tasks:  [...previousState.object.tasks],
+            __typename: "Object"
+          }
+        };
+
+        break;
+      case "createTask":
+        query = gql`
+          query object($id: ID!) {
+            object(id: $id ) @client {
+              __typename
+              tasks {
+                id
+                name
+                assignedTo
+                endDate
+                lastMessage
+                parentId
+                status
+                unreadCount
+                users
+              }
+            }
+          }
+        `;
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": objectId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        console.warn("prevstate is", previousState)
+
+        // eslint-disable-next-line no-case-declarations
+        const newFeedItem = {
+          id: taskId,
+          name: value.name ? value.name : "Не указано",
+          users: value.users ? value.users : null,
+          unreadCount: value.unreadCount ? value.unreadCount : 0 ,
+          lastMessage: value.lastMessage ? value.lastMessage : null,
+          status: value.status ? value.status : null,
+          parentId: value.parentId ? value.parentId : null,
+          assignedTo: value.assignedTo ?  value.assignedTo :null,
+          endDate: value.endDate ? value.endDate :null,
+          __typename: "Task"}
+
+        data = {
+          object: {
+            tasks:  [...previousState.object.tasks, newFeedItem],
+            __typename: "Object"
+          }
+        };
+
+        break;
+      case "deleteTask":
+        query = gql`
+          query object($id: ID!) {
+            object(id: $id ) @client {
+              __typename
+              tasks {
+                id
+                name
+              }
+            }
+          }
+        `;
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": objectId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        console.warn("prevstate is", previousState)
+
+        data = {
+          object: {
+            tasks: [...previousState.object.tasks.filter(tasks => tasks.id !== taskId)],
             __typename: "Object"
           }
         };
