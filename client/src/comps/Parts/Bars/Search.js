@@ -30,42 +30,38 @@ export class Search extends Component {
   render() {
     let {children} = this.props;
     let {value} = this.state;
-
+    // let query = value;
     let SearchGql = `
-    query search($query: String, limit: 5){
-      search(query: $query ){
-        Objects{
-          name
-        }
-        Tasks{
-          name
-        }
-        Users{
-          name
-        }
-        Chats{
-          name
-        }
-        Docs{
-          name
-        }
+    query previewSearch($query: String!){
+        previewSearch(query: $query){
+          objects{
+            name
+          }
+          tasks{
+            name
+          }
+          users{
+            username
+          }
+          messages{
+            text
+          }
       }
     }
     `;
 
-    SearchGql = `
-    query search($text: String){
-      search(text: $text ){
-        __typename
-        ... on Object{
-          name
-        }
-      }
-    }
-    `;
-    let Search = gql`
-      ${SearchGql}
-  `;
+    // SearchGql = `
+    // query search($text: String){
+    //   search(text: $text ){
+    //     __typename
+    //     ... on Object{
+    //       name
+    //     }
+    //   }
+    // }
+    // `;
+
+    let Search = gql(SearchGql);
 
     return(
       <div className="Search">
@@ -80,89 +76,55 @@ export class Search extends Component {
         <div className="SearchBody">
           {
             value ? (
-              <Query query={Search} variables={{value}}>
+              <Query query={Search} variables={{query: value}}>
                 {
                   ({data, loading, error})=>{
                     if(error) {
                       console.log(error)
-                      return error.message}
+                      return error.message;
+                    }
                     if(loading) return "загрузка"
-                    
-                    console.log(error)
-                    console.log(data)
+                    if(data && data.previewSearch){
+                      let Search={};
 
-                    if(data){
-                      let ObjectTypes;
-                      console.log(data)
-                      data.map((e,i)=>{
+                        data.previewSearch.messages && data.previewSearch.messages.length > 0 ? Search.messages = data.previewSearch.messages : null
+                        data.previewSearch.tasks && data.previewSearch.tasks.length > 0 ? Search.tasks = data.previewSearch.tasks : null
+                        data.previewSearch.objects && data.previewSearch.objects.length > 0 ? Search.objects = data.previewSearch.objects : null
+                        data.previewSearch.users && data.previewSearch.users.length > 0 ? Search.users = data.previewSearch.users : null
 
-                        switch (e.__typename) {
-                        case 'User':
-                          ObjectTypes = 'Сотрудники';
-                          break;
-                        case 'Task':
-                          ObjectTypes = 'Задачи';
-                          break;
-                        case 'Object':
-                          ObjectTypes = 'Объекты';
-                          break;
-                        case 'Message':
-                          ObjectTypes = 'Сообщения';
-                          break;
-                        
-                        default:
-                          break;
+                        Search ? console.log("Search", Search) : null
+
+
+                        if(Search){
+                          for(let prop in Search) {
+                            console.log("Search." + prop + " = " + Search[prop]);
+                            switch (prop) {
+                              case "tasks":
+                                
+                                break;
+                            
+                              case "objects":
+                                
+                                break;
+                            
+                              case "users":
+                                
+                                break;
+                            
+                              case "messages":
+                                
+                                break;
+                            
+                              default:
+                                break;
+                            }
+                          }
                         }
 
-
-                        return(
-                          <div>
-                            {e.__typename}
-                          </div>
-                        )
-                      })
-                      return "data"
+                      return(
+                        <div id=""></div>
+                      )
                     }
-                    // if(data.Objects){
-                    //   return(
-                    //     <div>
-                    //       <div>Объекты</div>
-                    //       <div>{}</div>
-                    //     </div>
-                    //   )
-                    // }
-                    // if(data.Tasks){
-                    //   return(
-                    //     <div>
-                    //       <div>Задачи</div>
-                    //       <div>{}</div>
-                    //     </div>
-                    //   )
-                    // }
-                    // if(data.Users){
-                    //   return(
-                    //     <div>
-                    //       <div>Пользователи</div>
-                    //       <div>{}</div>
-                    //     </div>
-                    //   )
-                    // }
-                    // if(data.Chats){
-                    //   return(
-                    //     <div>
-                    //       <div>Чаты</div>
-                    //       <div>{}</div>
-                    //     </div>
-                    //   )
-                    // }
-                    // if(data.Docs){
-                    //   return(
-                    //     <div>
-                    //       <div>Документы</div>
-                    //       <div>{}</div>
-                    //     </div>
-                    //   )
-                    // }
                       return(
                         "ничего не найдено"
                       )
