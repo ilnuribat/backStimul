@@ -60,7 +60,7 @@
 
 .SearchBody .BlockContent{
   margin: 0 0 0 20px;
-  background: #7979791e;
+  /* background: #7979791e; */
   padding:10px 5px 5px;
   border-radius: 3px;
 }
@@ -91,15 +91,36 @@
   letter-spacing: -0.3px;
   color: #ffffff;
   width:auto;
-  max-width: 180px;
+  /* max-width: 180px; */
   overflow: hidden;
   display:flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  width: 100%;
 }
 .SearchBody .BlockContent .SearchTask .SearchStatus{
   background: #3d4147;
-  padding: 4px 6px;
+  padding: 4px 2px;
+  border-radius: 2px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 0 0;
+  font-size: 11px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.3px;
+  color: #ffffff;
+  width: 70px;
+  min-width: 70px;
+  overflow: hidden;
+}
+
+.SearchBody .BlockContent .SearchTask .SearchEndDate{
+  background: #3d4147;
+  padding: 4px 2px;
   border-radius: 2px;
   display:flex;
   justify-content: center;
@@ -112,8 +133,22 @@
   line-height: normal;
   letter-spacing: -0.3px;
   color: #ffffff;
+  width: 70px;
+  min-width: 70px;
+  overflow: hidden;
 }
-.SearchBody .BlockContent .SearchTask .SearchEndDate{
+
+.SearchBody .BlockContent .SearchObjects{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.SearchBody .BlockContent .SearchObjects .SearchName{
+  width:100%;
+  width: 60%;
+}
+.SearchBody .BlockContent .SearchObjects .SearchStatus{
   background: #3d4147;
   padding: 4px 6px;
   border-radius: 2px;
@@ -128,9 +163,9 @@
   line-height: normal;
   letter-spacing: -0.3px;
   color: #ffffff;
+  width: auto;
+  width: 38%;
 }
-
-
 .SearchBody .BlockContent > .UserRow{
   margin: 6px 0 10px;
   padding:10px;
