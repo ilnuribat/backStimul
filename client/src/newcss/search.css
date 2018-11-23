@@ -1,0 +1,29 @@
+.searchTags{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.searchTagsRow{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.searchTag{
+  margin:2px 4px;
+  cursor:pointer;
+  text-align: center;
+  overflow: hidden;
+  width:auto;
+  padding:5px;
+  border-radius: 2px;
+  background: #3d4147;
+}
+.searchTag:hover{
+  background: #3e74b293;
+}
+.searchTag.sel{
+  background: #3e75b2;
+}

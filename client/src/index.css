@@ -172,6 +172,7 @@ a{
 @import './newcss/svg.css';
 @import './newcss/rows.css';
 @import './newcss/fakeselect.css';
+@import './newcss/search.css';
 
 .Button {
     width: 140px;
