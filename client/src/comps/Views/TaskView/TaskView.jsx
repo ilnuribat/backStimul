@@ -361,11 +361,13 @@ class TaskView extends Component {
               );
             }
             if (error){
-              return (
-                <div className="errMess">
-                  {error.message}
-                </div>
-              );
+              // return (
+              //   <div className="errMess">
+              //     {error.message}
+              //   </div>
+              // );
+              console.log(error);
+              
             }
             console.warn("DATA", data.task)
 

@@ -49,6 +49,7 @@ export class Search extends Component {
           tasks{
             id
             name
+            objectId
             assignedTo{
               id
               username
@@ -170,7 +171,7 @@ export class Search extends Component {
                           { Search.tasks ? <h3 className="BlockHeader">Задачи</h3> : null}
                           { Search.tasks ? <div className="BlockContent">{
                             Search.tasks.map((e)=>(
-                              <Link key={e.id} to={{pathname: "/task", state:{taskId: e.id }}} >
+                              <Link key={e.id} to={{pathname: "/task", state:{taskId: e.id, taskName: e.name, objectId: e.objectId }}} >
                                 <div className="SearchTask"  key={e.id}>
                                   <div className="SearchTaskTop"  key={e.id}>
                                     {e.name ? <span className="SearchName">{e.name}</span> : null}
