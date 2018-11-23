@@ -170,7 +170,7 @@ export class Search extends Component {
                           { Search.tasks ? <h3 className="BlockHeader">Задачи</h3> : null}
                           { Search.tasks ? <div className="BlockContent">{
                             Search.tasks.map((e)=>(
-                              <Link to={{pathname: "/task", state:{taskId: e.id }}} >
+                              <Link key={e.id} to={{pathname: "/task", state:{taskId: e.id }}} >
                                 <div className="SearchTask"  key={e.id}>
                                   <div className="SearchTaskTop"  key={e.id}>
                                     {e.name ? <span className="SearchName">{e.name}</span> : null}
@@ -196,7 +196,7 @@ export class Search extends Component {
                           { Search.objects ? <h3 className="BlockHeader">Объекты</h3> : null}
                           { Search.objects ? <div className="BlockContent">{
                             Search.objects.map((e)=>(
-                              <Link to={{pathname: "/board", state:{objectId: e.id }}} >
+                              <Link key={e.id} to={{pathname: "/board", state:{objectId: e.id }}} >
                                 <div className="SearchObjects"  key={e.id}>
                                   <span className="SearchName">{e.name} </span>{e.address && e.address.value ? <span className="SearchStatus">{e.address.value}</span> : null}                           
                                 </div>
@@ -206,7 +206,7 @@ export class Search extends Component {
                           { Search.users ? <h3 className="BlockHeader">Пользователи</h3> : null}
                           { Search.users ? <div className="BlockContent">{
                             Search.users.map((e)=>(
-                              <Link to={{pathname: "/profile", state:"id"}} >
+                              <Link key={e.id} to={{pathname: "/profile", state:"id"}} >
                                 <UserRow view="Boxed" id={e.id} icon="1" name={e.username} key={e.id} />
                               </Link>
                             )) }</div>:  null
@@ -214,7 +214,7 @@ export class Search extends Component {
                           { Search.messages ? <h3 className="BlockHeader">Сообщения</h3> : null}
                           { Search.messages ? <div className="BlockContent">{
                             Search.messages.map((e)=>(
-                              <Link to={{pathname: "/profile", state:"id"}} >
+                              <Link key={e.id} to={{pathname: "/profile", state:"id"}} >
                                 <div className="SearchMessage" key={e.id}>{e.text}</div>
                               </Link>
                             )) }</div>:  null
