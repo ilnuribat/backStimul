@@ -12,7 +12,7 @@ async function search(parent, { query, type, limit = 10 }, { user }) {
   if (type) {
     switch (type) {
       case 'MESSAGES':
-        tempRes = await searchMessages(user, regExQuery);
+        tempRes = await searchMessages(user, regExQuery, limit);
 
         result.push(...tempRes.map(m => ({
           __typename: 'Message',
@@ -20,7 +20,7 @@ async function search(parent, { query, type, limit = 10 }, { user }) {
         })));
         break;
       case 'OBJECTS':
-        tempRes = await searchObjects(user, regExQuery);
+        tempRes = await searchObjects(user, regExQuery, limit);
 
         result.push(...tempRes.map(r => ({
           __typename: 'Object',
@@ -28,7 +28,7 @@ async function search(parent, { query, type, limit = 10 }, { user }) {
         })));
         break;
       case 'TASKS':
-        tempRes = await searchTasks(user, regExQuery);
+        tempRes = await searchTasks(user, regExQuery, limit);
 
         result.push(...tempRes.map(t => ({
           __typename: 'Task',
@@ -36,7 +36,7 @@ async function search(parent, { query, type, limit = 10 }, { user }) {
         })));
         break;
       case 'USERS':
-        tempRes = await searchUsers(user, regExQuery);
+        tempRes = await searchUsers(user, regExQuery, limit);
 
         result.push(...tempRes.map(u => ({
           __typename: 'User',
@@ -76,6 +76,7 @@ async function search(parent, { query, type, limit = 10 }, { user }) {
 
   return result;
 }
+
 
 module.exports = {
   search,
