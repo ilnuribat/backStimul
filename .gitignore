@@ -11,3 +11,4 @@ yarn.lock
 coverage
 
 .nyc_output
+*.swp
