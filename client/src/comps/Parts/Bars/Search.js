@@ -6,6 +6,9 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import Loading from '../../Loading';
 import { checkServerIdentity } from 'tls';
+import {UserRow} from '../../Parts/Rows/Rows';
+
+
 
 export class Search extends Component {
   constructor(props) {
@@ -169,31 +172,33 @@ export class Search extends Component {
                       }
 
                       return(
-                        <div id="">
-                          { Search.messages ? <p>Сообщения</p> : null}
-                          { Search.messages ?
-                            Search.messages.map((e)=>(
-                              <li key={e.id}>{e.text}</li>
-                            )) :  null
-                          }
-                          { Search.tasks ? <p>Задачи</p> : null}
-                          { Search.tasks ?
+                        <div id="SeacrhInner">
+                          { Search.tasks ? <h3 className="BlockHeader">Задачи</h3> : null}
+                          { Search.tasks ? <div className="BlockContent">{
                             Search.tasks.map((e)=>(
-                              <li key={e.id}>{e.name}</li>
-                            )) :  null
+                              <div className="SearchTask"  key={e.id}>{e.name}</div>
+                            )) }</div>:  null
                           }
-                          { Search.objects ? <p>Объекты</p> : null}
-                          { Search.objects ?
+                          { Search.objects ? <h3 className="BlockHeader">Объекты</h3> : null}
+                          { Search.objects ? <div className="BlockContent">{
                             Search.objects.map((e)=>(
-                              <li key={e.id}>{e.name}</li>
-                            )) :  null
+                              <div className="SearchObjects"  key={e.id}>{e.name}</div>
+                            )) }</div>:  null
                           }
-                          { Search.tasks ? <p>Пользователи</p> : null}
-                          { Search.tasks ?
+                          { Search.tasks ? <h3 className="BlockHeader">Пользователи</h3> : null}
+                          { Search.tasks ? <div className="BlockContent">{
                             Search.tasks.map((e)=>(
-                              <li key={e.id}>{e.username}</li>
-                            )) :  null
+                              <UserRow view="Boxed" id={e.id} icon="1" name={e.username} key={e.id} />
+                            )) }</div>:  null
                           }
+                          { Search.messages ? <h3 className="BlockHeader">Сообщения</h3> : null}
+                          { Search.messages ? <div className="BlockContent">{
+                            Search.messages.map((e)=>(
+                              <div className="SearchMessage" key={e.id}>{e.text}</div>
+                            )) }</div>:  null
+                          }
+
+
                         </div>
                       )
                     }
