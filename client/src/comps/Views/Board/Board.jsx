@@ -121,6 +121,32 @@ class Board extends Component {
 
   }
 
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { location } = this.props;
+    let id;
+
+    if(prevProps.location.state == this.props.location.state) return false
+
+    location.state && location.state.objectId ? id = location.state.objectId : id = localStorage.getItem('ObjectId')
+
+    if(id){
+      this.setState({
+        objectId: id,
+      });
+      this.glossStatus(id)
+    }
+  }
+  shouldComponentUpdate(nextProps, nextState){
+
+    if(nextProps.location.state != this.props.location.state){
+      return true
+    }
+    return true
+
+  }
+
+
   childs(id){
     console.warn(id)
     if(id){
