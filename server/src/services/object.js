@@ -45,7 +45,26 @@ async function searchObjects(user, regExp, limit = 10) {
   return res;
 }
 
+async function deleteObject(parent, { id }) {
+  const foundObject = await Group.findById(id);
+
+  if (!foundObject) {
+    throw new Error('no object found to delete');
+  }
+
+  await Group.deleteMany({
+    type: 'TASK',
+    objectId: foundObject._id,
+  });
+
+  const res = await Group.deleteOne({ _id: id });
+
+  return res.n;
+}
+
+
 module.exports = {
   rootObjectQuery,
   searchObjects,
+  deleteObject,
 };
