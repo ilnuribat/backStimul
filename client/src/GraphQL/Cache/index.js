@@ -239,6 +239,11 @@ export const taskCacheUpdate = gql `
     taskCacheUpdate(action: $action, value: $value, userName: $userName, taskId: $taskId, object: $object) @client
   }
 `;
+export const objectCacheUpdate = gql `
+  mutation objectCacheUpdate($action: String!, $value: Object, $objectId: String!, $taskId: String!) {
+    objectCacheUpdate(action: $action, value: $value, objectId: $objectId, taskId: $taskId) @client
+  }
+`;
 export const delInfo = gql `
   mutation delInfo($id: String){
     delInfo(id: $id) @client{

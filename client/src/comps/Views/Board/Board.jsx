@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { graphql, compose, Query } from "react-apollo";
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -11,7 +11,7 @@ import Task from '../../Parts/Task';
 import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
-import { setChat, setInfo, rootId } from '../../../GraphQL/Cache';
+import { setChat, setInfo, rootId, objectCacheUpdate } from '../../../GraphQL/Cache';
 import { getObjectTasks, glossaryStatus, TASKS_QUERY } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
@@ -21,10 +21,7 @@ import { ButtonRow, TextRow, FileRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import { updTask, crTask, deleteTask } from '../../../GraphQL/Qur/Mutation';
 import Panel from '../../Lays/Panel/index';
-import { Fragment } from 'react';
 // import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
-
-let ref;
 
 class Board extends Component {
 
@@ -53,7 +50,6 @@ class Board extends Component {
 
     this.changeModal = this.changeModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
-    this.writeTaskName = this.writeTaskName.bind(this)
     this.writeTaskData = this.writeTaskData.bind(this)
     this.deleteTask = this.deleteTask.bind(this)
     this.changeDelModal = this.changeDelModal.bind(this)
@@ -82,6 +78,7 @@ class Board extends Component {
       this.setState({
         objectId: id,
       });
+      this.glossStatus(id)
     }
   }
 
@@ -147,7 +144,6 @@ class Board extends Component {
     this.setState({
       taskId: "",
     })
-    ref()
   }
 
   glossStatus(){
@@ -165,7 +161,14 @@ class Board extends Component {
   deleteTask () {
     qauf(deleteTask(this.state.taskId), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn("delete task done", a)
-      this.changeDelModal()
+      this.props.objectCacheUpdate({
+        variables:{
+          action: "deleteTask",
+          taskId: this.state.taskId,
+          objectId: this.state.objectId
+        }
+      })
+      this.changeDelModal("")
     }).catch((e)=>{
       console.warn(e);
     })
@@ -178,35 +181,30 @@ class Board extends Component {
     });
   }
 
-  writeTaskName(name) {
-    // console.warn("writeName", name, this.state.taskId)
-    if (!this.state.taskId)
-      qauf(crTask(`{name: "${name}", objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
-        console.warn("create task done", a.data.createTask.id)
-        this.setState({
-          taskId: a.data.createTask.id,
-        })
-      }).catch((e)=>{
-        console.warn(e);
-      })
-    else
-      qauf(updTask(this.state.taskId,`{name: "${name}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
-        console.warn("update task done", a)
-      }).catch((e)=>{
-        console.warn(e);
-      })
-  }
-
   writeTaskData(e, change, quota) {
+    const value = e
     let cap = ""
-    const value = e.target.value
 
     if (quota) cap = '"';
-    // console.warn("writeData", e, change, this.state.taskId)
+
+    let changes = `${change}: ${cap}${value}${cap}`;
+
+
+    if (change !== "name"){
+      changes = `name: "Нет названия", ${change}: ${cap}${value}${cap}`
+    }
 
     if (!this.state.taskId)
-      qauf(crTask(`{name: "Нет названия", ${change}: ${cap}${value}${cap}, objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
+      qauf(crTask(`{${changes}, objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("create task done", a.data.createTask.id)
+        this.props.objectCacheUpdate({
+          variables:{
+            value: {[change] : value},
+            action: "createTask",
+            taskId: a.data.createTask.id,
+            objectId: this.state.objectId
+          }
+        })
         this.setState({
           taskId: a.data.createTask.id,
         })
@@ -216,16 +214,23 @@ class Board extends Component {
     else
       qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("update task done", a)
+        this.props.objectCacheUpdate({
+          variables:{
+            value: {value : value, key : change},
+            action: "updateTask",
+            taskId: this.state.taskId,
+            objectId: this.state.objectId
+          }
+        })
       }).catch((e)=>{
         console.warn(e);
       })
   }
 
-
   render(){
     const { objectId, status, taskId, toTask, taskName, showChilds } = this.state;
     const { setInfo } = this.props;
-    let cols = [[],[],[],[],[],[],[]];
+
 
     // if(toRoot) return <Redirect to={{
     //   pathname: '/',
@@ -236,10 +241,12 @@ class Board extends Component {
       state: { taskId: taskId, taskName: taskName, objectId: objectId }
     }} />
 
-    if(objectId && status){
-      return (
+    // console.warn(" current states is", objectId, status)
+
+    return (
+      objectId && status ?
         <Query query={getObjectTasks} variables={{ id: objectId}} >
-          {({ loading, error, data, refetch }) => {
+          {({ loading, error, data }) => {
             if (loading){
               return (
                 <div style={{ paddingTop: 20, margin: "auto"}}>
@@ -259,15 +266,14 @@ class Board extends Component {
             if(data && data.object){
               let selected = false;
 
-              ref = refetch
-
               if (this.state.curParentId && this.state.showChilds)
               {
                 data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
               }
-              console.warn("DATA IS", data.object.tasks)
+              // console.warn("DATA IS", data.object.tasks)
 
               let arr = _.sortBy(data.object.tasks, 'status');
+              let cols = [[],[],[],[],[],[],[]];
 
               arr = _.sortBy(data.object.tasks, 'unreadCount');
               _.forEach(arr, (result)=>{
@@ -281,176 +287,167 @@ class Board extends Component {
 
               return(
                 <Fragment>
-                <Content>
-                  <div className="Board">
-                    <div className="Board-Top">
-                      {
-                        data.object.parentId ? (<div className="toBack" onClick={()=>{this.toBack(data.object.parentId)}}>
-                          <Link to={{
-                            pathname: '/tile',
-                            state: { rootId: data.object.parentId }
-                          }} className="toBackLink">
-                            <Svg svg="back" /><span>Назад</span>
-                          </Link></div>) : null
-                      }
-                      <div className="BoardTopCenter">
-                        <h1>{data.object.name}</h1>
-                        <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
-                        {/* <p className="small">{data.object.id}</p> */}
-                      </div>
-
-                    </div>
-                    <div className="Board-Content">
-                      {this.state.modalDelete? (
-                        <Modal close={this.changeDelModal} size="350">
-                          Удалить задачу?
-                          <ButtonRow iconright="1" click={this.deleteTask}>Удалить</ButtonRow>
-                        </Modal>
-                      ) : null }
-                      {this.state.modal ? (
-                        <Modal close={this.closeModal}>
-                          <InputWrapper name="Ведите название задачи" save="Сохранить" click={this.writeTaskName}>
-                      Название
-                          </InputWrapper>
-
-                          <ModalRow>
-                            <ModalCol>
-                              <ModalBlockName>
-                          Статус
-                              </ModalBlockName>
-                              <label htmlFor="">
-                                <select onChange={(e)=>{this.writeTaskData(e, "status", false)}} >
-                                  {/* <option value="0">Выбрать статус</option> */}
-                                  {
-                                    status.map((e)=>(
-                                      <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
-                                        {e.name}
-                                      </option>
-                                    ))
-                                  }
-                                </select>
-                              </label>
-                            </ModalCol>
-                          </ModalRow>
-
-                          <ModalRow>
-                            <ModalCol>
-                              <div className="ModalBlockName">
-                                Срок истечения
-                              </div>
-                              <label htmlFor="">
-                                <input type="date" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
-                              </label>
-                            </ModalCol>
-
-                            <ModalCol>
-                              <ModalBlockName>
-                                Добавить родительскую задачу
-                              </ModalBlockName>
-                              <label htmlFor="">
-                                <select onChange={(e)=>{this.writeTaskData(e, "parentId", true)}}>
-                                  <option value="0">Выбрать задачу</option>
-                                  {
-                                    data.object.tasks.map((e)=>{
-                                      return(
-                                        <option key={e.id} value={e.id}>{e.name}</option>
-                                      )
-                                    })
-                                  }
-                                </select>
-                              </label>
-                            </ModalCol>
-                          </ModalRow>
-                        </Modal>
-                      ) : null }
-                      {/* {console.warn("status2",status)} */}
-                      {
-                        status && status.map((e,i)=>{
-                          if( i === 0 ){
-                            return(true)
-                          }
-
-                          return(
-                            <Column key={e.id} id={e.id} status={e.name} name={e.name} >
-                              {
-                                cols[e.id].map((task)=>{
-                                  if(this.state.curParentId === task.id ){
-                                    selected = showChilds;
-                                  } else { selected = false; }
-
-                                  return(
-                                    <Task key={task.id} id={task.id} selected={selected} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal}/>
-                                  )
-                                })
-                              }
-                            </Column>
-                          )
-                        })
-                      }
-                    </div>
-                  </div>
-                </Content>
-                <Panel>
-                  <TextRow name="Информация" view="Pad510 BigName">
-                    <TextRow name="" view="Pad510 MT10">
-                      {data.object.name}
-                    </TextRow>
-                    <TextRow name="" view="cgr Pad510 s">
-                      {data.object.address.value}
-                      <p>
-                        "{data.object.address.coordinates[0]}, {data.object.address.coordinates[1]}"
-                      </p>
-                      
-                    </TextRow>
-                    <TextRow name="" view="cgr Pad510 s">
-                    Задачи: {data.object.tasks.length} штуки
-                    </TextRow>
-                    <TextRow name="" view="cgr Pad510 s">
+                  <Content>
+                    <div className="Board">
+                      <div className="Board-Top">
                         {
-                          console.log(data.object)
+                          data.object.parentId ? (<div className="toBack" onClick={()=>{this.toBack(data.object.parentId)}}>
+                            <Link to={{
+                              pathname: '/tile',
+                              state: { rootId: data.object.parentId }
+                            }} className="toBackLink">
+                              <Svg svg="back" /><span>Назад</span>
+                            </Link></div>) : null
                         }
+                        <div className="BoardTopCenter">
+                          <h1>{data.object.name}</h1>
+                          <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
+                          {/* <p className="small">{data.object.id}</p> */}
+                        </div>
+
+                      </div>
+                      <div className="Board-Content">
+                        {this.state.modalDelete? (
+                          <Modal close={this.changeDelModal} size="350">
+                          Удалить задачу?
+                            <ButtonRow iconright="1" click={this.deleteTask}>Удалить</ButtonRow>
+                          </Modal>
+                        ) : null }
+                        {this.state.modal ? (
+                          <Modal close={this.closeModal}>
+                            <InputWrapper name="Ведите название задачи" save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
+                      Название
+                            </InputWrapper>
+
+                            <ModalRow>
+                              <ModalCol>
+                                <ModalBlockName>
+                          Статус
+                                </ModalBlockName>
+                                <label htmlFor="selectStatus" className="LabelSelect">
+                                  <select name="selectStatus" onChange={(e)=>{this.writeTaskData(e.target.value, "status", false)}} >
+                                    {/* <option value="0">Выбрать статус</option> */}
+                                    {
+                                      status.map((e)=>(
+                                        <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
+                                          {e.name}
+                                        </option>
+                                      ))
+                                    }
+                                  </select>
+                                </label>
+                              </ModalCol>
+                            </ModalRow>
+
+                            <ModalRow>
+                              <ModalCol>
+                                <div className="ModalBlockName">
+                                Срок истечения
+                                </div>
+                                <label htmlFor="dateout" className="LabelInputDate">
+                                  <input type="date" name="dateout" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
+                                </label>
+                              </ModalCol>
+
+                              <ModalCol>
+                                <ModalBlockName>
+                                Добавить родительскую задачу
+                                </ModalBlockName>
+                                <label htmlFor="parentSelect" className="LabelSelect">
+                                  <select name="parentSelect" onChange={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
+                                    <option value="0">Выбрать задачу</option>
+                                    {
+                                      data.object.tasks.map((e)=>{
+                                        return(
+                                          <option key={e.id} value={e.id}>{e.name}</option>
+                                        )
+                                      })
+                                    }
+                                  </select>
+                                </label>
+                              </ModalCol>
+                            </ModalRow>
+                          </Modal>
+                        ) : null }
+                        {/* {console.warn("status2",status)} */}
+                        {
+                          status && status.map((e,i)=>{
+                            if( i === 0 ){
+                              return(true)
+                            }
+
+                            return(
+                              <Column key={e.id} id={e.id} status={e.name} name={e.name} >
+                                {
+                                  cols[e.id].map((task)=>{
+                                    if(this.state.curParentId === task.id ){
+                                      selected = showChilds;
+                                    } else { selected = false; }
+
+                                    return(
+                                      <Task key={task.id} id={task.id} selected={selected} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal}/>
+                                    )
+                                  })
+                                }
+                              </Column>
+                            )
+                          })
+                        }
+                      </div>
+                    </div>
+                  </Content>
+                  <Panel>
+                    <TextRow name="Информация" view="Pad510 BigName">
+                      <TextRow name="" view="Pad510 MT10">
+                        {data.object.name}
+                      </TextRow>
+                      <TextRow name="" view="cgr Pad510 s">
+                        {data.object.address.value}
+                        <p>
+                        "{data.object.address.coordinates[0]}, {data.object.address.coordinates[1]}"
+                        </p>
+
+                      </TextRow>
+                      <TextRow name="" view="cgr Pad510 s">
+                    Задачи: {data.object.tasks.length} штуки
+                      </TextRow>
+                      <TextRow name="" view="cgr Pad510 s">
                       </TextRow>
 
-                    <TextRow name="Документы" view="Pad510">
-                      {
-                      data.object ? (
+                      <TextRow name="Документы" view="Pad510">
+                        {
+                          data.object ? (
                             <div>
                               {
                                 data.object.docs ? data.object.docs.map(
-                                (e,i)=>{
-                                  return(
-                                    <FileRow name={e.name} id={e.id} icon="doc" />
-                                  )
-                                }
-                              ) : (
-                                <div>
+                                  (e,i)=>{
+                                    return(
+                                      <FileRow key={e.id} name={e.name} id={e.id} icon="doc" />
+                                    )
+                                  }
+                                ) : (
+                                  <div>
                                     <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
                                     <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
                                     <div className="FakeLink"><Link to="/docs">Показать все</Link></div>
-                                </div>
-                              )
+                                  </div>
+                                )
                               }
                             </div>) : null
-                      }
+                        }
+                      </TextRow>
                     </TextRow>
-                  </TextRow>
 
 
 
-                </Panel>
+                  </Panel>
                 </Fragment>
               )
 
             }
           }}
-        </Query>
-      )
-    }else{
-      // console.warn("status")
-      this.glossStatus(objectId);
-
-      return <Loading/>
-    }
+        </Query> : <Loading/>
+    )
   }
 }
 
@@ -460,6 +457,7 @@ Board.propTypes = {
   setInfo: PropTypes.func.isRequired,
   rootId: PropTypes.func.isRequired,
   setChat: PropTypes.func.isRequired,
+  objectCacheUpdate: PropTypes.func.isRequired,
   location: PropTypes.shape({
     state: PropTypes.object
   }),
@@ -470,4 +468,7 @@ export default compose(
   graphql(rootId, { name: 'rootId' }),
   graphql(setInfo, { name: 'setInfo' }),
   graphql(setChat, { name: 'setChat' }),
+  graphql(objectCacheUpdate, { name: 'objectCacheUpdate' }),
 )(Board);
+
+

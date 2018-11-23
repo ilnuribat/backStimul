@@ -5,6 +5,10 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import Loading from '../../Loading';
+import { checkServerIdentity } from 'tls';
+import {UserRow} from '../../Parts/Rows/Rows';
+import moment from 'moment';
+
 
 export class Search extends Component {
   constructor(props) {
@@ -30,142 +34,192 @@ export class Search extends Component {
   render() {
     let {children} = this.props;
     let {value} = this.state;
-
+    // let query = value;
     let SearchGql = `
-    query search($query: String, limit: 5){
-      search(query: $query ){
-        Objects{
-          name
-        }
-        Tasks{
-          name
-        }
-        Users{
-          name
-        }
-        Chats{
-          name
-        }
-        Docs{
-          name
-        }
+    query previewSearch($query: String!){
+        previewSearch(query: $query){
+          objects{
+            id
+            name
+            address{
+              value
+            }
+          }
+          tasks{
+            id
+            name
+            assignedTo{
+              id
+              username
+            }
+            endDate
+            status
+          }
+          users{
+            id
+            username
+          }
+          messages{
+            id
+            text
+          }
       }
     }
     `;
 
-    SearchGql = `
-    query search($text: String){
-      search(text: $text ){
-        __typename
-        ... on Object{
-          name
-        }
-      }
-    }
-    `;
-    let Search = gql`
-      ${SearchGql}
-  `;
+    // SearchGql = `
+    // query search($text: String){
+    //   search(text: $text ){
+    //     __typename
+    //     ... on Object{
+    //       name
+    //     }
+    //   }
+    // }
+    // `;
+
+    let Search = gql(SearchGql);
+    let checks = [
+      {name: 'Все', id:'0', some:'data'},
+      {name: 'Объекты', id:'0', some:'data'},
+      {name: 'Задачи', id:'0', some:'data'},
+      {name: 'Сотрудники', id:'0', some:'data'},
+      {name: 'Сообщения', id:'0', some:'data'},
+      {name: 'Документы', id:'0', some:'data'},
+    ];
+    let checksTasks = [
+      {name: 'Новые', id:'0', status:'1'},
+      {name: 'В работе', id:'0', status:'3'},
+      {name: 'Проверяются', id:'0', status:'4'},
+      {name: 'Завершенные', id:'0', status:'5'},
+    ];
+    let statuses = [
+      {name: 'Новая', status:'1'},
+      {name: 'В работе', status:'3'},
+      {name: 'Проверяется', status:'4'},
+      {name: 'Завершена', status:'5'},
+    ];
 
     return(
       <div className="Search">
         <div className="SearchTop">
           <form onSubmit={this.handleSubmit}>
-            <label>
-              <input type="text"  value={value} onChange={this.handleChange} placeholder="Найти задачи, человека, объект..."/>
+            <label className="LabelInputText" htmlFor="searchinput">
+              <input type="text" name="searchinput" value={value} onChange={this.handleChange} placeholder="Найти задачи, человека, объект..."/>
             </label>
+
+
+            <div className="searchTags">
+              <div className="searchTagsRow">
+
+                {
+                  checks.map((e,i)=>{
+                    return(
+                      <label className={i === 0 ? "searchTag sel" : "searchTag"} htmlFor={"check"+i} key={"check"+i}>
+                        <input type="checkbox" name={"check"+i}/>
+                        <span className="searchTagText">{e.name}</span>
+                      </label>
+                    )
+                  })
+                }
+
+              </div>
+              <div className="searchTagsRow">
+                {
+                  true ? checksTasks.map((e,i)=>{
+                    return(
+                      <label className={i === 0 ? "searchTag sel" : "searchTag"} htmlFor={"check"+i} key={"check"+i}>
+                        <input type="checkbox" name={"check"+i}/>
+                        <span className="searchTagText">{e.name}</span>
+                      </label>
+                    )
+                  }) : null
+                }
+              </div>
+
+            </div>
           </form>
-          
+
         </div>
         <div className="SearchBody">
           {
             value ? (
-              <Query query={Search} variables={{value}}>
+              <Query query={Search} variables={{query: value}}>
                 {
                   ({data, loading, error})=>{
                     if(error) {
                       console.log(error)
-                      return error.message}
-                    if(loading) return "загрузка"
-                    
-                    console.log(error)
-                    console.log(data)
 
-                    if(data){
-                      let ObjectTypes;
-                      console.log(data)
-                      data.map((e,i)=>{
-
-                        switch (e.__typename) {
-                        case 'User':
-                          ObjectTypes = 'Сотрудники';
-                          break;
-                        case 'Task':
-                          ObjectTypes = 'Задачи';
-                          break;
-                        case 'Object':
-                          ObjectTypes = 'Объекты';
-                          break;
-                        case 'Message':
-                          ObjectTypes = 'Сообщения';
-                          break;
-                        
-                        default:
-                          break;
-                        }
-
-
-                        return(
-                          <div>
-                            {e.__typename}
-                          </div>
-                        )
-                      })
-                      return "data"
+                      return error.message;
                     }
-                    // if(data.Objects){
-                    //   return(
-                    //     <div>
-                    //       <div>Объекты</div>
-                    //       <div>{}</div>
-                    //     </div>
-                    //   )
-                    // }
-                    // if(data.Tasks){
-                    //   return(
-                    //     <div>
-                    //       <div>Задачи</div>
-                    //       <div>{}</div>
-                    //     </div>
-                    //   )
-                    // }
-                    // if(data.Users){
-                    //   return(
-                    //     <div>
-                    //       <div>Пользователи</div>
-                    //       <div>{}</div>
-                    //     </div>
-                    //   )
-                    // }
-                    // if(data.Chats){
-                    //   return(
-                    //     <div>
-                    //       <div>Чаты</div>
-                    //       <div>{}</div>
-                    //     </div>
-                    //   )
-                    // }
-                    // if(data.Docs){
-                    //   return(
-                    //     <div>
-                    //       <div>Документы</div>
-                    //       <div>{}</div>
-                    //     </div>
-                    //   )
-                    // }
+                    if(loading) return "загрузка"
+                    if(data && data.previewSearch){
+                      let Search={};
+
+                      data.previewSearch.messages && data.previewSearch.messages.length > 0 ? Search.messages = data.previewSearch.messages : null
+                      data.previewSearch.tasks && data.previewSearch.tasks.length > 0 ? Search.tasks = data.previewSearch.tasks : null
+                      data.previewSearch.objects && data.previewSearch.objects.length > 0 ? Search.objects = data.previewSearch.objects : null
+                      data.previewSearch.users && data.previewSearch.users.length > 0 ? Search.users = data.previewSearch.users : null
+
+                      Search ? console.log("Search", Search) : null
+
+                      // Search ? (
                       return(
-                        "ничего не найдено"
+                        <div id="SeacrhInner">
+                          { Search.tasks ? <h3 className="BlockHeader">Задачи</h3> : null}
+                          { Search.tasks ? <div className="BlockContent">{
+                            Search.tasks.map((e)=>(
+                              <div className="SearchTask"  key={e.id}>
+                                <div className="SearchTaskTop"  key={e.id}>
+                                  {e.name ? <span className="SearchName">{e.name}</span> : null}
+                                  {e.endDate ? <span className={moment(e.endDate).fromNow() ? "SearchEndDate" : "SearchEndDate" } >{ moment(e.endDate).format('D MMM, h:mm')}</span> : null}
+                                  {
+                                    // (()=>{
+                                    //   if(e.status){
+                                    //     let a = statuses.find((x)=>x.status == e.status).name;
+                                    //       console.log("sssssssssssssssssssss",a)
+                                    //     return a
+
+                                    //   } 
+                                    // })()
+                                  }
+                                 
+                                  <span className="SearchStatus">{ e.status ? statuses.find((x)=>x.status == e.status).name : "Новая" }</span>
+                                </div>
+                                {e.assignedTo ? <UserRow view="Boxed" id={e.assignedTo.id} icon="1" name={e.assignedTo.username} key={e.assignedTo.id} /> : null}
+                              </div>
+                            )) }</div>:  null
+                          }
+                          { Search.objects ? <h3 className="BlockHeader">Объекты</h3> : null}
+                          { Search.objects ? <div className="BlockContent">{
+                            Search.objects.map((e)=>(
+                              <div className="SearchObjects"  key={e.id}>
+                              <span className="SearchName">{e.name} </span>{e.address && e.address.value ? <span className="SearchStatus">{e.address.value}</span> : null}                           
+                              </div>
+                            )) }</div>:  null
+                          }
+                          { Search.users ? <h3 className="BlockHeader">Пользователи</h3> : null}
+                          { Search.users ? <div className="BlockContent">{
+                            Search.users.map((e)=>(
+                              <UserRow view="Boxed" id={e.id} icon="1" name={e.username} key={e.id} />
+                            )) }</div>:  null
+                          }
+                          { Search.messages ? <h3 className="BlockHeader">Сообщения</h3> : null}
+                          { Search.messages ? <div className="BlockContent">{
+                            Search.messages.map((e)=>(
+                              <div className="SearchMessage" key={e.id}>{e.text}</div>
+                            )) }</div>:  null
+                          }
+
+
+                        </div>
                       )
+                      // ) : ("Нет данных")
+                    }
+
+                    return(
+                      "ничего не найдено"
+                    )
 
                   }
                 }
