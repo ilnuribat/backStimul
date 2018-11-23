@@ -186,9 +186,9 @@ export class Search extends Component {
                               <div className="SearchObjects"  key={e.id}>{e.name}</div>
                             )) }</div>:  null
                           }
-                          { Search.tasks ? <h3 className="BlockHeader">Пользователи</h3> : null}
-                          { Search.tasks ? <div className="BlockContent">{
-                            Search.tasks.map((e)=>(
+                          { Search.users ? <h3 className="BlockHeader">Пользователи</h3> : null}
+                          { Search.users ? <div className="BlockContent">{
+                            Search.users.map((e)=>(
                               <UserRow view="Boxed" id={e.id} icon="1" name={e.username} key={e.id} />
                             )) }</div>:  null
                           }

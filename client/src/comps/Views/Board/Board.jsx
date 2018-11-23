@@ -412,9 +412,6 @@ class Board extends Component {
                     Задачи: {data.object.tasks.length} штуки
                       </TextRow>
                       <TextRow name="" view="cgr Pad510 s">
-                        {
-                          console.log(data.object)
-                        }
                       </TextRow>
 
                       <TextRow name="Документы" view="Pad510">
