@@ -395,13 +395,15 @@ export const getObjectTasks2 = (id) => `
 }`;
 
 
-export const getObjectTasks3 = (id) => `
+export const getObjectTasksSmall = (id) => `
 {
   object (id: "${id}") {
       tasks{
         id
         name
         parentId
+        endDate
+        status
       }
     }
 }`;
@@ -419,13 +421,14 @@ export const getObjectTasks = gql `
         id
         parentId
         name
-        users{
+        endDate
+        status
+        unreadCount
+        assignedTo{
           id
           username
         }
-        unreadCount
-        status
-        assignedTo{
+        users{
           id
           username
         }
@@ -436,8 +439,6 @@ export const getObjectTasks = gql `
           }
           text
         }
-        endDate
-
       }
     }
 }
