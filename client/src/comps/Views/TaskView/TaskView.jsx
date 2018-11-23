@@ -520,8 +520,8 @@ class TaskView extends Component {
                         <div className="ModalBlockName">
                           Срок истечения
                         </div>
-                        <label htmlFor="">
-                          <input type="date" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
+                        <label htmlFor="dateselect" className="LabelInputDate">
+                          <input type="date" name="dateselect" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
                         </label>
                       </ModalCol>
 
@@ -543,7 +543,7 @@ class TaskView extends Component {
                           Добавить пользователя
                         </ModalBlockName>
                         <div className="content">
-                          <label className="" htmlFor="users">
+                          <label className="LabelInputList" htmlFor="users">
                             <input type="list" name="users" list="users" autoComplete="on" onChange={this.newUser} />
                             {
                               this.state.newUser ? (

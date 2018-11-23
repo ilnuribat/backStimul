@@ -318,8 +318,8 @@ class Board extends Component {
                                 <ModalBlockName>
                           Статус
                                 </ModalBlockName>
-                                <label htmlFor="">
-                                  <select onChange={(e)=>{this.writeTaskData(e, "status", false)}} >
+                                <label htmlFor="selectStatus" className="LabelSelect">
+                                  <select name="selectStatus" onChange={(e)=>{this.writeTaskData(e, "status", false)}} >
                                     {/* <option value="0">Выбрать статус</option> */}
                                     {
                                       status.map((e)=>(
@@ -338,8 +338,8 @@ class Board extends Component {
                                 <div className="ModalBlockName">
                                 Срок истечения
                                 </div>
-                                <label htmlFor="">
-                                  <input type="date" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
+                                <label htmlFor="dateout" className="LabelInputDate">
+                                  <input type="date" name="dateout" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e, "endDate", true)}} />
                                 </label>
                               </ModalCol>
 
@@ -347,8 +347,8 @@ class Board extends Component {
                                 <ModalBlockName>
                                 Добавить родительскую задачу
                                 </ModalBlockName>
-                                <label htmlFor="">
-                                  <select onChange={(e)=>{this.writeTaskData(e, "parentId", true)}}>
+                                <label htmlFor="parentSelect" className="LabelSelect">
+                                  <select name="parentSelect" onChange={(e)=>{this.writeTaskData(e, "parentId", true)}}>
                                     <option value="0">Выбрать задачу</option>
                                     {
                                       data.object.tasks.map((e)=>{

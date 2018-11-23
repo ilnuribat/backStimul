@@ -21,6 +21,9 @@
   border-radius: 2px;
   background: #3d4147;
 }
+.searchTag input[type="checkbox"]{
+  display: none;
+}
 .searchTag:hover{
   background: #3e74b293;
 }

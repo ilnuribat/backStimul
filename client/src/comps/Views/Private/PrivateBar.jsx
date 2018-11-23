@@ -221,7 +221,7 @@ class Private extends React.Component {
                       return(
 
                         <div className="content">
-                            <label className="Pad" htmlFor="users">
+                            <label className="LabelInputList Pad" htmlFor="users">
                               <input type="list" name="users" list="users" autoComplete="on" valueid="" onChange={(e)=>this.newUser(e, data.users)} />
                               {
                                   <div className="Button3" onClick={()=>this.CreateNewGroup(data.users)}>Добавить{/*this.state.newUser*/}</div>

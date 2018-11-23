@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import Loading from '../../Loading';
+import { checkServerIdentity } from 'tls';
 
 export class Search extends Component {
   constructor(props) {
@@ -62,14 +63,60 @@ export class Search extends Component {
     // `;
 
     let Search = gql(SearchGql);
+    let checks = [
+      {name: 'Все', id:'0', some:'data'},
+      {name: 'Объекты', id:'0', some:'data'},
+      {name: 'Задачи', id:'0', some:'data'},
+      {name: 'Сотрудники', id:'0', some:'data'},
+      {name: 'Сообщения', id:'0', some:'data'},
+      {name: 'Документы', id:'0', some:'data'},
+    ];
+    let checksTasks = [
+      {name: 'Новые', id:'0', status:'1'},
+      {name: 'В работе', id:'0', status:'3'},
+      {name: 'Проверяются', id:'0', status:'4'},
+      {name: 'Завершенные', id:'0', status:'5'},
+    ];
 
     return(
       <div className="Search">
         <div className="SearchTop">
           <form onSubmit={this.handleSubmit}>
-            <label>
-              <input type="text"  value={value} onChange={this.handleChange} placeholder="Найти задачи, человека, объект..."/>
+            <label className="LabelInputText" htmlFor="searchinput">
+              <input type="text" name="searchinput" value={value} onChange={this.handleChange} placeholder="Найти задачи, человека, объект..."/>
             </label>
+
+
+            <div className="searchTags">
+              <div className="searchTagsRow">
+
+                {
+                  checks.map((e,i)=>{
+                    return(
+                      <label className="searchTag" htmlFor={"check"+i} key={"check"+i}>
+                        <input type="checkbox" name={"check"+i}/>
+                        <span className="searchTagText">{e.name}</span>
+                      </label>
+                    )
+                  })
+                }
+
+
+                <div className="searchTag sel">Все</div>
+                <div className="searchTag">Объекты</div>
+                <div className="searchTag">Задачи</div>
+                <div className="searchTag">Пользователи</div>
+                <div className="searchTag">Сообщения</div>
+                <div className="searchTag">Вложения</div>
+              </div>
+              <div className="searchTagsRow">
+                <div className="searchTag">Новые</div>
+                <div className="searchTag">В работе</div>
+                <div className="searchTag">На проверке</div>
+                <div className="searchTag">Заверщенные</div>
+              </div>
+
+            </div>
           </form>
 
         </div>
