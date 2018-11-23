@@ -61,15 +61,19 @@
 .SearchBody .BlockContent{
   margin: 0 0 0 20px;
   background: #7979791e;
-  padding:10px;
+  padding:10px 5px 5px;
   border-radius: 3px;
 }
 
+.SearchBody .BlockContent .SearchTask .UserRow{
+   margin:20px 0 0;
+}
 .SearchBody .BlockContent .SearchTask{
-  margin: 2px 0 2px;
-  padding:10px;
+  margin: 6px 0 10px;
+  padding:20px 10px 5px;
   border-radius: 3px;
-  background: #3e74b210;
+  background: #3156803d;
+  cursor:pointer;
 }
 .SearchBody .BlockContent .SearchTask .SearchTaskTop{
   display: flex;
@@ -94,6 +98,12 @@
   align-items: center;
 }
 .SearchBody .BlockContent .SearchTask .SearchStatus{
+  background: #3d4147;
+  padding: 4px 6px;
+  border-radius: 2px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
   margin: 0 5px 0;
   font-size: 11px;
   font-weight: 300;
@@ -101,10 +111,7 @@
   font-stretch: normal;
   line-height: normal;
   letter-spacing: -0.3px;
-  color: #3b3b3bcc;
-  display:flex;
-  justify-content: center;
-  align-items: center;
+  color: #ffffff;
 }
 .SearchBody .BlockContent .SearchTask .SearchEndDate{
   background: #3d4147;
@@ -124,19 +131,59 @@
 }
 
 
-.SearchBody .BlockContent .UserRow{
-  margin: 2px 0 2px;
+.SearchBody .BlockContent > .UserRow{
+  margin: 6px 0 10px;
   padding:10px;
   border-radius: 3px;
   /* background: #3e74b236; */
 }
 .SearchBody .BlockContent .SearchMessage{
-  margin: 2px 0 2px;
+  margin: 6px 0 10px;
   padding:10px;
   border-radius: 3px;
-  background: #3e74b236;
+  background: #3156803d;
+  cursor:pointer;
 }
-.SearchBody .BlockContent .SearchObjects{}
+.SearchBody .BlockContent .SearchObjects{
+  margin: 6px 0 10px;
+  padding:20px 10px;
+  border-radius: 3px;
+  background: #3156803d;
+  cursor:pointer;
+}
+.SearchBody .BlockContent .SearchMessage:hover,
+.SearchBody .BlockContent .SearchTask:hover,
+.SearchBody .BlockContent .SearchObjects:hover{
+  background: #1170af5e;
+}
+
 .SearchBody .BlockContent .SearchMessage{}
 .SearchBody .BlockContent .SearchDoc{}
 .SearchBody .BlockContent .SearchUser{}
+.SeacrhInner{
+  overflow: auto;
+  width: 100%;
+  height: auto;
+}
+.Bar{
+  overflow: hidden;
+}
+.Bar .Search{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.SearchTop{
+  height: auto;
+}
+.SearchBody{
+  height: auto;
+  overflow: auto;
+}
+.SearchBody .SeacrhInner{
+  height: 100%;
+}

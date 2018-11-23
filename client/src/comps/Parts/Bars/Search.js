@@ -41,6 +41,9 @@ export class Search extends Component {
           objects{
             id
             name
+            address{
+              value
+            }
           }
           tasks{
             id
@@ -89,6 +92,12 @@ export class Search extends Component {
       {name: 'В работе', id:'0', status:'3'},
       {name: 'Проверяются', id:'0', status:'4'},
       {name: 'Завершенные', id:'0', status:'5'},
+    ];
+    let statuses = [
+      {name: 'Новая', status:'1'},
+      {name: 'В работе', status:'3'},
+      {name: 'Проверяется', status:'4'},
+      {name: 'Завершена', status:'5'},
     ];
 
     return(
@@ -163,18 +172,19 @@ export class Search extends Component {
                               <div className="SearchTask"  key={e.id}>
                                 <div className="SearchTaskTop"  key={e.id}>
                                   {e.name ? <span className="SearchName">{e.name}</span> : null}
-                                  {e.endDate ? <span className="SearchEndDate" >{ moment(e.endDate).format('D MMM, h:mm')}</span> : null}
-                                  {e.endDate ? <span className="SearchEndDate" >{ moment(e.endDate).hours()}</span> : null}
-                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment(e.endDate).unix()}</span> : null} */}
-                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment().unix()}</span> : null} */}
-                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment().unix() - moment(e.endDate).unix()}</span> : null} */}
-                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment(e.endDate).unix() - moment().unix() }</span> : null} */}
-                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment(moment(e.endDate).unix() - moment().unix()).hours() }</span> : null} */}
-                                  {/* {e.endDate ? <span className="SearchEndDate" >{ moment(moment().unix() - moment(e.endDate).unix()).hours() }</span> : null} */}
-                                  {e.endDate ? <span className="SearchEndDate" >{ moment().format('D MMM, h:mm') }</span> : null}
-                                  {e.endDate ? <span className="SearchEndDate" >{ moment(e.endDate).format('D MMM, h:mm').diff(moment().format('D MMM, h:mm')) }</span> : null}
+                                  {e.endDate ? <span className={moment(e.endDate).fromNow() ? "SearchEndDate" : "SearchEndDate" } >{ moment(e.endDate).format('D MMM, h:mm')}</span> : null}
+                                  {
+                                    // (()=>{
+                                    //   if(e.status){
+                                    //     let a = statuses.find((x)=>x.status == e.status).name;
+                                    //       console.log("sssssssssssssssssssss",a)
+                                    //     return a
 
-                                  <span className="SearchStatus">{ e.status ? e.status : "Новая" }</span>
+                                    //   } 
+                                    // })()
+                                  }
+                                 
+                                  <span className="SearchStatus">{ e.status ? statuses.find((x)=>x.status == e.status).name : "Новая" }</span>
                                 </div>
                                 {e.assignedTo ? <UserRow view="Boxed" id={e.assignedTo.id} icon="1" name={e.assignedTo.username} key={e.assignedTo.id} /> : null}
                               </div>
@@ -183,12 +193,14 @@ export class Search extends Component {
                           { Search.objects ? <h3 className="BlockHeader">Объекты</h3> : null}
                           { Search.objects ? <div className="BlockContent">{
                             Search.objects.map((e)=>(
-                              <div className="SearchObjects"  key={e.id}>{e.name}</div>
+                              <div className="SearchObjects"  key={e.id}>
+                              <span className="SearchName">{e.name} </span>{e.address && e.address.value ? <span className="SearchStatus">{e.address.value}</span> : null}                           
+                              </div>
                             )) }</div>:  null
                           }
-                          { Search.tasks ? <h3 className="BlockHeader">Пользователи</h3> : null}
-                          { Search.tasks ? <div className="BlockContent">{
-                            Search.tasks.map((e)=>(
+                          { Search.users ? <h3 className="BlockHeader">Пользователи</h3> : null}
+                          { Search.users ? <div className="BlockContent">{
+                            Search.users.map((e)=>(
                               <UserRow view="Boxed" id={e.id} icon="1" name={e.username} key={e.id} />
                             )) }</div>:  null
                           }
