@@ -22,6 +22,7 @@ module.exports = {
       return getDirectChats(user);
     },
     id: user => user._id.toString(),
+    username: user => user.email,
   },
   Query: {
     user(parent, args, { user }) {
