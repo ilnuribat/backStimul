@@ -65,13 +65,6 @@ class TaskView extends Component {
     let _objId
 
     if (location.state && location.state.taskId) {
-
-      console.log("location.state-------------------------------")
-      console.log(location.state)
-      console.log(location.state.taskId)
-      console.log(typeof location.state.taskId)
-      console.log("location.state-------------------------------")
-
       _grid = location.state.taskId
       _grnm = location.state.taskName
       _objId = location.state.objectId || '1'
@@ -85,12 +78,6 @@ class TaskView extends Component {
     }
 
     if(_grid && _grnm){
-
-
-      console.log("_grid----------------------------------------------------------");
-      console.log(_grid);
-      console.log(_grnm);
-      
       this.props.setChat({
         variables:{
           id: _grid || localStorage.getItem('grid'),
@@ -107,7 +94,45 @@ class TaskView extends Component {
     this.allUserGet();
     this.glossStatus();
   }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { location } = this.props;
 
+    let _grid
+    let _grnm
+    let _objId
+
+    if(prevProps.location.state == this.props.location.state) return false
+
+    if (location.state && location.state.taskId) {
+      _grid = location.state.taskId
+      _grnm = location.state.taskName
+      _objId = location.state.objectId || '1'
+      if(!_objId || _objId.length < 9){
+        this.queryTaskById(_grid)
+      }
+    } else {
+      _grid = localStorage.getItem('grid');
+      _grnm = localStorage.getItem('grnm');
+      _objId = localStorage.getItem('ObjectId');
+    }
+
+    if(_grid && _grnm){
+      this.props.setChat({
+        variables:{
+          id: _grid || localStorage.getItem('grid'),
+          name: _grnm || localStorage.getItem('grnm'),
+        }
+      })
+      this.setState({
+        taskName: _grnm,
+        taskId: _grid,
+        objectId: _objId
+      });
+    }
+
+    this.allUserGet();
+    this.glossStatus();
+  }
   allUserGet(){
     qauf(allUsers(), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){

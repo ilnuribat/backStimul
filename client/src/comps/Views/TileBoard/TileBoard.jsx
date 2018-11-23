@@ -112,6 +112,8 @@ class TileBoard extends Component {
     }
   }
 
+
+
   render() {
     let { tiles, rootid, parentid, object, objectId, objectname } = this.state;
 
