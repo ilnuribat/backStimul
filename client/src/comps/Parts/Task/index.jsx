@@ -4,6 +4,7 @@ import '../../../newcss/column.css'
 /** Column view */
 import { Svg } from "../SVG/index";
 import { UserRow } from '../Rows/Rows';
+import moment from 'moment';
 
 class Task extends Component {
   constructor(props) {
@@ -35,8 +36,8 @@ class Task extends Component {
         {
           endDate ? (
             <div className="endDate">
-                    истекает:
-              {endDate}
+                    <span className="Pad">истекает:</span> 
+              { moment(endDate).format('D MMMM, h:mm')}
             </div>
           ): null
         }

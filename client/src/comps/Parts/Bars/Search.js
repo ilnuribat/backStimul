@@ -5,6 +5,10 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import Loading from '../../Loading';
+import { checkServerIdentity } from 'tls';
+import {UserRow} from '../../Parts/Rows/Rows';
+
+
 
 export class Search extends Component {
   constructor(props) {
@@ -62,14 +66,59 @@ export class Search extends Component {
     // `;
 
     let Search = gql(SearchGql);
+    let checks = [
+      {name: 'Все', id:'0', some:'data'},
+      {name: 'Объекты', id:'0', some:'data'},
+      {name: 'Задачи', id:'0', some:'data'},
+      {name: 'Сотрудники', id:'0', some:'data'},
+      {name: 'Сообщения', id:'0', some:'data'},
+      {name: 'Документы', id:'0', some:'data'},
+    ];
+    let checksTasks = [
+      {name: 'Новые', id:'0', status:'1'},
+      {name: 'В работе', id:'0', status:'3'},
+      {name: 'Проверяются', id:'0', status:'4'},
+      {name: 'Завершенные', id:'0', status:'5'},
+    ];
 
     return(
       <div className="Search">
         <div className="SearchTop">
           <form onSubmit={this.handleSubmit}>
-            <label>
-              <input type="text"  value={value} onChange={this.handleChange} placeholder="Найти задачи, человека, объект..."/>
+            <label className="LabelInputText" htmlFor="searchinput">
+              <input type="text" name="searchinput" value={value} onChange={this.handleChange} placeholder="Найти задачи, человека, объект..."/>
             </label>
+
+
+            <div className="searchTags">
+              <div className="searchTagsRow">
+
+                {
+                  checks.map((e,i)=>{
+                    return(
+                      <label className={i === 0 ? "searchTag sel" : "searchTag"} htmlFor={"check"+i} key={"check"+i}>
+                        <input type="checkbox" name={"check"+i}/>
+                        <span className="searchTagText">{e.name}</span>
+                      </label>
+                    )
+                  })
+                }
+
+              </div>
+              <div className="searchTagsRow">
+                {
+                  true ? checksTasks.map((e,i)=>{
+                    return(
+                      <label className={i === 0 ? "searchTag sel" : "searchTag"} htmlFor={"check"+i} key={"check"+i}>
+                        <input type="checkbox" name={"check"+i}/>
+                        <span className="searchTagText">{e.name}</span>
+                      </label>
+                    )
+                  }) : null
+                }
+              </div>
+
+            </div>
           </form>
 
         </div>
@@ -123,31 +172,33 @@ export class Search extends Component {
                       }
 
                       return(
-                        <div id="">
-                          { Search.messages ? <p>Сообщения</p> : null}
-                          { Search.messages ?
-                            Search.messages.map((e)=>(
-                              <li key={e.id}>{e.text}</li>
-                            )) :  null
-                          }
-                          { Search.tasks ? <p>Задачи</p> : null}
-                          { Search.tasks ?
+                        <div id="SeacrhInner">
+                          { Search.tasks ? <h3 className="BlockHeader">Задачи</h3> : null}
+                          { Search.tasks ? <div className="BlockContent">{
                             Search.tasks.map((e)=>(
-                              <li key={e.id}>{e.name}</li>
-                            )) :  null
+                              <div className="SearchTask"  key={e.id}>{e.name}</div>
+                            )) }</div>:  null
                           }
-                          { Search.objects ? <p>Объекты</p> : null}
-                          { Search.objects ?
+                          { Search.objects ? <h3 className="BlockHeader">Объекты</h3> : null}
+                          { Search.objects ? <div className="BlockContent">{
                             Search.objects.map((e)=>(
-                              <li key={e.id}>{e.name}</li>
-                            )) :  null
+                              <div className="SearchObjects"  key={e.id}>{e.name}</div>
+                            )) }</div>:  null
                           }
-                          { Search.tasks ? <p>Пользователи</p> : null}
-                          { Search.tasks ?
+                          { Search.tasks ? <h3 className="BlockHeader">Пользователи</h3> : null}
+                          { Search.tasks ? <div className="BlockContent">{
                             Search.tasks.map((e)=>(
-                              <li key={e.id}>{e.username}</li>
-                            )) :  null
+                              <UserRow view="Boxed" id={e.id} icon="1" name={e.username} key={e.id} />
+                            )) }</div>:  null
                           }
+                          { Search.messages ? <h3 className="BlockHeader">Сообщения</h3> : null}
+                          { Search.messages ? <div className="BlockContent">{
+                            Search.messages.map((e)=>(
+                              <div className="SearchMessage" key={e.id}>{e.text}</div>
+                            )) }</div>:  null
+                          }
+
+
                         </div>
                       )
                     }

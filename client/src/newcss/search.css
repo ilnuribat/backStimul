@@ -1,0 +1,89 @@
+.searchTags{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.searchTagsRow{
+  margin:5px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.searchTag{
+  margin:2px 4px;
+  cursor:pointer;
+  text-align: center;
+  overflow: hidden;
+  width:auto;
+  padding:5px 10px;
+  border-radius: 2px;
+  background: #3d4147;
+  font-size: 12px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.3px;
+  color: #ffffff;
+}
+.searchTag input[type="checkbox"]{
+  display: none;
+}
+.searchTag:hover{
+  background: #3e74b293;
+}
+.searchTag.sel{
+  background: #3e75b2;
+}
+
+.SearchBody .BlockHeader{
+  font-size: 20px;
+  font-weight: 300;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.4px;
+  color: #ffffff;
+  margin:10px 0 10px;
+}
+.SearchBody .BlockHeader:after{
+  content: ' ';
+  display: block;
+  width:200px;
+  height: 1px;
+  margin:10px 0 0;
+  background: #3d4147;  
+}
+
+.SearchBody .BlockContent{
+  margin: 0 0 0 20px;
+  background: #7979791e;
+  padding:10px;
+  border-radius: 3px;
+}
+
+.SearchBody .BlockContent .SearchTask{
+  margin: 2px 0 2px;
+  padding:10px;
+  border-radius: 3px;
+  background: #3e74b236;
+}
+.SearchBody .BlockContent .UserRow{
+  margin: 2px 0 2px;
+  padding:10px;
+  border-radius: 3px;
+  background: #3e74b236;
+}
+.SearchBody .BlockContent .SearchMessage{
+  margin: 2px 0 2px;
+  padding:10px;
+  border-radius: 3px;
+  background: #3e74b236;
+}
+.SearchBody .BlockContent .SearchObjects{}
+.SearchBody .BlockContent .SearchMessage{}
+.SearchBody .BlockContent .SearchDoc{}
+.SearchBody .BlockContent .SearchUser{}
