@@ -50,12 +50,6 @@ class Private extends React.Component {
 
 
   newUser(e,users){
-    console.log("TARGED");
-    
-    console.log(e.target)
-    console.log(e.target.value)
-    console.log(e.target.text)
-    console.log(e.target.valueid)
     
     if(e && e.target && e.target.value){
       let user = _.find(users, (obj)=> { return obj.username === e.target.value; });
@@ -98,13 +92,10 @@ class Private extends React.Component {
     let params = `"${uid}"`;
 
     if(uid){
-      console.log(createDirect(params));
       // return true
       qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
         if(a && a.data){
           ref1()
-          console.log(a);
-  
         }
       }).catch((e)=>{
         console.warn(e);

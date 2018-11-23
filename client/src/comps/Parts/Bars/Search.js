@@ -163,8 +163,8 @@ export class Search extends Component {
                       data.previewSearch.objects && data.previewSearch.objects.length > 0 ? Search.objects = data.previewSearch.objects : null
                       data.previewSearch.users && data.previewSearch.users.length > 0 ? Search.users = data.previewSearch.users : null
 
-                      Search ? console.log("Search", Search) : null
-
+                      // Search ? console.log("Search", Search) : null
+                      
                       // Search ? (
                       return(
                         <div id="SeacrhInner">
@@ -180,7 +180,6 @@ export class Search extends Component {
                                       // (()=>{
                                       //   if(e.status){
                                       //     let a = statuses.find((x)=>x.status == e.status).name;
-                                      //       console.log("sssssssssssssssssssss",a)
                                       //     return a
 
                                       //   } 

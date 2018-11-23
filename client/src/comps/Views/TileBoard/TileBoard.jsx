@@ -68,8 +68,6 @@ class TileBoard extends Component {
 
   query(args){
     let {id, type, name, parentId} = args;
-    // console.log("-------------")
-    // console.log(id, type, name, parentId)
     if(id && type === 'AddressObject'){
       localStorage.setItem('rootId', id)
       localStorage.setItem('parentId', parentId)

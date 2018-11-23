@@ -7,7 +7,6 @@ export default class Main extends Component {
 
   render() {
 
-    console.log(this.props)
     let {children} = this.props;
 
 

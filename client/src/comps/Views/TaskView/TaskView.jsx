@@ -12,7 +12,7 @@ import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
 import { uploadFile, removeFile, updTask } from '../../../GraphQL/Qur/Mutation';
 import { selectUser, setChat, taskCacheUpdate } from '../../../GraphQL/Cache';
-import { allUsers, glossaryStatus, GR_QUERY, getObjectTasksSmall } from '../../../GraphQL/Qur/Query';
+import { allUsers, glossaryStatus, GR_QUERY, getObjectTasksSmall, getTaskById } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 // import Panel from '../../Lays/Panel/index';
@@ -65,9 +65,19 @@ class TaskView extends Component {
     let _objId
 
     if (location.state && location.state.taskId) {
+
+      console.log("location.state-------------------------------")
+      console.log(location.state)
+      console.log(location.state.taskId)
+      console.log(typeof location.state.taskId)
+      console.log("location.state-------------------------------")
+
       _grid = location.state.taskId
       _grnm = location.state.taskName
-      _objId = location.state.objectId
+      _objId = location.state.objectId || '1'
+      if(!_objId || _objId.length < 9){
+        this.queryTaskById(_grid)
+      }
     } else {
       _grid = localStorage.getItem('grid');
       _grnm = localStorage.getItem('grnm');
@@ -75,10 +85,16 @@ class TaskView extends Component {
     }
 
     if(_grid && _grnm){
+
+
+      console.log("_grid----------------------------------------------------------");
+      console.log(_grid);
+      console.log(_grnm);
+      
       this.props.setChat({
         variables:{
-          id: localStorage.getItem('grid'),
-          name: localStorage.getItem('grnm'),
+          id: _grid || localStorage.getItem('grid'),
+          name: _grnm || localStorage.getItem('grnm'),
         }
       })
       this.setState({
@@ -104,6 +120,49 @@ class TaskView extends Component {
     });
   }
 
+  queryTaskById(id){
+    // console.warn("GETTASK!!", objectId, taskId)
+    const { objectId, taskId } = this.state;
+
+    console.log("query---------------");
+    console.log(id);
+
+    return true;
+    if(objectId && objectId.length > 9 ){
+      console.log("objectId---------------------");
+      console.log(objectId);
+      
+      return true;
+    }
+
+    qauf(getTaskById(id), _url, localStorage.getItem('auth-token')).then(a=>{
+      console.log("query---------------");
+      console.log(id);
+      
+      
+      if(a && a.data){
+        this.setState({
+          objectId: a.data.task.objectId,
+        })
+      }
+    }).catch((e)=>{
+      console.warn(e);
+    })
+  }
+
+
+  shouldComponentUpdate(nextProps, nextState){
+
+    console.log("nextProps.location----------------------------------");
+    console.log(nextProps.location);
+    console.log(this.props.location);
+    
+    if(nextProps.location.state != this.props.location.state){
+      return true
+    }
+    return true
+
+  }
   getTaskLists(){
     // console.warn("GETTASK!!", objectId, taskId)
     const { objectId, taskId } = this.state
@@ -121,9 +180,9 @@ class TaskView extends Component {
   }
 
   writeTaskName(name) {
-    console.warn("writeName", name, this.state.taskId)
+    // console.warn("writeName", name, this.state.taskId)
     qauf(updTask(this.state.taskId,`{name: "${name}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.warn(a.data)
+      // console.warn(a.data)
       this.modalMessage(a.data.updateTask);
       localStorage.setItem('grnm',name);
       this.setState({taskName: name})
@@ -151,7 +210,7 @@ class TaskView extends Component {
 
   deleteFile (id) {
     qauf(removeFile(id), _url, localStorage.getItem('auth-token')).then((a)=>{
-      console.warn(a)
+      // console.warn(a)
       this.props.taskCacheUpdate({
         variables:{
           value: id,
@@ -171,9 +230,9 @@ class TaskView extends Component {
     value = e
 
     if (quota) cap = '"';
-    console.warn("writeData", e, change, this.state.taskId)
+    // console.warn("writeData", e, change, this.state.taskId)
     qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.warn("update task done", a)
+      // console.warn("update task done", a)
       this.modalMessage(a.data.updateTask);
       switch (change) {
       case "assignedTo":
@@ -369,7 +428,7 @@ class TaskView extends Component {
               console.log(error);
               
             }
-            console.warn("DATA", data.task)
+            // console.warn("DATA", data.task)
 
             if (!data || !data.task)
               return null
@@ -588,7 +647,7 @@ class TaskView extends Component {
                         {/* <div className="files-drop"> */}
                         {/* <Svg svg="tocloud" inline={0} />переместите файлы сюдa */}
                         <Mutation mutation={uploadFile} onCompleted={(data) => {
-                          console.warn(data)
+                          // console.warn(data)
                           this.modalMessage(data.uploadFile);
                           this.updateCacheFile(data.uploadFile)
                         }}>

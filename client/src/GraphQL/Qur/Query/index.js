@@ -83,6 +83,24 @@ export const getById = (id) => {
         `)
 };
 
+export const getTaskById = (id) => {
+    return (
+        `{
+            task(id: ${id}) {
+                id
+                name
+                assignedTo{
+                  id
+                  username
+                }
+                endDate
+                status
+                objectId
+              }
+        }
+        `)
+};
+
 
 
 
