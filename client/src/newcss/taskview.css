@@ -36,6 +36,11 @@
   margin:10px auto;
   display:block;
   padding: 20px;
+  height: auto;
+  max-height: 200px;
+  width:90%;
+  min-width: 260px;
+  overflow: auto;
 }
 /* .TaskViewInner0 > div > *{
   border: 1px solid salmon;
