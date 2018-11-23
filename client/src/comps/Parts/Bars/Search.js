@@ -49,7 +49,7 @@ export class Search extends Component {
           tasks{
             id
             name
-            #objectId
+            objectId
             assignedTo{
               id
               username
