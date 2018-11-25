@@ -11,8 +11,4 @@ const user = new Schema({
   },
 });
 
-user.virtual('username').get(function () {
-  return this.email;
-});
-
 module.exports = user;
