@@ -1,9 +1,10 @@
+const mongoose = require('mongoose');
 const { assert } = require('chai');
 const objectService = require('../../server/src/services/object.js');
 const { Group, UserGroup } = require('../../server/src/models');
 
 describe('object', () => {
-  before(async function () {
+  beforeEach(async function () {
     this.tmpObject = await Group.create({
       address: {
         value: 'asdf',
@@ -14,7 +15,7 @@ describe('object', () => {
     this.tmpTask = await Group.create({
       objectId: this.tmpObject._id,
       name: 'test object',
-      type: 'TASK'
+      type: 'TASK',
     });
     await UserGroup.create({
       userId: this.user._id,
@@ -28,10 +29,18 @@ describe('object', () => {
 
     assert.isEmpty(tasks);
   });
-  after(async function () {
+  it('delete notFound object', async () => {
+    try {
+      await objectService.deleteObject(null, { id: mongoose.Types.ObjectId.createFromTime(Date.now()) });
+      throw new Error('asdf');
+    } catch (err) {
+      assert.equal(err.message, 'no object found to delete');
+    }
+  });
+
+  afterEach(async function () {
     await UserGroup.deleteOne({ groupId: this.tmpTask._id });
     await Group.deleteOne({ _id: this.tmpObject._id });
     await Group.deleteOne({ _id: this.tmpTask._id });
   });
 });
-

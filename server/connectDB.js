@@ -4,6 +4,7 @@ const { MONGODB_HOST } = require('./config');
 
 module.exports = async function (connection = MONGODB_HOST) {
   mongoose.set('debug', !['test', 'production'].includes(process.env.NODE_ENV));
+  logger.info('connecting to mongo...');
 
   return mongoose
     .connect(connection, {
