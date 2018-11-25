@@ -121,7 +121,7 @@ async function start() {
     /* istanbul ignore if  */
     if (process.env.NODE_ENV !== 'test') {
       server.listen({ port: HTTP_PORT }, () => {
-        logger.info(`server started at port: ${HTTP_PORT}`);
+        logger.info('server started at', { port: HTTP_PORT });
         resolve();
       });
     }

@@ -7,18 +7,19 @@ const {
 
 function handleMeta(meta) {
   return Object.keys(meta)
+    .filter(k => !['label', 'timestamp'].includes(k))
     .map(key => `${key}: ${meta[key]}`)
     .join(', ');
 }
 
 const customFormat = printf(log => `${
   log.level
-} [${
+}: ${
   log.timestamp
-}]: ${
+}: ${
   log.label
 } ${
-  !log.message ? log.message : log.message.toString().toString()
+  typeof log.message === 'string' ? log.message : log.message.toString()
 } ${
   handleMeta(log.metadata)
 }`);
