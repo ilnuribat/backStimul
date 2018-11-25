@@ -32,7 +32,7 @@ async function rootObjectQuery(parent, { id: addressId }) {
   };
 }
 
-async function searchObjects(user, regExp, limit = 10) {
+async function searchObjects(user, regExp, limit) {
   const res = await Group.find({
     type: 'OBJECT',
     $or: [{
