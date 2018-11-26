@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { graphql, compose, Query } from "react-apollo";
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
+// import { Redirect } from 'react-router';
+import { Link,Redirect } from 'react-router-dom';
 
 import 'animate.css';
 import Column from '../../Parts/Column';
@@ -68,12 +68,30 @@ class Board extends Component {
     });
   }
 
+  componentWillMount(){
+    const { location } = this.props;
+    let id = location.state && location.state.objectId ? location.state.objectId : localStorage.getItem('ObjectId')
+
+    console.log("location.state ------------ ", location.state )
+
+    
+    if(id){
+      this.setState({
+        objectId: id,
+      });
+      this.glossStatus(id)
+    }
+  }
+
   componentDidMount(){
     const { location } = this.props;
-    let id;
+    let id = location.state && location.state.objectId ? location.state.objectId : localStorage.getItem('ObjectId')
 
-    (location.state && location.state.objectId) ? id = location.state.objectId : id = localStorage.getItem('ObjectId')
+    console.log("location.state ------------ ", location.state )
 
+
+    
+    
     if(id){
       this.setState({
         objectId: id,
@@ -268,9 +286,8 @@ class Board extends Component {
     }} />
 
     // console.warn(" current states is", objectId, status)
-
-    return (
-      objectId && status ?
+    if(objectId && status){
+      return (
         <Query query={getObjectTasks} variables={{ id: objectId}} >
           {({ loading, error, data }) => {
             if (loading){
@@ -472,8 +489,11 @@ class Board extends Component {
 
             }
           }}
-        </Query> : <Loading/>
+        </Query> 
     )
+    }else{
+      return(<Redirect to="/" />)
+    }
   }
 }
 

@@ -362,7 +362,6 @@ class TaskView extends Component {
       userId = id;
     }
 
-
     q = () => {return(`mutation{
       updateUsersTask(task: {id: "${this.state.taskId}", delete: ${dels}, users: ["${userId}"]} )
     }`)} ;
@@ -451,8 +450,6 @@ class TaskView extends Component {
                   {error.message}
                 </div>
               );
-              
-              
             }
             // console.warn("DATA", data.task)
 
@@ -468,7 +465,7 @@ class TaskView extends Component {
             return(
               <Content view="OvH">
                 <div className="TaskViewTop">
-                  <ButtonTo url={"/board"} icon="back">Назад</ButtonTo>
+                  <ButtonTo url={"/board"} linkstate={{objectId: data.task.objectId}} icon="back">Назад</ButtonTo>
                   <div className="TaskViewTopName"><h1>{data.task.name}</h1></div>
                 </div>
                 <div className="TaskView Row Pad10">
