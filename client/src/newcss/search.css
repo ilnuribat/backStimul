@@ -29,13 +29,20 @@
   letter-spacing: -0.3px;
   color: #ffffff;
 }
+.searchTag{
+
+}
+
+
 .searchTag input[type="checkbox"]{
   display: none;
 }
+
 .searchTag:hover{
   background: #3e74b293;
 }
-.searchTag.sel{
+.searchTag.sel,
+input[type="checkbox"]:checked + label.searchTag{
   background: #3e75b2;
 }
 

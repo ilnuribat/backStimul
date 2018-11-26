@@ -14,10 +14,19 @@ import { Link } from 'react-router-dom';
 export class Search extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    this.state = {
+      chAll: true,
+      chObj: false,
+      chDcs: false,
+      chMsg: false,
+      chUsr: false,
+      chTsk: false,
+      value:'',
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   handleChange(event) {
@@ -28,66 +37,93 @@ export class Search extends Component {
     alert('A name was submitted: ' + this.state.value);
     event.preventDefault();
   }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    target.type === 'checkbox' && target.name !== 'chAll' ? this.setState({chAll: false, [name]: value }) : this.setState({[name]: value});
+  }
+
   static propTypes = {
 
   }
 
+  componentWillUpdate(){
+    // !this.state.chObj && 
+    // !this.state.chTsk && 
+    // !this.state.chDcs && 
+    // !this.state.chUsr && 
+    // !this.state.chMsg ? this.setState({chAll: true,}) : null
+  }
+
+  // shouldComponentUpdate(nextProps, nextState){
+    // if(nextState.chAll === this.state.chAll){
+    //   return false
+    // }
+    // if(nextState === this.state){
+    //   return false
+    // }
+    // return true
+  // }
+
   render() {
+
+    let Obj = `objects{
+      id
+      name
+      address{
+        value
+      }
+    }`;
+    let Tsk = `tasks{
+      id
+      name
+      objectId
+      assignedTo{
+        id
+        username
+      }
+      endDate
+      status
+    }`;
+    let Usr = `users{
+      id
+      username
+    }`
+    let Msg = `messages{
+      id
+      text
+    }`;
+    let Dcs = `docs{
+      id
+      name
+    }`;
+
     let {children} = this.props;
     let {value} = this.state;
     // let query = value;
     let SearchGql = `
     query previewSearch($query: String!){
         previewSearch(query: $query){
-          objects{
-            id
-            name
-            address{
-              value
-            }
-          }
-          tasks{
-            id
-            name
-            #objectId
-            assignedTo{
-              id
-              username
-            }
-            endDate
-            status
-          }
-          users{
-            id
-            username
-          }
-          messages{
-            id
-            text
-          }
+        ${this.state.chAll || this.state.chObj ? Obj : null}
+        ${this.state.chAll || this.state.chTsk ? Tsk : null}
+        ${this.state.chAll || this.state.chUsr ? Usr : null}
+        ${this.state.chAll || this.state.chMsg ? Msg : null}
+        ${this.state.chAll || this.state.chDcs ? Dcs : null}
       }
     }
     `;
 
-    // SearchGql = `
-    // query search($text: String){
-    //   search(text: $text ){
-    //     __typename
-    //     ... on Object{
-    //       name
-    //     }
-    //   }
-    // }
-    // `;
-
     let Search = gql(SearchGql);
     let checks = [
-      {name: 'Все', id:'0', some:'data'},
-      {name: 'Объекты', id:'0', some:'data'},
-      {name: 'Задачи', id:'0', some:'data'},
-      {name: 'Сотрудники', id:'0', some:'data'},
-      {name: 'Сообщения', id:'0', some:'data'},
-      {name: 'Документы', id:'0', some:'data'},
+      {name: 'chAll', text:'Все', id:'0', some:'data'},
+      {name: 'chObj', text:'Объекты', id:'0', some:'data'},
+      {name: 'chTsk', text:'Задачи', id:'0', some:'data'},
+      {name: 'chUsr', text:'Сотрудники', id:'0', some:'data'},
+      {name: 'chMsg', text:'Сообщения', id:'0', some:'data'},
+      {name: 'chDcs', text:'Документы', id:'0', some:'data'},
     ];
     let checksTasks = [
       {name: 'Новые', id:'0', status:'1'},
@@ -102,6 +138,8 @@ export class Search extends Component {
       {name: 'Завершена', status:'5'},
     ];
 
+
+
     return(
       <div className="Search">
         <div className="SearchTop">
@@ -113,13 +151,12 @@ export class Search extends Component {
 
             <div className="searchTags">
               <div className="searchTagsRow">
-
                 {
                   checks.map((e,i)=>{
                     return(
-                      <label className={i === 0 ? "searchTag sel" : "searchTag"} htmlFor={"check"+i} key={"check"+i}>
-                        <input type="checkbox" name={"check"+i}/>
-                        <span className="searchTagText">{e.name}</span>
+                      <label className={this.state[e.name] ? "searchTag sel" : "searchTag"} htmlFor={e.name} key={"check"+i}>
+                        <input id={e.name} name={e.name} type="checkbox" checked={this.state[e.name]} onChange={this.handleInputChange} />
+                        <span className="searchTagText">{e.text}</span>
                       </label>
                     )
                   })
@@ -128,7 +165,7 @@ export class Search extends Component {
               </div>
               <div className="searchTagsRow">
                 {
-                  true ? checksTasks.map((e,i)=>{
+                  this.state.chTsk ? checksTasks.map((e,i)=>{
                     return(
                       <label className={i === 0 ? "searchTag sel" : "searchTag"} htmlFor={"check"+i} key={"check"+i}>
                         <input type="checkbox" name={"check"+i}/>
