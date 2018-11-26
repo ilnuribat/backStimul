@@ -243,7 +243,7 @@ export default {
       let query;
       let previousState;
 
-      console.warn("ДАННЫЕ!", taskId, objectId, action, value);
+      // console.warn("ДАННЫЕ!", taskId, objectId, action, value);
 
       switch (action) {
       case "updateTask":
@@ -272,7 +272,7 @@ export default {
 
           return null
         }
-        console.warn("prevstate is", previousState)
+        // console.warn("prevstate is", previousState)
 
         Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { [value.key]: value.value });
 
@@ -310,24 +310,22 @@ export default {
 
           return null
         }
-        console.warn("prevstate is", previousState)
-
-        // eslint-disable-next-line no-case-declarations
-        const newFeedItem = {
-          id: taskId,
-          name: value.name ? value.name : "Не указано",
-          users: value.users ? value.users : null,
-          unreadCount: value.unreadCount ? value.unreadCount : 0 ,
-          lastMessage: value.lastMessage ? value.lastMessage : null,
-          status: value.status ? value.status : null,
-          parentId: value.parentId ? value.parentId : null,
-          assignedTo: value.assignedTo ?  value.assignedTo :null,
-          endDate: value.endDate ? value.endDate :null,
-          __typename: "Task"}
+        // console.warn("prevstate is", previousState)
 
         data = {
           object: {
-            tasks:  [...previousState.object.tasks, newFeedItem],
+            tasks:  [...previousState.object.tasks, {
+              id: taskId,
+              name: value.name ? value.name : "Не указано",
+              users: value.users ? value.users : null,
+              unreadCount: value.unreadCount ? value.unreadCount : 0 ,
+              lastMessage: value.lastMessage ? value.lastMessage : null,
+              status: value.status ? value.status : null,
+              parentId: value.parentId ? value.parentId : null,
+              assignedTo: value.assignedTo ?  value.assignedTo :null,
+              endDate: value.endDate ? value.endDate :null,
+              __typename: "Task"
+            }],
             __typename: "Object"
           }
         };

@@ -458,9 +458,7 @@ Board.propTypes = {
   rootId: PropTypes.func.isRequired,
   setChat: PropTypes.func.isRequired,
   objectCacheUpdate: PropTypes.func.isRequired,
-  location: PropTypes.shape({
-    state: PropTypes.object
-  }),
+  location: PropTypes.object
 };
 
 
