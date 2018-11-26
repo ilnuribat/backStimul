@@ -392,10 +392,13 @@ class Board extends Component {
                         ) : null }
                         {this.state.modal ? (
                           <Modal close={this.closeModal}>
-                            <InputWrapper name="Ведите название задачи" save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
-                      Название
-                            </InputWrapper>
-
+                            <ModalRow>
+                              <ModalCol>
+                                <InputWrapper placeholder="Ведите название задачи" save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
+                                  Название
+                                </InputWrapper>
+                              </ModalCol>
+                            </ModalRow>
                             <ModalRow>
                               <ModalCol>
                                 <ModalBlockName>

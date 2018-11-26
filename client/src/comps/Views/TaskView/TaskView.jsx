@@ -369,7 +369,7 @@ class TaskView extends Component {
 
     if(typeof q === "function"){
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
-        // console.warn("Answer updUsrGr",a.data)
+
         this.modalMessage(a.data.updateUsersTask);
         !dels ?
           this.props.taskCacheUpdate({
@@ -379,15 +379,17 @@ class TaskView extends Component {
               userName: this.state.newUser,
               taskId: this.state.taskId,
             }
-          })
-          :
-          this.props.taskCacheUpdate({
+          }) : this.props.taskCacheUpdate({
             variables:{
               action: "delUser",
               value: userId,
               taskId: this.state.taskId,
             }
           })
+
+        this.setState({
+          newUser: "",
+        })    
       })
         .catch((e)=>{
           console.warn(e);
@@ -570,9 +572,14 @@ class TaskView extends Component {
                 </div>
                 {modal ? (
                   <Modal close={()=>{ this.setState({modal: !modal}) }} small="" message={this.state.modalMessageShow?this.state.modalMessage:""}>
-                    <InputWrapper name={data.task.name} save="Сохранить" click={this.writeTaskName}>
-                        Название
-                    </InputWrapper>
+
+                    <ModalRow>
+                      <ModalCol>
+                        <InputWrapper name={data.task.name} save="Сохранить" click={this.writeTaskName}>
+                            Название
+                        </InputWrapper>
+                      </ModalCol>
+                    </ModalRow>
 
 
                     <ModalRow>
@@ -628,7 +635,7 @@ class TaskView extends Component {
                         </ModalBlockName>
                         <div className="content">
                           <label className="LabelInputList" htmlFor="users">
-                            <input type="list" name="users" list="users" autoComplete="on" onChange={this.newUser} />
+                            <input type="list" name="users" list="users" autoComplete="on" value={this.state.newUser} onChange={this.newUser} />
                             {
                               this.state.newUser ? (
                                 <div className="Button3" onClick={()=>this.userAdd(this.state.newUser, 1)}>Добавить{/*this.state.newUser*/}</div>
