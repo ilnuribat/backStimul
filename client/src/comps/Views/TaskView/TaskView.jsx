@@ -11,7 +11,7 @@ import { qauf, _url } from '../../../constants';
 import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
 import { uploadFile, removeFile, updTask } from '../../../GraphQL/Qur/Mutation';
-import { selectUser, setChat, taskCacheUpdate } from '../../../GraphQL/Cache';
+import { selectUser, setChat, taskCacheUpdate, objectCacheUpdate } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, GR_QUERY, getObjectTasksSmall, getTaskById } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
@@ -39,6 +39,7 @@ class TaskView extends Component {
       taskName: "",
       taskId: "",
       objectId: "",
+      objectCache: false,
       modal: false,
       inputSaver: {},
       newUser: "",
@@ -52,7 +53,6 @@ class TaskView extends Component {
     this.glossStatus = this.glossStatus.bind(this);
     this.newUser = this.newUser.bind(this);
 
-    this.writeTaskName = this.writeTaskName.bind(this)
     this.writeTaskData = this.writeTaskData.bind(this)
     this.modalMessage = this.modalMessage.bind(this)
   }
@@ -107,9 +107,9 @@ class TaskView extends Component {
       _grid = location.state.taskId
       _grnm = location.state.taskName
       _objId = location.state.objectId || '1'
-      if(!_objId || _objId.length < 9){
-        this.queryTaskById(_grid)
-      }
+      // if(!_objId || _objId.length < 9){
+      //   this.queryTaskById(_grid)
+      // }
     } else {
       _grid = localStorage.getItem('grid');
       _grnm = localStorage.getItem('grnm');
@@ -149,45 +149,38 @@ class TaskView extends Component {
     // console.warn("GETTASK!!", objectId, taskId)
     const { objectId, taskId } = this.state;
 
-    console.log("query---------------");
-    console.log(id);
-
     return true;
-    if(objectId && objectId.length > 9 ){
-      console.log("objectId---------------------");
-      console.log(objectId);
-      
-      return true;
-    }
+    // if(objectId && objectId.length > 9 ){
+    //   console.log("objectId---------------------");
+    //   console.log(objectId);
 
-    qauf(getTaskById(id), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.log("query---------------");
-      console.log(id);
-      
-      
-      if(a && a.data){
-        this.setState({
-          objectId: a.data.task.objectId,
-        })
-      }
-    }).catch((e)=>{
-      console.warn(e);
-    })
+    //   return true;
+    // }
+
+    // qauf(getTaskById(id), _url, localStorage.getItem('auth-token')).then(a=>{
+    //   console.log("query---------------");
+    //   console.log(id);
+
+
+    //   if(a && a.data){
+    //     this.setState({
+    //       objectId: a.data.task.objectId,
+    //     })
+    //   }
+    // }).catch((e)=>{
+    //   console.warn(e);
+    // })
   }
 
 
   shouldComponentUpdate(nextProps, nextState){
-
-    console.log("nextProps.location----------------------------------");
-    console.log(nextProps.location);
-    console.log(this.props.location);
-    
     if(nextProps.location.state != this.props.location.state){
       return true
     }
-    return true
 
+    return true
   }
+
   getTaskLists(){
     // console.warn("GETTASK!!", objectId, taskId)
     const { objectId, taskId } = this.state
@@ -204,29 +197,10 @@ class TaskView extends Component {
     })
   }
 
-  writeTaskName(name) {
-    // console.warn("writeName", name, this.state.taskId)
-    qauf(updTask(this.state.taskId,`{name: "${name}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      // console.warn(a.data)
-      this.modalMessage(a.data.updateTask);
-      localStorage.setItem('grnm',name);
-      this.setState({taskName: name})
-      this.props.taskCacheUpdate({
-        variables:{
-          action: "name",
-          value: name,
-          taskId: this.state.taskId,
-        }
-      })
-    }).catch((e)=>{
-      console.warn(e);
-    })
-  }
-
   updateCacheFile (data) {
     this.props.taskCacheUpdate({
       variables:{
-        object: data,
+        value: data,
         action: "uploadFile",
         taskId: this.state.taskId,
       }
@@ -238,7 +212,7 @@ class TaskView extends Component {
       // console.warn(a)
       this.props.taskCacheUpdate({
         variables:{
-          value: id,
+          value: {id: id},
           action: "deleteFile",
           taskId: this.state.taskId,
         }
@@ -248,11 +222,13 @@ class TaskView extends Component {
     });
   }
 
-  writeTaskData(e, change, quota, userName) {
+  writeTaskData(value, change, quota, userName) {
     let cap = "";
-    let value;
 
-    value = e
+    if (value && value.name) {
+      localStorage.setItem('grnm',value.name);
+      this.setState({taskName: value.name})
+    }
 
     if (quota) cap = '"';
     // console.warn("writeData", e, change, this.state.taskId)
@@ -264,8 +240,7 @@ class TaskView extends Component {
         this.props.taskCacheUpdate({
           variables:{
             action: change,
-            value: value,
-            userName: userName,
+            value: { id: value, name: userName, key: change },
             taskId: this.state.taskId,
           }
         })
@@ -273,11 +248,23 @@ class TaskView extends Component {
       default:
         this.props.taskCacheUpdate({
           variables:{
-            value: value,
+            value: { value : value, key : change },
             action: change,
             taskId: this.state.taskId,
           }
         })
+
+        if (this.props.location.state && this.props.location.state.objectId && change !== "addUser" && change !== "delUser") {
+          console.warn("location!!",this.props.location.state.objectId, change )
+          this.props.objectCacheUpdate({
+            variables:{
+              value: { value: value, key: change },
+              action: "updateTask",
+              taskId: this.state.taskId,
+              objectId: this.props.location.state.objectId
+            }
+          })
+        }
         break;
       }
     }).catch((e)=>{
@@ -375,21 +362,20 @@ class TaskView extends Component {
           this.props.taskCacheUpdate({
             variables:{
               action: "addUser",
-              value: userId,
-              userName: this.state.newUser,
+              value: { id: userId, name: this.state.newUser },
               taskId: this.state.taskId,
             }
           }) : this.props.taskCacheUpdate({
             variables:{
               action: "delUser",
-              value: userId,
+              value: { id: userId },
               taskId: this.state.taskId,
             }
           })
 
         this.setState({
           newUser: "",
-        })    
+        })
       })
         .catch((e)=>{
           console.warn(e);
@@ -446,7 +432,8 @@ class TaskView extends Component {
               );
             }
             if (error){
-              console.log(error);
+              // console.log(error);
+
               return (
                 <div className="errMess">
                   {error.message}
@@ -575,7 +562,7 @@ class TaskView extends Component {
 
                     <ModalRow>
                       <ModalCol>
-                        <InputWrapper name={data.task.name} save="Сохранить" click={this.writeTaskName}>
+                        <InputWrapper name={data.task.name} save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
                             Название
                         </InputWrapper>
                       </ModalCol>
@@ -706,11 +693,15 @@ TaskView.propTypes = {
   selectUser: PropTypes.func.isRequired,
   setChat: PropTypes.func.isRequired,
   taskCacheUpdate: PropTypes.func.isRequired,
+  objectCacheUpdate: PropTypes.func.isRequired,
   location: PropTypes.object
 };
 
 export default compose(
   graphql(setChat, { name: 'setChat' }),
   graphql(taskCacheUpdate, { name: 'taskCacheUpdate' }),
+  graphql(objectCacheUpdate, { name: 'objectCacheUpdate' }),
   graphql(selectUser, { name: 'selectUser' }),
 )(TaskView);
+
+

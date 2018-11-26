@@ -272,7 +272,7 @@ export default {
 
           return null
         }
-        console.warn("prevstate is", previousState)
+        // console.warn("prevstate is", previousState)
 
         Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { [value.key]: value.value });
 
@@ -310,24 +310,22 @@ export default {
 
           return null
         }
-        console.warn("prevstate is", previousState)
-
-        // eslint-disable-next-line no-case-declarations
-        const newFeedItem = {
-          id: taskId,
-          name: value.name ? value.name : "Не указано",
-          users: value.users ? value.users : null,
-          unreadCount: value.unreadCount ? value.unreadCount : 0 ,
-          lastMessage: value.lastMessage ? value.lastMessage : null,
-          status: value.status ? value.status : null,
-          parentId: value.parentId ? value.parentId : null,
-          assignedTo: value.assignedTo ?  value.assignedTo :null,
-          endDate: value.endDate ? value.endDate :null,
-          __typename: "Task"}
+        // console.warn("prevstate is", previousState)
 
         data = {
           object: {
-            tasks:  [...previousState.object.tasks, newFeedItem],
+            tasks:  [...previousState.object.tasks, {
+              id: taskId,
+              name: value.name ? value.name : "Не указано",
+              users: value.users ? value.users : null,
+              unreadCount: value.unreadCount ? value.unreadCount : 0 ,
+              lastMessage: value.lastMessage ? value.lastMessage : null,
+              status: value.status ? value.status : null,
+              parentId: value.parentId ? value.parentId : null,
+              assignedTo: value.assignedTo ?  value.assignedTo :null,
+              endDate: value.endDate ? value.endDate :null,
+              __typename: "Task"
+            }],
             __typename: "Object"
           }
         };
@@ -374,75 +372,27 @@ export default {
       return true;
 
     },
-    taskCacheUpdate: (_, { value, userName, action, taskId, object },  { cache }) => {
+    taskCacheUpdate: (_, { value, action, taskId },  { cache }) => {
       let data;
       let query;
       let previousState;
 
-      switch (action) {
-      case "name":
-        // eslint-disable-next-line no-case-declarations
-        const params = `name`
+      if (value && value.status) value.status = parseInt(value.status)
 
+      switch (action) {
+      default:
+        // console.warn("ДАННЫЕ!", taskId, action, value);
         query = gql`
           query task($id: ID!) {
             task(id: $id ) @client {
-              ${params}
+              ${value.key}
               __typename
             }
           }
       `;
         data = {
           task: {
-            name: value,
-            __typename: "Task"
-          }
-        };
-        break;
-      case "parentId":
-        query = gql`
-          query task($id: ID!) {
-            task(id: $id ) @client {
-              parentId
-              __typename
-            }
-          }
-      `;
-        data = {
-          task: {
-            parentId: value,
-            __typename: "Task"
-          }
-        };
-        break;
-      case "endDate":
-        query = gql`
-          query task($id: ID!) {
-            task(id: $id ) @client {
-              endDate
-              __typename
-            }
-          }
-      `;
-        data = {
-          task: {
-            endDate: value,
-            __typename: "Task"
-          }
-        };
-        break;
-      case "status":
-        query = gql`
-          query task($id: ID!) {
-            task(id: $id ) @client {
-              status
-              __typename
-            }
-          }
-      `;
-        data = {
-          task: {
-            status: parseInt(value),
+            [value.key]: value.value,
             __typename: "Task"
           }
         };
@@ -461,7 +411,7 @@ export default {
           }
         `;
         // eslint-disable-next-line no-case-declarations
-        let param = {id: value, username: userName, __typename: "UserTaskRole"}
+        let param = {id: value.id, username: value.name, __typename: "UserTaskRole"}
 
         if (!value) param = null
 
@@ -497,7 +447,7 @@ export default {
 
         data = {
           task: {
-            users: [...previousState.task.users, {id: value, username: userName, __typename: "User"}],
+            users: [...previousState.task.users, {id: value.id, username: value.name, __typename: "User"}],
             __typename: "Task"
           }
         };
@@ -527,7 +477,7 @@ export default {
 
         data = {
           task: {
-            users: [...previousState.task.users.filter(users => users.id !== value)],
+            users: [...previousState.task.users.filter(users => users.id !== value.id)],
             __typename: "Task"
           }
         };
@@ -561,11 +511,11 @@ export default {
         data = {
           task: {
             files: [...previousState.task.files, {
-              id: object.id,
+              id: value.id,
               date: new Date(),
-              mimeType: object.mimeType,
-              name: object.name,
-              size: object.size,
+              mimeType: value.mimeType,
+              name: value.name,
+              size: value.size,
               __typename: "File"
             }],
             __typename: "Task"
@@ -600,12 +550,10 @@ export default {
 
         data = {
           task: {
-            files: [...previousState.task.files.filter(files => files.id !== value)],
+            files: [...previousState.task.files.filter(files => files.id !== value.id)],
             __typename: "Task"
           }
         };
-        break;
-      default:
         break;
       }
 

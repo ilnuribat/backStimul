@@ -36,7 +36,7 @@ class Task extends Component {
         {
           endDate ? (
             <div className="endDate">
-                    <span className="Pad">истекает:</span> 
+              <span className="Pad">истекает:</span> 
               { moment(endDate).format('D MMMM, h:mm')}
             </div>
           ): null
@@ -64,7 +64,7 @@ class Task extends Component {
           <UserRow icon="1" box="1"/>
           {/* </div> */}
           <div className="Childs" onClick={()=>childs(id)}>
-            {!selected ? <Svg svg="childs"></Svg> : <div className="">Скрыть подзадачи</div>}
+            {!selected ? <Svg svg="childs"></Svg> : <div className="" onClick={()=>childs('')}>Скрыть подзадачи</div>}
           </div>
         </div>
         <div className="Delete" onClick={()=>deleteTask(id)}>

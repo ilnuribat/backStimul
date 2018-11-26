@@ -21,6 +21,7 @@ import { ButtonRow, TextRow, FileRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import { updTask, crTask, deleteTask } from '../../../GraphQL/Qur/Mutation';
 import Panel from '../../Lays/Panel/index';
+
 // import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
 
 class Board extends Component {
@@ -225,8 +226,7 @@ class Board extends Component {
     });
   }
 
-  writeTaskData(e, change, quota) {
-    const value = e
+  writeTaskData(value, change, quota) {
     let cap = ""
 
     if (quota) cap = '"';
@@ -546,9 +546,7 @@ Board.propTypes = {
   rootId: PropTypes.func.isRequired,
   setChat: PropTypes.func.isRequired,
   objectCacheUpdate: PropTypes.func.isRequired,
-  location: PropTypes.shape({
-    state: PropTypes.object
-  }),
+  location: PropTypes.object
 };
 
 

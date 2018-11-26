@@ -235,8 +235,8 @@ export const messagesListDirectUpdate = gql `
   }
 `;
 export const taskCacheUpdate = gql `
-  mutation taskCacheUpdate($action: String!, $value: String, $userName: String, $taskId: String!, $object: Object) {
-    taskCacheUpdate(action: $action, value: $value, userName: $userName, taskId: $taskId, object: $object) @client
+  mutation taskCacheUpdate($action: String!, $value: String, $taskId: String!) {
+    taskCacheUpdate(action: $action, value: $value, taskId: $taskId) @client
   }
 `;
 export const objectCacheUpdate = gql `
