@@ -11,5 +11,4 @@ type Mutation {
   deleteFile(id: ID!): Boolean!,
 }
 
-
 scalar Upload
