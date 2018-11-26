@@ -223,6 +223,7 @@ input[type="checkbox"]:checked + label.searchTag{
   height: auto;
 }
 .SearchBody{
+  min-height: 100%;
   height: auto;
   overflow: auto;
 }

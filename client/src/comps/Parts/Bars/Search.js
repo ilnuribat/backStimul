@@ -49,7 +49,7 @@ export class Search extends Component {
 
     target.type === 'checkbox' && target.name !== 'chAll' ? this.setState({chAll: false, [name]: value }) : this.setState({[name]: value});
     
-    !this.state.chObj && !this.state.chTsk && !this.state.chDcs && !this.state.chUsr && !this.state.chMsg ? this.setState({chAll: true,}) : null
+    // !this.state.chObj && !this.state.chTsk && !this.state.chDcs && !this.state.chUsr && !this.state.chMsg ? this.setState({chAll: true,}) : null
   }
 
   static propTypes = {
@@ -198,13 +198,13 @@ export class Search extends Component {
                       return error.message;
                     }
                     if(loading) return "загрузка"
-                    if(data && data.previewSearch){
+                    if(data && data.search){
                       let Search={};
 
-                      data.previewSearch.messages && data.previewSearch.messages.length > 0 ? Search.messages = data.previewSearch.messages : null
-                      data.previewSearch.tasks && data.previewSearch.tasks.length > 0 ? Search.tasks = data.previewSearch.tasks : null
-                      data.previewSearch.objects && data.previewSearch.objects.length > 0 ? Search.objects = data.previewSearch.objects : null
-                      data.previewSearch.users && data.previewSearch.users.length > 0 ? Search.users = data.previewSearch.users : null
+                      data.search.messages && data.search.messages.length > 0 ? Search.messages = data.search.messages : null
+                      data.search.tasks && data.search.tasks.length > 0 ? Search.tasks = data.search.tasks : null
+                      data.search.objects && data.search.objects.length > 0 ? Search.objects = data.search.objects : null
+                      data.search.users && data.search.users.length > 0 ? Search.users = data.search.users : null
 
                       // Search ? console.log("Search", Search) : null
                       
