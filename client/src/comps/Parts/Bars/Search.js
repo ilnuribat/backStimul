@@ -21,6 +21,10 @@ export class Search extends Component {
       chMsg: false,
       chUsr: false,
       chTsk: false,
+      chTskNew: false,
+      chTskWrk: false,
+      chTskChk: false,
+      chTskEnd: false,
       value:'',
     };
 
@@ -44,6 +48,8 @@ export class Search extends Component {
     const name = target.name;
 
     target.type === 'checkbox' && target.name !== 'chAll' ? this.setState({chAll: false, [name]: value }) : this.setState({[name]: value});
+    
+    !this.state.chObj && !this.state.chTsk && !this.state.chDcs && !this.state.chUsr && !this.state.chMsg ? this.setState({chAll: true,}) : null
   }
 
   static propTypes = {
@@ -105,8 +111,8 @@ export class Search extends Component {
     let {value} = this.state;
     // let query = value;
     let SearchGql = `
-    query previewSearch($query: String!){
-        previewSearch(query: $query){
+    query search($query: String!){
+      search(query: $query){
         ${this.state.chAll || this.state.chObj ? Obj : null}
         ${this.state.chAll || this.state.chTsk ? Tsk : null}
         ${this.state.chAll || this.state.chUsr ? Usr : null}
@@ -126,10 +132,10 @@ export class Search extends Component {
       {name: 'chDcs', text:'Документы', id:'0', some:'data'},
     ];
     let checksTasks = [
-      {name: 'Новые', id:'0', status:'1'},
-      {name: 'В работе', id:'0', status:'3'},
-      {name: 'Проверяются', id:'0', status:'4'},
-      {name: 'Завершенные', id:'0', status:'5'},
+      {name: 'chTskNew', text:'Новые', id:'0', status:'1'},
+      {name: 'chTskWrk', text:'В работе', id:'0', status:'3'},
+      {name: 'chTskChk', text:'Проверяются', id:'0', status:'4'},
+      {name: 'chTskEnd', text:'Завершенные', id:'0', status:'5'},
     ];
     let statuses = [
       {name: 'Новая', status:'1'},
@@ -167,9 +173,9 @@ export class Search extends Component {
                 {
                   this.state.chTsk ? checksTasks.map((e,i)=>{
                     return(
-                      <label className={i === 0 ? "searchTag sel" : "searchTag"} htmlFor={"check"+i} key={"check"+i}>
-                        <input type="checkbox" name={"check"+i}/>
-                        <span className="searchTagText">{e.name}</span>
+                      <label className={this.state[e.name] ? "searchTag sel" : "searchTag"} htmlFor={e.name} key={"checkTsk"+i}>
+                        <input id={e.name} name={e.name} type="checkbox" checked={this.state[e.name]} onChange={this.handleInputChange} />
+                        <span className="searchTagText">{e.text}</span>
                       </label>
                     )
                   }) : null
