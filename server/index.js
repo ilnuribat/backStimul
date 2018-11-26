@@ -71,8 +71,7 @@ app.get('/download/:id', (req, res) => {
       stream.pipe(res);
     })
     .catch((err) => {
-      console.error(err);
-      // res.json({ ok: false });
+      res.json(err);
     });
 });
 
