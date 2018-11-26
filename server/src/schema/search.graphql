@@ -1,5 +1,3 @@
-union SearchResult = Task | Object | User | Message
-
 enum SEARCH_TYPE {
   MESSAGES
   TASKS
@@ -15,6 +13,5 @@ type SearchType {
 }
 
 type Query {
-  # search(query: String!, type: SEARCH_TYPE, limit: Int) : [SearchResult]
   search(query: String!, limit: Int): SearchType
 }
