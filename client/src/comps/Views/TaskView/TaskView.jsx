@@ -459,7 +459,7 @@ class TaskView extends Component {
                 </div>
                 <div className="TaskView Row Pad10">
                   <div className="TaskViewInner" view="">
-                    <ChatView name={data.task.name} id={taskId} taskInfo={ data.task } priv={0} />
+                    <ChatView id={taskId} data={ data.task } />
                   </div>
                   <InnerBar>
                     <TextRow name="Информация" view="BigName">
