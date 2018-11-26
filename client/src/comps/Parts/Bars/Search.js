@@ -113,11 +113,11 @@ export class Search extends Component {
     let SearchGql = `
     query search($query: String!){
       search(query: $query){
-        ${this.state.chAll || this.state.chObj ? Obj : null}
-        ${this.state.chAll || this.state.chTsk ? Tsk : null}
-        ${this.state.chAll || this.state.chUsr ? Usr : null}
-        ${this.state.chAll || this.state.chMsg ? Msg : null}
-        ${this.state.chAll || this.state.chDcs ? Dcs : null}
+        ${this.state.chAll || this.state.chObj ? Obj : ""}
+        ${this.state.chAll || this.state.chTsk ? Tsk : ""}
+        ${this.state.chAll || this.state.chUsr ? Usr : ""}
+        ${this.state.chAll || this.state.chMsg ? Msg : ""}
+        ${this.state.chAll || this.state.chDcs ? "" : ""}
       }
     }
     `;
