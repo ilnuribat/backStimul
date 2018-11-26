@@ -101,6 +101,12 @@ export class Search extends Component {
     let Msg = `messages{
       id
       text
+      isDirect
+      groupId
+      from{
+        username
+        id
+      }
     }`;
     let Dcs = `docs{
       id
@@ -110,14 +116,25 @@ export class Search extends Component {
     let {children} = this.props;
     let {value} = this.state;
     // let query = value;
+
+    let SearchBody = `
+    ${this.state.chAll || this.state.chObj ? Obj : ""}
+    ${this.state.chAll || this.state.chTsk ? Tsk : ""}
+    ${this.state.chAll || this.state.chUsr ? Usr : ""}
+    ${this.state.chAll || this.state.chMsg ? Msg : ""}
+    ${this.state.chAll || this.state.chDcs ? "" : ""}
+    `
+    console.log("SearchBody------",SearchBody.toString());
+    console.log("SearchBody------",SearchBody.toString().length);
+    
+
+    // if(SearchBody.toString().length < 31){
+    //   this.setState({chAll: true,})
+    // }
     let SearchGql = `
     query search($query: String!){
       search(query: $query){
-        ${this.state.chAll || this.state.chObj ? Obj : ""}
-        ${this.state.chAll || this.state.chTsk ? Tsk : ""}
-        ${this.state.chAll || this.state.chUsr ? Usr : ""}
-        ${this.state.chAll || this.state.chMsg ? Msg : ""}
-        ${this.state.chAll || this.state.chDcs ? "" : ""}
+        ${SearchBody}
       }
     }
     `;
@@ -249,7 +266,7 @@ export class Search extends Component {
                           { Search.users ? <h3 className="BlockHeader">Пользователи</h3> : null}
                           { Search.users ? <div className="BlockContent">{
                             Search.users.map((e)=>(
-                              <Link key={e.id} to={{pathname: "/profile", state:"id"}} >
+                              <Link key={e.id} to={{pathname: "/login", state:"id"}} >
                                 <UserRow view="Boxed" id={e.id} icon="1" name={e.username} key={e.id} />
                               </Link>
                             )) }</div>:  null
@@ -257,7 +274,8 @@ export class Search extends Component {
                           { Search.messages ? <h3 className="BlockHeader">Сообщения</h3> : null}
                           { Search.messages ? <div className="BlockContent">{
                             Search.messages.map((e)=>(
-                              <Link key={e.id} to={{pathname: "/profile", state:"id"}} >
+                              <Link key={e.id} to={{pathname: e.isDirect ? "/chat" : "/task" , state:{ taskId: e.groupId || "",  taskName: e.name || "ChinaEbachina" }}} >
+                                {e.from && e.from.id && e.from.username ? <UserRow view="Boxed" id={e.from.id} icon="1" name={e.from.username} key={e.from.id} /> : ''}
                                 <div className="SearchMessage" key={e.id}>{e.text}</div>
                               </Link>
                             )) }</div>:  null
