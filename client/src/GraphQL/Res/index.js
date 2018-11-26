@@ -243,7 +243,7 @@ export default {
       let query;
       let previousState;
 
-      // console.warn("ДАННЫЕ!", taskId, objectId, action, value);
+      console.warn("ДАННЫЕ!", taskId, objectId, action, value);
 
       switch (action) {
       case "updateTask":
@@ -374,7 +374,7 @@ export default {
       return true;
 
     },
-    taskCacheUpdate: (_, { value, userName, action, taskId, object },  { cache }) => {
+    taskCacheUpdate: (_, { value, action, taskId },  { cache }) => {
       let data;
       let query;
       let previousState;
@@ -394,7 +394,7 @@ export default {
       `;
         data = {
           task: {
-            name: value,
+            [action]: value.name,
             __typename: "Task"
           }
         };
@@ -410,7 +410,7 @@ export default {
       `;
         data = {
           task: {
-            parentId: value,
+            parentId: value.parentId,
             __typename: "Task"
           }
         };
@@ -426,7 +426,7 @@ export default {
       `;
         data = {
           task: {
-            endDate: value,
+            endDate: value.endDate,
             __typename: "Task"
           }
         };
@@ -442,7 +442,7 @@ export default {
       `;
         data = {
           task: {
-            status: parseInt(value),
+            status: parseInt(value.status),
             __typename: "Task"
           }
         };
@@ -461,7 +461,7 @@ export default {
           }
         `;
         // eslint-disable-next-line no-case-declarations
-        let param = {id: value, username: userName, __typename: "UserTaskRole"}
+        let param = {id: value.id, username: value.name, __typename: "UserTaskRole"}
 
         if (!value) param = null
 
@@ -497,7 +497,7 @@ export default {
 
         data = {
           task: {
-            users: [...previousState.task.users, {id: value, username: userName, __typename: "User"}],
+            users: [...previousState.task.users, {id: value.id, username: value.name, __typename: "User"}],
             __typename: "Task"
           }
         };
@@ -527,7 +527,7 @@ export default {
 
         data = {
           task: {
-            users: [...previousState.task.users.filter(users => users.id !== value)],
+            users: [...previousState.task.users.filter(users => users.id !== value.id)],
             __typename: "Task"
           }
         };
@@ -561,11 +561,11 @@ export default {
         data = {
           task: {
             files: [...previousState.task.files, {
-              id: object.id,
+              id: value.id,
               date: new Date(),
-              mimeType: object.mimeType,
-              name: object.name,
-              size: object.size,
+              mimeType: value.mimeType,
+              name: value.name,
+              size: value.size,
               __typename: "File"
             }],
             __typename: "Task"
@@ -600,7 +600,7 @@ export default {
 
         data = {
           task: {
-            files: [...previousState.task.files.filter(files => files.id !== value)],
+            files: [...previousState.task.files.filter(files => files.id !== value.id)],
             __typename: "Task"
           }
         };
