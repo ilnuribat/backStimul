@@ -26,19 +26,19 @@ const subscrMes = (subscribeToMore,idu, refetch)=>{
 };
 
 class Private extends React.Component {
- constructor(props) {
-   super(props)
- 
-   this.state = {
+  constructor(props) {
+    super(props)
+
+    this.state = {
       newUser: "",
       newChay: "",
       userwarn: "",
       warnMe: "",
-   }
-   this.newUser = this.newUser.bind(this);
-   this.CreateNewGroup = this.CreateNewGroup.bind(this);
- }
- 
+    }
+    this.newUser = this.newUser.bind(this);
+    this.CreateNewGroup = this.CreateNewGroup.bind(this);
+  }
+
   openPrivate(gid, name){
     this.props.setPrivateChat({
       variables: { id: gid, name: name }
@@ -69,19 +69,19 @@ class Private extends React.Component {
     let {newUser} = this.state;
 
     if(users){
-        let user = _.find(users, (obj)=> { return obj.username === newUser; });
-  
-        if(user){
-          uid = user.id;
-          console.warn("юзер", nodeInput);
-          nodeInput.value = ""
-        }else{
-          console.warn("Неправильный юзер");
-          this.setState({
-            newUser:"",
-          })
-          nodeInput.value = ""
-        }
+      let user = _.find(users, (obj)=> { return obj.username === newUser; });
+
+      if(user){
+        uid = user.id;
+        console.warn("юзер", nodeInput);
+        nodeInput.value = ""
+      }else{
+        console.warn("Неправильный юзер");
+        this.setState({
+          newUser:"",
+        })
+        nodeInput.value = ""
+      }
     }
 
     let params = `"${uid}"`;
@@ -159,7 +159,7 @@ class Private extends React.Component {
                               </UserRow>
                               {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
                             </div>
-                            
+
                           )
                         })
                       }</div>
@@ -182,45 +182,45 @@ class Private extends React.Component {
             <h4>Создать приватный чай</h4>
           </div>
           <div className="content">
-              {
-                <Query query={USERS_QUERY}>
-                  {({ loading, data }) => {
-                    if (loading){
-                      return (
-                        <div style={{ paddingTop: 20 }}>
-                          <Loading />
-                        </div>
-                      );
-                    }
-
-                    if(data && data.users){
-                      return(
-
-                        <div className="content">
-                            <label className="LabelInputList Pad" htmlFor="users">
-                              <input ref={node=>{newChay = node}} type="list" name="users" list="users" autoComplete="on" valueid="" onChange={(e)=>this.newUser(e, data.users)} />
-                              <div className="Button3" onClick={()=>this.CreateNewGroup(data.users, newChay)}>+</div>
-                              
-                              <datalist id="users">
-                                {
-                                  data.users && data.users.map((e)=>(
-                                    <option key={e.id} data-id={e.id} valueid={e.id} valuename={e.username} >{e.username}</option>
-                                    )
-                                  )
-                                }
-                              </datalist>
-                          </label>
+            {
+              <Query query={USERS_QUERY}>
+                {({ loading, data }) => {
+                  if (loading){
+                    return (
+                      <div style={{ paddingTop: 20 }}>
+                        <Loading />
                       </div>
-                      )
-                    }else{
-                      return(
-                        <div>Нет данных</div>
-                      )
-                    }
+                    );
+                  }
 
-                  }}
-                </Query>
-              }
+                  if(data && data.users){
+                    return(
+
+                      <div className="content">
+                        <label className="LabelInputList Pad" htmlFor="users">
+                          <input ref={node=>{newChay = node}} type="list" name="users" list="users" autoComplete="on" valueid="" onChange={(e)=>this.newUser(e, data.users)} />
+                          <div className="Button3" onClick={()=>this.CreateNewGroup(data.users, newChay)}>+</div>
+
+                          <datalist id="users">
+                            {
+                              data.users && data.users.map((e)=>(
+                                <option key={e.id} data-id={e.id} valueid={e.id} valuename={e.username} >{e.username}</option>
+                              )
+                              )
+                            }
+                          </datalist>
+                        </label>
+                      </div>
+                    )
+                  }else{
+                    return(
+                      <div>Нет данных</div>
+                    )
+                  }
+
+                }}
+              </Query>
+            }
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { graphql, compose  } from "react-apollo";
 import PropTypes from 'prop-types';
-import { colorHash } from '../../../constants';
+// import { colorHash } from '../../../constants';
 import { selectUser, appendUser, getChat } from "../../../GraphQL/Cache";
 
 selectUser

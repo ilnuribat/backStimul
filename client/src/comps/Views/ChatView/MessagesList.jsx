@@ -58,19 +58,14 @@ export default class MessagesList extends Component {
   }
 
   render(){
-    const { priv, data } = this.props;
-
-    // console.warn("our group is: ", variables.id )
-
+    const { data } = this.props;
     let datas = '';
     let uid = localStorage.getItem('userid');
     let same = false;
     let usid = "";
 
-    if(data && priv && data.direct && data.direct.messages && data.direct.messages.edges ){
-      datas = data.direct.messages.edges;
-    }else if(data && data.task && data.task.messages && data.task.messages.edges ){
-      datas = data.task.messages.edges;
+    if(data && data.messages && data.messages.edges ){
+      datas = data.messages.edges;
     }else{
       return(<div className="mess">нет данных</div>)
     }
@@ -135,8 +130,8 @@ export default class MessagesList extends Component {
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
                       {/* <UserRow name={username} icon="1" view="Col" /> */}
                     </div>
-                  
-                  
+
+
                   ) : (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
                       {id !== uid ? (<UserRow name={username} icon="1" view="Col" />) : null}
@@ -168,7 +163,7 @@ export default class MessagesList extends Component {
                       ) : null }
 
                       {date ? (<div className="msg-date">
-                      {date}
+                        {date}
                       </div>):null}
                     </div>
 
@@ -186,6 +181,5 @@ export default class MessagesList extends Component {
 
 
 MessagesList.propTypes = {
-  priv: PropTypes.number.isRequired,
   data:PropTypes.object.isRequired,
 };

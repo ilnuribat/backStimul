@@ -1,4 +1,5 @@
 const { connection, mongo: { GridFSBucket }, Types: { ObjectId } } = require('mongoose');
+const { UserGroup } = require('../models');
 
 async function download(id) {
   if (!ObjectId.isValid(id)) {
@@ -16,6 +17,50 @@ async function download(id) {
   };
 }
 
+async function searchFiles(user, regExp, limit) {
+  const res = await UserGroup.aggregate([{
+    $match: {
+      userId: ObjectId(user.id),
+    },
+  }, {
+    $lookup: {
+      from: 'files',
+      localField: 'groupId',
+      foreignField: 'taskId',
+      as: 'files',
+    },
+  }, {
+    $unwind: '$files',
+  }, {
+    $lookup: {
+      from: 'gridfs.files',
+      localField: 'files.fileId',
+      foreignField: '_id',
+      as: 'gridFile',
+    },
+  }, {
+    $unwind: '$gridFile',
+  }, {
+    $match: {
+      'gridFile.filename': regExp,
+    },
+  }, {
+    $project: {
+      id: '$gridFile._id',
+      name: '$gridFile.filename',
+      size: '$gridFile.length',
+      date: '$gridFile.uploadDate',
+      mimeType: '$files.mimetype',
+      groupId: '$groupId',
+    },
+  }, {
+    $limit: limit,
+  }]);
+
+  return res;
+}
+
 module.exports = {
   download,
+  searchFiles,
 };
