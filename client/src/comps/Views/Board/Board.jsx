@@ -41,6 +41,8 @@ class Board extends Component {
       modal: false,
       modalDelete: false,
       HaveObj: false,
+      modalMessageShow: false,
+      modalMessage: "",
     };
 
     this.daTa = this.daTa.bind(this)
@@ -55,6 +57,7 @@ class Board extends Component {
     this.writeTaskData = this.writeTaskData.bind(this)
     this.deleteTask = this.deleteTask.bind(this)
     this.changeDelModal = this.changeDelModal.bind(this)
+    this.modalMessage = this.modalMessage.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
@@ -226,13 +229,27 @@ class Board extends Component {
     });
   }
 
+  modalMessage(message){
+    if(message){
+      this.setState({
+        modalMessageShow: true,
+        modalMessage: message.toString(),
+      })
+      setTimeout(() => {
+        this.setState({
+          modalMessageShow: false,
+          modalMessage: "",
+        })
+      }, 3000);
+    }
+  }
+
   writeTaskData(value, change, quota) {
     let cap = ""
 
     if (quota) cap = '"';
 
     let changes = `${change}: ${cap}${value}${cap}`;
-
 
     if (change !== "name"){
       changes = `name: "Нет названия", ${change}: ${cap}${value}${cap}`
@@ -249,15 +266,18 @@ class Board extends Component {
             objectId: this.state.objectId
           }
         })
+        this.modalMessage("Изменения сохранены");
         this.setState({
           taskId: a.data.createTask.id,
         })
       }).catch((e)=>{
+        this.modalMessage("Ошибка"+e);
         console.warn(e);
       })
     else
       qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("update task done", a)
+        this.modalMessage("Изменения сохранены");
         this.props.objectCacheUpdate({
           variables:{
             value: {value : value, key : change},
@@ -267,6 +287,7 @@ class Board extends Component {
           }
         })
       }).catch((e)=>{
+        this.modalMessage("Ошибка " + e);
         console.warn(e);
       })
   }
@@ -391,18 +412,18 @@ class Board extends Component {
                           </Modal>
                         ) : null }
                         {this.state.modal ? (
-                          <Modal close={this.closeModal}>
+                          <Modal close={this.closeModal} message={this.state.modalMessage?this.state.modalMessage:""}>
                             <ModalRow>
                               <ModalCol>
-                                <InputWrapper placeholder="Ведите название задачи" save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
+                                <InputWrapper placeholder="Введите название задачи" save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
                                   Название
                                 </InputWrapper>
                               </ModalCol>
-                            </ModalRow>
-                            <ModalRow>
+                              </ModalRow>
+                              <ModalRow>
                               <ModalCol>
                                 <ModalBlockName>
-                          Статус
+                                  Статус
                                 </ModalBlockName>
                                 <label htmlFor="selectStatus" className="LabelSelect">
                                   <select name="selectStatus" onChange={(e)=>{this.writeTaskData(e.target.value, "status", false)}} >
