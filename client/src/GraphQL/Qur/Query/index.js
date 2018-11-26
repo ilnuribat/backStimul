@@ -192,7 +192,7 @@ export const TASKS_QUERY = gql `
 `;
 
 export const PRIV_QUERY = gql `
-  query group($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
+  query ($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       direct(id: $id ){
           unreadCount
           messages(messageConnection: $messageConnection) {
@@ -226,7 +226,7 @@ export const MESSAGE_QUERY = gql `
 `;
 
 export const GR_QUERY = gql `
-  query task($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
+  query ($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
     task(id: $id ){
           name
           users{
