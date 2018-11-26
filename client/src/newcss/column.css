@@ -1,4 +1,5 @@
 .Column{
+  position: relative;
   display: block;
   flex:0;
   background: #3d4147;

@@ -458,6 +458,7 @@ class Board extends Component {
 
                             return(
                               <Column key={e.id} id={e.id} status={e.name} name={e.name} >
+                                {e.id == 1 ? <ButtonRow icon="plus" view="MiniBox" iconright="1" click={this.changeModal}></ButtonRow>  : null}
                                 {
                                   cols[e.id].map((task)=>{
                                     if(this.state.curParentId === task.id ){
