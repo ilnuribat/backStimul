@@ -9,14 +9,10 @@ module.exports = {
     messages: (parent, args, ctx) => search(null, { type: 'MESSAGES', ...ctx.args }, ctx),
   },
   Query: {
-    search,
-    previewSearch: async (parent, args, ctx) => {
+    search: async (parent, args, ctx) => {
       ctx.args = args;
 
       return {};
     },
-  },
-  SearchResult: {
-    __resolveType: ({ __typename }) => __typename,
   },
 };
