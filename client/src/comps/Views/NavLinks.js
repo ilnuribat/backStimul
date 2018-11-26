@@ -7,8 +7,6 @@ import { graphql, compose } from "react-apollo";
 import { sBar, gBar, setPlaceName, getPlaceName } from '../../GraphQL/Cache';
 
 const search = (props)=>{
-  console.log("Seacrh")
-  console.log(props)
 } 
 
 const NavArr = [
@@ -44,9 +42,6 @@ class NavLinks extends Component {
   }
 
   search(){
-    console.log('Search click')
-
-
     this.props.sBar({
       variables:{
         barType: 'Search',
@@ -56,8 +51,6 @@ class NavLinks extends Component {
   }
 
   place(place){
-    console.log('Place click', place)
-
     this.props.setPlaceName({
       variables:{
         name: place,
@@ -79,7 +72,6 @@ class NavLinks extends Component {
         {
           NavArr.map((e,i)=>{
             return(
-              //<div className="nav" key={"nav"+i+e.link} onClick={()=>{e.click === "modal" ? this.modal() : console.log('No click')} }>
               <div className={getPlaceName && getPlaceName.placename == e.name ? "nav selected" : "nav"} key={"nav"+i+e.link} onClick={()=>{e.click && typeof e.click === 'function' ? e.click() : console.log('No click')} }>
                 {e.link ? (
                   <Link to={e.link}>

@@ -8,15 +8,29 @@ import Loading from '../../Loading';
 import { checkServerIdentity } from 'tls';
 import {UserRow} from '../../Parts/Rows/Rows';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 
 export class Search extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    this.state = {
+      chAll: true,
+      chObj: false,
+      chDcs: false,
+      chMsg: false,
+      chUsr: false,
+      chTsk: false,
+      chTskNew: false,
+      chTskWrk: false,
+      chTskChk: false,
+      chTskEnd: false,
+      value:'',
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   handleChange(event) {
@@ -27,71 +41,118 @@ export class Search extends Component {
     alert('A name was submitted: ' + this.state.value);
     event.preventDefault();
   }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    target.type === 'checkbox' && target.name !== 'chAll' ? this.setState({chAll: false, [name]: value }) : this.setState({[name]: value});
+    
+    // !this.state.chObj && !this.state.chTsk && !this.state.chDcs && !this.state.chUsr && !this.state.chMsg ? this.setState({chAll: true,}) : null
+  }
+
   static propTypes = {
 
   }
 
+  componentWillUpdate(){
+    // !this.state.chObj && 
+    // !this.state.chTsk && 
+    // !this.state.chDcs && 
+    // !this.state.chUsr && 
+    // !this.state.chMsg ? this.setState({chAll: true,}) : null
+  }
+
+  // shouldComponentUpdate(nextProps, nextState){
+    // if(nextState.chAll === this.state.chAll){
+    //   return false
+    // }
+    // if(nextState === this.state){
+    //   return false
+    // }
+    // return true
+  // }
+
   render() {
+
+    let Obj = `objects{
+      id
+      name
+      address{
+        value
+      }
+    }`;
+    let Tsk = `tasks{
+      id
+      name
+      objectId
+      assignedTo{
+        id
+        username
+      }
+      endDate
+      status
+    }`;
+    let Usr = `users{
+      id
+      username
+    }`
+    let Msg = `messages{
+      id
+      text
+      isDirect
+      groupId
+      from{
+        username
+        id
+      }
+    }`;
+    let Dcs = `docs{
+      id
+      name
+    }`;
+
     let {children} = this.props;
     let {value} = this.state;
     // let query = value;
+
+    let SearchBody = `
+    ${this.state.chAll || this.state.chObj ? Obj : ""}
+    ${this.state.chAll || this.state.chTsk ? Tsk : ""}
+    ${this.state.chAll || this.state.chUsr ? Usr : ""}
+    ${this.state.chAll || this.state.chMsg ? Msg : ""}
+    ${this.state.chAll || this.state.chDcs ? "" : ""}
+    `
+    console.log("SearchBody------",SearchBody.toString());
+    console.log("SearchBody------",SearchBody.toString().length);
+    
+
+    // if(SearchBody.toString().length < 31){
+    //   this.setState({chAll: true,})
+    // }
     let SearchGql = `
-    query previewSearch($query: String!){
-        previewSearch(query: $query){
-          objects{
-            id
-            name
-            address{
-              value
-            }
-          }
-          tasks{
-            id
-            name
-            assignedTo{
-              id
-              username
-            }
-            endDate
-            status
-          }
-          users{
-            id
-            username
-          }
-          messages{
-            id
-            text
-          }
+    query search($query: String!){
+      search(query: $query){
+        ${SearchBody}
       }
     }
     `;
 
-    // SearchGql = `
-    // query search($text: String){
-    //   search(text: $text ){
-    //     __typename
-    //     ... on Object{
-    //       name
-    //     }
-    //   }
-    // }
-    // `;
-
     let Search = gql(SearchGql);
     let checks = [
-      {name: 'Все', id:'0', some:'data'},
-      {name: 'Объекты', id:'0', some:'data'},
-      {name: 'Задачи', id:'0', some:'data'},
-      {name: 'Сотрудники', id:'0', some:'data'},
-      {name: 'Сообщения', id:'0', some:'data'},
-      {name: 'Документы', id:'0', some:'data'},
+      {name: 'chAll', text:'Все', id:'0', some:'data'},
+      {name: 'chObj', text:'Объекты', id:'0', some:'data'},
+      {name: 'chTsk', text:'Задачи', id:'0', some:'data'},
+      {name: 'chUsr', text:'Сотрудники', id:'0', some:'data'},
+      {name: 'chMsg', text:'Сообщения', id:'0', some:'data'},
+      {name: 'chDcs', text:'Документы', id:'0', some:'data'},
     ];
     let checksTasks = [
-      {name: 'Новые', id:'0', status:'1'},
-      {name: 'В работе', id:'0', status:'3'},
-      {name: 'Проверяются', id:'0', status:'4'},
-      {name: 'Завершенные', id:'0', status:'5'},
+      {name: 'chTskNew', text:'Новые', id:'0', status:'1'},
+      {name: 'chTskWrk', text:'В работе', id:'0', status:'3'},
+      {name: 'chTskChk', text:'Проверяются', id:'0', status:'4'},
+      {name: 'chTskEnd', text:'Завершенные', id:'0', status:'5'},
     ];
     let statuses = [
       {name: 'Новая', status:'1'},
@@ -99,6 +160,8 @@ export class Search extends Component {
       {name: 'Проверяется', status:'4'},
       {name: 'Завершена', status:'5'},
     ];
+
+
 
     return(
       <div className="Search">
@@ -111,13 +174,12 @@ export class Search extends Component {
 
             <div className="searchTags">
               <div className="searchTagsRow">
-
                 {
                   checks.map((e,i)=>{
                     return(
-                      <label className={i === 0 ? "searchTag sel" : "searchTag"} htmlFor={"check"+i} key={"check"+i}>
-                        <input type="checkbox" name={"check"+i}/>
-                        <span className="searchTagText">{e.name}</span>
+                      <label className={this.state[e.name] ? "searchTag sel" : "searchTag"} htmlFor={e.name} key={"check"+i}>
+                        <input id={e.name} name={e.name} type="checkbox" checked={this.state[e.name]} onChange={this.handleInputChange} />
+                        <span className="searchTagText">{e.text}</span>
                       </label>
                     )
                   })
@@ -126,11 +188,11 @@ export class Search extends Component {
               </div>
               <div className="searchTagsRow">
                 {
-                  true ? checksTasks.map((e,i)=>{
+                  this.state.chTsk ? checksTasks.map((e,i)=>{
                     return(
-                      <label className={i === 0 ? "searchTag sel" : "searchTag"} htmlFor={"check"+i} key={"check"+i}>
-                        <input type="checkbox" name={"check"+i}/>
-                        <span className="searchTagText">{e.name}</span>
+                      <label className={this.state[e.name] ? "searchTag sel" : "searchTag"} htmlFor={e.name} key={"checkTsk"+i}>
+                        <input id={e.name} name={e.name} type="checkbox" checked={this.state[e.name]} onChange={this.handleInputChange} />
+                        <span className="searchTagText">{e.text}</span>
                       </label>
                     )
                   }) : null
@@ -153,61 +215,69 @@ export class Search extends Component {
                       return error.message;
                     }
                     if(loading) return "загрузка"
-                    if(data && data.previewSearch){
+                    if(data && data.search){
                       let Search={};
 
-                      data.previewSearch.messages && data.previewSearch.messages.length > 0 ? Search.messages = data.previewSearch.messages : null
-                      data.previewSearch.tasks && data.previewSearch.tasks.length > 0 ? Search.tasks = data.previewSearch.tasks : null
-                      data.previewSearch.objects && data.previewSearch.objects.length > 0 ? Search.objects = data.previewSearch.objects : null
-                      data.previewSearch.users && data.previewSearch.users.length > 0 ? Search.users = data.previewSearch.users : null
+                      data.search.messages && data.search.messages.length > 0 ? Search.messages = data.search.messages : null
+                      data.search.tasks && data.search.tasks.length > 0 ? Search.tasks = data.search.tasks : null
+                      data.search.objects && data.search.objects.length > 0 ? Search.objects = data.search.objects : null
+                      data.search.users && data.search.users.length > 0 ? Search.users = data.search.users : null
 
-                      Search ? console.log("Search", Search) : null
-
+                      // Search ? console.log("Search", Search) : null
+                      
                       // Search ? (
                       return(
                         <div id="SeacrhInner">
                           { Search.tasks ? <h3 className="BlockHeader">Задачи</h3> : null}
                           { Search.tasks ? <div className="BlockContent">{
                             Search.tasks.map((e)=>(
-                              <div className="SearchTask"  key={e.id}>
-                                <div className="SearchTaskTop"  key={e.id}>
-                                  {e.name ? <span className="SearchName">{e.name}</span> : null}
-                                  {e.endDate ? <span className={moment(e.endDate).fromNow() ? "SearchEndDate" : "SearchEndDate" } >{ moment(e.endDate).format('D MMM, h:mm')}</span> : null}
-                                  {
-                                    // (()=>{
-                                    //   if(e.status){
-                                    //     let a = statuses.find((x)=>x.status == e.status).name;
-                                    //       console.log("sssssssssssssssssssss",a)
-                                    //     return a
+                              <Link key={e.id} to={{pathname: "/task", state:{taskId: e.id, taskName: e.name, objectId: e.objectId || '1' }}} >
+                                <div className="SearchTask"  key={e.id}>
+                                  <div className="SearchTaskTop"  key={e.id}>
+                                    {e.name ? <span className="SearchName">{e.name}</span> : null}
+                                    {e.endDate ? <span className={moment(e.endDate).fromNow() ? "SearchEndDate" : "SearchEndDate" } >{ moment(e.endDate).format('D MMM, h:mm')}</span> : null}
+                                    {
+                                      // (()=>{
+                                      //   if(e.status){
+                                      //     let a = statuses.find((x)=>x.status == e.status).name;
+                                      //     return a
 
-                                    //   } 
-                                    // })()
-                                  }
-                                 
-                                  <span className="SearchStatus">{ e.status ? statuses.find((x)=>x.status == e.status).name : "Новая" }</span>
+                                      //   } 
+                                      // })()
+                                    }
+                                  
+                                    <span className="SearchStatus">{ e.status ? statuses.find((x)=>x.status == e.status).name : "Новая" }</span>
+                                  </div>
+                                  {e.assignedTo ? <UserRow view="Boxed" id={e.assignedTo.id} icon="1" name={e.assignedTo.username} key={e.assignedTo.id} /> : null}
                                 </div>
-                                {e.assignedTo ? <UserRow view="Boxed" id={e.assignedTo.id} icon="1" name={e.assignedTo.username} key={e.assignedTo.id} /> : null}
-                              </div>
+                              </Link>
                             )) }</div>:  null
                           }
                           { Search.objects ? <h3 className="BlockHeader">Объекты</h3> : null}
                           { Search.objects ? <div className="BlockContent">{
                             Search.objects.map((e)=>(
-                              <div className="SearchObjects"  key={e.id}>
-                                <span className="SearchName">{e.name} </span>{e.address && e.address.value ? <span className="SearchStatus">{e.address.value}</span> : null}                           
-                              </div>
+                              <Link key={e.id} to={{pathname: "/board", state:{objectId: e.id }}} >
+                                <div className="SearchObjects"  key={e.id}>
+                                  <span className="SearchName">{e.name} </span>{e.address && e.address.value ? <span className="SearchStatus">{e.address.value}</span> : null}                           
+                                </div>
+                              </Link>
                             )) }</div>:  null
                           }
                           { Search.users ? <h3 className="BlockHeader">Пользователи</h3> : null}
                           { Search.users ? <div className="BlockContent">{
                             Search.users.map((e)=>(
-                              <UserRow view="Boxed" id={e.id} icon="1" name={e.username} key={e.id} />
+                              <Link key={e.id} to={{pathname: "/login", state:"id"}} >
+                                <UserRow view="Boxed" id={e.id} icon="1" name={e.username} key={e.id} />
+                              </Link>
                             )) }</div>:  null
                           }
                           { Search.messages ? <h3 className="BlockHeader">Сообщения</h3> : null}
                           { Search.messages ? <div className="BlockContent">{
                             Search.messages.map((e)=>(
-                              <div className="SearchMessage" key={e.id}>{e.text}</div>
+                              <Link key={e.id} to={{pathname: e.isDirect ? "/chat" : "/task" , state:{ taskId: e.groupId || "",  taskName: e.name || "ChinaEbachina" }}} >
+                                {e.from && e.from.id && e.from.username ? <UserRow view="Boxed" id={e.from.id} icon="1" name={e.from.username} key={e.from.id} /> : ''}
+                                <div className="SearchMessage" key={e.id}>{e.text}</div>
+                              </Link>
                             )) }</div>:  null
                           }
 

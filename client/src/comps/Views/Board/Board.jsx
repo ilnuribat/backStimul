@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { graphql, compose, Query } from "react-apollo";
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
+// import { Redirect } from 'react-router';
+import { Link,Redirect } from 'react-router-dom';
 
 import 'animate.css';
 import Column from '../../Parts/Column';
@@ -12,7 +12,7 @@ import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
 import { setChat, setInfo, rootId, objectCacheUpdate } from '../../../GraphQL/Cache';
-import { getObjectTasks, glossaryStatus, TASKS_QUERY } from '../../../GraphQL/Qur/Query';
+import { getObjectTasks, glossaryStatus, TASKS_QUERY, checkObject } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
 import '../../../newcss/task.css';
@@ -39,7 +39,8 @@ class Board extends Component {
       toTask: false,
       showChilds: false,
       modal: false,
-      modalDelete: false
+      modalDelete: false,
+      HaveObj: false,
     };
 
     this.daTa = this.daTa.bind(this)
@@ -69,19 +70,33 @@ class Board extends Component {
     });
   }
 
-  componentDidMount(){
+  componentWillMount(){
     const { location } = this.props;
-    let id;
+    let id = location.state && location.state.objectId ? location.state.objectId : localStorage.getItem('ObjectId')
 
-    (location.state && location.state.objectId) ? id = location.state.objectId : id = localStorage.getItem('ObjectId')
+    console.log("location.state ------------ ", location.state )
 
+    
     if(id){
       this.setState({
         objectId: id,
       });
+      this.chkObject(id)
       this.glossStatus(id)
     }
   }
+
+  // componentDidMount(){
+  //   const { location } = this.props;
+  //   let id = location.state && location.state.objectId ? location.state.objectId : localStorage.getItem('ObjectId')
+
+  //   console.log("location.state ------------ ", location.state )
+    
+  //   if(id){
+  //     this.chkObject(id)
+  //     this.glossStatus(id)
+  //   }
+  // }
 
   toBack(id){
     console.warn("TO BACK",id);
@@ -121,6 +136,35 @@ class Board extends Component {
     })
 
   }
+
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { location } = this.props;
+    let id;
+
+    if(prevProps.location.state == this.props.location.state) return false
+
+    location.state && location.state.objectId ? id = location.state.objectId : id = localStorage.getItem('ObjectId')
+
+    
+
+    if(id){
+      this.setState({
+        objectId: id,
+      });
+      this.chkObject(id)
+      this.glossStatus(id)
+    }
+  }
+  shouldComponentUpdate(nextProps, nextState){
+
+    if(nextProps.location.state != this.props.location.state){
+      return true
+    }
+    return true
+
+  }
+
 
   childs(id){
     console.warn(id)
@@ -227,8 +271,22 @@ class Board extends Component {
       })
   }
 
+  chkObject(id){
+      qauf(checkObject(id), _url, localStorage.getItem('auth-token')).then(a=>{
+        if(a && a.name){
+          this.setState({
+            HaveObj: true,
+          });
+          
+        }
+      }).catch((e)=>{
+        console.warn(e);
+      })
+  }
+
+
   render(){
-    const { objectId, status, taskId, toTask, taskName, showChilds } = this.state;
+    const { objectId, status, taskId, toTask, taskName, showChilds, HaveObj } = this.state;
     const { setInfo } = this.props;
 
 
@@ -241,10 +299,29 @@ class Board extends Component {
       state: { taskId: taskId, taskName: taskName, objectId: objectId }
     }} />
 
-    // console.warn(" current states is", objectId, status)
+    // let o = this.checkObject(objectId);
 
-    return (
-      objectId && status ?
+    // let o = ()=>{
+    //   let HaveName = false;
+    //   qauf(checkObject(objectId), _url, localStorage.getItem('auth-token')).then(a=>{
+    //     console.log("checkObject Name AAAAAAAAAAA", a);
+    //     if(a && a.name){
+    //       console.log("checkObject Name AAAAAAAAAANAME", a.name);
+    //       HaveName = true;
+    //       return true;
+    //     }
+    //   }).catch((e)=>{
+    //     console.warn(e);
+    //   })
+    //   console.log("oooooooooooooooooooooo", HaveName)
+    //   return await HaveName;
+    // }
+    
+
+    // console.warn(" current states is", objectId, status)
+    if(objectId && status){
+      
+      return (
         <Query query={getObjectTasks} variables={{ id: objectId}} >
           {({ loading, error, data }) => {
             if (loading){
@@ -444,10 +521,18 @@ class Board extends Component {
                 </Fragment>
               )
 
+            }else{
+              console.log("Data and error",data, error)
+              return(<div className="errMess">
+                Объект не найден
+              </div>) 
             }
           }}
-        </Query> : <Loading/>
+        </Query> 
     )
+    }else{
+      return(<Redirect to="/" />)
+    }
   }
 }
 

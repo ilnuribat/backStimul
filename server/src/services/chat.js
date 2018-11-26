@@ -1,3 +1,4 @@
+const { Types: { ObjectId } } = require('mongoose');
 const {
   Message, Group, UserGroup, User,
 } = require('../models');
@@ -77,7 +78,7 @@ async function getDirectChats(user) {
     code: {
       $exists: true,
     },
-  }).sort({ lastMessageAt: -1 });
+  }).sort({ lastMessageAt: -1 }).lean();
 
   const directs = directsRaw.map(d => ({
     ...d,
@@ -85,6 +86,7 @@ async function getDirectChats(user) {
       .split('|')
       .filter(dId => dId !== user.id)[0] || user.id,
     id: d._id.toString(),
+    _id: d._id,
   }));
 
   const users = await User.find({
@@ -101,8 +103,79 @@ async function getDirectChats(user) {
   return res.filter(r => r.name);
 }
 
+async function searchMessages(user, regExp, limit = 10) {
+  const res = await UserGroup.aggregate([{
+    $match: {
+      userId: user._id,
+    },
+  }, {
+    $graphLookup: {
+      from: 'messages',
+      startWith: '$groupId',
+      connectFromField: 'groupId',
+      connectToField: 'groupId',
+      as: 'messages',
+    },
+  }, {
+    $unwind: '$messages',
+  }, {
+    $match: {
+      'messages.text': regExp,
+    },
+  }, {
+    $limit: limit,
+  }]);
+
+  return res.map(r => r.messages);
+}
+
+async function directMessage(parent, { id }, { user }) {
+  const dUser = await User.findById(id);
+
+  if (!dUser) {
+    throw new Error('no user found with such id');
+  }
+  const ids = [user.id, dUser.id].sort();
+
+  // try to create such group
+  let group;
+
+  try {
+    group = await Group.create({
+      name: ids.join(', '),
+      code: ids.join('|'),
+    });
+  } catch (err) {
+    if (err.errmsg && err.errmsg.indexOf('duplicate key error') > -1) {
+      group = await Group.findOne({ code: ids.join('|') });
+    }
+  }
+
+  try {
+    await UserGroup.insertMany([{
+      userId: user.id,
+      groupId: group.id,
+      lastReadCursor: ObjectId.createFromTime(0),
+    }, {
+      userId: dUser.id,
+      groupId: group.id,
+      lastReadCursor: ObjectId.createFromTime(0),
+    }]);
+  } catch (err) {
+    if (err.errmsg && err.errmsg.indexOf('duplicate key error')) {
+      return group;
+    }
+
+    throw err;
+  }
+
+  return group;
+}
+
 module.exports = {
   getPageInfo,
   formWhere,
   getDirectChats,
+  searchMessages,
+  directMessage,
 };

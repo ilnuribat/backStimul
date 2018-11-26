@@ -118,10 +118,40 @@ async function deleteTask(parent, { id }) {
   return res.n;
 }
 
+async function searchTasks(user, regExp, limit = 10) {
+  const res = await UserGroup.aggregate([{
+    $match: {
+      userId: user._id,
+    },
+  }, {
+    $graphLookup: {
+      from: 'groups',
+      startWith: '$groupId',
+      connectFromField: '_id',
+      connectToField: '_id',
+      as: 'tasks',
+      restrictSearchWithMatch: {
+        type: 'TASK',
+      },
+    },
+  }, {
+    $unwind: '$tasks',
+  }, {
+    $match: {
+      'tasks.name': regExp,
+    },
+  }, {
+    $limit: limit,
+  }]);
+
+  return res.map(r => r.tasks);
+}
+
 
 module.exports = {
   createTask,
   updateTask,
   updateUsersTask,
   deleteTask,
+  searchTasks,
 };

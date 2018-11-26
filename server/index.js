@@ -71,8 +71,7 @@ app.get('/download/:id', (req, res) => {
       stream.pipe(res);
     })
     .catch((err) => {
-      console.error(err);
-      // res.json({ ok: false });
+      res.json(err);
     });
 });
 
@@ -121,7 +120,7 @@ async function start() {
     /* istanbul ignore if  */
     if (process.env.NODE_ENV !== 'test') {
       server.listen({ port: HTTP_PORT }, () => {
-        logger.info(`server started at port: ${HTTP_PORT}`);
+        logger.info('server started at', { port: HTTP_PORT });
         resolve();
       });
     }

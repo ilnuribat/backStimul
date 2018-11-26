@@ -1,11 +1,9 @@
-const { Types: { ObjectId } } = require('mongoose');
-const {
-  Group, Message, User, UserGroup,
-} = require('../models');
-const GroupResolver = require('./group');
+const { Group, Message, User } = require('../models');
 const {
   getPageInfo, formWhere, getDirectChats,
 } = require('../services/chat');
+const groupService = require('../services/group');
+const { directMessage } = require('../services/chat');
 
 
 module.exports = {
@@ -23,8 +21,8 @@ module.exports = {
 
       return anotherUser.email;
     },
-    users: parent => GroupResolver.Group.users(parent),
-    unreadCount: (parent, args, ctx) => GroupResolver.Group.unreadCount(parent, args, ctx),
+    users: groupService.getMembers,
+    unreadCount: groupService.unreadCount,
     messages: async (parent, { messageConnection }) => {
       const { id } = parent;
       const group = await Group.findById(id);
@@ -70,47 +68,6 @@ module.exports = {
     }),
   },
   Mutation: {
-    directMessage: async (parent, { id }, { user }) => {
-      const dUser = await User.findById(id);
-
-      if (!dUser) {
-        throw new Error('no user found with such id');
-      }
-      const ids = [user.id, dUser.id].sort();
-
-      // try to create such group
-      let group;
-
-      try {
-        group = await Group.create({
-          name: ids.join(', '),
-          code: ids.join('|'),
-        });
-      } catch (err) {
-        if (err.errmsg && err.errmsg.indexOf('duplicate key error') > -1) {
-          group = await Group.findOne({ code: ids.join('|') });
-        }
-      }
-
-      try {
-        await UserGroup.insertMany([{
-          userId: user.id,
-          groupId: group.id,
-          lastReadCursor: ObjectId.createFromTime(0),
-        }, {
-          userId: dUser.id,
-          groupId: group.id,
-          lastReadCursor: ObjectId.createFromTime(0),
-        }]);
-      } catch (err) {
-        if (err.errmsg && err.errmsg.indexOf('duplicate key error')) {
-          return group;
-        }
-
-        throw err;
-      }
-
-      return group;
-    },
+    directMessage,
   },
 };

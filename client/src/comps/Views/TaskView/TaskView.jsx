@@ -12,7 +12,7 @@ import ChatView from '../ChatView/ChatView';
 import Loading from '../../Loading';
 import { uploadFile, removeFile, updTask } from '../../../GraphQL/Qur/Mutation';
 import { selectUser, setChat, taskCacheUpdate, objectCacheUpdate } from '../../../GraphQL/Cache';
-import { allUsers, glossaryStatus, GR_QUERY, getObjectTasksSmall } from '../../../GraphQL/Qur/Query';
+import { allUsers, glossaryStatus, GR_QUERY, getObjectTasksSmall, getTaskById } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 // import Panel from '../../Lays/Panel/index';
@@ -67,7 +67,10 @@ class TaskView extends Component {
     if (location.state && location.state.taskId) {
       _grid = location.state.taskId
       _grnm = location.state.taskName
-      _objId = location.state.objectId
+      _objId = location.state.objectId || '1'
+      if(!_objId || _objId.length < 9){
+        this.queryTaskById(_grid)
+      }
     } else {
       _grid = localStorage.getItem('grid');
       _grnm = localStorage.getItem('grnm');
@@ -77,8 +80,8 @@ class TaskView extends Component {
     if(_grid && _grnm){
       this.props.setChat({
         variables:{
-          id: localStorage.getItem('grid'),
-          name: localStorage.getItem('grnm'),
+          id: _grid || localStorage.getItem('grid'),
+          name: _grnm || localStorage.getItem('grnm'),
         }
       })
       this.setState({
@@ -91,7 +94,45 @@ class TaskView extends Component {
     this.allUserGet();
     this.glossStatus();
   }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { location } = this.props;
 
+    let _grid
+    let _grnm
+    let _objId
+
+    if(prevProps.location.state == this.props.location.state) return false
+
+    if (location.state && location.state.taskId) {
+      _grid = location.state.taskId
+      _grnm = location.state.taskName
+      _objId = location.state.objectId || '1'
+      if(!_objId || _objId.length < 9){
+        this.queryTaskById(_grid)
+      }
+    } else {
+      _grid = localStorage.getItem('grid');
+      _grnm = localStorage.getItem('grnm');
+      _objId = localStorage.getItem('ObjectId');
+    }
+
+    if(_grid && _grnm){
+      this.props.setChat({
+        variables:{
+          id: _grid || localStorage.getItem('grid'),
+          name: _grnm || localStorage.getItem('grnm'),
+        }
+      })
+      this.setState({
+        taskName: _grnm,
+        taskId: _grid,
+        objectId: _objId
+      });
+    }
+
+    this.allUserGet();
+    this.glossStatus();
+  }
   allUserGet(){
     qauf(allUsers(), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){
@@ -104,6 +145,49 @@ class TaskView extends Component {
     });
   }
 
+  queryTaskById(id){
+    // console.warn("GETTASK!!", objectId, taskId)
+    const { objectId, taskId } = this.state;
+
+    console.log("query---------------");
+    console.log(id);
+
+    return true;
+    if(objectId && objectId.length > 9 ){
+      console.log("objectId---------------------");
+      console.log(objectId);
+
+      return true;
+    }
+
+    qauf(getTaskById(id), _url, localStorage.getItem('auth-token')).then(a=>{
+      console.log("query---------------");
+      console.log(id);
+
+
+      if(a && a.data){
+        this.setState({
+          objectId: a.data.task.objectId,
+        })
+      }
+    }).catch((e)=>{
+      console.warn(e);
+    })
+  }
+
+
+  shouldComponentUpdate(nextProps, nextState){
+
+    console.log("nextProps.location----------------------------------");
+    console.log(nextProps.location);
+    console.log(this.props.location);
+
+    if(nextProps.location.state != this.props.location.state){
+      return true
+    }
+    return true
+
+  }
   getTaskLists(){
     // console.warn("GETTASK!!", objectId, taskId)
     const { objectId, taskId } = this.state
@@ -132,7 +216,7 @@ class TaskView extends Component {
 
   deleteFile (id) {
     qauf(removeFile(id), _url, localStorage.getItem('auth-token')).then((a)=>{
-      console.warn(a)
+      // console.warn(a)
       this.props.taskCacheUpdate({
         variables:{
           value: {id: id},
@@ -154,9 +238,9 @@ class TaskView extends Component {
     }
 
     if (quota) cap = '"';
-    console.warn("writeData", value, change, this.state.taskId)
+    // console.warn("writeData", e, change, this.state.taskId)
     qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.warn("update task done", a)
+      // console.warn("update task done", a)
       this.modalMessage(a.data.updateTask);
       switch (change) {
       case "assignedTo":
@@ -272,7 +356,6 @@ class TaskView extends Component {
       userId = id;
     }
 
-
     q = () => {return(`mutation{
       updateUsersTask(task: {id: "${this.state.taskId}", delete: ${dels}, users: ["${userId}"]} )
     }`)} ;
@@ -354,6 +437,7 @@ class TaskView extends Component {
               );
             }
             if (error){
+              console.log(error);
               return (
                 <div className="errMess">
                   {error.message}
@@ -374,7 +458,7 @@ class TaskView extends Component {
             return(
               <Content view="OvH">
                 <div className="TaskViewTop">
-                  <ButtonTo url={"/board"} icon="back">Назад</ButtonTo>
+                  <ButtonTo url={"/board"} linkstate={{objectId: data.task.objectId}} icon="back">Назад</ButtonTo>
                   <div className="TaskViewTopName"><h1>{data.task.name}</h1></div>
                 </div>
                 <div className="TaskView Row Pad10">
@@ -579,7 +663,7 @@ class TaskView extends Component {
                         {/* <div className="files-drop"> */}
                         {/* <Svg svg="tocloud" inline={0} />переместите файлы сюдa */}
                         <Mutation mutation={uploadFile} onCompleted={(data) => {
-                          console.warn(data)
+                          // console.warn(data)
                           this.modalMessage(data.uploadFile);
                           this.updateCacheFile(data.uploadFile)
                         }}>

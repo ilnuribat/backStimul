@@ -1,9 +1,10 @@
 const { Group, UserGroup } = require('../models');
-const obejctService = require('../services/object');
+const objectService = require('../services/object');
 const addressService = require('../services/address');
 
 module.exports = {
   Object: {
+    id: object => object._id.toString(),
     async tasks(parent, args, { user }) {
       const userGroups = await UserGroup.find({
         userId: user.id,
@@ -31,7 +32,7 @@ module.exports = {
   },
   Query: {
     rootObject(parent, args, ctx) {
-      return obejctService.rootObjectQuery(parent, args, ctx);
+      return objectService.rootObjectQuery(parent, args, ctx);
     },
     async object(parent, { id }) {
       return Group.findById(id);
@@ -79,10 +80,6 @@ module.exports = {
 
       return res.nModified;
     },
-    async deleteObject(parent, { id }) {
-      const res = await Group.deleteOne({ _id: id });
-
-      return res.n;
-    },
+    deleteObject: objectService.deleteObject,
   },
 };

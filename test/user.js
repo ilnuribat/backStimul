@@ -5,6 +5,7 @@ const query = `
     user {
       id
       email
+      username
     }
   }
 `;
@@ -17,6 +18,8 @@ describe('user', () => {
     assert.isObject(data.user);
     assert.isString(data.user.id);
     assert.isString(data.user.email);
+    assert.isString(data.user.username);
+    assert.equal(data.user.email, data.user.username);
   });
 
   it('try to get info with no token', async function () {

@@ -9,7 +9,6 @@ export default class Panel extends Component {
 
   render() {
 
-    console.log(this.props)
     let {children} = this.props;
 
 

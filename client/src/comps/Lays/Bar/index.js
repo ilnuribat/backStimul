@@ -9,7 +9,6 @@ export default class Bar extends Component {
 
   render() {
 
-    console.log(this.props)
     let {children, view} = this.props;
 
 

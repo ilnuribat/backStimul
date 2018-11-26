@@ -21,7 +21,8 @@ module.exports = {
     async directs(parent, args, { user }) {
       return getDirectChats(user);
     },
-    id: ({ _id }) => _id.toString(),
+    id: user => user._id.toString(),
+    username: user => user.email,
   },
   Query: {
     user(parent, args, { user }) {

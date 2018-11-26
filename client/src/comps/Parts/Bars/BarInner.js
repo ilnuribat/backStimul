@@ -22,8 +22,6 @@ export class BarInner extends Component {
   render() {
     let { children, gBar } = this.props;
 
-    console.log("gBar-----------")
-    console.log(this.props.gBar)
 
     if(gBar && gBar.barType){
 

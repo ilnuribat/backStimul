@@ -142,7 +142,6 @@ class TileMaker extends Component {
                       e.preventDefault();
                       if (edit) {
                         let addr = value || address.value;
-                        console.log(addr);
 
                         MakeTile({ variables: { id: id, name: input.value, address: address.value } });
                         // this.props.setEdit();

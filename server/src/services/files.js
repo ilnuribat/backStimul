@@ -14,13 +14,6 @@ async function download(id) {
     stream: bucket.openDownloadStream(ObjectId(id)),
     filename: chunksQuery.filename,
   };
-  // .pipe(fs.createWriteStream(chunksQuery.filename))
-  // .on('error', (error) => {
-  //   console.log(error);
-  // })
-  // .on('finish', () => {
-  //   // resolve(); console.log('done!');
-  // });
 }
 
 module.exports = {

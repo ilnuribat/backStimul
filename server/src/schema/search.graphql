@@ -1,5 +1,20 @@
 union SearchResult = Task | Object | User | Message
 
+enum SEARCH_TYPE {
+  MESSAGES
+  TASKS
+  OBJECTS
+  USERS
+}
+
+type SearchType {
+  messages: [Message]
+  objects: [Object]
+  tasks: [Task]
+  users: [User]
+}
+
 type Query {
-  search(text: String) : [SearchResult]
+  # search(query: String!, type: SEARCH_TYPE, limit: Int) : [SearchResult]
+  search(query: String!, limit: Int): SearchType
 }
