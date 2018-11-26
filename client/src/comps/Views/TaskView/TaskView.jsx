@@ -107,9 +107,9 @@ class TaskView extends Component {
       _grid = location.state.taskId
       _grnm = location.state.taskName
       _objId = location.state.objectId || '1'
-      if(!_objId || _objId.length < 9){
-        this.queryTaskById(_grid)
-      }
+      // if(!_objId || _objId.length < 9){
+      //   this.queryTaskById(_grid)
+      // }
     } else {
       _grid = localStorage.getItem('grid');
       _grnm = localStorage.getItem('grnm');
@@ -149,45 +149,38 @@ class TaskView extends Component {
     // console.warn("GETTASK!!", objectId, taskId)
     const { objectId, taskId } = this.state;
 
-    console.log("query---------------");
-    console.log(id);
-
     return true;
-    if(objectId && objectId.length > 9 ){
-      console.log("objectId---------------------");
-      console.log(objectId);
+    // if(objectId && objectId.length > 9 ){
+    //   console.log("objectId---------------------");
+    //   console.log(objectId);
 
-      return true;
-    }
+    //   return true;
+    // }
 
-    qauf(getTaskById(id), _url, localStorage.getItem('auth-token')).then(a=>{
-      console.log("query---------------");
-      console.log(id);
+    // qauf(getTaskById(id), _url, localStorage.getItem('auth-token')).then(a=>{
+    //   console.log("query---------------");
+    //   console.log(id);
 
 
-      if(a && a.data){
-        this.setState({
-          objectId: a.data.task.objectId,
-        })
-      }
-    }).catch((e)=>{
-      console.warn(e);
-    })
+    //   if(a && a.data){
+    //     this.setState({
+    //       objectId: a.data.task.objectId,
+    //     })
+    //   }
+    // }).catch((e)=>{
+    //   console.warn(e);
+    // })
   }
 
 
   shouldComponentUpdate(nextProps, nextState){
-
-    console.log("nextProps.location----------------------------------");
-    console.log(nextProps.location);
-    console.log(this.props.location);
-
     if(nextProps.location.state != this.props.location.state){
       return true
     }
-    return true
 
+    return true
   }
+
   getTaskLists(){
     // console.warn("GETTASK!!", objectId, taskId)
     const { objectId, taskId } = this.state
@@ -437,7 +430,8 @@ class TaskView extends Component {
               );
             }
             if (error){
-              console.log(error);
+              // console.log(error);
+
               return (
                 <div className="errMess">
                   {error.message}
