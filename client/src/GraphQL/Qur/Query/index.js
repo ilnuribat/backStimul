@@ -426,6 +426,13 @@ export const getObjectTasksSmall = (id) => `
     }
 }`;
 
+export const checkObject = (id) => `
+{
+  object(id: "${id}"){
+      name
+    }
+}`;
+
 export const getObjectTasks = gql `
  query getObjectTasks($id: ID!){
   object (id: $id) {
