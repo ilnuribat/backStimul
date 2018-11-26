@@ -163,7 +163,7 @@ class TaskView extends Component {
         this.props.taskCacheUpdate({
           variables:{
             action: change,
-            value: { id: value, name: userName },
+            value: { id: value, name: userName, key: change },
             taskId: this.state.taskId,
           }
         })
@@ -171,7 +171,7 @@ class TaskView extends Component {
       default:
         this.props.taskCacheUpdate({
           variables:{
-            value: { [change]: value },
+            value: { value : value, key : change },
             action: change,
             taskId: this.state.taskId,
           }

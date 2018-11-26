@@ -379,70 +379,22 @@ export default {
       let query;
       let previousState;
 
-      switch (action) {
-      case "name":
-        // eslint-disable-next-line no-case-declarations
-        const params = `name`
+      if (value && value.status) value.status = parseInt(value.status)
 
+      switch (action) {
+      default:
+        // console.warn("ДАННЫЕ!", taskId, action, value);
         query = gql`
           query task($id: ID!) {
             task(id: $id ) @client {
-              ${params}
+              ${value.key}
               __typename
             }
           }
       `;
         data = {
           task: {
-            [action]: value.name,
-            __typename: "Task"
-          }
-        };
-        break;
-      case "parentId":
-        query = gql`
-          query task($id: ID!) {
-            task(id: $id ) @client {
-              parentId
-              __typename
-            }
-          }
-      `;
-        data = {
-          task: {
-            parentId: value.parentId,
-            __typename: "Task"
-          }
-        };
-        break;
-      case "endDate":
-        query = gql`
-          query task($id: ID!) {
-            task(id: $id ) @client {
-              endDate
-              __typename
-            }
-          }
-      `;
-        data = {
-          task: {
-            endDate: value.endDate,
-            __typename: "Task"
-          }
-        };
-        break;
-      case "status":
-        query = gql`
-          query task($id: ID!) {
-            task(id: $id ) @client {
-              status
-              __typename
-            }
-          }
-      `;
-        data = {
-          task: {
-            status: parseInt(value.status),
+            [value.key]: value.value,
             __typename: "Task"
           }
         };
@@ -604,8 +556,6 @@ export default {
             __typename: "Task"
           }
         };
-        break;
-      default:
         break;
       }
 
