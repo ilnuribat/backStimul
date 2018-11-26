@@ -43,6 +43,7 @@ class Board extends Component {
       HaveObj: false,
       modalMessageShow: false,
       modalMessage: "",
+      modalNameCreator: "",
     };
 
     this.daTa = this.daTa.bind(this)
@@ -415,7 +416,7 @@ class Board extends Component {
                           <Modal close={this.closeModal} message={this.state.modalMessage?this.state.modalMessage:""}>
                             <ModalRow>
                               <ModalCol>
-                                <InputWrapper placeholder="Введите название задачи" save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
+                                <InputWrapper placeholder="Введите название задачи" save="Сохранить" change={(name)=>{this.setState({ modalNameCreator: name })}}>
                                   Название
                                 </InputWrapper>
                               </ModalCol>
@@ -467,6 +468,12 @@ class Board extends Component {
                                   </select>
                                 </label>
                               </ModalCol>
+                            </ModalRow>
+                            <ModalRow>
+                            <ModalCol>
+                              <div className="Button3" onClick={this.writeTaskData(this.state.modalNameCreator, 'name', true)}>Сохранить</div>
+                            </ModalCol>
+
                             </ModalRow>
                           </Modal>
                         ) : null }

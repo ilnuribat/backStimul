@@ -11,6 +11,15 @@
   box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.16);
   margin:0 5px;
   padding: 20px;
+  max-height: 100%;
+}
+.Column-Content{
+  overflow: hidden;
+  height: 100%;
+}
+.Column-Content-Inner{
+  overflow: auto;
+  height: auto;
 }
 
 .Column-Name{
