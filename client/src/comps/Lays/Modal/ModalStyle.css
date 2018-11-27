@@ -156,7 +156,7 @@ input{
   background: #3d4147;
   display: flex;
   justify-content: flex-start;
-  /* align-items: flex-start; */
+  align-items: center;
 }
 .EditForm label input,
  label.LabelInputText input,

@@ -5,6 +5,7 @@ import AddNew from './AddNew';
 import MessagesList from './MessagesList';
 import { ADD_MUT } from "../../../GraphQL/Qur/Mutation";
 import '../../../newcss/taskview.css'
+import { UserRow } from "../../Parts/Rows/Rows";
 
 const AddMesMut = ({ children }) => (
   <Mutation
@@ -25,6 +26,9 @@ class ChatView extends Component {
 
     return (
       <div className="Chat">
+        <div className="ChatTop">
+          <UserRow id="id" name="User" icon="1" iconright="1"></UserRow>
+        </div>
         <section id="messageList" ref={this.messageList} className="messages ChatMessages">
           <MessagesList {...this.props} />
         </section>
