@@ -154,6 +154,7 @@ input{
   /* background: none transparent; */
   background: #202225;
   background: #3d4147;
+  background: #4a4e55;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -167,6 +168,7 @@ input{
   margin:0;
   width: 100%;
   max-width: 100%;
+  background: #4a4e55;
  }
 
 

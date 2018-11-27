@@ -37,10 +37,15 @@ class Private extends Component {
 
   componentDidMount(){
 
+    
+
     const {getchat, getPlaceName} = this.props;
     let { setPlaceName } = this.props;
 
     let place = 'Private';
+
+
+    console.log(getChat)
 
     if(getPlaceName && getPlaceName.placename != place){
       setPlaceName({
@@ -102,8 +107,8 @@ class Private extends Component {
                     return null
 
                   return(
-                    <ContentInner view="Row OvH Pad10">
-                      <ChatView id={this.props.getchat.id} data={ data.direct } />
+                    <ContentInner view="Row OvH Pad010">
+                      <ChatView id={this.props.getchat.id} name={this.props.getchat.name} data={ data.direct } />
                     </ContentInner>
                   )}}
               </Query>)

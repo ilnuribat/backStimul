@@ -27,7 +27,7 @@ class ChatView extends Component {
     return (
       <div className="Chat">
         <div className="ChatTop">
-          <UserRow id="id" name="User" icon="1" iconright="1"></UserRow>
+          <UserRow id="id" name={this.props.name} icon="1" iconright="1"></UserRow>
         </div>
         <section id="messageList" ref={this.messageList} className="messages ChatMessages">
           <MessagesList {...this.props} />
