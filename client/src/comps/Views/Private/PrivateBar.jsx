@@ -146,7 +146,6 @@ class Private extends React.Component {
                   if(data && data.user && data.user.directs){
                     let privs = 0;
 
-
                     return(
                       <div className="PrivateChatsUsers">{
                         data.user.directs.map((e,i, a)=>{
