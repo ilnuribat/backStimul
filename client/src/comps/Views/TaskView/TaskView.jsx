@@ -576,8 +576,8 @@ class TaskView extends Component {
                         </ModalBlockName>
 
                         <ResponsibleRow >
-                          <UserRow id={taskStatus} name={this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Новая"}/>
-                          {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus}/> : null}
+                          <UserRow id={taskStatus || "1"} name={this.state.status.find(x => x.id == taskStatus) && this.state.status.find(x => x.id == taskStatus).name ? this.state.status.find(x => x.id == taskStatus).name : "Новая"}/>
+                          {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus || "1"}/> : null}
                         </ResponsibleRow>
 
                       </ModalCol>
