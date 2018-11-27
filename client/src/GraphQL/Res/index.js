@@ -325,6 +325,49 @@ export default {
       return true;
 
     },
+    privateListCacheUpdate: (_, { id, reset },  { cache }) => {
+      const query = gql`
+          query {
+            user @client {
+              directs {
+                id
+                name
+                unreadCount
+              }
+            }
+          }
+      `;
+      let previousState;
+
+      try {
+        previousState = cache.readQuery({ query });
+      } catch (error) {
+        console.warn("cache is empty!")
+
+        return null
+      }
+      console.warn("prevstate unrPrivatesCacheUpdate is", previousState, id,reset)
+
+      let filter = previousState.user.directs.filter(directs => directs.id === id)[0]
+
+      if (!reset) Object.assign(filter, { unreadCount: filter.unreadCount + 1 })
+      else  Object.assign(filter, { unreadCount: 0 })
+
+      const data = {
+        user: {
+          directs: [...previousState.user.directs],
+          __typename: "User",
+        }
+      };
+
+      cache.writeQuery({
+        query,
+        data,
+      });
+
+      return true;
+
+    },
     taskCacheUpdate: (_, { value, action, taskId },  { cache }) => {
       let data;
       let query;

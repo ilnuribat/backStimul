@@ -1,29 +1,27 @@
 import React from 'react';
 import { graphql, compose, Query  } from "react-apollo";
-// import ColorHash from 'color-hash';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 
-import { setChat, getChat, cSetCountPrivates, cSetChats } from '../../../GraphQL/Cache';
-import { qauf, _url, colorHash } from '../../../constants';
+import { setChat, getChat, cSetCountPrivates, cSetChats, privateListCacheUpdate } from '../../../GraphQL/Cache';
+import { qauf, _url } from '../../../constants';
 import Loading from '../../Loading';
 import { PRIVS_QUERY, USERS_QUERY, cGetChats } from '../../../GraphQL/Qur/Query';
-import { MESSAGE_CREATED } from '../../../GraphQL/Qur/Subscr';
+// import { MESSAGE_CREATED } from '../../../GraphQL/Qur/Subscr';
 import { createDirect } from '../../../GraphQL/Qur/Mutation';
 import { UserRow } from '../../Parts/Rows/Rows';
 
 
+// let ref1;
 
-let ref1;
-
-const subscrMes = (subscribeToMore,idu, refetch)=>{
-  return subscribeToMore({ document: MESSAGE_CREATED, variables: {id: idu,},
-    updateQuery: () => {
-      refetch().then(()=>{
-      })
-    },
-  });
-};
+// const subscrMes = (subscribeToMore,idu, refetch)=>{
+//   return subscribeToMore({ document: MESSAGE_CREATED, variables: {id: idu,},
+//     updateQuery: () => {
+//       refetch().then(()=>{
+//       })
+//     },
+//   });
+// };
 
 class Private extends React.Component {
   constructor(props) {
@@ -43,7 +41,13 @@ class Private extends React.Component {
     this.props.setPrivateChat({
       variables: { id: gid, name: name }
     })
-    ref1();
+
+    this.props.privateListCacheUpdate({
+      variables:{
+        id: gid,
+        reset: true
+      }
+    })
   }
 
   newUser(e,users){
@@ -57,7 +61,7 @@ class Private extends React.Component {
           newUserId: user.id,
         })
       }else{
-        console.log("Неправильный юзер", user);
+        console.warn("Неправильный юзер", user);
       }
 
     }
@@ -89,7 +93,8 @@ class Private extends React.Component {
     if(uid){
       qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
         if(a && a.data){
-          ref1()
+          // ref1()
+          console.warn("NEW CHAT??")
         }
       }).catch((e)=>{
         console.warn(e);
@@ -118,8 +123,8 @@ class Private extends React.Component {
             <div className="content-scroll">
 
               <Query query={PRIVS_QUERY}>
-                {({ loading, error, data, refetch, subscribeToMore }) => {
-                  ref1 = refetch;
+                {({ loading, error, data}) => {
+                  // ref1 = refetch;
                   if (loading){
                     return (
                       <div style={{ paddingTop: 20 }}>
@@ -145,7 +150,7 @@ class Private extends React.Component {
                           //Если не открытый чат
                           if (this.props.getPrivateChat.id !== e.id ) {
                             privs = privs + e.unreadCount;
-                            subscrMes(subscribeToMore, e.id, refetch)
+                            // subscrMes(subscribeToMore, e.id, refetch)
                           }
                           if (i === a.length-1) {
                             this.props.cSetCountPrivates({
@@ -236,11 +241,13 @@ Private.propTypes = {
   }),
   cSetCountPrivates: PropTypes.func.isRequired,
   getPrivateChat: PropTypes.object.isRequired,
-  setPrivateChat: PropTypes.func.isRequired
+  setPrivateChat: PropTypes.func.isRequired,
+  privateListCacheUpdate: PropTypes.func.isRequired
 };
 
 export default compose(
   graphql(cSetCountPrivates, { name: 'cSetCountPrivates' }),
+  graphql(privateListCacheUpdate, { name: 'privateListCacheUpdate' }),
   graphql(cSetChats, { name: 'cSetChats' }),
   graphql(cGetChats, { name: 'cGetChats' }),
   graphql(getChat, { name: 'getPrivateChat' }),

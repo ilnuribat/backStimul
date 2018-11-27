@@ -223,7 +223,6 @@ export const messagesListCacheUpdate = gql `
     }
   }
 `;
-
 export const taskCacheUpdate = gql `
   mutation taskCacheUpdate($action: String!, $value: Object, $taskId: String!) {
     taskCacheUpdate(action: $action, value: $value, taskId: $taskId) @client
@@ -232,6 +231,11 @@ export const taskCacheUpdate = gql `
 export const objectCacheUpdate = gql `
   mutation objectCacheUpdate($action: String!, $value: Object, $objectId: String!, $taskId: String!) {
     objectCacheUpdate(action: $action, value: $value, objectId: $objectId, taskId: $taskId) @client
+  }
+`;
+export const privateListCacheUpdate = gql `
+  mutation privateListCacheUpdate($id: String!, $reset: Bool) {
+    privateListCacheUpdate(id: $id, reset: $reset) @client
   }
 `;
 export const delInfo = gql `

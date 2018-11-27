@@ -8,7 +8,7 @@ import { graphql, compose } from "react-apollo";
 import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED } from '../../GraphQL/Qur/Subscr';
-import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate } from '../../GraphQL/Cache';
+import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate, privateListCacheUpdate } from '../../GraphQL/Cache';
 import { getUnreadCount } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 
@@ -32,7 +32,7 @@ class NavTop extends Component {
           let equalGroupMessage
           //пишем мессагу в кэш
 
-          console.warn(data.data)
+          // console.warn(data.data)
 
           client.mutate({
             mutation: lastMessageCache,
@@ -65,6 +65,16 @@ class NavTop extends Component {
                   })
 
                 });
+
+                //пишем в кеш юзербаров приватный счетчик
+                client.mutate({
+                  mutation: privateListCacheUpdate,
+                  variables:{
+                    id: result.data.lastMessage.groupId,
+                  }
+                }).then(result => {
+                  if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
+                })
               }
 
             })
