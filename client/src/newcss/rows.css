@@ -61,6 +61,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  
 }
 .UserRow .UserIcon{
   flex:1 1 auto;
@@ -70,7 +71,7 @@
   max-width: 32px;
   border-radius: 999em;
   background-color: #30333865;
-  margin:0 20px 0 0;
+  margin:0 0 0;
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
@@ -91,6 +92,7 @@
 .UserRow .UserName{
   flex:2;
   font-size: 12px;
+  padding: 0 10px 0;
   width: 100%;
   color:#fff;
 }

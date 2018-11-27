@@ -37,13 +37,15 @@ export const IconRow = ({ children, id, name, url, icon, click, box, size, type,
     </div>
   )
 }
-export const UserRow = ({ children, id, name, username, url, userid, icon, click, box, size, type, view, ondelete })=>{
+export const UserRow = ({ children, id, name, iconright, username, url, userid, icon, click, box, size, type, view, ondelete })=>{
 
   return(
     <div className={`UserRow${view?" "+view:""}`}>
-      { icon ? (<div className={box?"UserIcon Boxed":"UserIcon"} style={size ? {"width":size+'px',"maxWidth":size+'px',"maxHeight":size+'px', "height":size+'px'} : null}  onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("user", userid||id,url )}}>
+      { icon && !iconright ? (<div className={box?"UserIcon Boxed":"UserIcon"} style={size ? {"width":size+'px',"maxWidth":size+'px',"maxHeight":size+'px', "height":size+'px'} : null}  onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("user", userid||id,url )}}>
         <img src={icon && icon != 1 ? icon : userDefault} alt={username || name || children} /></div>):null}
       { username || name || children ? (<div className="UserName" onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("user", userid||id,url )}}>{username || name || children}</div>):null}
+      { icon && iconright ? (<div className={box?"UserIcon Boxed":"UserIcon"} style={size ? {"width":size+'px',"maxWidth":size+'px',"maxHeight":size+'px', "height":size+'px'} : null}  onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("user", userid||id,url )}}>
+        <img src={icon && icon != 1 ? icon : userDefault} alt={username || name || children} /></div>):null}
       { ondelete && typeof ondelete === 'function' ? (<Svg svg="cancel" view="ondelete" click={()=>ondelete(id)} />) : null}
     </div>
   )
