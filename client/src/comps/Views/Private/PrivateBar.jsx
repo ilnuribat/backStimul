@@ -31,23 +31,20 @@ class Private extends React.Component {
 
     this.state = {
       newUser: "",
+      newChay: "",
+      userwarn: "",
+      warnMe: "",
     }
     this.newUser = this.newUser.bind(this);
+    this.CreateNewGroup = this.CreateNewGroup.bind(this);
   }
 
-
-
   openPrivate(gid, name){
-    // console.warn (gid, name)
-
     this.props.setPrivateChat({
       variables: { id: gid, name: name }
     })
     ref1();
   }
-
-
-
 
   newUser(e,users){
 
@@ -61,39 +58,35 @@ class Private extends React.Component {
         })
       }else{
         console.log("Неправильный юзер", user);
-
       }
 
     }
 
   }
 
-  CreateNewGroup(users){
+  CreateNewGroup(users, nodeInput){
     let uid = "";
     let {newUser} = this.state;
 
     if(users){
-      if(true){
-        let user = _.find(users, (obj)=> { return obj.username === newUser; });
+      let user = _.find(users, (obj)=> { return obj.username === newUser; });
 
-        if(user){
-          uid = user.id;
-          console.warn("юзер", user);
-        }else{
-          console.warn("Неправильный юзер");
-          this.setState({
-            newUser:"",
-          })
-
-          return(false)
-        }
+      if(user){
+        uid = user.id;
+        console.warn("юзер", nodeInput);
+        nodeInput.value = ""
+      }else{
+        console.warn("Неправильный юзер");
+        this.setState({
+          newUser:"",
+        })
+        nodeInput.value = ""
       }
     }
 
     let params = `"${uid}"`;
 
     if(uid){
-      // return true
       qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
         if(a && a.data){
           ref1()
@@ -108,16 +101,12 @@ class Private extends React.Component {
   }
 
   shouldComponentUpdate(nextProp) {
-    // Use lodash is Equal nextProp, nextState
-    // console.warn("getPrivateChat", _.isEqual(nextProp.getPrivateChat, this.props.getPrivateChat));
-    // console.warn("getPrivateChats", nextProp.getPrivateChat, this.props.getPrivateChat);
     if (!_.isEqual(nextProp.getPrivateChat.id, this.props.getPrivateChat.id)) return true
     else return false
   }
 
   render(){
-    let {newUser} = this.state;
-    // console.warn ("REFRESH!!")
+    let newChay;
 
     return (
       <div className="f-column-l">
@@ -171,10 +160,6 @@ class Private extends React.Component {
                               {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
                             </div>
 
-                          // <div className="user-private-chat" ids={e.id} key={'users-'+i} onClick={()=>this.openPrivate(e.id, e.name)}>
-                          //   {e.name}
-                          //   {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="small-ruond-info">{e.unreadCount}</span>) : null}
-                          // </div>
                           )
                         })
                       }</div>
@@ -197,7 +182,6 @@ class Private extends React.Component {
             <h4>Создать приватный чай</h4>
           </div>
           <div className="content">
-            {/* <div className="content-scroll"> */}
             {
               <Query query={USERS_QUERY}>
                 {({ loading, data }) => {
@@ -214,10 +198,8 @@ class Private extends React.Component {
 
                       <div className="content">
                         <label className="LabelInputList Pad" htmlFor="users">
-                          <input type="list" name="users" list="users" autoComplete="on" valueid="" onChange={(e)=>this.newUser(e, data.users)} />
-                          {
-                            <div className="Button3" onClick={()=>this.CreateNewGroup(data.users)}>Добавить{/*this.state.newUser*/}</div>
-                          }
+                          <input ref={node=>{newChay = node}} type="list" name="users" list="users" autoComplete="on" valueid="" onChange={(e)=>this.newUser(e, data.users)} />
+                          <div className="Button3" onClick={()=>this.CreateNewGroup(data.users, newChay)}>+</div>
 
                           <datalist id="users">
                             {
@@ -229,28 +211,6 @@ class Private extends React.Component {
                           </datalist>
                         </label>
                       </div>
-                    // <div className="UsersList">{
-                    //   data.users.map((e,i)=>{
-                    //     let Iam;
-
-                    //     if(e.id === localStorage.getItem('userid')){
-                    //       Iam = ' - я';
-
-                    //       return false;
-                    //       // return <span style={{color: colorHash.hex(e.username)}}  key={'usersspan-'+i} >{e.username}<span>{Iam}</span></span>;
-                    //     }
-
-                    //     return(
-                    //       <div className="RowBg">
-                    //       <UserRow key={'users-'+i} icon="1" id={e.id} name={e.username} click={()=>this.CreateNewGroup(e.id,e.username)}></UserRow>
-                    //       </div>
-                    //       // <div className="user-private" key={'users-'+i} onClick={()=>this.CreateNewGroup(e.id,e.username)}>
-                    //       //   <span style={{color: colorHash.hex(e.username)}}>{e.username}<span>{Iam}</span></span>
-                    //       // </div>
-
-                    //     )
-                    //   })
-                    // }</div>
                     )
                   }else{
                     return(
@@ -261,7 +221,6 @@ class Private extends React.Component {
                 }}
               </Query>
             }
-            {/* </div> */}
           </div>
         </div>
       </div>

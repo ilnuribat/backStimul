@@ -240,7 +240,7 @@ class TaskView extends Component {
         this.props.taskCacheUpdate({
           variables:{
             action: change,
-            value: { id: value, name: userName, key: change },
+            value: { id: value, username: userName, key: change },
             taskId: this.state.taskId,
           }
         })
@@ -362,7 +362,7 @@ class TaskView extends Component {
           this.props.taskCacheUpdate({
             variables:{
               action: "addUser",
-              value: { id: userId, name: this.state.newUser },
+              value: { id: userId, username: this.state.newUser },
               taskId: this.state.taskId,
             }
           }) : this.props.taskCacheUpdate({
