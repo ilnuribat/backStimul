@@ -417,7 +417,7 @@ class Board extends Component {
                           <Modal close={this.closeModal} message={this.state.modalMessage?this.state.modalMessage:""}>
                             <ModalRow>
                               <ModalCol>
-                                <InputWrapper placeholder="Введите название задачи" change={(name)=>{console.log(name), this.setState({ modalNameCreator: name })}}>
+                                <InputWrapper placeholder="Введите название задачи" change={(name)=>{console.log(name); this.setState({ modalNameCreator: name })}}>
                                   Название
                                 </InputWrapper>
                               </ModalCol>
