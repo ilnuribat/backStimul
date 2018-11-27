@@ -44,9 +44,6 @@ class Private extends Component {
 
     let place = 'Private';
 
-
-    console.log(getChat)
-
     if(getPlaceName && getPlaceName.placename != place){
       setPlaceName({
         variables:{
