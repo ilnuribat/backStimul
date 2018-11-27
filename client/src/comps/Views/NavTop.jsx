@@ -70,7 +70,7 @@ class NavTop extends Component {
                 client.mutate({
                   mutation: privateListCacheUpdate,
                   variables:{
-                    id: result.data.lastMessage.groupId,
+                    value: {id: result.data.lastMessage.groupId},
                   }
                 }).then(result => {
                   if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)

@@ -234,8 +234,8 @@ export const objectCacheUpdate = gql `
   }
 `;
 export const privateListCacheUpdate = gql `
-  mutation privateListCacheUpdate($id: String!, $reset: Bool) {
-    privateListCacheUpdate(id: $id, reset: $reset) @client
+  mutation privateListCacheUpdate($value: Object!) {
+    privateListCacheUpdate(value: $value) @client
   }
 `;
 export const delInfo = gql `
