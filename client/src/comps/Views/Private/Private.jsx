@@ -37,8 +37,6 @@ class Private extends Component {
 
   componentDidMount(){
 
-    
-
     const {getchat, getPlaceName} = this.props;
     let { setPlaceName } = this.props;
 
@@ -56,7 +54,6 @@ class Private extends Component {
   }
 
   componentWillUnmount(){
-    // console.warn("UMount")
     this.props.setChat({
       variables: { id: "", name: "" }
     })

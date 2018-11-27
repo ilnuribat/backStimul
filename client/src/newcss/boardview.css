@@ -1,7 +1,10 @@
 .Board-Top{
 display: flex;
 flex-direction: row;
-height: 80px;
+height: 60px;
+min-height: 60px;
+width: 100%;
+min-width: 100%;
 background: #2a2c31;
 justify-content: center;
 align-content: center;
@@ -49,7 +52,7 @@ align-content: center;
   height: 64px;
   fill: #3e75b2;
 }
-.Board{
+/* .Board{
   display: flex;
   flex-direction: column;
   height:100%;
@@ -58,7 +61,6 @@ align-content: center;
 }
 .Board-Content{
   display: flex;
-  /* flex:1 1 auto; */
   flex-direction: row;
   overflow-y:hidden;
   overflow-x:hidden;
@@ -66,7 +68,45 @@ align-content: center;
   justify-content: flex-start;
   height:100%;
   max-height: 100%;
+} */
+
+.Board{
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: row;
+  min-height:100%;
+  width:100%;
+  min-width:auto;
+  max-width:100%;
+  overflow: hidden;
+  padding: 8px 8px;
 }
+.Board-Content-Wrap{
+  display: flex;
+  flex-direction: column;
+  overflow-y:hidden;
+  overflow-x:hidden;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height:100%;
+  max-height: 100%;
+  width:100%;
+  min-width:auto;
+  max-width:100%;
+  padding: 0 8px;
+}
+.Board-Content{
+  display: flex;
+  flex-direction: row;
+  overflow-y:hidden;
+  overflow-x:auto;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height:100%;
+  max-height: 100%;
+  min-height: auto;
+}
+
 .toBack{
   padding: 10px;
 }

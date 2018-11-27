@@ -238,6 +238,9 @@ button{
   overflow-y: hidden;
   overflow-x: auto;
 }
+.Pad0{
+  padding: 0;
+}
 .Pad{
   padding: 5px;
 }
@@ -260,7 +263,10 @@ button{
 Mar5{
   margin:5 auto;
 }
-
+.NoBg{
+  background: transparent;
+  background-color: transparent;
+}
 
 .maxiCounter{
   position: relative;
