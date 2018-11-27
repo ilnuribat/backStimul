@@ -335,7 +335,7 @@ class Board extends Component {
             }
 
             if(data && data.object){
-              let selected = false;
+              let selectedChilds = false;
 
               if (this.state.curParentId && this.state.showChilds)
               {
@@ -423,11 +423,11 @@ class Board extends Component {
                                 {
                                   cols[e.id].map((task)=>{
                                     if(this.state.curParentId === task.id ){
-                                      selected = showChilds;
-                                    }else { selected = false; }
+                                      selectedChilds = showChilds;
+                                    }else { selectedChilds = false; }
 
                                     return(
-                                      <Task showother={this.state.showChilds} key={task.id} id={task.id} selected={selected || toTask && taskId === task.id ? toTask : null } name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal}/>
+                                      <Task showother={this.state.showChilds} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null } name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal}/>
                                     )
                                   })
                                 }

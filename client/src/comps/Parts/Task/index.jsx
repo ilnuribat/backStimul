@@ -19,10 +19,19 @@ class Task extends Component {
 
   render() {
 
-    const {children, name, id, endDate, lastMessage, click, childs, selected, deleteTask, showother} = this.props;
+    const {children, name, id, endDate, lastMessage, click, childs, selected, selectedChilds, deleteTask, showother} = this.props;
+    let sel = "";
+    let oth = "";
+
+    if(selected || selectedChilds){
+      sel = " Sel";
+    }
+    if(showother){
+      oth = " Child"
+    }
 
     return(
-      <div className={!selected ? !showother ? "Task" : "Task Child" : "Task Sel" } >
+      <div className={`Task${sel}${oth}`} >
         <div style={{"display":"none"}}>
           {
             id
@@ -64,7 +73,7 @@ class Task extends Component {
           <UserRow icon="1" box="1"/>
           {/* </div> */}
           <div className="Childs" onClick={()=>childs(id)}>
-            {!selected ? <Svg svg="childs"></Svg> : <div className="" onClick={()=>childs('')}>Скрыть подзадачи</div>}
+            {!selectedChilds ? <Svg svg="childs"></Svg> : <div className="" onClick={()=>childs('')}>Скрыть подзадачи</div>}
           </div>
         </div>
         <div className="Delete" onClick={()=>deleteTask(id)}>
