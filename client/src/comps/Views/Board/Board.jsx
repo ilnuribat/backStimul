@@ -420,6 +420,8 @@ class Board extends Component {
                                   Название
                                 </InputWrapper>
                               </ModalCol>
+                              {/* <ModalCol>
+                              </ModalCol> */}
                               </ModalRow>
                               <ModalRow>
                               <ModalCol>
@@ -438,6 +440,8 @@ class Board extends Component {
                                     }
                                   </select>
                                 </label>
+                              </ModalCol>
+                              <ModalCol>
                               </ModalCol>
                             </ModalRow>
 
@@ -471,7 +475,7 @@ class Board extends Component {
                             </ModalRow>
                             <ModalRow>
                             <ModalCol>
-                              <div className="Button3" onClick={this.writeTaskData(this.state.modalNameCreator, 'name', true)}>Сохранить</div>
+                              <div className="Button2" onClick={()=>this.writeTaskData(this.state.modalNameCreator, 'name', true)}>Создать задачу</div>
                             </ModalCol>
 
                             </ModalRow>
