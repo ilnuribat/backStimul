@@ -44,8 +44,7 @@ class Private extends React.Component {
 
     this.props.privateListCacheUpdate({
       variables:{
-        id: gid,
-        reset: true
+        value: {id: gid, reset: true}
       }
     })
   }
@@ -77,7 +76,7 @@ class Private extends React.Component {
 
       if(user){
         uid = user.id;
-        console.warn("юзер", nodeInput);
+        // console.warn("юзер", nodeInput);
         nodeInput.value = ""
       }else{
         console.warn("Неправильный юзер");
@@ -94,7 +93,11 @@ class Private extends React.Component {
       qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
         if(a && a.data){
           // ref1()
-          console.warn("NEW CHAT??")
+          this.props.privateListCacheUpdate({
+            variables:{
+              value: {id: uid, name: newUser, addUser: true}
+            }
+          })
         }
       }).catch((e)=>{
         console.warn(e);

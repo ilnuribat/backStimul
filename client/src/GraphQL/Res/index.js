@@ -132,7 +132,7 @@ export default {
     },
 
     messagesListCacheUpdate: (_, {lastMessage, queryName},  { cache }) => {
-      console.warn("query" , queryName)
+      // console.warn("query" , queryName)
       const query = gql`
         query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
           ${queryName}(id: $id ) @client {
@@ -189,6 +189,58 @@ export default {
 
 
       return {lastMessage, __typename: queryName.charAt(0).toUpperCase()  };
+    },
+    privateListCacheUpdate: (_, { value },  { cache }) => {
+      const query = gql`
+          query {
+            user @client {
+              directs {
+                id
+                name
+                unreadCount
+              }
+            }
+          }
+      `;
+      let previousState;
+      let data;
+
+      try {
+        previousState = cache.readQuery({ query });
+      } catch (error) {
+        console.warn("cache is empty!")
+
+        return null
+      }
+      console.warn("prevstate unrPrivatesCacheUpdate is", previousState, value)
+
+      if (value && !value.addUser) {
+        let filter = previousState.user.directs.filter(directs => directs.id === value.id)[0]
+
+        if (!value.reset) Object.assign(filter, { unreadCount: filter.unreadCount + 1 })
+        else  Object.assign(filter, { unreadCount: 0 })
+        data = {
+          user: {
+            directs: [...previousState.user.directs],
+            __typename: "User",
+          }
+        };
+      } else {
+        data = {
+          user: {
+            directs: [...previousState.user.directs, {...value, unreadCount: 0, __typename: "Group"}],
+            __typename: "User",
+          }
+        };
+      }
+
+      cache.writeQuery({
+        query,
+        data,
+      });
+
+      return true;
+
     },
     objectCacheUpdate: (_, { value, action, objectId, taskId },  { cache }) => {
       let data;
@@ -320,49 +372,6 @@ export default {
         query,
         data,
         variables: {"id": objectId}
-      });
-
-      return true;
-
-    },
-    privateListCacheUpdate: (_, { id, reset },  { cache }) => {
-      const query = gql`
-          query {
-            user @client {
-              directs {
-                id
-                name
-                unreadCount
-              }
-            }
-          }
-      `;
-      let previousState;
-
-      try {
-        previousState = cache.readQuery({ query });
-      } catch (error) {
-        console.warn("cache is empty!")
-
-        return null
-      }
-      console.warn("prevstate unrPrivatesCacheUpdate is", previousState, id,reset)
-
-      let filter = previousState.user.directs.filter(directs => directs.id === id)[0]
-
-      if (!reset) Object.assign(filter, { unreadCount: filter.unreadCount + 1 })
-      else  Object.assign(filter, { unreadCount: 0 })
-
-      const data = {
-        user: {
-          directs: [...previousState.user.directs],
-          __typename: "User",
-        }
-      };
-
-      cache.writeQuery({
-        query,
-        data,
       });
 
       return true;
