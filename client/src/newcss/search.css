@@ -227,7 +227,9 @@ input[type="checkbox"]:checked + label.searchTag{
   /* height: auto; */
   height: 100%;
   overflow: auto;
+  width: 100%;
 }
 .SearchBody .SeacrhInner{
   height: 100%;
+  width: 100%;
 }

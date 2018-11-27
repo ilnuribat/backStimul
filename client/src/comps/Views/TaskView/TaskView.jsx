@@ -64,9 +64,9 @@ class TaskView extends Component {
     let _grnm
     let _objId
 
-    if (location.state && location.state.taskId) {
-      _grid = location.state.taskId
-      _grnm = location.state.taskName
+    if (location.state && location.state.id) {
+      _grid = location.state.id
+      _grnm = location.state.taskName || '1'
       _objId = location.state.objectId || '1'
       if(!_objId || _objId.length < 9){
         this.queryTaskById(_grid)
