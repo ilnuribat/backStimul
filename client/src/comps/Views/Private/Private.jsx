@@ -72,6 +72,9 @@ class Private extends Component {
     return(
       <Fragment>
         <Content view="OvH Row OvH Pad10">
+          <InnerBar>
+            <PrivateBar />
+          </InnerBar>
           {
             this.props.getchat && this.props.getchat.id ?
               (<Query
@@ -112,7 +115,7 @@ class Private extends Component {
               )
           }
           <InnerBar>
-            <PrivateBar />
+            
           </InnerBar>
 
         </Content>
