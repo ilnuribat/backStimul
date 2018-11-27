@@ -131,16 +131,16 @@ class Board extends Component {
 
     this.props.setChat({
       variables: {
-        id: id,
-        name: name,
+        id: id === this.state.taskId ? "" : id,
+        name: id === this.state.taskId ? "" : name,
         priv: false,
       }
     });
 
     this.setState({
-      toTask: true,
-      taskId: id,
-      taskName: name
+      toTask: id === this.state.taskId ? false : true,
+      taskId: id === this.state.taskId ? "" : id,
+      taskName: id === this.state.taskId ? "" : name
     })
 
   }
@@ -373,7 +373,6 @@ class Board extends Component {
                               ); 
                             }
                             if (error){
-                              // console.log(error);
 
                               return (
                                 <div className="errMess">
@@ -408,12 +407,10 @@ class Board extends Component {
                           <div className="BoardTopCenter">
                             <h1>{data.object.name}</h1>
                             <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
-                            {/* <p className="small">{data.object.id}</p> */}
                           </div>
 
                         </div>
                       <ContentInner view="Board-Content">
-
                         {
                           status && status.map((e,i)=>{
                             if( i === 0 ){
@@ -425,12 +422,12 @@ class Board extends Component {
                                 {e.id == 1 ? <ButtonRow icon="plus" view="MiniBox" iconright="1" click={this.changeModal}></ButtonRow>  : null}
                                 {
                                   cols[e.id].map((task)=>{
-                                    if(this.state.curParentId === task.id){
+                                    if(this.state.curParentId === task.id ){
                                       selected = showChilds;
-                                    } else { selected = false; }
+                                    }else { selected = false; }
 
                                     return(
-                                      <Task showother={this.state.showChilds} key={task.id} id={task.id} selected={selected} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal}/>
+                                      <Task showother={this.state.showChilds} key={task.id} id={task.id} selected={selected || toTask && taskId === task.id ? toTask : null } name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal}/>
                                     )
                                   })
                                 }
@@ -441,8 +438,6 @@ class Board extends Component {
                       </ContentInner>
                     </ContentInner>
 
-
-                  
                   <Panel>
                     <TextRow name="Информация" view="Pad510 BigName">
                       <TextRow name="" view="Pad510 MT10">
