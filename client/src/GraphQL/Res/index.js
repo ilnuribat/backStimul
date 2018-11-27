@@ -130,10 +130,12 @@ export default {
 
       return {barType, barShow, __typename: 'Bar' };
     },
-    messagesListDirectUpdate: (_, {lastMessage, lastMessageId, lastMessageGroupId},  { cache }) => {
+
+    messagesListCacheUpdate: (_, {lastMessage, queryName},  { cache }) => {
+      console.warn("query" , queryName)
       const query = gql`
         query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
-          direct(id: $id ) @client {
+          ${queryName}(id: $id ) @client {
             messages(messageConnection: $messageConnection) {
               edges {
                 cursor
@@ -152,61 +154,7 @@ export default {
       let previousState;
 
       try {
-        previousState = cache.readQuery({ query, variables: {"id": lastMessageGroupId}});
-      } catch (error) {
-        console.warn("cache is empty!")
-
-        return null
-      }
-
-      // console.warn("prevstate is", previousState)
-
-      const newFeedItem = {cursor: lastMessageId, node: {id: lastMessageId, text: lastMessage,  __typename: "Message"},
-        __typename: "MessageEdge" };
-
-      const data = {
-        direct: {
-          messages:{
-            edges: [...previousState.direct.messages.edges, newFeedItem],
-            __typename: "MessageConnection",
-          },
-          __typename: "Direct"
-        }
-      };
-
-      cache.writeQuery({
-        query,
-        data,
-        variables: {"id": lastMessageGroupId}
-      });
-
-
-      return {lastMessage,lastMessageId, lastMessageGroupId, __typename: 'Direct' };
-    },
-    messagesListTaskUpdate: (_, {lastMessage, lastMessageId, lastMessageGroupId},  { cache }) => {
-
-      const query = gql`
-        query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
-          task(id: $id ) @client {
-            messages(messageConnection: $messageConnection) {
-              edges {
-                cursor
-                node {
-                  id
-                  text
-                }
-              }
-            }
-            __typename
-          }
-        # id @client
-        }
-      `;
-
-      let previousState;
-
-      try {
-        previousState = cache.readQuery({ query, variables: {"id": lastMessageGroupId}});
+        previousState = cache.readQuery({ query, variables: {"id": lastMessage.groupId}});
       } catch (error) {
         console.warn("cache is empty!")
 
@@ -216,27 +164,31 @@ export default {
       // console.warn("lastMessage is", lastMessage)
       // console.warn("prevstate is", previousState)
 
-      const newFeedItem = {cursor: lastMessageId, node: {id: lastMessageId, text: lastMessage,  __typename: "Message"},
+      const newFeedItem = {cursor: lastMessage.id, node: {...lastMessage,  __typename: "Message"},
         __typename: "MessageEdge" };
 
+      let edges;
+
+      queryName === "task" ? edges = [...previousState.task.messages.edges, newFeedItem] : edges = [...previousState.direct.messages.edges, newFeedItem]
+
       const data = {
-        task: {
+        [queryName]: {
           messages:{
-            edges: [...previousState.task.messages.edges, newFeedItem],
+            edges: edges,
             __typename: "MessageConnection",
           },
-          __typename: "Task"
+          __typename: queryName.charAt(0).toUpperCase()
         }
       };
 
       cache.writeQuery({
         query,
         data,
-        variables: {"id": lastMessageGroupId}
+        variables: {"id": lastMessage.groupId}
       });
 
 
-      return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'Task' };
+      return {lastMessage, __typename: queryName.charAt(0).toUpperCase()  };
     },
     objectCacheUpdate: (_, { value, action, objectId, taskId },  { cache }) => {
       let data;
@@ -316,6 +268,7 @@ export default {
           object: {
             tasks:  [...previousState.object.tasks, {
               id: taskId,
+              // ...value,
               name: value.name ? value.name : "Не указано",
               users: value.users ? value.users : null,
               unreadCount: value.unreadCount ? value.unreadCount : 0 ,
@@ -411,7 +364,7 @@ export default {
           }
         `;
         // eslint-disable-next-line no-case-declarations
-        let param = {id: value.id, username: value.name, __typename: "UserTaskRole"}
+        let param = {...value, __typename: "UserTaskRole"}
 
         if (!value) param = null
 
@@ -447,7 +400,7 @@ export default {
 
         data = {
           task: {
-            users: [...previousState.task.users, {id: value.id, username: value.name, __typename: "User"}],
+            users: [...previousState.task.users, {...value, __typename: "User"}],
             __typename: "Task"
           }
         };

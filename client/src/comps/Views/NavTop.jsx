@@ -8,7 +8,7 @@ import { graphql, compose } from "react-apollo";
 import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED } from '../../GraphQL/Qur/Subscr';
-import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListDirectUpdate, messagesListTaskUpdate } from '../../GraphQL/Cache';
+import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate } from '../../GraphQL/Cache';
 import { getUnreadCount } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 
@@ -31,6 +31,8 @@ class NavTop extends Component {
           // into the existing list of comments
           let equalGroupMessage
           //пишем мессагу в кэш
+
+          console.warn(data.data)
 
           client.mutate({
             mutation: lastMessageCache,
@@ -70,11 +72,10 @@ class NavTop extends Component {
 
           //Пишем в кеш (если он есть конечно) нужной группы полученную мессагу
           client.mutate({
-            mutation: data.data.messageAdded.isDirect ? messagesListDirectUpdate : messagesListTaskUpdate,
+            mutation: messagesListCacheUpdate,
             variables: {
-              lastMessage: data.data.messageAdded.text,
-              lastMessageId: data.data.messageAdded.id,
-              lastMessageGroupId: data.data.messageAdded.groupId,
+              lastMessage: data.data.messageAdded,
+              queryName: data.data.messageAdded.isDirect ? "direct" : "task",
             },
           })
         },
@@ -92,7 +93,7 @@ class NavTop extends Component {
             if(e && e.unreadCount){
               privs = privs + e.unreadCount
             }
-            
+
 
             return null
           })
@@ -117,6 +118,7 @@ class NavTop extends Component {
       if (!this.isRunOnce) {
         this.queryCounterDirects()
         this.subscribe(this.props.client)
+        this.setState ({isRunOnce: true})
       }
     }
 

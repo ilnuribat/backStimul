@@ -216,26 +216,16 @@ export const setTemp = gql `
     }
   }
 `;
-export const messagesListTaskUpdate = gql `
-  mutation messagesListTaskUpdate($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
-    messagesListTaskUpdate(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
+export const messagesListCacheUpdate = gql `
+  mutation messagesListCacheUpdate($lastMessage: Object!, $queryName: String!) {
+    messagesListCacheUpdate(lastMessage: $lastMessage, queryName: $queryName) @client {
       lastMessage
-      lastMessageId
-      lastMessageGroupId
     }
   }
 `;
-export const messagesListDirectUpdate = gql `
-  mutation messagesListDirectUpdate($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
-    messagesListDirectUpdate(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
-      lastMessage
-      lastMessageId
-      lastMessageGroupId
-    }
-  }
-`;
+
 export const taskCacheUpdate = gql `
-  mutation taskCacheUpdate($action: String!, $value: String, $taskId: String!) {
+  mutation taskCacheUpdate($action: String!, $value: Object, $taskId: String!) {
     taskCacheUpdate(action: $action, value: $value, taskId: $taskId) @client
   }
 `;
