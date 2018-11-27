@@ -21,8 +21,9 @@ import { ButtonRow, TextRow, FileRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import { updTask, crTask, deleteTask } from '../../../GraphQL/Qur/Mutation';
 import Panel from '../../Lays/Panel/index';
+import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect'
 
-// import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
+
 
 class Board extends Component {
 
@@ -428,18 +429,22 @@ class Board extends Component {
                                 <ModalBlockName>
                                   Статус
                                 </ModalBlockName>
-                                <label htmlFor="selectStatus" className="LabelSelect">
-                                  <select name="selectStatus" onChange={(e)=>{this.writeTaskData(e.target.value, "status", false)}} >
+
+                                  <FakeSelect array={status} change={(e)=>{this.writeTaskData(e, "status", true)}}>
+                                  </FakeSelect>
+
+                                {/* <label htmlFor="selectStatus" className="LabelSelect">
+                                  <select name="selectStatus" onChange={(e)=>{this.writeTaskData(e, "status", false)}} >
                                     {/* <option value="0">Выбрать статус</option> */}
                                     {
-                                      status.map((e)=>(
-                                        <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
-                                          {e.name}
-                                        </option>
-                                      ))
+                                      // status.map((e)=>(
+                                      //   <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
+                                      //     {e.name}
+                                      //   </option>
+                                      // ))
                                     }
-                                  </select>
-                                </label>
+                                  {/* </select> */}
+                                {/* </label> */}
                               </ModalCol>
                               <ModalCol>
                               </ModalCol>
@@ -459,8 +464,11 @@ class Board extends Component {
                                 <ModalBlockName>
                                 Добавить родительскую задачу
                                 </ModalBlockName>
-                                <label htmlFor="parentSelect" className="LabelSelect">
-                                  <select name="parentSelect" onChange={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
+
+                                  <FakeSelect array={data.object.tasks} change={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
+                                  </FakeSelect>
+                                {/* <label htmlFor="parentSelect" className="LabelSelect"> */}
+                                  {/* <select name="parentSelect" onChange={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
                                     <option value="0">Выбрать задачу</option>
                                     {
                                       data.object.tasks.map((e)=>{
@@ -469,8 +477,8 @@ class Board extends Component {
                                         )
                                       })
                                     }
-                                  </select>
-                                </label>
+                                  </select> */}
+                                {/* </label> */}
                               </ModalCol>
                             </ModalRow>
                             <ModalRow>
