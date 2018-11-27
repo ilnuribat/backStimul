@@ -1,15 +1,38 @@
 .Column{
+  position: relative;
   display: block;
-  flex:0;
+  /* flex:0; */
   background: #3d4147;
   width:300px;
   min-width:300px;
   max-width:300px;
-  height: auto;
+  height:auto;
   border-radius: 6px;
   box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.16);
   margin:0 5px;
-  padding: 20px;
+  padding: 15px 10px;
+  /* max-height:100%; */
+  /* -webkit-flex: 0 1 auto;
+  -moz-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 100px;
+  max-height: 100%;
+}
+.Column-Content{
+  display: block;
+  overflow: auto;
+  height: 100%;
+  width:100%;
+}
+.Column-Content-Inner{
+  overflow: hidden;
+  height: auto;
+  min-height: auto;
 }
 
 .Column-Name{
@@ -26,6 +49,8 @@ display: block;
 background: #fff;
 padding:0;
 height: 5px;
+min-height: 5px;
+max-height: 5px;
 border-radius: 11px;
 width:50%;
 margin:15px 0 30px;

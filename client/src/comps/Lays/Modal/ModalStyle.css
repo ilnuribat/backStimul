@@ -73,7 +73,7 @@
 }
 .ModalBig{
   width:90%;
-  max-width: 900px;
+  max-width: 700px;
   box-sizing: border-box;
   /* height: 80%; */
   /* min-height: 80%; */
@@ -88,7 +88,7 @@
   width:90%;
   max-width: 400px;
   height: auto;
-  min-height: 200px;
+  min-height: 300px;
 }
 .ModalBlock, .ModalCol{
   /* background: #ddd; */
@@ -245,6 +245,9 @@ input{
   background-color: #3d4147;
 }
 
+.ModalClose svg{
+  fill: #808fa3;
+}
 .ModalClose{
   position: absolute;
   top:40px;
@@ -254,6 +257,8 @@ input{
   cursor: pointer;
   z-index: 999;
 }
+
+
 option{
   background: #2f3136;
 }

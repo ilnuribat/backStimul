@@ -150,7 +150,7 @@ class TileMaker extends Component {
                       }
                       input.value = "";
                       address.value = "";
-
+                      this.open();
                     }}
                   >
                     <div>

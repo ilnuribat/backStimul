@@ -1,7 +1,6 @@
-
 const filesize = require('filesize');
 const { GraphQLUpload } = require('apollo-upload-server');
-const { connection, mongo: { GridFSBucket } } = require('mongoose');
+const { connection, mongo: { GridFSBucket }, Types: { ObjectId } } = require('mongoose');
 const {
   Files,
 } = require('../models');
@@ -38,55 +37,42 @@ const storeUpload = ({
 
 module.exports = {
   Upload: GraphQLUpload,
+  File: {
+    id: ({ id }) => id.toString(),
+  },
   Task: {
-    files: async ({ id }) => {
-      const file = await Files.aggregate([{
-        $match: {
-          taskId: id,
+    files: async ({ id }) => Files.aggregate([{
+      $match: {
+        taskId: ObjectId(id),
+      },
+    }, {
+      $lookup: {
+        from: 'gridfs.files',
+        localField: 'fileId',
+        foreignField: '_id',
+        as: 'fileBody',
+      },
+    }, {
+      $unwind: {
+        path: '$fileBody',
+      },
+    }, {
+      $addFields: {
+        id: '$fileId',
+        size: '$fileBody.length',
+        name: '$fileBody.filename',
+        date: {
+          $toString: '$fileBody.uploadDate',
         },
-      }, {
-        $project: {
-          _id: 0,
-          fileId: 1,
-          mimetype: 1,
-        },
-      }, {
-        $addFields: {
-          fileIdObject: {
-            $toObjectId: '$fileId',
-          },
-        },
-      }, {
-        $lookup: {
-          from: 'gridfs.files',
-          localField: 'fileIdObject',
-          foreignField: '_id',
-          as: 'fileBody',
-        },
-      }, {
-        $unwind: {
-          path: '$fileBody',
-        },
-      }, {
-        $addFields: {
-          id: '$fileId',
-          size: '$fileBody.length',
-          name: '$fileBody.filename',
-          date: {
-            $toString: '$fileBody.uploadDate',
-          },
-          mimeType: '$mimetype',
-        },
-      }, {
-        $project: {
-          fileBody: 0,
-          fileIdObject: 0,
-          fileId: 0,
-        },
-      }]);
-
-      return file;
-    },
+        mimeType: '$mimetype',
+      },
+    }, {
+      $project: {
+        fileBody: 0,
+        fileIdObject: 0,
+        fileId: 0,
+      },
+    }]),
   },
   Mutation: {
     async uploadFile(parent, { id: taskId, file }) {

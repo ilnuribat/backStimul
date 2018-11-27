@@ -21,8 +21,9 @@ import { ButtonRow, TextRow, FileRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import { updTask, crTask, deleteTask } from '../../../GraphQL/Qur/Mutation';
 import Panel from '../../Lays/Panel/index';
+import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect'
 
-// import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
+
 
 class Board extends Component {
 
@@ -41,6 +42,9 @@ class Board extends Component {
       modal: false,
       modalDelete: false,
       HaveObj: false,
+      modalMessageShow: false,
+      modalMessage: "",
+      modalNameCreator: "",
     };
 
     this.daTa = this.daTa.bind(this)
@@ -55,6 +59,7 @@ class Board extends Component {
     this.writeTaskData = this.writeTaskData.bind(this)
     this.deleteTask = this.deleteTask.bind(this)
     this.changeDelModal = this.changeDelModal.bind(this)
+    this.modalMessage = this.modalMessage.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
@@ -226,13 +231,27 @@ class Board extends Component {
     });
   }
 
+  modalMessage(message){
+    if(message){
+      this.setState({
+        modalMessageShow: true,
+        modalMessage: message.toString(),
+      })
+      setTimeout(() => {
+        this.setState({
+          modalMessageShow: false,
+          modalMessage: "",
+        })
+      }, 3000);
+    }
+  }
+
   writeTaskData(value, change, quota) {
     let cap = ""
 
     if (quota) cap = '"';
 
     let changes = `${change}: ${cap}${value}${cap}`;
-
 
     if (change !== "name"){
       changes = `name: "Нет названия", ${change}: ${cap}${value}${cap}`
@@ -249,15 +268,18 @@ class Board extends Component {
             objectId: this.state.objectId
           }
         })
+        this.modalMessage("Изменения сохранены");
         this.setState({
           taskId: a.data.createTask.id,
         })
       }).catch((e)=>{
+        this.modalMessage("Ошибка"+e);
         console.warn(e);
       })
     else
       qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("update task done", a)
+        this.modalMessage("Изменения сохранены");
         this.props.objectCacheUpdate({
           variables:{
             value: {value : value, key : change},
@@ -267,6 +289,7 @@ class Board extends Component {
           }
         })
       }).catch((e)=>{
+        this.modalMessage("Ошибка " + e);
         console.warn(e);
       })
   }
@@ -391,31 +414,39 @@ class Board extends Component {
                           </Modal>
                         ) : null }
                         {this.state.modal ? (
-                          <Modal close={this.closeModal}>
+                          <Modal close={this.closeModal} message={this.state.modalMessage?this.state.modalMessage:""}>
                             <ModalRow>
                               <ModalCol>
-                                <InputWrapper placeholder="Ведите название задачи" save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
+                                <InputWrapper placeholder="Введите название задачи" change={(name)=>{ this.setState({ modalNameCreator: name })}}>
                                   Название
                                 </InputWrapper>
                               </ModalCol>
-                            </ModalRow>
-                            <ModalRow>
+                              {/* <ModalCol>
+                              </ModalCol> */}
+                              </ModalRow>
+                              <ModalRow>
                               <ModalCol>
                                 <ModalBlockName>
-                          Статус
+                                  Статус
                                 </ModalBlockName>
-                                <label htmlFor="selectStatus" className="LabelSelect">
-                                  <select name="selectStatus" onChange={(e)=>{this.writeTaskData(e.target.value, "status", false)}} >
+
+                                  <FakeSelect array={status} change={(e)=>{this.writeTaskData(e, "status", true)}}>
+                                  </FakeSelect>
+
+                                {/* <label htmlFor="selectStatus" className="LabelSelect">
+                                  <select name="selectStatus" onChange={(e)=>{this.writeTaskData(e, "status", false)}} >
                                     {/* <option value="0">Выбрать статус</option> */}
                                     {
-                                      status.map((e)=>(
-                                        <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
-                                          {e.name}
-                                        </option>
-                                      ))
+                                      // status.map((e)=>(
+                                      //   <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
+                                      //     {e.name}
+                                      //   </option>
+                                      // ))
                                     }
-                                  </select>
-                                </label>
+                                  {/* </select> */}
+                                {/* </label> */}
+                              </ModalCol>
+                              <ModalCol>
                               </ModalCol>
                             </ModalRow>
 
@@ -433,8 +464,11 @@ class Board extends Component {
                                 <ModalBlockName>
                                 Добавить родительскую задачу
                                 </ModalBlockName>
-                                <label htmlFor="parentSelect" className="LabelSelect">
-                                  <select name="parentSelect" onChange={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
+
+                                  <FakeSelect array={data.object.tasks} change={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
+                                  </FakeSelect>
+                                {/* <label htmlFor="parentSelect" className="LabelSelect"> */}
+                                  {/* <select name="parentSelect" onChange={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
                                     <option value="0">Выбрать задачу</option>
                                     {
                                       data.object.tasks.map((e)=>{
@@ -443,9 +477,15 @@ class Board extends Component {
                                         )
                                       })
                                     }
-                                  </select>
-                                </label>
+                                  </select> */}
+                                {/* </label> */}
                               </ModalCol>
+                            </ModalRow>
+                            <ModalRow>
+                            <ModalCol>
+                              <div className="Button2" onClick={()=>this.writeTaskData(this.state.modalNameCreator, 'name', true)}>Создать задачу</div>
+                            </ModalCol>
+
                             </ModalRow>
                           </Modal>
                         ) : null }
@@ -458,6 +498,7 @@ class Board extends Component {
 
                             return(
                               <Column key={e.id} id={e.id} status={e.name} name={e.name} >
+                                {e.id == 1 ? <ButtonRow icon="plus" view="MiniBox" iconright="1" click={this.changeModal}></ButtonRow>  : null}
                                 {
                                   cols[e.id].map((task)=>{
                                     if(this.state.curParentId === task.id ){

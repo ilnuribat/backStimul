@@ -1,7 +1,7 @@
 .Board-Top{
 display: flex;
 flex-direction: row;
-height: 60px;
+height: 80px;
 background: #2a2c31;
 justify-content: center;
 align-content: center;
@@ -58,12 +58,14 @@ align-content: center;
 }
 .Board-Content{
   display: flex;
-  flex:1 1 auto;
+  /* flex:1 1 auto; */
   flex-direction: row;
   overflow-y:hidden;
-  overflow-x:auto;
+  overflow-x:hidden;
   align-items: flex-start;
   justify-content: flex-start;
+  height:100%;
+  max-height: 100%;
 }
 .toBack{
   padding: 10px;

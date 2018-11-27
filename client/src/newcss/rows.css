@@ -97,6 +97,7 @@
 /******************ButtonRow**************/
 
 .ButtonRow{
+  transition: all 0.3s ease-in-out;
   margin: 5px 0;
   display: flex;
   width: 140px;
@@ -109,6 +110,9 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+.ButtonRow:hover{
+  background-color: #275285;
 }
 .ButtonRow .ButtonIcon{
   /* flex:1 1 auto; */
@@ -144,6 +148,7 @@
   /* width: 100%; */
   color:#fff;
 }
+
 
 
 /******************UserRow**************/
@@ -283,9 +288,14 @@ margin:0 auto 5px;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  font-size: 14px;
 }
 .ResponsibleRow > *{
   width:100%;
+  font-size: 14px;
+}
+.ResponsibleRow .UserRow .UserName{
+  font-size: 16px;
 }
 
 
@@ -312,4 +322,12 @@ margin:0 auto 5px;
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
+}
+.ButtonRow.MiniBox{
+  position: absolute;
+  top:10px;
+  right:10px;
+  width: 40px;
+  max-width: 40px;
+  min-width: 40px;
 }

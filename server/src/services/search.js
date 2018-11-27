@@ -2,6 +2,7 @@ const { searchMessages } = require('../services/chat');
 const { searchObjects } = require('../services/object');
 const { searchTasks } = require('../services/task');
 const { searchUsers } = require('../services/user');
+const { searchFiles } = require('../services/files');
 
 async function search(parent, { query, type, limit = 10 }, { user }) {
   const result = [];
@@ -43,15 +44,24 @@ async function search(parent, { query, type, limit = 10 }, { user }) {
           ...u,
         })));
         break;
+      case 'FILES':
+        tempRes = await searchFiles(user, regExQuery, limit);
+
+        result.push(...tempRes.map(f => ({
+          __typename: 'File',
+          ...f,
+        })));
+        break;
       default:
         break;
     }
   } else {
-    const [users, tasks, objects, messages] = await Promise.all([
+    const [users, tasks, objects, messages, files] = await Promise.all([
       searchUsers(user, regExQuery, limit),
       searchTasks(user, regExQuery, limit),
       searchObjects(user, regExQuery, limit),
       searchMessages(user, regExQuery, limit),
+      searchFiles(user, regExQuery, limit),
     ]);
 
     return [
@@ -70,6 +80,10 @@ async function search(parent, { query, type, limit = 10 }, { user }) {
       ...messages.map(m => ({
         __typename: 'Message',
         ...m,
+      })),
+      ...files.map(f => ({
+        __typename: 'File',
+        ...f,
       })),
     ];
   }

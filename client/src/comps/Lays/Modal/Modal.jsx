@@ -36,7 +36,7 @@ export const ModalRow = ({ children })=>{
   )
 }
 
-export const InputWrapper = ({ children, name, save, placeholder, click })=>{
+export const InputWrapper = ({ children, name, save, placeholder, click, change })=>{
   let value = name;
   let old = name;
 
@@ -46,8 +46,8 @@ export const InputWrapper = ({ children, name, save, placeholder, click })=>{
         {children}
       </ModalBlockName>
       <div className="InputWrapper">
-        <input type="text" defaultValue={name||""} placeholder={placeholder||"" } onChange={(e)=>{value = e.target.value}} />
-        { true ? ( <div className="SaveBtn" onClick={()=>{click(value)}}><Svg svg="save"/>{save||"Сохранить"}</div> ): null }
+        <input type="text" defaultValue={name||""} placeholder={placeholder||"" } onChange={(e)=>{value = e.target.value; change(value)}} />
+        { click ? ( <div className="SaveBtn" onClick={()=>{click(value)}}><Svg svg="save"/>{save||"Сохранить"}</div> ): null }
       </div>
     </ModalCol>
   )

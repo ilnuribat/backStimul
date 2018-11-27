@@ -112,7 +112,15 @@ input[type="submit"]:hover{
 }
 
 input[type="list"]{
-  width:300px;
-  min-width:300px;
-  max-width:300px;
+  width:auto;
+  min-width:auto;
+  max-width:100%;
+}
+
+.LabelInputList{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
 }

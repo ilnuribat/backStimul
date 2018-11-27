@@ -20,8 +20,7 @@
       "node_modules/*",
       "client",
       "test"
-    ],
-    "watch": ["*.graphql"]
+    ]
   },
   "devDependencies": {
     "eslint": "^5.6.1",

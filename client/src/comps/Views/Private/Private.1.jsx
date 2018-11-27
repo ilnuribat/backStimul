@@ -30,6 +30,7 @@ class Private extends Component {
       grnm: '',
       gid: '',
       getchat: '',
+      chatId: "",
     }
 
     this.setStateProps = this.setStateProps.bind(this)
@@ -37,8 +38,27 @@ class Private extends Component {
 
   componentDidMount(){
 
-    const {getchat, getPlaceName} = this.props;
+    const {getchat, getPlaceName, location} = this.props;
     let { setPlaceName } = this.props;
+    const { chatId } = this.state;
+
+
+    // if(location && location.state && location.state.id){
+    //   this.setState({
+    //     chatId: location.state.id,
+    //   })
+    // }else
+    if(getchat && getchat.id){
+      this.setState({
+        chatId: getchat.id,
+      })
+    }else{
+      // this.setState({
+      //   chatId: "",
+      // })
+    }
+
+    
 
     let place = 'Private';
 
@@ -51,6 +71,53 @@ class Private extends Component {
     }
 
     this.setStateProps(getchat)
+  }
+
+  componentWillUpdate(){
+    const {getchat, getPlaceName, location} = this.props;
+
+    if(getchat && getchat.id){
+      this.setState({
+        chatId: getchat.id,
+      })
+    }else{
+      // this.setState({
+      //   chatId: "",
+      // })
+    }
+    // const {getchat, location} = this.props;
+    // const {chatId} = this.state;
+
+    // if(location && location.state && location.state.id && location.state.id !== chatId){
+    //   let id = location.state.id;
+
+    //   this.setState({
+    //     chatId: id,
+    //   })
+    // }else if(getchat && getchat.id && getchat.id !== chatId){
+    //   let id = getchat.id;
+
+    //   this.setState({
+    //     chatId: id,
+    //   })
+    // }else{
+    //   return true;
+    // }
+
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    if(nextProps === this.props && nextState === this.state){
+      return false
+    }
+    if(nextProps.getchat.id === this.props.getchat.id){
+      return false
+    }
+    if(nextState.chatId === this.state.chatId){
+      return false
+    }
+
+    return true
   }
 
   componentWillUnmount(){
@@ -68,7 +135,7 @@ class Private extends Component {
 
 
   render() {
-
+    const {chatId} = this.state;
     return(
       <Fragment>
         <Content view="OvH Row OvH Pad10">
@@ -76,10 +143,10 @@ class Private extends Component {
             <PrivateBar />
           </InnerBar>
           {
-            this.props.getchat && this.props.getchat.id ?
+            chatId ?
               (<Query
                 query={PRIV_QUERY}
-                variables={{ id: `${this.props.getchat.id}` }}
+                variables={{ id: `${chatId}` }}
               >
                 {({ loading, error, data }) => {
                   if (loading){
@@ -103,19 +170,30 @@ class Private extends Component {
 
                   return(
                     <ContentInner view="Row OvH Pad10">
-                      <ChatView id={this.props.getchat.id} data={ data.direct } />
+                      <ChatView id={chatId} data={ data.direct } />
                     </ContentInner>
                   )}}
               </Query>)
               :
               (
-                <ContentInner view="Row OvH Pad10">
+                <ContentInner>
                   <div className="errorMessage">Выберите чат</div>
                 </ContentInner>
               )
           }
           <InnerBar>
-            
+            <div>
+              Вложения
+            </div>
+            <div>
+              Вложения
+            </div>
+            <div>
+              Вложения
+            </div>
+            <div>
+              Вложения
+            </div>
           </InnerBar>
 
         </Content>
