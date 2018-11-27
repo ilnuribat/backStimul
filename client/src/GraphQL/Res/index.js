@@ -212,7 +212,7 @@ export default {
 
         return null
       }
-      console.warn("prevstate unrPrivatesCacheUpdate is", previousState, value)
+      // console.warn("prevstate unrPrivatesCacheUpdate is", previousState, value)
 
       if (value && !value.addUser) {
         let filter = previousState.user.directs.filter(directs => directs.id === value.id)[0]
