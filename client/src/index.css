@@ -61,8 +61,8 @@ a{
 
 .Bar {
     width: 100%;
-    min-width: 300px;
-    max-width: 500px;
+    min-width: 350px;
+    max-width: 350px;
     background: #202225;
     display: flex;
     flex-direction: column;
@@ -77,8 +77,9 @@ a{
     display: flex;
     flex:1;
     flex-direction: column;
-    width: 300px;
-    min-width: 300px;
+    width: 100%;
+    min-width: 350px;
+    max-width: 350px;
     background: #30363d;
     height: 100%;
     min-height: 100%;
@@ -142,7 +143,9 @@ a{
   justify-content: flex-start;
   /* align-items: flex-start; */
   flex-direction: column;
-  width: 300px;
+  width: 100%;
+  min-width: 350px;
+  max-width: 350px;
   height: 100%;
   border-radius: 6px;
   box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
