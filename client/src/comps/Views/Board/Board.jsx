@@ -80,15 +80,50 @@ class Board extends Component {
 
   componentWillMount(){
     const { location } = this.props;
-    let id = location.state && location.state.objectId ? location.state.objectId : localStorage.getItem('ObjectId')
-
-    console.log("location.state ------------ ", location.state )
-
+    const { objectId, taskId } = this.state;
+    let id = "";
+    let tid = "";
+    let Mount = false;
     
-    if(id){
+    if(location.state && location.state.objectId && location.state.objectId){
+      Mount = true;
+      id = location.state.objectId
+
+      localStorage.setItem('objectId', id)
+
       this.setState({
         objectId: id,
       });
+    } 
+    if(location.state && location.state.taskId && location.state.taskId){
+      Mount = true;
+      tid = location.state.taskId
+      localStorage.setItem('taskId', tid)
+
+      this.setState({
+        toTask: true,
+        taskId: tid,
+      });
+    }
+
+    if(!location.state || !location.state.objectId){
+      Mount = true;
+      id = localStorage.getItem('objectId')
+      this.setState({
+        objectId: id,
+      });
+    }
+    if(!location.state || !location.state.taskId ){
+      Mount = true;
+      tid = localStorage.getItem('taskId')
+      this.setState({
+        toTask: true,
+        taskId: tid,
+      });
+    }
+
+   
+    if(id && Mount){
       this.chkObject(id)
       this.glossStatus(id)
     }
@@ -96,7 +131,7 @@ class Board extends Component {
 
   // componentDidMount(){
   //   const { location } = this.props;
-  //   let id = location.state && location.state.objectId ? location.state.objectId : localStorage.getItem('ObjectId')
+  //   let id = location.state && location.state.objectId ? location.state.objectId : localStorage.getItem('objectId')
 
   //   console.log("location.state ------------ ", location.state )
     
@@ -126,7 +161,7 @@ class Board extends Component {
 
     if(id){
       localStorage.setItem('grid', id)
-      localStorage.setItem('grnm', name)
+      localStorage.setItem('taskId', id)
     }
 
     this.props.setChat({
@@ -147,19 +182,62 @@ class Board extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { location } = this.props;
-    let id;
+    const { objectId, taskId } = this.state;
+    let id = "";
+    let tid = "";
+    let Mount = false;
+    
+    if(location.state && location.state.objectId && location.state.objectId !== objectId){
+      Mount = true;
+      id = location.state.objectId
+      localStorage.setItem('objectId', id)
+    } 
+    if(location.state && location.state.taskId && location.state.taskId !== taskId){
+      Mount = true;
+      tid = location.state.taskId
+      localStorage.setItem('taskId', tid)
+    }
 
-    if(prevProps.location.state == this.props.location.state) return false
+    // if(!location.state || !location.state.objectId){
+    //   Mount = true;
+    //   id = localStorage.getItem('objectId')
+    //   this.setState({
+    //     objectId: id,
+    //   });
+    // }
+    // if(!location.state || !location.state.taskId ){
+    //   Mount = true;
+    //   tid = localStorage.getItem('taskId')
+    //   this.setState({
+    //     toTask: true,
+    //     taskId: tid,
+    //   });
+    // }
 
-    location.state && location.state.objectId ? id = location.state.objectId : id = localStorage.getItem('ObjectId')
-
-    if(id){
+   
+    if(id && Mount){
       this.setState({
         objectId: id,
+        toTask: tid ? true : false,
+        taskId: tid ? tid : "",
       });
       this.chkObject(id)
       this.glossStatus(id)
     }
+
+    // if(prevProps.location.state == this.props.location.state) return false
+
+    // location.state && location.state.objectId ? id = location.state.objectId : id = localStorage.getItem('objectId')
+    // location.state && location.state.taskId ? taskId = location.state.taskId : id = localStorage.getItem('taskId')
+
+    // if(id){
+    //   this.setState({
+    //     objectId: id,
+    //     taskId: taskId,
+    //   });
+    //   this.chkObject(id)
+    //   this.glossStatus(id)
+    // }
   }
   shouldComponentUpdate(nextProps, nextState){
 
@@ -383,6 +461,9 @@ class Board extends Component {
                             if (a && !data || !data.task)
                               return null
                             let dataValue;
+
+
+
                             let taskStatus = data.task.status
 
                             if (data.task.endDate) dataValue = data.task.endDate.replace(/T.*$/gi, "")
@@ -439,6 +520,8 @@ class Board extends Component {
                     </ContentInner>
 
                   <Panel>
+
+
                     <TextRow name="Информация" view="Pad510 BigName">
                       <TextRow name="" view="Pad510 MT10">
                         {data.object.name}

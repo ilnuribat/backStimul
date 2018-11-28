@@ -58,7 +58,8 @@ class NavBottom extends Component {
           .Column-Name,
           .Column .Name,
           .Task-Name,
-          .Board-Top h1
+          .Board-Top h1,
+          .SearchBody .BlockHeader
           {color:#222;}
           .grey p, .cgr p,
           .grey, .cgr,
@@ -124,8 +125,6 @@ class NavBottom extends Component {
 
 
 NavBottom.propTypes = {
-  cGetCountPrivates: PropTypes.object.isRequired,
-  client: PropTypes.object.isRequired,
 };
 
 export default compose(
