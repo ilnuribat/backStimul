@@ -247,6 +247,7 @@ export default {
       let query;
       let previousState;
 
+      if (value && value.key && value.key==="status") value.value = parseInt(value.value)
       console.warn("ДАННЫЕ!", taskId, objectId, action, value);
 
       switch (action) {
@@ -265,6 +266,7 @@ export default {
                 status
                 unreadCount
                 users
+                __typename
               }
             }
           }
@@ -276,13 +278,15 @@ export default {
 
           return null
         }
-        console.warn("prevstate is", previousState)
+        // console.warn("prevstate is", previousState)
 
-        Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { [value.key]: value.value });
+        // Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { [value.key]: value.value });
+
+        console.warn("prevstate is",  previousState.object.tasks)
 
         data = {
           object: {
-            tasks:  [...previousState.object.tasks],
+            tasks:  previousState.object.tasks,
             __typename: "Object"
           }
         };

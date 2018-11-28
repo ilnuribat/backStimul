@@ -304,12 +304,12 @@ class TaskView extends Component {
 
   render() {
     const { allusers, modal, status, allTasks } = this.state;
-    const { taskId, dataObject } = this.props;
+    const { taskId, data } = this.props;
 
 
-    let data = dataObject.filter((task) => (task.id === taskId))[0]
+    // let data = dataObject.filter((task) => (task.id === taskId))[0]
 
-    // console.warn("TASKID", data)
+    console.warn("TASKID", data)
 
     let dataValue;
 
@@ -325,7 +325,7 @@ class TaskView extends Component {
             <div className="content">
               <div className="content-scroll">
 
-                {data.users.map(
+                {data.users && data.users.map(
                   (e,i)=>{
                     return(
                       <div className="username" role="presentation" key={'usr-'+i} >

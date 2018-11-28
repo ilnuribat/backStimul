@@ -41,6 +41,7 @@ class Board extends Component {
       status: [],
       toRoot: false,
       toTask: false,
+      taskData: {},
       showChilds: false,
       modal: false,
       modalDelete: false,
@@ -244,6 +245,10 @@ class Board extends Component {
       return true
     }
 
+    if(nextState.taskData !== this.state.taskData){
+      return true
+    }
+
     return true
 
   }
@@ -355,14 +360,14 @@ class Board extends Component {
         console.warn(e);
       })
     else
-      qauf(updTask(this.state.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
+      qauf(updTask(this.state.taskIdCreate,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("update task done", a)
         this.modalMessage("Изменения сохранены");
         this.props.objectCacheUpdate({
           variables:{
             value: {value : value, key : change},
             action: "updateTask",
-            taskId: this.state.taskId,
+            taskId: this.state.taskIdCreate,
             objectId: this.state.objectId
           }
         })
@@ -387,7 +392,7 @@ class Board extends Component {
 
 
   render(){
-    const { objectId, status, taskId, toTask, taskName, showChilds, HaveObj, openTask } = this.state;
+    const { taskData, objectId, status, taskId, toTask, taskName, showChilds, HaveObj, openTask } = this.state;
     const { setInfo } = this.props;
 
 
@@ -461,13 +466,6 @@ class Board extends Component {
                             }
                             if (a && !data || !data.task)
                               return null
-                            let dataValue;
-
-
-
-                            let taskStatus = data.task.status
-
-                            if (data.task.endDate) dataValue = data.task.endDate.replace(/T.*$/gi, "")
 
                             return(
                               <ChatView id={taskId} data={ data.task } name={data.task.name} />
@@ -523,7 +521,36 @@ class Board extends Component {
                     <Panel>
 
                       {toTask ? (
-                        <TaskView taskId={this.state.taskId} objectId={this.state.objectId} dataObject={data.object.tasks} />
+                        <Query query={GR_QUERY} variables={{ id: `${taskId}` }} >
+                          {({ loading, error, data }) => {
+                            let a = false;
+
+                            if (loading){
+
+                              return (
+                                <div style={{ paddingTop: 20, margin: "auto"}}>
+                                  <Loading />
+                                </div>
+                              );
+                            }
+                            if (error){
+
+                              return (
+                                <div className="errMess">
+                                  {error.message}
+                                </div>
+                              );
+                            }
+                            if (a && !data || !data.task)
+                              return null
+
+                            return(
+                              <TaskView taskId={this.state.taskId} objectId={this.state.objectId} data={data.task} />
+                            )
+                          }}
+                        </Query>
+
+
                       ) : ( <TextRow name="Информация" view="Pad510 BigName">
                         <TextRow name="" view="Pad510 MT10">
                           {data.object.name}
@@ -591,7 +618,7 @@ class Board extends Component {
                                   Статус
                           </ModalBlockName>
 
-                          <FakeSelect array={status} change={(e)=>{this.writeTaskData(e, "status", true)}}>
+                          <FakeSelect array={status} onselect={(e)=>{this.writeTaskData(e, "status", false)}}>
                           </FakeSelect>
 
                           {/* <label htmlFor="selectStatus" className="LabelSelect">
@@ -626,7 +653,7 @@ class Board extends Component {
                                 Добавить родительскую задачу
                           </ModalBlockName>
 
-                          <FakeSelect array={data.object.tasks} change={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
+                          <FakeSelect array={data.object.tasks} onselect={(e)=>{this.writeTaskData(e, "parentId", true)}}>
                           </FakeSelect>
                           {/* <label htmlFor="parentSelect" className="LabelSelect"> */}
                           {/* <select name="parentSelect" onChange={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
