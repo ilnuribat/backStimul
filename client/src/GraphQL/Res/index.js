@@ -247,7 +247,7 @@ export default {
       let query;
       let previousState;
 
-      // console.warn("ДАННЫЕ!", taskId, objectId, action, value);
+      console.warn("ДАННЫЕ!", taskId, objectId, action, value);
 
       switch (action) {
       case "updateTask":
@@ -276,7 +276,7 @@ export default {
 
           return null
         }
-        // console.warn("prevstate is", previousState)
+        console.warn("prevstate is", previousState)
 
         Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { [value.key]: value.value });
 

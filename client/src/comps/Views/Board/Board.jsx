@@ -34,6 +34,7 @@ class Board extends Component {
     this.state = {
       objectId:"",
       taskId:"",
+      taskIdCreate:"",
       taskName: "",
       rootId: "",
       info:{name:"", id:""},
@@ -269,7 +270,7 @@ class Board extends Component {
       modal: false,
     });
     this.setState({
-      taskId: "",
+      taskIdCreate: "",
     })
   }
 
@@ -286,12 +287,12 @@ class Board extends Component {
   }
 
   deleteTask () {
-    qauf(deleteTask(this.state.taskId), _url, localStorage.getItem('auth-token')).then(a=>{
+    qauf(deleteTask(this.state.taskIdCreate), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn("delete task done", a)
       this.props.objectCacheUpdate({
         variables:{
           action: "deleteTask",
-          taskId: this.state.taskId,
+          taskId: this.state.taskIdCreate,
           objectId: this.state.objectId
         }
       })
@@ -303,7 +304,7 @@ class Board extends Component {
 
   changeDelModal (id) {
     this.setState({
-      taskId: id,
+      taskIdCreate: id,
       modalDelete: !this.state.modalDelete,
     });
   }
@@ -333,8 +334,8 @@ class Board extends Component {
     if (change !== "name"){
       changes = `name: "Нет названия", ${change}: ${cap}${value}${cap}`
     }
-
-    if (!this.state.taskId)
+    console.warn("CHANGE", this.state.taskIdCreate, change)
+    if (!this.state.taskIdCreate)
       qauf(crTask(`{${changes}, objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("create task done", a.data.createTask.id)
         this.props.objectCacheUpdate({
@@ -347,7 +348,7 @@ class Board extends Component {
         })
         this.modalMessage("Изменения сохранены");
         this.setState({
-          taskId: a.data.createTask.id,
+          taskIdCreate: a.data.createTask.id,
         })
       }).catch((e)=>{
         this.modalMessage("Ошибка"+e);
