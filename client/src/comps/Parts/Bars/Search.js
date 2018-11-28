@@ -231,20 +231,12 @@ export class Search extends Component {
                           { Search.tasks ? <h3 className="BlockHeader">Задачи</h3> : null}
                           { Search.tasks ? <div className="BlockContent">{
                             Search.tasks.map((e)=>(
-                              <Link key={e.id} to={{pathname: "/task", state:{taskId: e.id, taskName: e.name, objectId: e.objectId || '1' }}} >
+                              <Link key={e.id} to={{pathname: "/board", state:{taskId: e.id, objectId: e.objectId }}} >
                                 <div className="SearchTask"  key={e.id}>
                                   <div className="SearchTaskTop"  key={e.id}>
                                     {e.name ? <span className="SearchName">{e.name}</span> : null}
                                     {e.endDate ? <span className={moment(e.endDate).fromNow() ? "SearchEndDate" : "SearchEndDate" } >{ moment(e.endDate).format('D MMM, h:mm')}</span> : null}
-                                    {
-                                      // (()=>{
-                                      //   if(e.status){
-                                      //     let a = statuses.find((x)=>x.status == e.status).name;
-                                      //     return a
 
-                                      //   } 
-                                      // })()
-                                    }
                                   
                                     <span className="SearchStatus">{ e.status ? statuses.find((x)=>x.status == e.status).name : "Новая" }</span>
                                   </div>
