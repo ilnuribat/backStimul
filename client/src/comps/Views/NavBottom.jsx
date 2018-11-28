@@ -46,16 +46,56 @@ class NavBottom extends Component {
     }
 
     render() {
-      let style; 
-      if(this.state.theme === ' white'){
-        style = require('../../newcss/white.css')
-      }else{
-        style = "";
-      }
-
       return (
         <div className = "NavBottom" >
           <div className={"ColorButton" + this.state.theme } onClick={this.changeTheme}></div>
+
+          {this.state.theme === ' white' ? (<style type="text/css">{`
+          body,h1,h2,h3,h4,h5,p,div,span,
+          .TileBoardTopCenter,.TileBoardTop .TileBoardTopName h1,
+          .TileBoardTop .TileBoardTopCenter h1,
+          .Tile .name,
+          .Column-Name,
+          .Column .Name,
+          .Task-Name,
+          .Board-Top h1
+          {color:#222;}
+          .grey p, .cgr p,
+          .grey, .cgr
+          {
+            color:#666;
+          }
+          .Root{background: #f4f8f9;background-color: #f4f8f9;}
+          .Tile{background: #ffffff;background-color: #ffffff;}
+          .Nav, .Panel, .Column,.Board-Top,.Task
+          ,.Bar
+          
+          {
+            background: #fff;
+            background-color: #fff;
+            color:#222;
+          }
+          .Board-Top{
+            background: transparent;
+            background-color: transparent;
+          }
+
+          .searchTag          
+          {
+            background: #f4f8f9;
+            background-color: #f4f8f9;
+            color:#222;
+          }
+
+          .EditForm label input, label.LabelInputText input,
+          label.LabelSelect input, label.LabelInputDate input,
+          label.LabelInputList input
+          {
+            background: #f4f8f9;
+            background-color: #f4f8f9;
+            color:#222;
+          }
+          `}</style>) : null}
         </div>
       )
     }
