@@ -46,7 +46,7 @@ export const InputWrapper = ({ children, name, save, placeholder, click, change 
         {children}
       </ModalBlockName>
       <div className="InputWrapper">
-        <input type="text" defaultValue={name||""} placeholder={placeholder||"" } onChange={(e)=>{value = e.target.value; change(value)}} />
+        <input type="text" defaultValue={name||""} placeholder={placeholder||"" } onChange={(e)=>{value = e.target.value; change && typeof change === 'function' ? change(value) : null}} />
         { click ? ( <div className="SaveBtn" onClick={()=>{click(value)}}><Svg svg="save"/>{save||"Сохранить"}</div> ): null }
       </div>
     </ModalCol>
@@ -76,8 +76,8 @@ class Modal extends Component {
         <div className="ModalWrap">
 
           <div className="ModalBig" style={size ? {"maxWidth":size+"px"} : {} }>
-            
-            
+
+
             <ModalClose click={()=>{close ? close() : console.log("No close function") }}/>
             <div className="inner">
               {message?(<div className="ModalMessage">{message}</div>) : null}

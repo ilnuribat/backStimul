@@ -11,7 +11,7 @@ import Task from '../../Parts/Task';
 import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
-import { setChat, setInfo, rootId, objectCacheUpdate } from '../../../GraphQL/Cache';
+import { setChat, setInfo, rootId, objectCacheUpdate, getTasksCache } from '../../../GraphQL/Cache';
 import { getObjectTasks, glossaryStatus, TASKS_QUERY, checkObject, GR_QUERY } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
@@ -25,8 +25,9 @@ import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect'
 import ContentInner from '../../Lays/ContentInner/ContentInner';
 import ChatView from '../ChatView/ChatView';
 import InnerBar from '../../Lays/InnerBar/InnerBar';
+import TaskView from '../TaskView/TaskView';
 
-
+let varTask = "5bfbb83dac706b045b353d98";
 
 class Board extends Component {
 
@@ -91,6 +92,8 @@ class Board extends Component {
 
       localStorage.setItem('objectId', id)
 
+
+    if(id){
       this.setState({
         objectId: id,
       });
@@ -134,7 +137,7 @@ class Board extends Component {
   //   let id = location.state && location.state.objectId ? location.state.objectId : localStorage.getItem('objectId')
 
   //   console.log("location.state ------------ ", location.state )
-    
+
   //   if(id){
   //     this.chkObject(id)
   //     this.glossStatus(id)
@@ -244,6 +247,7 @@ class Board extends Component {
     if(nextProps.location.state != this.props.location.state){
       return true
     }
+
     return true
 
   }
@@ -373,16 +377,16 @@ class Board extends Component {
   }
 
   chkObject(id){
-      qauf(checkObject(id), _url, localStorage.getItem('auth-token')).then(a=>{
-        if(a && a.name){
-          this.setState({
-            HaveObj: true,
-          });
-          
-        }
-      }).catch((e)=>{
-        console.warn(e);
-      })
+    qauf(checkObject(id), _url, localStorage.getItem('auth-token')).then(a=>{
+      if(a && a.name){
+        this.setState({
+          HaveObj: true,
+        });
+
+      }
+    }).catch((e)=>{
+      console.warn(e);
+    })
   }
 
 
@@ -392,7 +396,7 @@ class Board extends Component {
 
 
     if(objectId && status){
-      
+
       return (
         <Query query={getObjectTasks} variables={{ id: objectId}} >
           {({ loading, error, data }) => {
@@ -442,13 +446,14 @@ class Board extends Component {
                         <Query query={GR_QUERY} variables={{ id: `${taskId}` }} >
                           {({ loading, error, data }) => {
                             let a = false;
+
                             if (loading){
 
                               return (
                                 <div style={{ paddingTop: 20, margin: "auto"}}>
                                   <Loading />
                                 </div>
-                              ); 
+                              );
                             }
                             if (error){
 
@@ -474,23 +479,23 @@ class Board extends Component {
                           }}
                         </Query>
                       </InnerBar> : null }
-                      <ContentInner view="Board-Content-Wrap">
+                    <ContentInner view="Board-Content-Wrap">
                       <div className="Board-Top">
-                          {
-                            data.object.parentId ? (<div className="toBack" onClick={()=>{this.toBack(data.object.parentId)}}>
-                              <Link to={{
-                                pathname: '/tile',
-                                state: { rootId: data.object.parentId }
-                              }} className="toBackLink">
-                                <Svg svg="back" /><span>Назад</span>
-                              </Link></div>) : null
-                          }
-                          <div className="BoardTopCenter">
-                            <h1>{data.object.name}</h1>
-                            <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
-                          </div>
-
+                        {
+                          data.object.parentId ? (<div className="toBack" onClick={()=>{this.toBack(data.object.parentId)}}>
+                            <Link to={{
+                              pathname: '/tile',
+                              state: { rootId: data.object.parentId }
+                            }} className="toBackLink">
+                              <Svg svg="back" /><span>Назад</span>
+                            </Link></div>) : null
+                        }
+                        <div className="BoardTopCenter">
+                          <h1>{data.object.name}</h1>
+                          <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
                         </div>
+
+                      </div>
                       <ContentInner view="Board-Content">
                         {
                           status && status.map((e,i)=>{
@@ -519,114 +524,116 @@ class Board extends Component {
                       </ContentInner>
                     </ContentInner>
 
-                  <Panel>
+                    <Panel>
 
-
-                    <TextRow name="Информация" view="Pad510 BigName">
-                      <TextRow name="" view="Pad510 MT10">
-                        {data.object.name}
-                      </TextRow>
-                      <TextRow name="" view="cgr Pad510 s">
-                        {data.object.address.value}
-                        <p>
+                      {toTask ? (
+                        <TaskView taskId={this.state.taskId} objectId={this.state.objectId} dataObject={data.object.tasks} />
+                      ) : ( <TextRow name="Информация" view="Pad510 BigName">
+                        <TextRow name="" view="Pad510 MT10">
+                          {data.object.name}
+                        </TextRow>
+                        <TextRow name="" view="cgr Pad510 s">
+                          {data.object.address.value}
+                          <p>
                         "{data.object.address.coordinates[0]}, {data.object.address.coordinates[1]}"
-                        </p>
+                          </p>
 
-                      </TextRow>
-                      <TextRow name="" view="cgr Pad510 s">
+                        </TextRow>
+                        <TextRow name="" view="cgr Pad510 s">
                     Задачи: {data.object.tasks.length} штуки
-                      </TextRow>
-                      <TextRow name="" view="cgr Pad510 s">
-                      </TextRow>
+                        </TextRow>
+                        <TextRow name="" view="cgr Pad510 s">
+                        </TextRow>
 
-                      <TextRow name="Документы" view="Pad510">
-                        {
-                          data.object ? (
-                            <div>
-                              {
-                                data.object.docs ? data.object.docs.map(
-                                  (e,i)=>{
-                                    return(
-                                      <FileRow key={e.id} name={e.name} id={e.id} icon="doc" />
-                                    )
-                                  }
-                                ) : (
-                                  <div>
-                                    <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
-                                    <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
-                                    <div className="FakeLink"><Link to="/docs">Показать все</Link></div>
-                                  </div>
-                                )
-                              }
-                            </div>) : null
-                        }
-                      </TextRow>
-                    </TextRow>
-                  </Panel>
+                        <TextRow name="Документы" view="Pad510">
+                          {
+                            data.object ? (
+                              <div>
+                                {
+                                  data.object.docs ? data.object.docs.map(
+                                    (e,i)=>{
+                                      return(
+                                        <FileRow key={e.id} name={e.name} id={e.id} icon="doc" />
+                                      )
+                                    }
+                                  ) : (
+                                    <div>
+                                      <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+                                      <FileRow name="Фото подвала.jpg" id="id1237" icon="img" />
+                                      <div className="FakeLink"><Link to="/docs">Показать все</Link></div>
+                                    </div>
+                                  )
+                                }
+                              </div>) : null
+                          }
+                        </TextRow>
+                      </TextRow>)}
+
+                    </Panel>
                   </Content>
 
                   {this.state.modalDelete? (
-                          <Modal close={this.changeDelModal} size="350">
+                    <Modal close={this.changeDelModal} size="350">
                           Удалить задачу?
-                            <ButtonRow iconright="1" click={this.deleteTask}>Удалить</ButtonRow>
-                          </Modal>
-                        ) : null }
-                        {this.state.modal ? (
-                          <Modal close={this.closeModal} message={this.state.modalMessage?this.state.modalMessage:""}>
-                            <ModalRow>
-                              <ModalCol>
-                                <InputWrapper placeholder="Введите название задачи" change={(name)=>{ this.setState({ modalNameCreator: name })}}>
+                      <ButtonRow iconright="1" click={this.deleteTask}>Удалить</ButtonRow>
+                    </Modal>
+                  ) : null }
+                  {this.state.modal ? (
+                    <Modal close={this.closeModal} message={this.state.modalMessage?this.state.modalMessage:""}>
+                      <ModalRow>
+                        <ModalCol>
+                          <InputWrapper placeholder="Введите название задачи" change={(name)=>{ this.setState({ modalNameCreator: name })}}>
                                   Название
-                                </InputWrapper>
-                              </ModalCol>
-                              {/* <ModalCol>
+                          </InputWrapper>
+                        </ModalCol>
+                        {/* <ModalCol>
                               </ModalCol> */}
-                              </ModalRow>
-                              <ModalRow>
-                              <ModalCol>
-                                <ModalBlockName>
+                      </ModalRow>
+                      <ModalRow>
+                        <ModalCol>
+                          <ModalBlockName>
                                   Статус
-                                </ModalBlockName>
+                          </ModalBlockName>
 
-                                  <FakeSelect array={status} change={(e)=>{this.writeTaskData(e, "status", true)}}>
-                                  </FakeSelect>
+                          <FakeSelect array={status} change={(e)=>{this.writeTaskData(e, "status", true)}}>
+                          </FakeSelect>
 
-                                {/* <label htmlFor="selectStatus" className="LabelSelect">
+                          {/* <label htmlFor="selectStatus" className="LabelSelect">
                                   <select name="selectStatus" onChange={(e)=>{this.writeTaskData(e, "status", false)}} >
                                     {/* <option value="0">Выбрать статус</option> */}
-                                    {
-                                      // status.map((e)=>(
-                                      //   <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
-                                      //     {e.name}
-                                      //   </option>
-                                      // ))
-                                    }
-                                  {/* </select> */}
-                                {/* </label> */}
-                              </ModalCol>
-                              <ModalCol>
-                              </ModalCol>
-                            </ModalRow>
+                          {
+                            // status.map((e)=>(
+                            //   <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
+                            //     {e.name}
+                            //   </option>
+                            // ))
+                          }
+                          {/* </select> */}
+                          {/* </label> */}
+                        </ModalCol>
+                        <ModalCol>
+                        </ModalCol>
+                      </ModalRow>
 
-                            <ModalRow>
-                              <ModalCol>
-                                <div className="ModalBlockName">
+                      <ModalRow>
+                        <ModalCol>
+                          <div className="ModalBlockName">
                                 Срок истечения
-                                </div>
-                                <label htmlFor="dateout" className="LabelInputDate">
-                                  <input type="date" name="dateout" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
-                                </label>
-                              </ModalCol>
+                          </div>
+                          <label htmlFor="dateout" className="LabelInputDate">
+                            <input type="date" name="dateout" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
+                          </label>
+                        </ModalCol>
 
-                              <ModalCol>
-                                <ModalBlockName>
+                        <ModalCol>
+                          <ModalBlockName>
                                 Добавить родительскую задачу
-                                </ModalBlockName>
+                          </ModalBlockName>
 
-                                  <FakeSelect array={data.object.tasks} change={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
-                                  </FakeSelect>
-                                {/* <label htmlFor="parentSelect" className="LabelSelect"> */}
-                                  {/* <select name="parentSelect" onChange={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
+                          <FakeSelect array={data.object.tasks} change={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
+                          </FakeSelect>
+                          {/* <label htmlFor="parentSelect" className="LabelSelect"> */}
+                          {/* <select name="parentSelect" onChange={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
                                     <option value="0">Выбрать задачу</option>
                                     {
                                       data.object.tasks.map((e)=>{
@@ -636,29 +643,30 @@ class Board extends Component {
                                       })
                                     }
                                   </select> */}
-                                {/* </label> */}
-                              </ModalCol>
-                            </ModalRow>
-                            <ModalRow>
-                            <ModalCol>
-                              <div className="Button2" onClick={()=>this.writeTaskData(this.state.modalNameCreator, 'name', true)}>Создать задачу</div>
-                            </ModalCol>
+                          {/* </label> */}
+                        </ModalCol>
+                      </ModalRow>
+                      <ModalRow>
+                        <ModalCol>
+                          <div className="Button2" onClick={()=>this.writeTaskData(this.state.modalNameCreator, 'name', true)}>Создать задачу</div>
+                        </ModalCol>
 
-                            </ModalRow>
-                          </Modal>
-                        ) : null }
+                      </ModalRow>
+                    </Modal>
+                  ) : null }
                 </Fragment>
               )
 
             }else{
               console.log("Data and error",data, error)
+
               return(<div className="errMess">
                 Объект не найден
-              </div>) 
+              </div>)
             }
           }}
-        </Query> 
-    )
+        </Query>
+      )
     }else{
       return(<Redirect to="/" />)
     }
@@ -682,5 +690,7 @@ export default compose(
   graphql(setChat, { name: 'setChat' }),
   graphql(objectCacheUpdate, { name: 'objectCacheUpdate' }),
 )(Board);
+
+
 
 

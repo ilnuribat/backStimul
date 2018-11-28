@@ -165,7 +165,53 @@ export const getObjectTasksTemp = gql `
 }
 `;
 
-
+export const getTasksCache = gql `
+ query getTasksCache($id: ID){
+  task (id: $id) @client{
+        id
+        parentId
+        objectId
+        name
+        status
+        endDate
+        users {
+          id
+          username
+        }
+        assignedTo{
+            id
+            username
+        }
+        files {
+          id
+          size
+          name
+          mimeType
+          date
+        }
+        # messages(messageConnection: $messageConnection) {
+        #   edges {
+        #       cursor
+        #       node {
+        #           isRead
+        #           id
+        #           userId
+        #           from {
+        #           id
+        #           username
+        #           }
+        #           createdAt
+        #           text
+        #       }
+        #   }
+        #   pageInfo {
+        #       hasNextPage
+        #       hasPreviousPage
+        #   }
+        # }
+    }
+}
+`;
 
 export const tempObj = gql `
   mutation tempObj($tempObj: String!){
