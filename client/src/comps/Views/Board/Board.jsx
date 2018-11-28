@@ -11,7 +11,7 @@ import Task from '../../Parts/Task';
 import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
-import { setChat, setInfo, rootId, objectCacheUpdate, getTasksCache } from '../../../GraphQL/Cache';
+import { setChat, setInfo, rootId, objectCacheUpdate } from '../../../GraphQL/Cache';
 import { getObjectTasks, glossaryStatus, TASKS_QUERY, checkObject, GR_QUERY } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
@@ -26,8 +26,6 @@ import ContentInner from '../../Lays/ContentInner/ContentInner';
 import ChatView from '../ChatView/ChatView';
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 import TaskView from '../TaskView/TaskView';
-
-let varTask = "5bfbb83dac706b045b353d98";
 
 class Board extends Component {
 
@@ -81,15 +79,50 @@ class Board extends Component {
 
   componentWillMount(){
     const { location } = this.props;
-    let id = location.state && location.state.objectId ? location.state.objectId : localStorage.getItem('ObjectId')
+    const { objectId, taskId } = this.state;
+    let id = "";
+    let tid = "";
+    let Mount = false;
 
-    console.log("location.state ------------ ", location.state )
+    if(location.state && location.state.objectId && location.state.objectId){
+      Mount = true;
+      id = location.state.objectId
 
+      localStorage.setItem('objectId', id)
 
-    if(id){
       this.setState({
         objectId: id,
       });
+    }
+    if(location.state && location.state.taskId && location.state.taskId){
+      Mount = true;
+      tid = location.state.taskId
+      localStorage.setItem('taskId', tid)
+
+      this.setState({
+        toTask: true,
+        taskId: tid,
+      });
+    }
+
+    if(!location.state || !location.state.objectId){
+      Mount = true;
+      id = localStorage.getItem('objectId')
+      this.setState({
+        objectId: id,
+      });
+    }
+    if(!location.state || !location.state.taskId ){
+      Mount = true;
+      tid = localStorage.getItem('taskId')
+      this.setState({
+        toTask: false,
+        taskId: tid,
+      });
+    }
+
+
+    if(id && Mount){
       this.chkObject(id)
       this.glossStatus(id)
     }
@@ -97,7 +130,7 @@ class Board extends Component {
 
   // componentDidMount(){
   //   const { location } = this.props;
-  //   let id = location.state && location.state.objectId ? location.state.objectId : localStorage.getItem('ObjectId')
+  //   let id = location.state && location.state.objectId ? location.state.objectId : localStorage.getItem('objectId')
 
   //   console.log("location.state ------------ ", location.state )
 
@@ -126,8 +159,7 @@ class Board extends Component {
     console.warn(id)
 
     if(id){
-      localStorage.setItem('grid', id)
-      localStorage.setItem('grnm', name)
+      localStorage.setItem('taskId', id)
     }
 
     this.props.setChat({
@@ -148,19 +180,62 @@ class Board extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { location } = this.props;
-    let id;
+    const { objectId, taskId } = this.state;
+    let id = "";
+    let tid = "";
+    let Mount = false;
 
-    if(prevProps.location.state == this.props.location.state) return false
+    if(location.state && location.state.objectId && location.state.objectId !== objectId){
+      Mount = true;
+      id = location.state.objectId
+      // localStorage.setItem('objectId', id)
+    }
+    if(location.state && location.state.taskId && location.state.taskId !== taskId){
+      Mount = true;
+      tid = location.state.taskId
+      // localStorage.setItem('taskId', tid)
+    }
 
-    location.state && location.state.objectId ? id = location.state.objectId : id = localStorage.getItem('ObjectId')
+    // if(!location.state || !location.state.objectId){
+    //   Mount = true;
+    //   id = localStorage.getItem('objectId')
+    //   this.setState({
+    //     objectId: id,
+    //   });
+    // }
+    // if(!location.state || !location.state.taskId ){
+    //   Mount = true;
+    //   tid = localStorage.getItem('taskId')
+    //   this.setState({
+    //     toTask: true,
+    //     taskId: tid,
+    //   });
+    // }
 
-    if(id){
+
+    if(id && Mount){
       this.setState({
         objectId: id,
+        toTask: tid ? true : false,
+        taskId: tid ? tid : "",
       });
       this.chkObject(id)
       this.glossStatus(id)
     }
+
+    // if(prevProps.location.state == this.props.location.state) return false
+
+    // location.state && location.state.objectId ? id = location.state.objectId : id = localStorage.getItem('objectId')
+    // location.state && location.state.taskId ? taskId = location.state.taskId : id = localStorage.getItem('taskId')
+
+    // if(id){
+    //   this.setState({
+    //     objectId: id,
+    //     taskId: taskId,
+    //   });
+    //   this.chkObject(id)
+    //   this.glossStatus(id)
+    // }
   }
   shouldComponentUpdate(nextProps, nextState){
 
@@ -386,6 +461,9 @@ class Board extends Component {
                             if (a && !data || !data.task)
                               return null
                             let dataValue;
+
+
+
                             let taskStatus = data.task.status
 
                             if (data.task.endDate) dataValue = data.task.endDate.replace(/T.*$/gi, "")

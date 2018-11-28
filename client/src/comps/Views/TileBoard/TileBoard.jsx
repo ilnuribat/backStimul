@@ -118,6 +118,7 @@ class TileBoard extends Component {
     let { tiles, rootid, parentid, object, objectId, objectname } = this.state;
 
     if(object && objectId){
+      console.log(objectId)
       return <Redirect to={{
         pathname: '/board',
         state: { objectId: this.state.objectId }
