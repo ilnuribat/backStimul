@@ -17,18 +17,6 @@ class Private extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      users: [
-        {id:"1",name:"Юзерь Ван"},
-        {id:"2",name:"Юзерь Пач"},
-        {id:"3",name:"Юзерь Ман"},
-        {id:"4",name:"Юзерь 4"},
-        {id:"5",name:"Юзерь 5"},
-
-      ],
-      grl: [],
-      grid: '',
-      grnm: '',
-      gid: '',
       getchat: '',
     }
 
@@ -114,7 +102,7 @@ class Private extends Component {
               )
           }
           <InnerBar>
-            
+
           </InnerBar>
 
         </Content>
