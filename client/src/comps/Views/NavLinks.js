@@ -9,11 +9,8 @@ import { sBar, gBar, setPlaceName, getPlaceName } from '../../GraphQL/Cache';
 const search = (props)=>{
 } 
 
-const NavArr = [
-  {name:"search", comp:"", svg:"search", click:(e)=>{search(e)}},
-  {name:"Root", link:"/", comp:"", svg:"dash"},
-  {name:"Private", link:"/chat", comp:"", svg:"chat"},
-  {name:"Pap", link:"/map", comp:"", svg:"map"},
+const NavArrS = [
+  {name:"color", comp:"", svg:"search", click:()=>{this.search()}},
 ];
 
 class NavLinks extends Component {
