@@ -122,8 +122,8 @@
 }
 
 .Task.Sel{
-  background: #3e75b2;
-  border: solid 1px #3e75b2;
+  background: #396aa3;
+  border: solid 1px #396aa3;
   color:#fff;
 }
 
@@ -134,7 +134,6 @@
 }
 .Task.Child{
    background: #304d6d;
-
 }
 
 .Task.Sel .Bottom svg{

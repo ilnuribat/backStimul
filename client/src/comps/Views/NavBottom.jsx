@@ -61,7 +61,8 @@ class NavBottom extends Component {
           .Board-Top h1
           {color:#222;}
           .grey p, .cgr p,
-          .grey, .cgr
+          .grey, .cgr,
+          .UserRow .UserName
           {
             color:#666;
           }
@@ -69,31 +70,51 @@ class NavBottom extends Component {
           .Tile{background: #ffffff;background-color: #ffffff;}
           .Nav, .Panel, .Column,.Board-Top,.Task
           ,.Bar
-          
+          ,.InnerBar
+          ,.ChatMessages
           {
             background: #fff;
             background-color: #fff;
             color:#222;
           }
+          .ChatForm,
           .Board-Top{
             background: transparent;
             background-color: transparent;
           }
 
-          .searchTag          
+          .searchTag
           {
             background: #f4f8f9;
             background-color: #f4f8f9;
+            color:#222;
+          }
+          .Chat       
+          {
+            background: #eaedee;
+            background-color: #eaedee;
             color:#222;
           }
 
           .EditForm label input, label.LabelInputText input,
           label.LabelSelect input, label.LabelInputDate input,
           label.LabelInputList input
+          ,.ChatForm .textarea-wrapper
+
           {
             background: #f4f8f9;
             background-color: #f4f8f9;
             color:#222;
+          }
+          .Task{border-color:rgba(0,0,0,0.1);}
+          .Task.Sel,.Task.Sel .Name,.Task.Sel .Task-Name{color:#fff;}
+          .msgs{
+            background: #f4f8f9;
+            background-color: #f4f8f9;
+          }
+          .Chat,
+          .msgs{
+            box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.2);
           }
           `}</style>) : null}
         </div>
