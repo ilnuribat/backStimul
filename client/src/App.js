@@ -26,6 +26,7 @@ import { gBar } from './GraphQL/Cache';
 import 'animate.css';
 import { BarInner } from './comps/Parts/Bars/BarInner';
 import { DocsView } from './comps/Views/DocsView/DocsView';
+import NavBottom from './comps/Views/NavBottom';
 
 
 // const Components = [
@@ -108,6 +109,7 @@ class App extends Component {
             <Nav>
               <NavTop client={this.props.client} />
               <NavLinks />
+              <NavBottom></NavBottom>
             </Nav>
             <Root>
               { this.props.gBar && this.props.gBar.barShow ? (

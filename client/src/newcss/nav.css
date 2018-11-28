@@ -98,3 +98,24 @@
   background: #3e75b2;
   height: 100%;
 }
+
+.NavBottom{
+  height: auto;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.ColorButton{
+  display: block;
+  border:2px solid rgb(107, 104, 104);
+  width:20px;
+  height:20px;
+  border-radius: 999em;
+  background: #fff;
+  cursor: pointer;
+}
+.ColorButton.white{
+  background: #202225;
+}
