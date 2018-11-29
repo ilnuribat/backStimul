@@ -259,13 +259,13 @@ export default {
               tasks {
                 id
                 name
-                assignedTo
+                # assignedTo
                 endDate
-                lastMessage
+                # lastMessage
                 parentId
                 status
                 unreadCount
-                users
+                # users
                 __typename
               }
             }
@@ -280,9 +280,9 @@ export default {
         }
         // console.warn("prevstate is", previousState)
 
-        // Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { [value.key]: value.value });
+        Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { [value.key]: value.value });
 
-        console.warn("prevstate is",  previousState.object.tasks)
+        // console.warn("prevstate is",  previousState.object.tasks)
 
         data = {
           object: {
@@ -300,13 +300,25 @@ export default {
               tasks {
                 id
                 name
-                assignedTo
                 endDate
-                lastMessage
                 parentId
                 status
                 unreadCount
-                users
+                assignedTo{
+                  id
+                  username
+                }
+                users{
+                  id
+                  username
+                }
+                lastMessage{
+                  from{
+                    id
+                    username
+                  }
+                  text
+                }
               }
             }
           }
@@ -363,7 +375,7 @@ export default {
 
         data = {
           object: {
-            tasks: [...previousState.object.tasks.filter(tasks => tasks.id !== taskId)],
+            tasks: previousState.object.tasks.filter(tasks => tasks.id !== taskId),
             __typename: "Object"
           }
         };
@@ -486,7 +498,7 @@ export default {
 
         data = {
           task: {
-            users: [...previousState.task.users.filter(users => users.id !== value.id)],
+            users: previousState.task.users.filter(users => users.id !== value.id),
             __typename: "Task"
           }
         };
@@ -559,7 +571,7 @@ export default {
 
         data = {
           task: {
-            files: [...previousState.task.files.filter(files => files.id !== value.id)],
+            files: previousState.task.files.filter(files => files.id !== value.id),
             __typename: "Task"
           }
         };
