@@ -376,7 +376,7 @@ class TaskView extends Component {
 
         </InnerBar>
         {modal ? (
-          <Modal close={()=>{ this.setState({modal: !modal}) }} small="" message={this.state.modalMessageShow?this.state.modalMessage:""}>
+          <Modal close={()=>{ this.setState({modal: !modal}) }} message={this.state.modalMessageShow?this.state.modalMessage:""}>
 
             <ModalRow>
               <ModalCol>
