@@ -518,36 +518,6 @@ class Board extends Component {
 
                       {toTask ? (
                         <TaskView taskId={this.state.taskId} objectId={this.state.objectId} data={taskData} />
-                        // <Query query={TASK_INFO} variables={{ id: `${taskId}` }} >
-                        //   {({ loading, error, data }) => {
-                        //     let a = false;
-
-                        //     if (loading){
-
-                        //       return (
-                        //         <div style={{ paddingTop: 20, margin: "auto"}}>
-                        //           <Loading />
-                        //         </div>
-                        //       );
-                        //     }
-                        //     if (error){
-
-                        //       return (
-                        //         <div className="errMess">
-                        //           {error.message}
-                        //         </div>
-                        //       );
-                        //     }
-                        //     if (a && !data || !data.task)
-                        //       return null
-
-                        //     return(
-                        //       <TaskView taskId={this.state.taskId} objectId={this.state.objectId} data={data.task} />
-                        //     )
-                        //   }}
-                        // </Query>
-
-
                       ) : ( <TextRow name="Информация" view="Pad510 BigName">
                         <TextRow name="" view="Pad510 MT10">
                           {data.object.name}
