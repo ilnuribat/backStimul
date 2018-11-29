@@ -110,7 +110,7 @@ subscriptionServer.onConnect = async (connectionParams) => {
     throw new Error('no user found');
   }
 
-  return user;
+  return { user };
 };
 
 async function start() {
