@@ -46,77 +46,94 @@ class NavBottom extends Component {
     }
 
     render() {
+      let ColorParent = "#222";
+      let ColorSecond = "#666";
+      let BakgrColorPrimary = "#f4f8f9";
+      let BakgrColorSecondary = "#3e74b27c";
+      let BakgrColorMaster = "#ffffff";
+      let BakgrColorSlave = "#eaedee";
+
+
+
       return (
         <div className = "NavBottom" >
           <div className={"ColorButton" + this.state.theme } onClick={this.changeTheme}></div>
 
           {this.state.theme === ' white' ? (<style type="text/css">{`
-          body,h1,h2,h3,h4,h5,p,div,span,
-          .TileBoardTopCenter,.TileBoardTop .TileBoardTopName h1,
-          .TileBoardTop .TileBoardTopCenter h1,
-          .Tile .name,
-          .Column-Name,
-          .Column .Name,
-          .Task-Name,
-          .Board-Top h1,
-          .SearchBody .BlockHeader
-          {color:#222;}
-          .grey p, .cgr p,
-          .grey, .cgr,
-          .UserRow .UserName
-          {
-            color:#666;
-          }
-          .Root{background: #f4f8f9;background-color: #f4f8f9;}
-          .Tile{background: #ffffff;background-color: #ffffff;}
-          .Nav, .Panel, .Column,.Board-Top,.Task
-          ,.Bar
-          ,.InnerBar
-          ,.ChatMessages
-          {
-            background: #fff;
-            background-color: #fff;
-            color:#222;
-          }
-          .ChatForm,
-          .Board-Top{
-            background: transparent;
-            background-color: transparent;
-          }
+            body,h1,h2,h3,h4,h5,p,div,span,
+            .TileBoardTopCenter,.TileBoardTop .TileBoardTopName h1,
+            .TileBoardTop .TileBoardTopCenter h1,
+            .Tile .name,
+            .Column-Name,
+            .Column .Name,
+            .Task-Name,
+            .Board-Top h1,
+            .SearchBody .BlockHeader
+            {color:${ColorParent};}
+            .grey p, .cgr p,
+            .grey, .cgr,
+            .UserRow .UserName
+            {
+              color:${ColorSecond};
+            }
+            .Root{background: ${BakgrColorPrimary};background-color: ${BakgrColorPrimary};}
+            .Tile{background: ${BakgrColorMaster};background-color: ${BakgrColorMaster};}
+            .Nav, .Panel, .Column,.Board-Top,.Task
+            ,.Bar
+            ,.InnerBar
+            ,.ChatMessages
+            {
+              background: ${BakgrColorMaster};
+              background-color: ${BakgrColorMaster};
+              color:${ColorParent};
+            }
+            .ChatForm,
+            .Board-Top{
+              background: transparent;
+              background-color: transparent;
+            }
+            
+            .searchTag
+            {
+              background:${BakgrColorPrimary};
+              background-color: ${BakgrColorPrimary};
+              color:${ColorParent};
+            }
+            .Chat       
+            {
+              background: ${BakgrColorSlave};
+              background-color: ${BakgrColorSlave};
+              color:${ColorParent};
+            }
+            
+            .EditForm label input, label.LabelInputText input,
+            label.LabelSelect input, label.LabelInputDate input,
+            label.LabelInputList input
+            ,.ChatForm .textarea-wrapper
+            
+            {
+              background: ${BakgrColorPrimary};
+              background-color: ${BakgrColorPrimary};
+              color:${ColorParent};
+            }
+            .Task{border-color:rgba(0,0,0,0.1);}
+            .Task.Sel,.Task.Sel .Name,.Task.Sel .Task-Name{color:${BakgrColorMaster};}
+            .msgs{
+              background: ${BakgrColorPrimary};
+              background-color: ${BakgrColorPrimary};
+            }
+            .Chat,
+            .msgs{
+              box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.2);
+            }
+            .FileIcon svg{
+              fill:${BakgrColorSecondary};
+            }
+            .FileIcon,
+            .FileIcon .Svg{
+              background: ${BakgrColorPrimary};
+            }
 
-          .searchTag
-          {
-            background: #f4f8f9;
-            background-color: #f4f8f9;
-            color:#222;
-          }
-          .Chat       
-          {
-            background: #eaedee;
-            background-color: #eaedee;
-            color:#222;
-          }
-
-          .EditForm label input, label.LabelInputText input,
-          label.LabelSelect input, label.LabelInputDate input,
-          label.LabelInputList input
-          ,.ChatForm .textarea-wrapper
-
-          {
-            background: #f4f8f9;
-            background-color: #f4f8f9;
-            color:#222;
-          }
-          .Task{border-color:rgba(0,0,0,0.1);}
-          .Task.Sel,.Task.Sel .Name,.Task.Sel .Task-Name{color:#fff;}
-          .msgs{
-            background: #f4f8f9;
-            background-color: #f4f8f9;
-          }
-          .Chat,
-          .msgs{
-            box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.2);
-          }
           `}</style>) : null}
         </div>
       )
