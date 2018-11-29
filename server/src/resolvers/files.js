@@ -2,8 +2,10 @@ const filesize = require('filesize');
 const { GraphQLUpload } = require('apollo-upload-server');
 const { connection, mongo: { GridFSBucket }, Types: { ObjectId } } = require('mongoose');
 const {
-  Files,
+  Files, Group,
 } = require('../models');
+const { pubsub, TASK_UPDATED } = require('../services/constants');
+
 
 const fileUpload = async ({ taskId, fileId, mimetype }) => Files.create({
   taskId,
@@ -79,12 +81,27 @@ module.exports = {
       const loadedFile = await file;
       const fileSaved = await storeUpload({ ...loadedFile, taskId });
 
+      const task = await Group.findById(taskId);
+
+      await pubsub.publish(TASK_UPDATED, { taskUpdated: task });
+
       return fileSaved;
     },
     async deleteFile(parent, { id }) {
-      const res = await Files.deleteOne({ fileId: id });
+      const taskFile = await Files.findOne({
+        fileId: id,
+      });
+      const task = await Group.findById(taskFile.taskId);
 
-      return res.n;
+      if (!task) {
+        return false;
+      }
+
+      await Files.deleteOne({ fileId: id });
+
+      await pubsub.publish(TASK_UPDATED, { taskUpdated: task });
+
+      return true;
     },
   },
 };
