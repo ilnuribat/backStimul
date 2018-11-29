@@ -24,42 +24,62 @@ class NavBottom extends Component {
   }
 
     componentDidMount (){
-      if(localStorage.getItem('theme') === 'white'){
+      if(localStorage.getItem('theme')){
         this.setState({
-          theme: ' white',
+          theme: localStorage.getItem('theme'),
         })
       }
     }
 
     changeTheme(){
-      if(localStorage.getItem('theme') === 'white'){
+      if(!this.state.theme){
+        localStorage.setItem('theme', 'white')
+        this.setState({
+          theme: 'white',
+        });
+      }
+      else if(this.state.theme === 'white'){
+        localStorage.setItem('theme', 'gold')
+        this.setState({
+          theme: 'gold',
+        });
+      }else{
         localStorage.setItem('theme', '')
         this.setState({
           theme: '',
         });
-      }else{
-        localStorage.setItem('theme', 'white')
-        this.setState({
-          theme: ' white',
-        })
       }
     }
 
     render() {
-      let ColorParent = "#222";
-      let ColorSecond = "#666";
-      let BakgrColorPrimary = "#f4f8f9";
-      let BakgrColorSecondary = "#3e74b27c";
-      let BakgrColorMaster = "#ffffff";
-      let BakgrColorSlave = "#eaedee";
+      let ColorParent, ColorSecond,BakgrColorPrimary,BakgrColorSecondary,BakgrColorMaster,BakgrColorSlave;
+
+      if(this.state.theme === 'white'){
+        ColorParent = "#222";
+        ColorSecond = "#666";
+        BakgrColorPrimary = "#f4f8f9";
+        BakgrColorSecondary = "#3e74b27c";
+        BakgrColorMaster = "#ffffff";
+        BakgrColorSlave = "#eaedee";
+      }
+
+      if(this.state.theme === 'gold'){
+        ColorParent = "#222";
+        ColorSecond = "#666";
+        BakgrColorPrimary = "#d9ddb9";
+        BakgrColorSecondary = "#3e74b27c";
+        BakgrColorMaster = "#f2d819";
+        BakgrColorSlave = "#eaedee";
+      }
+
 
 
 
       return (
         <div className = "NavBottom" >
-          <div className={"ColorButton" + this.state.theme } onClick={this.changeTheme}></div>
+          <div className={"ColorButton " + this.state.theme } onClick={this.changeTheme}></div>
 
-          {this.state.theme === ' white' ? (<style type="text/css">{`
+          {this.state.theme ? (<style type="text/css">{`
             body,h1,h2,h3,h4,h5,p,div,span,
             .TileBoardTopCenter,.TileBoardTop .TileBoardTopName h1,
             .TileBoardTop .TileBoardTopCenter h1,
