@@ -287,13 +287,13 @@ class Board extends Component {
   deleteTask () {
     qauf(deleteTask(this.state.taskIdCreate), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn("delete task done", a)
-      this.props.objectCacheUpdate({
-        variables:{
-          action: "deleteTask",
-          taskId: this.state.taskIdCreate,
-          objectId: this.state.objectId
-        }
-      })
+      // this.props.objectCacheUpdate({
+      //   variables:{
+      //     action: "deleteTask",
+      //     taskId: this.state.taskIdCreate,
+      //     objectId: this.state.objectId
+      //   }
+      // })
       this.changeDelModal("")
     }).catch((e)=>{
       console.warn(e);
@@ -336,14 +336,14 @@ class Board extends Component {
     if (!this.state.taskIdCreate)
       qauf(crTask(`{${changes}, objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("create task done", a.data.createTask.id)
-        this.props.objectCacheUpdate({
-          variables:{
-            value: {[change] : value},
-            action: "createTask",
-            taskId: a.data.createTask.id,
-            objectId: this.state.objectId
-          }
-        })
+        // this.props.objectCacheUpdate({
+        //   variables:{
+        //     value: {[change] : value},
+        //     action: "createTask",
+        //     taskId: a.data.createTask.id,
+        //     objectId: this.state.objectId
+        //   }
+        // })
         this.modalMessage("Изменения сохранены");
         this.setState({
           taskIdCreate: a.data.createTask.id,
