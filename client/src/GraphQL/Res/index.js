@@ -131,7 +131,7 @@ export default {
       return {barType, barShow, __typename: 'Bar' };
     },
 
-    messagesListCacheUpdate: (_, {lastMessage, queryName},  { cache }) => {
+    messagesCacheUpdate: (_, {lastMessage, queryName},  { cache }) => {
       // console.warn("query" , queryName)
       const query = gql`
         query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
@@ -248,7 +248,7 @@ export default {
       let previousState;
 
       if (value && value.key && value.key==="status") value.value = parseInt(value.value)
-      // console.warn("ДАННЫЕ!", taskId, objectId, action, value);
+      console.warn("ДАННЫЕ!", taskId, objectId, action, value);
 
       switch (action) {
       case "updateTask":
@@ -302,11 +302,19 @@ export default {
                 name
                 endDate
                 parentId
+                objectId
                 status
                 unreadCount
                 assignedTo{
                   id
                   username
+                }
+                files {
+                  id
+                  size
+                  name
+                  mimeType
+                  date
                 }
                 users{
                   id
@@ -337,6 +345,8 @@ export default {
             tasks:  [...previousState.object.tasks, {
               id: taskId,
               // ...value,
+              objectId,
+              files: value.files ?  value.files :null,
               name: value.name ? value.name : "Не указано",
               users: value.users ? value.users : null,
               unreadCount: value.unreadCount ? value.unreadCount : 0 ,
@@ -356,7 +366,6 @@ export default {
         query = gql`
           query object($id: ID!) {
             object(id: $id ) @client {
-              __typename
               tasks {
                 id
                 name

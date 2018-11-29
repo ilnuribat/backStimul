@@ -8,7 +8,7 @@ import { graphql, compose } from "react-apollo";
 import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED, TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
-import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate, privateListCacheUpdate } from '../../GraphQL/Cache';
+import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate, privateListCacheUpdate, taskCacheUpdate, messagesCacheUpdate } from '../../GraphQL/Cache';
 import { getUnreadCount } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 
@@ -19,17 +19,30 @@ class NavTop extends Component {
       isRunOnce: false,
     }
   }
-    //Подпись на все сообщения, адресованные тебе
+
     subscribe = (client) => {
       console.warn("countPriv", this.state.countPriv)
       client.subscribe({
         query: TASK_UPDATED,
       }).subscribe({
         next(data) {
-          console.warn("TASK UPDATED", data.data)
+          console.warn("TASK UPDATED", data.data.taskUpdated)
+          // client.mutate({
+          //   mutation: taskCacheUpdate,
+          //   variables:{
+          //     value: data.data.taskUpdated,
+          //     action: "subsChange",
+          //     taskId: data.data.taskUpdated.id,
+          //   }
+          // }).then(result => {
+          //   if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
+          // })
         }
+
       })
+
       // call the "subscribe" method on Apollo Client
+      //Подпись на все сообщения, адресованные тебе
       client.subscribe({
         query: ALL_MESSAGE_CREATED,
       }).subscribe({
@@ -89,7 +102,7 @@ class NavTop extends Component {
 
           //Пишем в кеш (если он есть конечно) нужной группы полученную мессагу
           client.mutate({
-            mutation: messagesListCacheUpdate,
+            mutation: messagesCacheUpdate,
             variables: {
               lastMessage: data.data.messageAdded,
               queryName: data.data.messageAdded.isDirect ? "direct" : "task",

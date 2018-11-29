@@ -88,25 +88,25 @@ class TaskView extends Component {
   }
 
   updateCacheFile (data) {
-    this.props.taskCacheUpdate({
-      variables:{
-        value: data,
-        action: "uploadFile",
-        taskId: this.props.taskId,
-      }
-    })
+    // this.props.taskCacheUpdate({
+    //   variables:{
+    //     value: data,
+    //     action: "uploadFile",
+    //     taskId: this.props.taskId,
+    //   }
+    // })
   }
 
   deleteFile (id) {
     qauf(removeFile(id), _url, localStorage.getItem('auth-token')).then((a)=>{
       // console.warn(a)
-      this.props.taskCacheUpdate({
-        variables:{
-          value: {id: id},
-          action: "deleteFile",
-          taskId: this.props.taskId,
-        }
-      })
+      // this.props.taskCacheUpdate({
+      //   variables:{
+      //     value: {id: id},
+      //     action: "deleteFile",
+      //     taskId: this.props.taskId,
+      //   }
+      // })
     }).catch((e)=>{
       console.warn(e);
     });
@@ -125,37 +125,37 @@ class TaskView extends Component {
     qauf(updTask(this.props.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
       // console.warn("update task done", a)
       this.modalMessage(a.data.updateTask);
-      switch (change) {
-      case "assignedTo":
-        this.props.taskCacheUpdate({
-          variables:{
-            action: change,
-            value: { id: value, username: userName, key: change },
-            taskId: this.props.taskId,
-          }
-        })
-        break;
-      default:
-        this.props.taskCacheUpdate({
-          variables:{
-            value: { value : value, key : change },
-            action: change,
-            taskId: this.props.taskId,
-          }
-        })
+      // switch (change) {
+      // case "assignedTo":
+      //   this.props.taskCacheUpdate({
+      //     variables:{
+      //       action: change,
+      //       value: { id: value, username: userName, key: change },
+      //       taskId: this.props.taskId,
+      //     }
+      //   })
+      //   break;
+      // default:
+      //   this.props.taskCacheUpdate({
+      //     variables:{
+      //       value: { value : value, key : change },
+      //       action: change,
+      //       taskId: this.props.taskId,
+      //     }
+      //   })
 
-        if (change !== "addUser" && change !== "delUser") {
-          this.props.objectCacheUpdate({
-            variables:{
-              value: { value: value, key: change },
-              action: "updateTask",
-              taskId: this.props.taskId,
-              objectId: this.props.objectId
-            }
-          })
-        }
-        break;
-      }
+      //   if (change !== "addUser" && change !== "delUser") {
+      //     this.props.objectCacheUpdate({
+      //       variables:{
+      //         value: { value: value, key: change },
+      //         action: "updateTask",
+      //         taskId: this.props.taskId,
+      //         objectId: this.props.objectId
+      //       }
+      //     })
+      //   }
+      //   break;
+      // }
     }).catch((e)=>{
       console.warn(e);
     })
@@ -247,20 +247,20 @@ class TaskView extends Component {
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
 
         this.modalMessage(a.data.updateUsersTask);
-        !dels ?
-          this.props.taskCacheUpdate({
-            variables:{
-              action: "addUser",
-              value: { id: userId, username: this.state.newUser },
-              taskId: this.props.taskId,
-            }
-          }) : this.props.taskCacheUpdate({
-            variables:{
-              action: "delUser",
-              value: { id: userId },
-              taskId: this.props.taskId,
-            }
-          })
+        // !dels ?
+        //   this.props.taskCacheUpdate({
+        //     variables:{
+        //       action: "addUser",
+        //       value: { id: userId, username: this.state.newUser },
+        //       taskId: this.props.taskId,
+        //     }
+        //   }) : this.props.taskCacheUpdate({
+        //     variables:{
+        //       action: "delUser",
+        //       value: { id: userId },
+        //       taskId: this.props.taskId,
+        //     }
+        //   })
 
         this.setState({
           newUser: "",
@@ -309,7 +309,7 @@ class TaskView extends Component {
 
     // let data = dataObject.filter((task) => (task.id === taskId))[0]
 
-    // console.warn("TASKID", data)
+    console.warn("TASKID", data)
 
     let dataValue;
 

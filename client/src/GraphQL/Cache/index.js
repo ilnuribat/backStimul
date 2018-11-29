@@ -262,9 +262,9 @@ export const setTemp = gql `
     }
   }
 `;
-export const messagesListCacheUpdate = gql `
-  mutation messagesListCacheUpdate($lastMessage: Object!, $queryName: String!) {
-    messagesListCacheUpdate(lastMessage: $lastMessage, queryName: $queryName) @client {
+export const messagesCacheUpdate = gql `
+  mutation messagesCacheUpdate($lastMessage: Object!, $queryName: String!) {
+    messagesCacheUpdate(lastMessage: $lastMessage, queryName: $queryName) @client {
       lastMessage
     }
   }

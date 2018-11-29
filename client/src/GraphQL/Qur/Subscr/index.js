@@ -58,31 +58,28 @@ export const SUBS_GR = (id) => `
   }
 `;
 export const TASK_UPDATED = gql`
-subscription ($id: ID!){
-  taskUpdated(id: $id){
+subscription {
+  taskUpdated{
         id
         name
-        users{
-          id
-          username
-        }
-        unreadCount
+        parentId
+        objectId
+        endDate
         status
+        # users{
+        #   id
+        #   username
+        # }
         assignedTo{
           id
           username
         }
-        lastMessage{
-          from{
-            id
-            username
-          }
-          text
-        }
-        endDate
-        address{
-          value
-          coordinates
+        files {
+          id
+          date
+          mimeType
+          name
+          size
         }
       }
 }`;

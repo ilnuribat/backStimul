@@ -12,7 +12,7 @@ import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
 import { setChat, setInfo, rootId, objectCacheUpdate } from '../../../GraphQL/Cache';
-import { getObjectTasks, glossaryStatus, TASKS_QUERY, checkObject, GR_QUERY } from '../../../GraphQL/Qur/Query';
+import { getObjectTasks, glossaryStatus, TASKS_QUERY, checkObject, TASK_INFO, TASK_MESSAGES } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
 import '../../../newcss/task.css';
@@ -41,7 +41,6 @@ class Board extends Component {
       status: [],
       toRoot: false,
       toTask: false,
-      taskData: {},
       showChilds: false,
       modal: false,
       modalDelete: false,
@@ -245,10 +244,6 @@ class Board extends Component {
       return true
     }
 
-    if(nextState.taskData !== this.state.taskData){
-      return true
-    }
-
     return true
 
   }
@@ -363,14 +358,14 @@ class Board extends Component {
       qauf(updTask(this.state.taskIdCreate,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("update task done", a)
         this.modalMessage("Изменения сохранены");
-        this.props.objectCacheUpdate({
-          variables:{
-            value: {value : value, key : change},
-            action: "updateTask",
-            taskId: this.state.taskIdCreate,
-            objectId: this.state.objectId
-          }
-        })
+        // this.props.objectCacheUpdate({
+        //   variables:{
+        //     value: {value : value, key : change},
+        //     action: "updateTask",
+        //     taskId: this.state.taskIdCreate,
+        //     objectId: this.state.objectId
+        //   }
+        // })
       }).catch((e)=>{
         this.modalMessage("Ошибка " + e);
         console.warn(e);
@@ -428,6 +423,7 @@ class Board extends Component {
 
               let arr = _.sortBy(data.object.tasks, 'status');
               let cols = [[],[],[],[],[],[],[]];
+              const taskData = data.object.tasks.filter((task) => (task.id === this.state.taskId))[0]
 
               arr = _.sortBy(data.object.tasks, 'unreadCount');
               _.forEach(arr, (result)=>{
@@ -444,7 +440,7 @@ class Board extends Component {
                   <Content view="Board">
                     {toTask && taskId ?
                       <InnerBar view="Pad0">
-                        <Query query={GR_QUERY} variables={{ id: `${taskId}` }} >
+                        <Query query={TASK_MESSAGES} variables={{ id: `${taskId}` }} >
                           {({ loading, error, data }) => {
                             let a = false;
 
@@ -521,34 +517,35 @@ class Board extends Component {
                     <Panel>
 
                       {toTask ? (
-                        <Query query={GR_QUERY} variables={{ id: `${taskId}` }} >
-                          {({ loading, error, data }) => {
-                            let a = false;
+                        <TaskView taskId={this.state.taskId} objectId={this.state.objectId} data={taskData} />
+                        // <Query query={TASK_INFO} variables={{ id: `${taskId}` }} >
+                        //   {({ loading, error, data }) => {
+                        //     let a = false;
 
-                            if (loading){
+                        //     if (loading){
 
-                              return (
-                                <div style={{ paddingTop: 20, margin: "auto"}}>
-                                  <Loading />
-                                </div>
-                              );
-                            }
-                            if (error){
+                        //       return (
+                        //         <div style={{ paddingTop: 20, margin: "auto"}}>
+                        //           <Loading />
+                        //         </div>
+                        //       );
+                        //     }
+                        //     if (error){
 
-                              return (
-                                <div className="errMess">
-                                  {error.message}
-                                </div>
-                              );
-                            }
-                            if (a && !data || !data.task)
-                              return null
+                        //       return (
+                        //         <div className="errMess">
+                        //           {error.message}
+                        //         </div>
+                        //       );
+                        //     }
+                        //     if (a && !data || !data.task)
+                        //       return null
 
-                            return(
-                              <TaskView taskId={this.state.taskId} objectId={this.state.objectId} data={data.task} />
-                            )
-                          }}
-                        </Query>
+                        //     return(
+                        //       <TaskView taskId={this.state.taskId} objectId={this.state.objectId} data={data.task} />
+                        //     )
+                        //   }}
+                        // </Query>
 
 
                       ) : ( <TextRow name="Информация" view="Pad510 BigName">
