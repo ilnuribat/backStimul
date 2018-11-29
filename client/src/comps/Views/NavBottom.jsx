@@ -117,6 +117,14 @@ class NavBottom extends Component {
           .msgs{
             box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.2);
           }
+          .FileIcon svg{
+            fill:#3e74b27c;
+          }
+          .FileIcon,
+          .FileIcon .Svg{
+            background: #f4f8f9e5;
+          }
+  .
           `}</style>) : null}
         </div>
       )
