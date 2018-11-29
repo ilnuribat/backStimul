@@ -117,5 +117,8 @@
   cursor: pointer;
 }
 .ColorButton.white{
+  background: #f5e505;
+}
+.ColorButton.gold{
   background: #202225;
 }
