@@ -28,6 +28,7 @@ class Private extends React.Component {
     super(props)
 
     this.state = {
+      chatId: "",
       newUser: "",
       newChay: "",
       userwarn: "",
@@ -38,9 +39,11 @@ class Private extends React.Component {
   }
 
   openPrivate(gid, name){
-    this.props.setPrivateChat({
-      variables: { id: gid, name: name }
-    })
+    // this.props.setPrivateChat({
+    //   variables: { id: gid, name: name }
+    // })
+
+    this.props.click(gid)
 
     this.props.privateListCacheUpdate({
       variables:{
@@ -115,6 +118,7 @@ class Private extends React.Component {
 
   render(){
     let newChay;
+    const {chatId} = this.props;
 
     return (
       <div className="f-column-l">
@@ -150,7 +154,7 @@ class Private extends React.Component {
                       <div className="PrivateChatsUsers">{
                         data.user.directs.map((e,i, a)=>{
                           //Если не открытый чат
-                          if (this.props.getPrivateChat.id !== e.id ) {
+                          if (chatId !== e.id ) {
                             privs = privs + e.unreadCount;
                             // subscrMes(subscribeToMore, e.id, refetch)
                           }
@@ -162,7 +166,7 @@ class Private extends React.Component {
 
                           return(
                             <div className="RowBg Row" key={'users-'+i}>
-                              <UserRow key={'users-'+i} size="32" icon="1" id={e.id} name={e.name} click={()=>this.openPrivate(e.id, e.name)}>
+                              <UserRow key={'users-'+i} size="32" icon="1" id={e.id} name={e.name} click={(usid, usname, usicon)=>this.openPrivate(e.id)}>
                               </UserRow>
                               {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
                             </div>
