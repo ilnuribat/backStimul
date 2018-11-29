@@ -84,13 +84,31 @@ subscription {
       }
 }`;
 
-export const userTaskUpdated = gql`
-  subscription userTaskUpdated($id: ID!){
-    userTaskUpdated(id: $id){
+export const USER_TASK_UPDATED = gql`
+  subscription {
+    userTaskUpdated{
           action
           user{
               id
               username
+          }
+          task {
+            id
+            name
+            parentId
+            objectId
+            endDate
+            assignedTo{
+              id
+              username
+            }
+            files {
+              id
+              date
+              mimeType
+              name
+              size
+            }
           }
       }
   }

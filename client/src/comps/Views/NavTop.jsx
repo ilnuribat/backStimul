@@ -7,8 +7,8 @@ import { graphql, compose } from "react-apollo";
 // import Logo from './Logo.jpg'
 import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
-import { ALL_MESSAGE_CREATED, TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
-import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate, privateListCacheUpdate, taskCacheUpdate, messagesCacheUpdate } from '../../GraphQL/Cache';
+import { ALL_MESSAGE_CREATED, TASK_UPDATED, USER_TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
+import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate, privateListCacheUpdate, taskCacheUpdate, messagesCacheUpdate, objectCacheUpdate } from '../../GraphQL/Cache';
 import { getUnreadCount } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 
@@ -23,24 +23,40 @@ class NavTop extends Component {
     subscribe = (client) => {
       console.warn("countPriv", this.state.countPriv)
       client.subscribe({
+        query: USER_TASK_UPDATED,
+      }).subscribe({
+        next(data) {
+          console.warn("TASK CREATE/DELETE", data.data.userTaskUpdated)
+          const newData = data.data.userTaskUpdated
+
+          newData.action === "KICKED" ?
+            client.mutate({
+              mutation: objectCacheUpdate,
+              variables:{
+                action: "deleteTask",
+                taskId: newData.task.id,
+                objectId: newData.task.objectId
+              }
+            })
+            :
+            client.mutate({
+              mutation: objectCacheUpdate,
+              variables:{
+                value: newData.task,
+                action: "createTask",
+                taskId: newData.task.id,
+                objectId: newData.task.objectId
+              }
+            })
+        }})
+
+      client.subscribe({
         query: TASK_UPDATED,
       }).subscribe({
         next(data) {
           console.warn("TASK UPDATED", data.data.taskUpdated)
-          // client.mutate({
-          //   mutation: taskCacheUpdate,
-          //   variables:{
-          //     value: data.data.taskUpdated,
-          //     action: "subsChange",
-          //     taskId: data.data.taskUpdated.id,
-          //   }
-          // }).then(result => {
-          //   if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
-          // })
         }
-
       })
-
       // call the "subscribe" method on Apollo Client
       //Подпись на все сообщения, адресованные тебе
       client.subscribe({

@@ -318,157 +318,157 @@ class TaskView extends Component {
     if(data){
 
 
-    let dataValue;
+      let dataValue;
 
-    let taskStatus = data.status
+      let taskStatus = data.status
 
-    if (data.endDate) dataValue = data.endDate.replace(/T.*$/gi, "")
+      if (data.endDate) dataValue = data.endDate.replace(/T.*$/gi, "")
 
-    return(
-      <Content view="OvH">
-        <InnerBar>
-          <TextRow name="Информация" view="BigName">
-            <TextRow name="" view="Pad510 MT10">
-              {
-                data.name
-              }
+      return(
+        <Content view="OvH">
+          <InnerBar>
+            <TextRow name="Информация" view="BigName">
+              <TextRow name="" view="Pad510 MT10">
+                {
+                  data.name
+                }
+              </TextRow>
+              <TextRow name="" view="cgr Pad510 s">
+                {
+                  dataValue ? moment(dataValue).format('D MMMM, h:mm') : null
+                }
+              </TextRow>
+              <TextRow name="" view="cgr Pad510 s">
+                {
+                  this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Новая"
+                }
+              </TextRow>
+
+
+              <TextRow name="" view="cgr Pad510 s">
+                {data && data.assignedTo && data.assignedTo.id && data.assignedTo.username ? (
+                  <UserRow size="24" id={data.assignedTo.id} name={data.assignedTo.username ? data.assignedTo.username : "Нет имени"} icon="1" />
+                ): "Ответственный не назначен"}
+              </TextRow>
             </TextRow>
-            <TextRow name="" view="cgr Pad510 s">
-              {
-                dataValue ? moment(dataValue).format('D MMMM, h:mm') : null
-              }
-            </TextRow>
-            <TextRow name="" view="cgr Pad510 s">
-              {
-                this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Новая"
-              }
-            </TextRow>
+            <div className="tab-roll">
+              <div className="header"><h4>Пользователи</h4></div>
+              <div className="content">
+                <div className="content-scroll">
 
-
-            <TextRow name="" view="cgr Pad510 s">
-              {data && data.assignedTo && data.assignedTo.id && data.assignedTo.username ? (
-                <UserRow size="24" id={data.assignedTo.id} name={data.assignedTo.username ? data.assignedTo.username : "Нет имени"} icon="1" />
-              ): "Ответственный не назначен"}
-            </TextRow>
-          </TextRow>
-          <div className="tab-roll">
-            <div className="header"><h4>Пользователи</h4></div>
-            <div className="content">
-              <div className="content-scroll">
-
-                {data.users && data.users.map(
-                  (e,i)=>{
-                    return(
-                      <div className="username" role="presentation" key={'usr-'+i} >
-                        {localStorage.getItem('userid') !== e.id ?
-                          <UserRow id={e.id} name={e.username} icon="1" ondelete={(id)=>this.userAdd(id, false)} />
-                          : null }
-                        <div className="hoverTrigger">
-                          <div className="hover">
-                            <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
-                            <div className="btn v2" onClick={()=>this.userAdd(e.id)}>Удалить {e.username}</div>
+                  {data.users && data.users.map(
+                    (e,i)=>{
+                      return(
+                        <div className="username" role="presentation" key={'usr-'+i} >
+                          {localStorage.getItem('userid') !== e.id ?
+                            <UserRow id={e.id} name={e.username} icon="1" ondelete={(id)=>this.userAdd(id, false)} />
+                            : null }
+                          <div className="hoverTrigger">
+                            <div className="hover">
+                              <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
+                              <div className="btn v2" onClick={()=>this.userAdd(e.id)}>Удалить {e.username}</div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )
+                      )
+                    }
+                  )
                   }
-                )
-                }
-              </div>
+                </div>
 
-              <div className="FakeLinkSvg"><Svg svg="expose" size="32" /></div>
+                <div className="FakeLinkSvg"><Svg svg="expose" size="32" /></div>
+              </div>
             </div>
-          </div>
-          <div className="tab-roll">
-            <div className="header"><h4>Документы</h4></div>
-            <div className="content">
-              <div className="content-scroll">
-                {data.files && data.files.length > 0 ? data.files.map(
-                  (e)=>{
-                    return(
-                      <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
-                    )
-                  }
-                ) : (
-                  <div>
-                    {/* <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+            <div className="tab-roll">
+              <div className="header"><h4>Документы</h4></div>
+              <div className="content">
+                <div className="content-scroll">
+                  {data.files && data.files.length > 0 ? data.files.map(
+                    (e)=>{
+                      return(
+                        <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
+                      )
+                    }
+                  ) : (
+                    <div>
+                      {/* <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
                                   <FileRow name="Фото подвала.jpg" id="id1237" icon="img" /> */}
-                    <div className="FakeLink">Файлов нет</div>
-                  </div>
-                )
-                }
+                      <div className="FakeLink">Файлов нет</div>
+                    </div>
+                  )
+                  }
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="content">
-            <div className="Btn v1" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
-          </div>
+            <div className="content">
+              <div className="Btn v1" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
+            </div>
 
-        </InnerBar>
-        {modal ? (
-          <Modal close={()=>{ this.setState({modal: !modal}) }} message={this.state.modalMessageShow?this.state.modalMessage:""}>
+          </InnerBar>
+          {modal ? (
+            <Modal close={()=>{ this.setState({modal: !modal}) }} message={this.state.modalMessageShow?this.state.modalMessage:""}>
 
-            <ModalRow>
-              <ModalCol>
-                <InputWrapper name={data.name} save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
+              <ModalRow>
+                <ModalCol>
+                  <InputWrapper name={data.name} save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
                             Название
-                </InputWrapper>
-              </ModalCol>
-            </ModalRow>
+                  </InputWrapper>
+                </ModalCol>
+              </ModalRow>
 
 
-            <ModalRow>
-              <ModalCol>
-                <ModalBlockName>
+              <ModalRow>
+                <ModalCol>
+                  <ModalBlockName>
                             Статус
-                </ModalBlockName>
+                  </ModalBlockName>
 
-                <ResponsibleRow >
-                  <UserRow id={taskStatus || "1"} name={this.state.status.find(x => x.id == taskStatus) && this.state.status.find(x => x.id == taskStatus).name ? this.state.status.find(x => x.id == taskStatus).name : "Новая"}/>
-                  {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus || "1"}/> : null}
-                </ResponsibleRow>
+                  <ResponsibleRow >
+                    <UserRow id={taskStatus || "1"} name={this.state.status.find(x => x.id == taskStatus) && this.state.status.find(x => x.id == taskStatus).name ? this.state.status.find(x => x.id == taskStatus).name : "Новая"}/>
+                    {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus || "1"}/> : null}
+                  </ResponsibleRow>
 
-              </ModalCol>
+                </ModalCol>
 
-              <ModalCol>
-                <ModalBlockName>
+                <ModalCol>
+                  <ModalBlockName>
                             Ответственный
-                </ModalBlockName>
-                <ResponsibleRow >
-                  <UserRow id={data.assignedTo && data.assignedTo.id ? data.assignedTo.id : "0"} name={data.assignedTo && data.assignedTo.username ? data.assignedTo.username : "не указано"} ondelete={()=>this.writeTaskData(null, "assignedTo", false, null)}/>
-                  <FakeSelect array={data.users} onselect={(id,name,icon)=>{this.writeTaskData(id, "assignedTo",true, name)}} defaultid={data.assignedTo && data.assignedTo.id ? data.assignedTo.id : "0"} />
-                </ResponsibleRow>
-              </ModalCol>
-            </ModalRow>
+                  </ModalBlockName>
+                  <ResponsibleRow >
+                    <UserRow id={data.assignedTo && data.assignedTo.id ? data.assignedTo.id : "0"} name={data.assignedTo && data.assignedTo.username ? data.assignedTo.username : "не указано"} ondelete={()=>this.writeTaskData(null, "assignedTo", false, null)}/>
+                    <FakeSelect array={data.users} onselect={(id,name,icon)=>{this.writeTaskData(id, "assignedTo",true, name)}} defaultid={data.assignedTo && data.assignedTo.id ? data.assignedTo.id : "0"} />
+                  </ResponsibleRow>
+                </ModalCol>
+              </ModalRow>
 
-            <ModalRow>
-              <ModalCol>
-                <ModalBlockName>
+              <ModalRow>
+                <ModalCol>
+                  <ModalBlockName>
                   Срок истечения
-                </ModalBlockName>
-                <label htmlFor="dateselect" className="LabelInputDate">
-                  <input type="date" name="dateselect" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
-                </label>
-              </ModalCol>
+                  </ModalBlockName>
+                  <label htmlFor="dateselect" className="LabelInputDate">
+                    <input type="date" name="dateselect" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
+                  </label>
+                </ModalCol>
 
-              <ModalCol>
-                <ModalBlockName>
+                <ModalCol>
+                  <ModalBlockName>
                           Добавить родительскую задачу
-                </ModalBlockName>
-                <ResponsibleRow >
-                  <UserRow id={data.parentId} name={allTasks.find(x => x.id == data.parentId) ? allTasks.find(x => x.id == data.parentId).name : "не указано"} ondelete={()=>this.writeTaskData(null, "parentId", false)}/>
-                  <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.parentId} />
-                </ResponsibleRow>
+                  </ModalBlockName>
+                  <ResponsibleRow >
+                    <UserRow id={data.parentId} name={allTasks.find(x => x.id == data.parentId) ? allTasks.find(x => x.id == data.parentId).name : "не указано"} ondelete={()=>this.writeTaskData(null, "parentId", false)}/>
+                    <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.parentId} />
+                  </ResponsibleRow>
 
-                {/* <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.parentId} /> */}
-              </ModalCol>
-            </ModalRow>
-            <ModalRow>
-              <ModalCol>
-                <ModalBlockName>
+                  {/* <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.parentId} /> */}
+                </ModalCol>
+              </ModalRow>
+              <ModalRow>
+                <ModalCol>
+                  <ModalBlockName>
                   Добавить пользователя
-                </ModalBlockName>
+                  </ModalBlockName>
                   <label className="LabelInputList" htmlFor="users">
                     <input type="list" name="users" list="users" autoComplete="on" value={this.state.newUser} onChange={this.newUser} />
                     {
@@ -489,50 +489,50 @@ class TaskView extends Component {
                       }
                     </datalist>
                   </label>
-              </ModalCol>
-            </ModalRow>
-            <ModalCol>
-              <ModalBlockName>
-                Добавить вложения
-              </ModalBlockName>
-              {data.files && data.files.length > 0 ? data.files.map((e)=>{
-                return(
-                  <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
-                )
-              }
-              ) : (
-                <div>
-                  <div className="FakeLink">Файлов нет</div>
-                </div>
-              )
-              }
+                </ModalCol>
+              </ModalRow>
               <ModalCol>
-                {/* <div className="files-drop"> */}
-                {/* <Svg svg="tocloud" inline={0} />переместите файлы сюдa */}
-                <Mutation mutation={uploadFile} onCompleted={(data) => {
+                <ModalBlockName>
+                Добавить вложения
+                </ModalBlockName>
+                {data.files && data.files.length > 0 ? data.files.map((e)=>{
+                  return(
+                    <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
+                  )
+                }
+                ) : (
+                  <div>
+                    <div className="FakeLink">Файлов нет</div>
+                  </div>
+                )
+                }
+                <ModalCol>
+                  {/* <div className="files-drop"> */}
+                  {/* <Svg svg="tocloud" inline={0} />переместите файлы сюдa */}
+                  <Mutation mutation={uploadFile} onCompleted={(data) => {
                   // console.warn(data)
-                  this.modalMessage(data.uploadFile);
-                  this.updateCacheFile(data.uploadFile)
-                }}>
-                  {upload => (
-                    <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
-                      <p><Svg svg="tocloud" inline={0} />Переместите сюда файлы или нажмите для добавления.</p>
-                    </Dropzone>
-                  )}
-                </Mutation>
-                {/* </div> */}
+                    this.modalMessage(data.uploadFile);
+                    this.updateCacheFile(data.uploadFile)
+                  }}>
+                    {upload => (
+                      <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
+                        <p><Svg svg="tocloud" inline={0} />Переместите сюда файлы или нажмите для добавления.</p>
+                      </Dropzone>
+                    )}
+                  </Mutation>
+                  {/* </div> */}
+                </ModalCol>
               </ModalCol>
-            </ModalCol>
-          </Modal>
-        ) : null
-        }
-      </Content>
-    )
+            </Modal>
+          ) : null
+          }
+        </Content>
+      )
     }else{
       return(
-<Loading />
+        <Loading />
       )
-      
+
 
     }
   }
