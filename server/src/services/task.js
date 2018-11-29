@@ -3,9 +3,10 @@ const {
   Group, UserGroup, User, Message,
 } = require('../models');
 const {
-  pubsub, TASK_UPDATED, USER_TASK_UPDATED,
+  pubsub, TASK_UPDATED, USER_TASK_UPDATED, KICKED, INVITED,
 } = require('../services/constants');
 const { logger } = require('../../logger');
+
 
 async function createTask(parent, { task }, { user }) {
   if (!task.objectId) {
@@ -27,9 +28,13 @@ async function createTask(parent, { task }, { user }) {
 
   pubsub.publish(USER_TASK_UPDATED, {
     userTaskUpdated: {
-      user,
+      user: {
+        ...user,
+        id: user._id.toString(),
+        username: user.email,
+      },
       task: group,
-      action: 'INVITED',
+      action: INVITED,
     },
   });
 
@@ -71,9 +76,13 @@ async function kickUsersFromGroup({ group, users }) {
 
   users.map(u => pubsub.publish(USER_TASK_UPDATED, {
     userTaskUpdated: {
-      user: u,
+      user: {
+        id: u._id.toString(),
+        username: u.email,
+        ...u,
+      },
       task: group,
-      action: 'KICKED',
+      action: KICKED,
     },
   }));
 
@@ -112,9 +121,13 @@ async function updateUsersTask(parent, { task }) {
 
       taskUsers.map(u => pubsub.publish(USER_TASK_UPDATED, {
         userTaskUpdated: {
-          user: u,
+          user: {
+            id: u._id.toString(),
+            username: u.email,
+            ...u,
+          },
           task: foundGroup,
-          action: 'INVITED',
+          action: INVITED,
         },
       }));
 
