@@ -64,6 +64,6 @@ type Mutation {
 }
 
 type Subscription {
-  taskUpdated(id: ID!): Task
+  taskUpdated: Task
   userTaskUpdated: UserTaskAction
 }
