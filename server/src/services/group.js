@@ -8,12 +8,18 @@ const {
   getPageInfo, formWhere,
 } = require('../services/chat');
 
-function assignedTo(parent) {
+async function assignedTo(parent) {
   if (!parent.assignedTo) {
     return null;
   }
 
-  return User.findById(parent.assignedTo);
+  const user = await User.findById(parent.assignedTo).lean();
+
+  return {
+    ...user,
+    id: user._id.toString(),
+    username: user.email,
+  };
 }
 
 function lastMessage({ id }) {
