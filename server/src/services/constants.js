@@ -6,6 +6,8 @@ const MESSAGE_ADDED = 'MESSAGE_ADDED';
 const MESSAGE_READ = 'MESSAGE_READ';
 const TASK_UPDATED = 'TASK_UPDATED';
 const USER_TASK_UPDATED = 'USER_TASK_UPDATED';
+const KICKED = 'KICKED';
+const INVITED = 'INVITED';
 
 const GROUP_TYPES = ['DIRECT', 'TASK', 'OBJECT'];
 const ADDRESS_LEVELS = ['region', 'area', 'city', 'settlement', 'street', 'house'];
@@ -36,4 +38,6 @@ module.exports = {
   GROUP_TYPES,
   ADDRESS_LEVELS,
   TASK_STATUSES,
+  KICKED,
+  INVITED,
 };
