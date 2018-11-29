@@ -1,15 +1,13 @@
-const { Group, UserGroup, User } = require('../../server/src/models');
+const { Group } = require('../../server/src/models');
 
-describe.only('task', () => {
+describe('task', () => {
   before(async function () {
     this.localObject = await Group.create({
       name: 'test obj',
       type: 'OBJECT',
     });
   });
-  it('test', async function () {
-    console.log(this.localObject._id);
-  });
+  // TODO - test deletion task and assert that users kicked from that task
   after(async function () {
     await Group.deleteOne({ _id: this.localObject._id });
   });
