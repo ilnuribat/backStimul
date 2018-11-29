@@ -57,8 +57,8 @@ export const SUBS_GR = (id) => `
           text
   }
 `;
-export const taskUpdated = gql`
-subscription taskUpdated($id: ID!){
+export const TASK_UPDATED = gql`
+subscription ($id: ID!){
   taskUpdated(id: $id){
         id
         name

@@ -248,7 +248,7 @@ export default {
       let previousState;
 
       if (value && value.key && value.key==="status") value.value = parseInt(value.value)
-      console.warn("ДАННЫЕ!", taskId, objectId, action, value);
+      // console.warn("ДАННЫЕ!", taskId, objectId, action, value);
 
       switch (action) {
       case "updateTask":

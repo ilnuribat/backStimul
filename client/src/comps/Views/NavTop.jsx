@@ -7,7 +7,7 @@ import { graphql, compose } from "react-apollo";
 // import Logo from './Logo.jpg'
 import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
-import { ALL_MESSAGE_CREATED } from '../../GraphQL/Qur/Subscr';
+import { ALL_MESSAGE_CREATED, TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
 import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate, privateListCacheUpdate } from '../../GraphQL/Cache';
 import { getUnreadCount } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
@@ -22,6 +22,13 @@ class NavTop extends Component {
     //Подпись на все сообщения, адресованные тебе
     subscribe = (client) => {
       console.warn("countPriv", this.state.countPriv)
+      client.subscribe({
+        query: TASK_UPDATED,
+      }).subscribe({
+        next(data) {
+          console.warn("TASK UPDATED", data.data)
+        }
+      })
       // call the "subscribe" method on Apollo Client
       client.subscribe({
         query: ALL_MESSAGE_CREATED,
