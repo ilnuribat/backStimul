@@ -343,19 +343,19 @@ export default {
         data = {
           object: {
             tasks:  [...previousState.object.tasks, {
-              id: taskId,
-              // ...value,
-              objectId,
-              files: value.files ?  value.files :null,
-              name: value.name ? value.name : "Не указано",
-              users: value.users ? value.users : null,
-              unreadCount: value.unreadCount ? value.unreadCount : 0 ,
-              lastMessage: value.lastMessage ? value.lastMessage : null,
-              status: value.status ? value.status : null,
-              parentId: value.parentId ? value.parentId : null,
-              assignedTo: value.assignedTo ?  value.assignedTo :null,
-              endDate: value.endDate ? value.endDate :null,
-              __typename: "Task"
+              // id: taskId,
+              ...value,
+              // objectId,
+              // files: value.files ?  value.files :null,
+              // name: value.name ? value.name : "Не указано",
+              // users: value.users ? value.users : null,
+              // unreadCount: value.unreadCount ? value.unreadCount : 0 ,
+              // lastMessage: value.lastMessage ? value.lastMessage : null,
+              // status: value.status ? value.status : null,
+              // parentId: value.parentId ? value.parentId : null,
+              // assignedTo: value.assignedTo ?  value.assignedTo :null,
+              // endDate: value.endDate ? value.endDate :null,
+              // __typename: "Task"
             }],
             __typename: "Object"
           }

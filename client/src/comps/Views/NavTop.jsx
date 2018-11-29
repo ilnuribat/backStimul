@@ -29,7 +29,7 @@ class NavTop extends Component {
           console.warn("TASK CREATE/DELETE", data.data.userTaskUpdated)
           const newData = data.data.userTaskUpdated
 
-          newData.action === "KICKED" ?
+          if (newData.action === "KICKED")
             client.mutate({
               mutation: objectCacheUpdate,
               variables:{
@@ -38,7 +38,7 @@ class NavTop extends Component {
                 objectId: newData.task.objectId
               }
             })
-            :
+          else if (newData.user.id === localStorage.getItem('userid'))
             client.mutate({
               mutation: objectCacheUpdate,
               variables:{
@@ -48,6 +48,16 @@ class NavTop extends Component {
                 objectId: newData.task.objectId
               }
             })
+          // else
+          //   client.mutate({
+          //     mutation: objectCacheUpdate,
+          //     variables:{
+          //       value: newData.task,
+          //       action: "updateTask",
+          //       taskId: newData.task.id,
+          //       objectId: newData.task.objectId
+          //     }
+          //   })
         }})
 
       client.subscribe({

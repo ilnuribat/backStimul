@@ -98,6 +98,8 @@ export const USER_TASK_UPDATED = gql`
             parentId
             objectId
             endDate
+            status
+            unreadCount
             assignedTo{
               id
               username
@@ -108,6 +110,17 @@ export const USER_TASK_UPDATED = gql`
               mimeType
               name
               size
+            }
+            users{
+              id
+              username
+            }
+            lastMessage{
+              from{
+                id
+                username
+              }
+              text
             }
           }
       }

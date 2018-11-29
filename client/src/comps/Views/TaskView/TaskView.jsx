@@ -516,7 +516,7 @@ class TaskView extends Component {
                   }}>
                     {upload => (
                       <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
-                        <p><Svg svg="tocloud" inline={0} />Переместите сюда файлы или нажмите для добавления.</p>
+                        <Svg svg="tocloud" inline={0} />Переместите сюда файлы или нажмите для добавления.
                       </Dropzone>
                     )}
                   </Mutation>
