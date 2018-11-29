@@ -9,6 +9,7 @@ import { checkServerIdentity } from 'tls';
 import {UserRow} from '../../Parts/Rows/Rows';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import { FileRow } from '../Rows/Rows';
 
 
 export class Search extends Component {
@@ -108,7 +109,7 @@ export class Search extends Component {
         id
       }
     }`;
-    let Dcs = `docs{
+    let Dcs = `files{
       id
       name
     }`;
@@ -122,15 +123,8 @@ export class Search extends Component {
     ${this.state.chAll || this.state.chTsk ? Tsk : ""}
     ${this.state.chAll || this.state.chUsr ? Usr : ""}
     ${this.state.chAll || this.state.chMsg ? Msg : ""}
-    ${this.state.chAll || this.state.chDcs ? "" : ""}
+    ${this.state.chAll || this.state.chDcs ? Dcs : ""}
     `
-    console.log("SearchBody------",SearchBody.toString());
-    console.log("SearchBody------",SearchBody.toString().length);
-    
-
-    // if(SearchBody.toString().length < 31){
-    //   this.setState({chAll: true,})
-    // }
     let SearchGql = `
     query search($query: String!){
       search(query: $query){
@@ -212,7 +206,7 @@ export class Search extends Component {
                     if(error) {
                       console.log(error)
 
-                      return error.message;
+                      return(<div id="SeacrhInner">{error.message}</div>)
                     }
                     if(loading) return "загрузка"
                     if(data && data.search){
@@ -222,6 +216,7 @@ export class Search extends Component {
                       data.search.tasks && data.search.tasks.length > 0 ? Search.tasks = data.search.tasks : null
                       data.search.objects && data.search.objects.length > 0 ? Search.objects = data.search.objects : null
                       data.search.users && data.search.users.length > 0 ? Search.users = data.search.users : null
+                      data.search.users && data.search.files.length > 0 ? Search.files = data.search.files : null
 
                       // Search ? console.log("Search", Search) : null
                       
@@ -266,10 +261,18 @@ export class Search extends Component {
                           { Search.messages ? <h3 className="BlockHeader">Сообщения</h3> : null}
                           { Search.messages ? <div className="BlockContent">{
                             Search.messages.map((e)=>(
-                              <Link key={e.id} to={{pathname: e.isDirect ? "/chat" : "/task", state:{ id: e.groupId || "", }}} >
+                              <Link key={e.id} to={{pathname: e.isDirect ? "/chat" : "/board", state:{ taskId: e.groupId, objectId: e.objectId || "" }}} >
                                 {e.from && e.from.id && e.from.username ? <UserRow view="Boxed" id={e.from.id} icon="1" name={e.from.username} key={e.from.id} /> : ''}
                                 <div className="SearchMessage" key={e.id}>{e.text}</div>
                               </Link>
+                            )) }</div>:  null
+                          }
+                          { Search.files ? <h3 className="BlockHeader">Документы</h3> : null}
+                          { Search.files ? <div className="BlockContent">{
+                            Search.files.map((e)=>(
+                              e.name ? <FileRow view="" id={e.id} icon="doc" name={e.name} key={"file" + e.id} /> : ''
+
+                              
                             )) }</div>:  null
                           }
 

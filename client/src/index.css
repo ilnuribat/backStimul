@@ -157,7 +157,9 @@ a{
   overflow: hidden;
   overflow-y: auto; 
 }
-
+svg{
+  fill: #3e75b2;
+}
 
 
 @import './newcss/nav.css';
@@ -334,4 +336,11 @@ Mar5{
   z-index: 9;
   width:20px;
   height:20px;
+}
+.InlBl{
+  display: inline-block;
+}
+
+h1{
+  font-size:10vw;
 }

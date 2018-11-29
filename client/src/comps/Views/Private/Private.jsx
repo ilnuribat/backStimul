@@ -17,17 +17,30 @@ class Private extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      chatId: '',
       getchat: '',
     }
 
     this.setStateProps = this.setStateProps.bind(this)
+    this.openChat = this.openChat.bind(this)
   }
 
-  componentDidMount(){
+  componentWillMount(){
 
-    const {getchat, getPlaceName} = this.props;
+    const {getchat, getPlaceName, location} = this.props;
+
+
+    
+
     let { setPlaceName } = this.props;
+    if(location && location.state && location.state.taskId){
 
+      console.log(this.props.location)
+
+      this.setState({
+        chatId: this.props.location.taskId
+      })
+    }
     let place = 'Private';
 
     if(getPlaceName && getPlaceName.placename != place){
@@ -38,8 +51,68 @@ class Private extends Component {
       })
     }
 
-    this.setStateProps(getchat)
+
+    
   }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { location } = this.props;
+    const { chatId } = this.state;
+    let id = "";
+    let tid = "";
+    let Mount = false;
+
+    if(location.state && location.state.taskId && location.state.taskId !== chatId){
+      tid = location.state.taskId
+      localStorage.setItem('chatId', tid)
+
+      this.setState({
+        chatId: tid,
+      });
+    }
+    if(prevState.chatId !== chatId){
+      tid = chatId
+      localStorage.setItem('chatId', tid)
+
+      this.setState({
+        chatId: tid,
+      });
+    }
+
+  }
+  shouldComponentUpdate(nextProps, nextState){
+
+    if(nextProps.location.state != this.props.location.state){
+      return true
+    }
+
+
+    return true
+
+  }
+
+  // componentDidUpdate(prevProps, prevState){
+  //   const { location } = this.props;
+  //   const { chatId } = this.state;
+
+  //   let chat = prevState.chatId;
+  //   // if(this.props.location && this.props.location.taskId ){
+
+  //   //   console.log( this.props.location.taskId);
+      
+
+  //   //   this.setState({
+  //   //     chatId: this.props.location.taskId
+  //   //   })
+  //   // }
+  //   let tid;
+  //   if(location.state && location.state.taskId && location.state.taskId !== chat){
+  //     tid = location.state.taskId
+  //     localStorage.setItem('chatId', tid)
+
+  //     this.openChat(tid)
+  //   }
+  // }
 
   componentWillUnmount(){
     this.props.setChat({
@@ -47,26 +120,38 @@ class Private extends Component {
     })
   }
 
-  setStateProps(props){
+  setStateProps(id){
+    // if(!id) return true;
+    // this.setState({
+    //   chatId: id,
+    // })
+  }
+
+  openChat(id){
+    console.log("ChatId === open",id);
+    
+
+    if(!id) return true;
     this.setState({
-      getchat: props,
+      chatId: id,
     })
   }
 
 
   render() {
+    const { chatId } = this.state;
 
     return(
       <Fragment>
         <Content view="OvH Row OvH Pad10">
           <InnerBar>
-            <PrivateBar />
+            <PrivateBar chatId={chatId} click={(id)=>this.openChat(id)} />
           </InnerBar>
           {
-            this.props.getchat && this.props.getchat.id ?
+            chatId ?
               (<Query
                 query={PRIV_QUERY}
-                variables={{ id: `${this.props.getchat.id}` }}
+                variables={{ id: `${chatId}` }}
               >
                 {({ loading, error, data }) => {
                   if (loading){
@@ -90,7 +175,7 @@ class Private extends Component {
 
                   return(
                     <ContentInner view="Row OvH Pad010">
-                      <ChatView id={this.props.getchat.id} name={this.props.getchat.name} data={ data.direct } />
+                      <ChatView id={chatId} name={data.direct.name} data={ data.direct } />
                     </ContentInner>
                   )}}
               </Query>)

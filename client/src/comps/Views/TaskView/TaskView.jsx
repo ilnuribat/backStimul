@@ -23,6 +23,8 @@ import InnerBar from '../../Lays/InnerBar/InnerBar';
 // import ContentInner from '../../Lays/ContentInner/ContentInner';
 import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
 import Svg from '../../Parts/SVG';
+import Loading from '../../Loading';
+
 
 moment.locale('ru')
 
@@ -292,6 +294,9 @@ class TaskView extends Component {
       method: 'GET',
       responseType: 'blob', // important
     }).then((response) => {
+
+
+
       const url = window.URL.createObjectURL(new Blob([response.data], {type: file.mimeType}));
       const link = document.createElement('a');
 
@@ -309,7 +314,9 @@ class TaskView extends Component {
 
     // let data = dataObject.filter((task) => (task.id === taskId))[0]
 
-    console.warn("TASKID", data)
+    // console.warn("TASKID", data)
+    if(data){
+
 
     let dataValue;
 
@@ -437,9 +444,9 @@ class TaskView extends Component {
 
             <ModalRow>
               <ModalCol>
-                <div className="ModalBlockName">
-                          Срок истечения
-                </div>
+                <ModalBlockName>
+                  Срок истечения
+                </ModalBlockName>
                 <label htmlFor="dateselect" className="LabelInputDate">
                   <input type="date" name="dateselect" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
                 </label>
@@ -460,9 +467,8 @@ class TaskView extends Component {
             <ModalRow>
               <ModalCol>
                 <ModalBlockName>
-                          Добавить пользователя
+                  Добавить пользователя
                 </ModalBlockName>
-                <div className="content">
                   <label className="LabelInputList" htmlFor="users">
                     <input type="list" name="users" list="users" autoComplete="on" value={this.state.newUser} onChange={this.newUser} />
                     {
@@ -483,13 +489,11 @@ class TaskView extends Component {
                       }
                     </datalist>
                   </label>
-                </div>
-
               </ModalCol>
             </ModalRow>
             <ModalCol>
               <ModalBlockName>
-                        Добавить вложения
+                Добавить вложения
               </ModalBlockName>
               {data.files && data.files.length > 0 ? data.files.map((e)=>{
                 return(
@@ -512,7 +516,7 @@ class TaskView extends Component {
                 }}>
                   {upload => (
                     <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
-                      <p>Переместите сюда файлы или нажмите для добавления.</p>
+                      <p><Svg svg="tocloud" inline={0} />Переместите сюда файлы или нажмите для добавления.</p>
                     </Dropzone>
                   )}
                 </Mutation>
@@ -523,7 +527,15 @@ class TaskView extends Component {
         ) : null
         }
       </Content>
-    )}
+    )
+    }else{
+      return(
+<Loading />
+      )
+      
+
+    }
+  }
 }
 
 

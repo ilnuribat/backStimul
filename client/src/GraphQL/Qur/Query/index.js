@@ -194,6 +194,8 @@ export const TASKS_QUERY = gql `
 export const PRIV_QUERY = gql `
   query ($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       direct(id: $id ){
+          id
+          name
           unreadCount
           messages(messageConnection: $messageConnection) {
               edges {
