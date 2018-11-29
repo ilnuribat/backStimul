@@ -40,10 +40,10 @@ module.exports = {
     taskUpdated: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([TASK_UPDATED]),
-        async ({ taskUpdated: { _id: mId } }, args, { id }) => {
+        async ({ taskUpdated: { _id: _mId, id: mId } }, args, { id: userId }) => {
           const res = await UserGroup.findOne({
-            groupId: mId,
-            userId: id,
+            groupId: mId || _mId,
+            userId,
           });
 
           return !!res;
