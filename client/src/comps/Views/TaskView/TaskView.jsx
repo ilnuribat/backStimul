@@ -15,7 +15,7 @@ import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar/index';
 // import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
-import { UserRow, FileRow, ResponsibleRow } from '../../Parts/Rows/Rows';
+import { UserRow, FileRow, ResponsibleRow, TextRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 // import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
@@ -320,6 +320,30 @@ class TaskView extends Component {
     return(
       <Content view="OvH">
         <InnerBar>
+          <TextRow name="Информация" view="BigName">
+            <TextRow name="" view="Pad510 MT10">
+              {
+                data.name
+              }
+            </TextRow>
+            <TextRow name="" view="cgr Pad510 s">
+              {
+                dataValue ? moment(dataValue).format('D MMMM, h:mm') : null
+              }
+            </TextRow>
+            <TextRow name="" view="cgr Pad510 s">
+              {
+                this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Новая"
+              }
+            </TextRow>
+
+
+            <TextRow name="" view="cgr Pad510 s">
+              {data && data.assignedTo && data.assignedTo.id && data.assignedTo.username ? (
+                <UserRow size="24" id={data.assignedTo.id} name={data.assignedTo.username ? data.assignedTo.username : "Нет имени"} icon="1" />
+              ): "Ответственный не назначен"}
+            </TextRow>
+          </TextRow>
           <div className="tab-roll">
             <div className="header"><h4>Пользователи</h4></div>
             <div className="content">

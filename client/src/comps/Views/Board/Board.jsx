@@ -80,7 +80,6 @@ class Board extends Component {
 
   componentWillMount(){
     const { location } = this.props;
-    const { objectId, taskId } = this.state;
     let id = "";
     let tid = "";
     let Mount = false;
@@ -95,7 +94,7 @@ class Board extends Component {
         objectId: id,
       });
     }
-    if(location.state && location.state.taskId && location.state.taskId){
+    if(location.state && location.state.taskId){
       Mount = true;
       tid = location.state.taskId
       localStorage.setItem('taskId', tid)
@@ -113,11 +112,11 @@ class Board extends Component {
         objectId: id,
       });
     }
-    if(!location.state || !location.state.taskId ){
+    if(!location.state || !location.state.taskId && localStorage.getItem('taskId') ){
       Mount = true;
       tid = localStorage.getItem('taskId')
       this.setState({
-        toTask: false,
+        toTask: true,
         taskId: tid,
       });
     }
@@ -155,10 +154,6 @@ class Board extends Component {
   }
 
   toTask(id, name){
-
-    console.warn("To TASK ID")
-    console.warn(id)
-
     if(id){
       localStorage.setItem('taskId', id)
     }
@@ -175,7 +170,10 @@ class Board extends Component {
       toTask: id === this.state.taskId ? false : true,
       taskId: id === this.state.taskId ? "" : id,
       taskName: id === this.state.taskId ? "" : name
+
     })
+
+    if (id === this.state.taskId) localStorage.setItem('taskId', "")
 
   }
 
@@ -387,7 +385,7 @@ class Board extends Component {
 
 
   render(){
-    const { taskData, objectId, status, taskId, toTask, taskName, showChilds, HaveObj, openTask } = this.state;
+    const { objectId, status, taskId, toTask, showChilds } = this.state;
     const { setInfo } = this.props;
 
 
