@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { withRouter } from 'react-router';
+import { compose, graphql } from 'react-apollo';
 import { AUTH_TOKEN } from './constants';
 
 import 'tachyons';
@@ -20,14 +21,12 @@ import RootLoader from './comps/RootLoader';
 import NavLinks from './comps/Views/NavLinks';
 import NavTop from './comps/Views/NavTop';
 import Bar from './comps/Lays/Bar/index';
-import { compose } from 'react-apollo';
-import { graphql } from 'react-apollo';
+
 import { gBar } from './GraphQL/Cache';
 import 'animate.css';
 import { BarInner } from './comps/Parts/Bars/BarInner';
 import { DocsView } from './comps/Views/DocsView/DocsView';
 import NavBottom from './comps/Views/NavBottom';
-
 
 // const Components = [
 //   {name:'', link: ''},
@@ -107,7 +106,7 @@ class App extends Component {
         ) : (
           <Fragment>
             <Nav>
-              <NavTop client={this.props.client} />
+              <NavTop />
               <NavLinks />
               <NavBottom></NavBottom>
             </Nav>
@@ -115,7 +114,7 @@ class App extends Component {
               { this.props.gBar && this.props.gBar.barShow ? (
                 <Bar view="animated fadeInLeft" type={this.props.gBar.barType } >
                   <BarInner >
-                    
+
                   </BarInner>
                 </Bar>
               ) : null }
