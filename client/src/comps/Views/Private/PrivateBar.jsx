@@ -169,10 +169,13 @@ class Private extends React.Component {
                               {/* <div>{e.id}</div> */}
                               
                               <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name} >
-                                {e.lastMessage && e.lastMessage.text ? (<div className="cgr">
-                                  {e.lastMessage.from && e.lastMessage.from.username  ? <div className="">{e.lastMessage.from.username}</div> : null}
-                                  <div className="">{e.lastMessage.text}</div>
-                                </div>) : null}
+                                {e.lastMessage && e.lastMessage.text ? (
+                                
+                                <div className="RowChildren PadTop5">
+                                  {e.lastMessage.from && e.lastMessage.from.username  ? <div className="UserNameText">{e.lastMessage.from.username}</div> : null}
+                                  <div className="MessageSimpleText">"{e.lastMessage.text}"</div>
+                                </div>
+                                ) : null}
                               </UserRow>
 
                               {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
