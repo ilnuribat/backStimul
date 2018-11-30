@@ -3,9 +3,10 @@ const {
   Group, UserGroup, User, Message,
 } = require('../models');
 const {
-  pubsub, TASK_UPDATED, USER_TASK_UPDATED,
+  pubsub, TASK_UPDATED, USER_TASK_UPDATED, KICKED, INVITED,
 } = require('../services/constants');
 const { logger } = require('../../logger');
+
 
 async function createTask(parent, { task }, { user }) {
   if (!task.objectId) {
@@ -23,6 +24,18 @@ async function createTask(parent, { task }, { user }) {
   await UserGroup.create({
     groupId: group.id,
     userId: user.id,
+  });
+
+  pubsub.publish(USER_TASK_UPDATED, {
+    userTaskUpdated: {
+      user: {
+        ...user,
+        id: user._id.toString(),
+        username: user.email,
+      },
+      task: group,
+      action: INVITED,
+    },
   });
 
   return group;
@@ -53,6 +66,29 @@ async function updateTask(parent, { id, task }) {
   return res.nModified;
 }
 
+async function kickUsersFromGroup({ group, users }) {
+  const res = await UserGroup.deleteMany({
+    userId: {
+      $in: users.map(u => u._id),
+    },
+    groupId: group.id,
+  });
+
+  users.map(u => pubsub.publish(USER_TASK_UPDATED, {
+    userTaskUpdated: {
+      user: {
+        id: u._id.toString(),
+        username: u.email,
+        ...u,
+      },
+      task: group,
+      action: KICKED,
+    },
+  }));
+
+  return !!res.n;
+}
+
 async function updateUsersTask(parent, { task }) {
   const groupId = task.id;
   const foundGroup = await Group.findById(groupId);
@@ -67,7 +103,7 @@ async function updateUsersTask(parent, { task }) {
     return false;
   }
 
-  const fullUsers = await User.find({
+  const taskUsers = await User.find({
     _id: {
       $in: users,
     },
@@ -83,11 +119,15 @@ async function updateUsersTask(parent, { task }) {
         lastReadCursor: lastMessage._id || ObjectId.createFromTime(0),
       })));
 
-      fullUsers.map(u => pubsub.publish(USER_TASK_UPDATED, {
+      taskUsers.map(u => pubsub.publish(USER_TASK_UPDATED, {
         userTaskUpdated: {
-          user: u,
+          user: {
+            id: u._id.toString(),
+            username: u.email,
+            ...u,
+          },
           task: foundGroup,
-          action: 'INVITED',
+          action: INVITED,
         },
       }));
 
@@ -99,20 +139,21 @@ async function updateUsersTask(parent, { task }) {
     }
   }
 
-  const res = await UserGroup.deleteMany({ userId: { $in: users }, groupId: foundGroup.id });
-
-  fullUsers.map(u => pubsub.publish(USER_TASK_UPDATED, {
-    userTaskUpdated: {
-      user: u,
-      task: foundGroup,
-      action: 'KICKED',
-    },
-  }));
-
-  return !!res.n;
+  return kickUsersFromGroup({ group: foundGroup, users: taskUsers });
 }
 
 async function deleteTask(parent, { id }) {
+  const userGroups = await UserGroup.find({ groupId: id });
+  const users = await User.find({
+    _id: {
+      $in: userGroups.map(ug => ug.userId),
+    },
+  });
+  const task = await Group.findById(id);
+
+
+  await kickUsersFromGroup({ group: task, users });
+
   const res = await Group.deleteOne({ _id: id });
 
   return res.n;
@@ -154,4 +195,5 @@ module.exports = {
   updateUsersTask,
   deleteTask,
   searchTasks,
+  kickUsersFromGroup,
 };

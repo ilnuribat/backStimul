@@ -154,7 +154,7 @@ module.exports = {
     messageAdded: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([MESSAGE_ADDED]),
-        async ({ messageAdded: { groupId: mGroupId } }, { groupId }, user) => {
+        async ({ messageAdded: { groupId: mGroupId } }, { groupId }, { user }) => {
           if (groupId) {
             return mGroupId.toString() === groupId;
           }
@@ -175,7 +175,7 @@ module.exports = {
     messageRead: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([MESSAGE_READ]),
-        ({ messageRead: { id: mId } }, { id }) => mId === id,
+        ({ messageRead: { id: mId } }, { user: { id } }) => mId === id,
       ),
     },
   },

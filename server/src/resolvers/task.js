@@ -40,10 +40,10 @@ module.exports = {
     taskUpdated: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([TASK_UPDATED]),
-        async ({ taskUpdated: { _id: _mId, id: mId } }, args, { id: userId }) => {
+        async ({ taskUpdated: { _id: _mId, id: mId } }, args, { user }) => {
           const res = await UserGroup.findOne({
             groupId: mId || _mId,
-            userId,
+            userId: user.id,
           });
 
           return !!res;
@@ -54,7 +54,10 @@ module.exports = {
       subscribe: withFilter(
         () => pubsub.asyncIterator([USER_TASK_UPDATED]),
         async ({ userTaskUpdated }, args, { user }) => {
-          if (user._id.equals(userTaskUpdated.user.id)) {
+          /* eslint-disable no-param-reassign */
+          userTaskUpdated.isMe = user._id.equals(userTaskUpdated.user.id);
+
+          if (userTaskUpdated.isMe) {
             return true;
           }
 

@@ -1,5 +1,5 @@
 type Direct {
-  id: ID
+  id: ID!
   name: String
   users: [User]
   messages(messageConnection: ConnectionInput): MessageConnection
