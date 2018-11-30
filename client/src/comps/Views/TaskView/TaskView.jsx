@@ -6,21 +6,15 @@ import _ from 'lodash';
 import axios from 'axios';
 import 'animate.css';
 import moment from 'moment';
-// import momentRu from 'moment/locale/ru';
 import { qauf, _url } from '../../../constants';
 import { uploadFile, removeFile, updTask } from '../../../GraphQL/Qur/Mutation';
-import { selectUser, taskCacheUpdate, objectCacheUpdate } from '../../../GraphQL/Cache';
+import { selectUser, objectCacheUpdate } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, getObjectTasksSmall } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
-// import Bar from '../../Lays/Bar/index';
-// import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
 import { UserRow, FileRow, ResponsibleRow, TextRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
-// import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
-
-// import ContentInner from '../../Lays/ContentInner/ContentInner';
 import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
 import Svg from '../../Parts/SVG';
 import Loading from '../../Loading';
@@ -89,15 +83,15 @@ class TaskView extends Component {
     })
   }
 
-  updateCacheFile (data) {
-    // this.props.taskCacheUpdate({
-    //   variables:{
-    //     value: data,
-    //     action: "uploadFile",
-    //     taskId: this.props.taskId,
-    //   }
-    // })
-  }
+  // updateCacheFile (data) {
+  //   this.props.taskCacheUpdate({
+  //     variables:{
+  //       value: data,
+  //       action: "uploadFile",
+  //       taskId: this.props.taskId,
+  //     }
+  //   })
+  // }
 
   deleteFile (id) {
     qauf(removeFile(id), _url, localStorage.getItem('auth-token')).then((a)=>{
@@ -114,18 +108,17 @@ class TaskView extends Component {
     });
   }
 
-  writeTaskData(value, change, quota, userName) {
+  writeTaskData(value, change, quota) {
     let cap = "";
+
+    if (quota) cap = '"';
 
     // if (value && value.name) {
     //   localStorage.setItem('grnm',value.name);
     //   this.setState({taskName: value.name})
     // }
-
-    if (quota) cap = '"';
     // console.warn("writeData", e, change, this.props.taskId)
     qauf(updTask(this.props.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      // console.warn("update task done", a)
       this.modalMessage(a.data.updateTask);
       // switch (change) {
       // case "assignedTo":
@@ -437,7 +430,7 @@ class TaskView extends Component {
                   </ModalBlockName>
                   <ResponsibleRow >
                     <UserRow id={data.assignedTo && data.assignedTo.id ? data.assignedTo.id : "0"} name={data.assignedTo && data.assignedTo.username ? data.assignedTo.username : "не указано"} ondelete={()=>this.writeTaskData(null, "assignedTo", false, null)}/>
-                    <FakeSelect array={data.users} onselect={(id,name,icon)=>{this.writeTaskData(id, "assignedTo",true, name)}} defaultid={data.assignedTo && data.assignedTo.id ? data.assignedTo.id : "0"} />
+                    <FakeSelect array={data.users} onselect={(id,name,icon)=>{this.writeTaskData(id, "assignedTo",true)}} defaultid={data.assignedTo && data.assignedTo.id ? data.assignedTo.id : "0"} />
                   </ResponsibleRow>
                 </ModalCol>
               </ModalRow>
@@ -512,7 +505,7 @@ class TaskView extends Component {
                   <Mutation mutation={uploadFile} onCompleted={(data) => {
                   // console.warn(data)
                     this.modalMessage(data.uploadFile);
-                    this.updateCacheFile(data.uploadFile)
+                    // this.updateCacheFile(data.uploadFile)
                   }}>
                     {upload => (
                       <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
@@ -541,12 +534,10 @@ class TaskView extends Component {
 
 TaskView.propTypes = {
   selectUser: PropTypes.func.isRequired,
-  taskCacheUpdate: PropTypes.func.isRequired,
   objectCacheUpdate: PropTypes.func.isRequired,
 };
 
 export default compose(
-  graphql(taskCacheUpdate, { name: 'taskCacheUpdate' }),
   graphql(objectCacheUpdate, { name: 'objectCacheUpdate' }),
   graphql(selectUser, { name: 'selectUser' }),
 )(TaskView);

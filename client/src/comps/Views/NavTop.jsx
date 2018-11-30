@@ -26,10 +26,10 @@ class NavTop extends Component {
         query: USER_TASK_UPDATED,
       }).subscribe({
         next(data) {
-          console.warn("TASK CREATE/DELETE", data.data.userTaskUpdated)
+          // console.warn("TASK CREATE/DELETE", data.data.userTaskUpdated)
           const newData = data.data.userTaskUpdated
 
-          if (newData.action === "KICKED")
+          if (newData.action === "KICKED" && newData.user.id === localStorage.getItem('userid'))
             client.mutate({
               mutation: objectCacheUpdate,
               variables:{
