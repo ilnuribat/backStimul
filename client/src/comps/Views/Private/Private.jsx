@@ -64,26 +64,11 @@ class Private extends Component {
     // console.warn("PRE!!changestate",this.state.chatId, prevProps.location.state.id, prevState)
     if (this.props.location && this.props.location.state && prevProps.location && prevProps.location.state && prevProps.location.state.id
       && this.state.chatId !== this.props.location.state.id &&  prevProps.location.state.id != this.props.location.state.id ) {
-    console.warn("changestate",  this.props.location.state.id, this.state.chatId)
+      console.warn("changestate",  this.props.location.state.id, this.state.chatId)
       this.setState ({ chatId: this.props.location.state.id  })
     }
   }
-  // componentWillUpdate() {
-  //   console.warn("PRE!!changestate",this.state.chatId)
-  //   if (this.props.location && this.props.location.state && this.state.chatId !== this.props.location.state.id  ) {
-  //   console.warn("changestate",  this.props.location.state.id, this.state.chatId)
-  //     this.setState ({chatId: this.props.location.state.id  })
-  //   }
-  // }
 
-  shouldComponentUpdate(nextProps, nextState){
-    // if( nextProps.location && nextProps.location.state) console.warn("id", nextProps.location.state.id, nextProps.location.state.id)
-    if( nextProps.location && nextProps.location.state && !this.props.location && !this.props.location.state.id) return true
-    // if (nextState != this.state) return true
-
-    return true
-
-  }
   componentWillUnmount(){
     this.props.setChat({
       variables: { id: "", name: "" }
@@ -91,7 +76,7 @@ class Private extends Component {
   }
 
   openChat(id){
-    console.log("ChatId === open",id);
+    console.warn("ChatId === open",id);
 
 
     if(id && id !== this.state.chatId){
