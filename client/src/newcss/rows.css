@@ -103,6 +103,14 @@
   /* text-align: center; */
   /* align-items: center; */
 }
+.RowBlock{
+  display: flex;
+  flex-direction: column;
+  
+}
+.RowChildren{
+
+}
 /******************ButtonRow**************/
 
 .ButtonRow{

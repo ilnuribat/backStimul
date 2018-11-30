@@ -124,7 +124,7 @@ class Private extends React.Component {
       <div className="f-column-l">
         <div className="tab-roll">
           <div className="header">
-            <h4>Мои чаты</h4>
+            <h4>Личные чаты</h4>
           </div>
           <div className="content">
             <div className="content-scroll">
@@ -166,9 +166,15 @@ class Private extends React.Component {
 
                           return(
                             <div className="RowBg Row" key={'users-'+i} onClick={()=>this.openPrivate(e.id)}>
-                              <div>{e.id}</div>
-                              <UserRow key={'users-'+i} size="32" icon="1" id={e.id} name={e.name} >
+                              {/* <div>{e.id}</div> */}
+                              
+                              <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name} >
+                                {e.lastMessage && e.lastMessage.text ? (<div className="cgr">
+                                  {e.lastMessage.from && e.lastMessage.from.username  ? <div className="">{e.lastMessage.from.username}</div> : null}
+                                  <div className="">{e.lastMessage.text}</div>
+                                </div>) : null}
                               </UserRow>
+
                               {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
                             </div>
 
@@ -191,9 +197,8 @@ class Private extends React.Component {
         </div>
         <div className="tab-roll">
           <div className="header">
-            <h4>Создать приватный чай</h4>
+            <h4>Добавить личный чат</h4>
           </div>
-          <div className="content">
             {
               <Query query={USERS_QUERY}>
                 {({ loading, data }) => {
@@ -208,7 +213,6 @@ class Private extends React.Component {
                   if(data && data.users){
                     return(
 
-                      <div className="content">
                         <label className="LabelInputList Pad" htmlFor="users">
                           <input ref={node=>{newChay = node}} type="list" name="users" list="users" autoComplete="on" valueid="" onChange={(e)=>this.newUser(e, data.users)} />
                           <div className="Button3" onClick={()=>this.CreateNewGroup(data.users, newChay)}>+</div>
@@ -222,7 +226,6 @@ class Private extends React.Component {
                             }
                           </datalist>
                         </label>
-                      </div>
                     )
                   }else{
                     return(
@@ -233,7 +236,6 @@ class Private extends React.Component {
                 }}
               </Query>
             }
-          </div>
         </div>
       </div>
     )
