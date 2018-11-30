@@ -36,6 +36,7 @@ class ChatView extends Component {
         <AddMesMut>
           {(add) => (
             <AddNew
+              id={this.props.id}
               key={this.props.id}
               add={({ id, text }) => add({ variables: { id: `${id}`, text } })}
             />

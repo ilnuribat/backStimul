@@ -94,9 +94,9 @@ class Board extends Component {
         objectId: id,
       });
     }
-    if(location.state && location.state.taskId){
+    if(location.state && location.state.id){
       Mount = true;
-      tid = location.state.taskId
+      tid = location.state.id
       localStorage.setItem('taskId', tid)
 
       this.setState({
@@ -112,7 +112,7 @@ class Board extends Component {
         objectId: id,
       });
     }
-    if(!location.state || !location.state.taskId && localStorage.getItem('taskId') ){
+    if(!location.state || !location.state.id && localStorage.getItem('taskId') ){
       Mount = true;
       tid = localStorage.getItem('taskId')
       this.setState({
@@ -189,9 +189,9 @@ class Board extends Component {
       id = location.state.objectId
       // localStorage.setItem('objectId', id)
     }
-    if(location.state && location.state.taskId && location.state.taskId !== taskId){
+    if(location.state && location.state.id && location.state.id !== taskId){
       Mount = true;
-      tid = location.state.taskId
+      tid = location.state.id
       // localStorage.setItem('taskId', tid)
     }
 
@@ -202,7 +202,7 @@ class Board extends Component {
     //     objectId: id,
     //   });
     // }
-    // if(!location.state || !location.state.taskId ){
+    // if(!location.state || !location.state.id ){
     //   Mount = true;
     //   tid = localStorage.getItem('taskId')
     //   this.setState({
@@ -225,7 +225,7 @@ class Board extends Component {
     // if(prevProps.location.state == this.props.location.state) return false
 
     // location.state && location.state.objectId ? id = location.state.objectId : id = localStorage.getItem('objectId')
-    // location.state && location.state.taskId ? taskId = location.state.taskId : id = localStorage.getItem('taskId')
+    // location.state && location.state.id ? taskId = location.state.id : id = localStorage.getItem('taskId')
 
     // if(id){
     //   this.setState({

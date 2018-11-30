@@ -132,7 +132,8 @@ export default {
     },
 
     messagesCacheUpdate: (_, {lastMessage, queryName},  { cache }) => {
-      // console.warn("query" , queryName)
+      const tname = queryName.charAt(0).toUpperCase()+queryName.substring(1)
+
       const query = gql`
         query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
           ${queryName}(id: $id ) @client {
@@ -177,7 +178,7 @@ export default {
             edges: edges,
             __typename: "MessageConnection",
           },
-          __typename: queryName.charAt(0).toUpperCase()
+          __typename: tname
         }
       };
 
@@ -188,7 +189,7 @@ export default {
       });
 
 
-      return {lastMessage, __typename: queryName.charAt(0).toUpperCase()  };
+      return {lastMessage, __typename: tname };
     },
     privateListCacheUpdate: (_, { value },  { cache }) => {
       const query = gql`

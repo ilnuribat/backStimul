@@ -49,7 +49,7 @@ export class Search extends Component {
     const name = target.name;
 
     target.type === 'checkbox' && target.name !== 'chAll' ? this.setState({chAll: false, [name]: value }) : this.setState({[name]: value});
-    
+
     // !this.state.chObj && !this.state.chTsk && !this.state.chDcs && !this.state.chUsr && !this.state.chMsg ? this.setState({chAll: true,}) : null
   }
 
@@ -58,10 +58,10 @@ export class Search extends Component {
   }
 
   componentWillUpdate(){
-    // !this.state.chObj && 
-    // !this.state.chTsk && 
-    // !this.state.chDcs && 
-    // !this.state.chUsr && 
+    // !this.state.chObj &&
+    // !this.state.chTsk &&
+    // !this.state.chDcs &&
+    // !this.state.chUsr &&
     // !this.state.chMsg ? this.setState({chAll: true,}) : null
   }
 
@@ -219,7 +219,7 @@ export class Search extends Component {
                       data.search.users && data.search.files.length > 0 ? Search.files = data.search.files : null
 
                       // Search ? console.log("Search", Search) : null
-                      
+
                       // Search ? (
                       return(
                         <div id="SeacrhInner">
@@ -232,7 +232,7 @@ export class Search extends Component {
                                     {e.name ? <span className="SearchName">{e.name}</span> : null}
                                     {e.endDate ? <span className={moment(e.endDate).fromNow() ? "SearchEndDate" : "SearchEndDate" } >{ moment(e.endDate).format('D MMM, h:mm')}</span> : null}
 
-                                  
+
                                     <span className="SearchStatus">{ e.status ? statuses.find((x)=>x.status == e.status).name : "Новая" }</span>
                                   </div>
                                   {e.assignedTo ? <UserRow view="Boxed" id={e.assignedTo.id} icon="1" name={e.assignedTo.username} key={e.assignedTo.id} /> : null}
@@ -245,7 +245,7 @@ export class Search extends Component {
                             Search.objects.map((e)=>(
                               <Link key={e.id} to={{pathname: "/board", state:{objectId: e.id }}} >
                                 <div className="SearchObjects"  key={e.id}>
-                                  <span className="SearchName">{e.name} </span>{e.address && e.address.value ? <span className="SearchStatus">{e.address.value}</span> : null}                           
+                                  <span className="SearchName">{e.name} </span>{e.address && e.address.value ? <span className="SearchStatus">{e.address.value}</span> : null}
                                 </div>
                               </Link>
                             )) }</div>:  null
@@ -261,7 +261,7 @@ export class Search extends Component {
                           { Search.messages ? <h3 className="BlockHeader">Сообщения</h3> : null}
                           { Search.messages ? <div className="BlockContent">{
                             Search.messages.map((e)=>(
-                              <Link key={e.id} to={{pathname: e.isDirect ? "/chat" : "/board", state:{ taskId: e.groupId, objectId: e.objectId || "" }}} >
+                              <Link key={e.id} to={{pathname: e.isDirect ? "/chat" : "/board", state:{ id: e.groupId, objectId: e.objectId || "" }}} >
                                 {e.from && e.from.id && e.from.username ? <UserRow view="Boxed" id={e.from.id} icon="1" name={e.from.username} key={e.from.id} /> : ''}
                                 <div className="SearchMessage" key={e.id}>{e.text}</div>
                               </Link>
@@ -272,7 +272,7 @@ export class Search extends Component {
                             Search.files.map((e)=>(
                               e.name ? <FileRow view="" id={e.id} icon="doc" name={e.name} key={"file" + e.id} /> : ''
 
-                              
+
                             )) }</div>:  null
                           }
 
