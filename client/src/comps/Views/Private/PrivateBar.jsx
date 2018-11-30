@@ -10,7 +10,8 @@ import { PRIVS_QUERY, USERS_QUERY, cGetChats } from '../../../GraphQL/Qur/Query'
 // import { MESSAGE_CREATED } from '../../../GraphQL/Qur/Subscr';
 import { createDirect } from '../../../GraphQL/Qur/Mutation';
 import { UserRow } from '../../Parts/Rows/Rows';
-
+import moment from 'moment';
+import Svg from '../../Parts/SVG/svg';
 
 // let ref1;
 
@@ -111,6 +112,28 @@ class Private extends React.Component {
 
   }
 
+  timeEdit(time){
+    if(time){
+
+      console.log(moment(new Date()).format('D MMM, h:mm:ss'));
+      console.log(moment(time).format('D MMM, h:mm:ss'));
+      console.log(moment(moment(new Date()).format('D MMM, h:mm:ss')).diff(moment(time).format('D MMM, h:mm:ss')));
+      console.log(moment(moment(new Date()).diff(time)).format('h:mm:ss'));
+      console.log(moment(moment(new Date()).diff(time)).hours());
+      
+      
+
+      // let a = moment(time).format('D MMM, h:mm');
+      let a = moment(time).format('h:mm');
+      // a = moment(time).fromNow();
+      return a;
+    }else{
+      return ''
+    }
+    
+    
+  }
+
   shouldComponentUpdate(nextProp) {
     if (!_.isEqual(nextProp.getPrivateChat.id, this.props.getPrivateChat.id)) return true
     else return false
@@ -171,10 +194,19 @@ class Private extends React.Component {
                               <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name} >
                                 {e.lastMessage && e.lastMessage.text ? (
                                 
-                                <div className="RowChildren PadTop5">
-                                  {e.lastMessage.from && e.lastMessage.from.username  ? <div className="UserNameText">{e.lastMessage.from.username}</div> : null}
-                                  <div className="MessageSimpleText">"{e.lastMessage.text}"</div>
-                                </div>
+                                  <div className="RowChildren PadTop5">
+                                    <div className="col">
+                                      {e.lastMessage.from && e.lastMessage.from.username  ? <div className="UserNameText">{e.lastMessage.from.username}</div> : null}
+                                      <div className="MessageSimpleText">"{e.lastMessage.text}"</div>
+                                    </div>
+                                    <div className="col">
+                                      {e.lastMessage.createdAt ? (<div className="MessageSimpleText Row3">
+                                        {e.lastMessage.isRead ? <Svg svg="read" size="16" view="inline MR5"/> : null}
+                                        {this.timeEdit(e.lastMessage.createdAt)}</div>) : null }
+                                    </div>
+
+                                    
+                                  </div>
                                 ) : null}
                               </UserRow>
 

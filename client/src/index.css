@@ -344,3 +344,18 @@ Mar5{
 h1{
   font-size:10vw;
 }
+.inline{
+  display: inline-block;
+}
+.Row3{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.MR5{
+  margin: 0 5px 0 0 ;
+}
+.ML5{
+  margin: 0 0 0 5px ;
+}

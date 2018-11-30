@@ -296,6 +296,19 @@ export const SvgToRight = () => (
     <path fill="none" d="M0 0h24v24H0V0z"/>
   </svg>
 );
+export const SvgRead = () => (
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <path d="M0 0h24v24H0z" fill="none"/>
+  <path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/>
+</svg>
+);
+export const SvgNotRead = () => (
+
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <path fill="none" d="M0 0h24v24H0z"/>
+  <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+</svg>
+);
 
 
 
@@ -303,6 +316,14 @@ export const SvgToRight = () => (
 
 
 const svgs = [
+  {
+    name:'read',
+    body:()=>(<SvgRead/>),
+  },
+  {
+    name:'notread',
+    body:()=>(<SvgNotRead/>),
+  },
   {
     name:'expose',
     body:()=>(<SvgExpose/>),
