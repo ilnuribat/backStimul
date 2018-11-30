@@ -8,7 +8,7 @@ import { graphql, compose } from "react-apollo";
 import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED, TASK_UPDATED, USER_TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
-import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate, privateListCacheUpdate, taskCacheUpdate, messagesCacheUpdate, objectCacheUpdate } from '../../GraphQL/Cache';
+import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, privateListCacheUpdate, messagesCacheUpdate, objectCacheUpdate } from '../../GraphQL/Cache';
 import { getUnreadCount, TASK_INFO_SMALL } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 
@@ -26,10 +26,10 @@ class NavTop extends Component {
         query: USER_TASK_UPDATED,
       }).subscribe({
         next(data) {
-          console.warn("TASK CREATE/DELETE", data.data.userTaskUpdated)
+          // console.warn("TASK CREATE/DELETE", data.data.userTaskUpdated)
           const newData = data.data.userTaskUpdated
 
-          if (newData.action === "KICKED")
+          if (newData.action === "KICKED" && newData.user.id === localStorage.getItem('userid'))
             client.mutate({
               mutation: objectCacheUpdate,
               variables:{
@@ -48,16 +48,6 @@ class NavTop extends Component {
                 objectId: newData.task.objectId
               }
             })
-          // else
-          //   client.mutate({
-          //     mutation: objectCacheUpdate,
-          //     variables:{
-          //       value: newData.task,
-          //       action: "updateTask",
-          //       taskId: newData.task.id,
-          //       objectId: newData.task.objectId
-          //     }
-          //   })
         }})
 
       client.subscribe({
