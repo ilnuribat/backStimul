@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/main/index.js",
+    "start": "node server",
     "dev": "nodemon server",
     "databases:up": "docker-compose -f server/dev/docker-compose.yml up --build -d",
     "databases:down": "docker-compose -f server/dev/docker-compose.yml down --volumes",
@@ -59,6 +59,7 @@
     "nyc": "^13.1.0",
     "pg": "^7.6.1",
     "subscriptions-transport-ws": "^0.9.15",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "ws": "^6.1.2"
   }
 }
