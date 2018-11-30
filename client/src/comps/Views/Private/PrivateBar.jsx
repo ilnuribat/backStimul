@@ -115,10 +115,6 @@ class Private extends React.Component {
   timeEdit(time){
     if(time){
 
-        // if (Math.abs(moment().diff(time)) < ) { // 1000 milliseconds
-        //     return 'just now';
-        // }
-
       console.log(moment(new Date()).format('D MMM, h:mm:ss'));
       console.log(moment(time).format('D MMM, h:mm:ss'));
       console.log(moment(moment(new Date()).format('D MMM, h:mm:ss')).diff(moment(time).format('D MMM, h:mm:ss')));
