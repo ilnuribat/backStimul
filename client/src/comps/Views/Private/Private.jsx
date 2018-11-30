@@ -83,12 +83,14 @@ class Private extends Component {
       localStorage.setItem('chatId', id)
       this.setState({
         chatId: id,
+        chatLocation: true,
       })
     }
     if(!id || id === this.state.chatId){
       localStorage.setItem('chatId', '')
       this.setState({
         chatId: "",
+        chatLocation: true,
       })
     }else{
 
