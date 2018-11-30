@@ -54,10 +54,7 @@ module.exports = {
       subscribe: withFilter(
         () => pubsub.asyncIterator([USER_TASK_UPDATED]),
         async ({ userTaskUpdated }, args, { user }) => {
-          /* eslint-disable no-param-reassign */
-          userTaskUpdated.isMe = user._id.equals(userTaskUpdated.user.id);
-
-          if (userTaskUpdated.isMe) {
+          if (user._id.equals(userTaskUpdated.user.id)) {
             return true;
           }
 
