@@ -50,7 +50,6 @@ type UserTaskAction {
   action: UserTaskActionEnum
   user: UserTaskRole
   task: Task
-  isMe: Boolean
 }
 
 type Query {
