@@ -353,3 +353,9 @@ h1{
   justify-content: flex-start;
   align-items: flex-start;
 }
+.MR5{
+  margin: 0 5px 0 0 ;
+}
+.ML5{
+  margin: 0 0 0 5px ;
+}

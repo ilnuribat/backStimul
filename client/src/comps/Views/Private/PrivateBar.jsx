@@ -114,8 +114,22 @@ class Private extends React.Component {
 
   timeEdit(time){
     if(time){
-      let a = moment(time).format('D MMM, h:mm');
-      a = moment(time).fromNow();
+
+        // if (Math.abs(moment().diff(time)) < ) { // 1000 milliseconds
+        //     return 'just now';
+        // }
+
+      console.log(moment(new Date()).format('D MMM, h:mm:ss'));
+      console.log(moment(time).format('D MMM, h:mm:ss'));
+      console.log(moment(moment(new Date()).format('D MMM, h:mm:ss')).diff(moment(time).format('D MMM, h:mm:ss')));
+      console.log(moment(moment(new Date()).diff(time)).format('h:mm:ss'));
+      console.log(moment(moment(new Date()).diff(time)).hours());
+      
+      
+
+      // let a = moment(time).format('D MMM, h:mm');
+      let a = moment(time).format('h:mm');
+      // a = moment(time).fromNow();
       return a;
     }else{
       return ''
@@ -191,7 +205,7 @@ class Private extends React.Component {
                                     </div>
                                     <div className="col">
                                       {e.lastMessage.createdAt ? (<div className="MessageSimpleText Row3">
-                                        {e.lastMessage.isRead ? <Svg svg="read" size="16" view="inline"/> : null}
+                                        {e.lastMessage.isRead ? <Svg svg="read" size="16" view="inline MR5"/> : null}
                                         {this.timeEdit(e.lastMessage.createdAt)}</div>) : null }
                                     </div>
 
