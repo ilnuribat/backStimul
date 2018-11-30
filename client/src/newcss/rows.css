@@ -112,8 +112,25 @@
 
 }
 .RowChildren{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.RowChildren .col{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.RowChildren .col:first-child{
+  width:100%;
+}
+.RowChildren .col:last-child{
 
 }
+
 .UserNameText{
   font-size: 10px;
   color: #ffffff;
