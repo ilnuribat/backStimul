@@ -262,10 +262,12 @@ export class Search extends Component {
                           { Search.messages ? <div className="BlockContent">{
                             Search.messages.map((e)=>(
                               <Link key={e.id} to={{pathname: e.isDirect ? "/chat" : "/board", state:{ id: e.groupId, objectId: e.objectId || "" }}} >
-                                {e.from && e.from.id && e.from.username ? <UserRow view="Boxed" id={e.from.id} icon="1" name={e.from.username} key={e.from.id} /> : ''}
+                                
+                                {e.from && e.from.id && e.from.username ? <UserRow view="Boxed" id={e.from.id} icon="1" name={e.from.username} key={e.from.id} >{e.isDirect ? <div className="small cgr">Личный чат</div> : null}</UserRow> : ''}
                                 <div className="SearchMessage" key={e.id}>{e.text}</div>
+                                
                               </Link>
-                            )) }</div>:  null
+                            )) }</div> :  null
                           }
                           { Search.files ? <h3 className="BlockHeader">Документы</h3> : null}
                           { Search.files ? <div className="BlockContent">{

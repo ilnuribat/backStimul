@@ -153,6 +153,15 @@ export const PRIVS_QUERY = gql `
           id
           name
           unreadCount
+          lastMessage{
+          from{
+            id
+            username
+          }
+          text
+          isRead
+          createdAt
+        }
         }
       }
     }

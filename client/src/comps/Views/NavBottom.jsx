@@ -68,8 +68,8 @@ class NavBottom extends Component {
         ColorSecond = "#666";
         BakgrColorPrimary = "#d9ddb9";
         BakgrColorSecondary = "#3e74b27c";
-        BakgrColorMaster = "#f2d819";
-        BakgrColorSlave = "#eaedee";
+        BakgrColorMaster = "#bba927";
+        BakgrColorSlave = "#d9ddb9";
       }
 
 
@@ -92,7 +92,8 @@ class NavBottom extends Component {
             {color:${ColorParent};}
             .grey p, .cgr p,
             .grey, .cgr,
-            .UserRow .UserName
+            .UserRow .UserName,
+            .UserNameText
             {
               color:${ColorSecond};
             }
@@ -152,6 +153,10 @@ class NavBottom extends Component {
             .FileIcon,
             .FileIcon .Svg{
               background: ${BakgrColorPrimary};
+            }
+            .EditForm label, label.LabelInputText, label.LabelSelect, label.LabelInputDate, label.LabelInputList{
+              background: ${BakgrColorPrimary};
+              background-color: ${BakgrColorPrimary};
             }
 
           `}</style>) : null}
