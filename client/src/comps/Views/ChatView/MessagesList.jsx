@@ -22,6 +22,8 @@ const toBottom = () => {
 }
 
 const subscribeToRead = (subscribeToMore, id) =>{
+  // console.warn("SUBS", subscribeToMore, id)
+
   return subscribeToMore({
     document: MESSAGE_READ,
     variables: { id: id },
@@ -149,6 +151,7 @@ export default class MessagesList extends Component {
                               variables={{ id:node.id }}
                             >
                               {({ data, subscribeToMore }) => {
+                                // console.warn("SUBSC", node.id, subscribeToMore)
                                 subscribeToRead(subscribeToMore, node.id);
 
                                 return(

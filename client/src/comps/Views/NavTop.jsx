@@ -9,7 +9,7 @@ import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED, TASK_UPDATED, USER_TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
 import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate, privateListCacheUpdate, taskCacheUpdate, messagesCacheUpdate, objectCacheUpdate } from '../../GraphQL/Cache';
-import { getUnreadCount } from '../../GraphQL/Qur/Query';
+import { getUnreadCount, TASK_INFO_SMALL } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 
 class NavTop extends Component {
@@ -78,7 +78,7 @@ class NavTop extends Component {
           let equalGroupMessage
           //пишем мессагу в кэш
 
-          // console.warn(data.data)
+          // console.warn(data.data.messageAdded)
 
           client.mutate({
             mutation: lastMessageCache,
@@ -134,6 +134,20 @@ class NavTop extends Component {
               queryName: data.data.messageAdded.isDirect ? "direct" : "task",
             },
           })
+          //Пишем lastmessage в кеш таска
+          if (!data.data.messageAdded.isDirect)
+            client.query({ query: TASK_INFO_SMALL, variables: {id: data.data.messageAdded.groupId} })
+              .then(result =>
+                client.mutate({
+                  mutation: objectCacheUpdate,
+                  variables: {
+                    value: data.data.messageAdded,
+                    action: "lastMessage",
+                    objectId: result.data.task.objectId,
+                    taskId: data.data.messageAdded.groupId,
+                  },
+                })
+              )
         },
         error(err) { console.error('err', err); },
       });

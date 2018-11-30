@@ -100,10 +100,6 @@ class Private extends Component {
   render() {
     const { chatId } = this.state;
 
-    let id = chatId || this.props.location.state.id
-
-    console.warn ("REFRESH", chatId)
-
     return(
       <Fragment>
         <Content view="OvH Row OvH Pad10">

@@ -300,6 +300,15 @@ export const TASK_INFO = gql `
   }
 `;
 
+export const TASK_INFO_SMALL = gql `
+  query ($id: ID!){
+    task(id: $id ){
+          objectId
+      }
+  }
+`;
+
+
 export const getObjectInfo = gql `
  query getObjectInfo($id: ID!){
   object (id: $id) {

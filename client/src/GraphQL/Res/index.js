@@ -249,9 +249,49 @@ export default {
       let previousState;
 
       if (value && value.key && value.key==="status") value.value = parseInt(value.value)
-      console.warn("ДАННЫЕ!", taskId, objectId, action, value);
+      // console.warn("ДАННЫЕ!", taskId, objectId, action, value);
 
       switch (action) {
+      case "lastMessage":
+        query = gql`
+          query object($id: ID!) {
+            object(id: $id ) @client {
+              __typename
+              tasks {
+                id
+                lastMessage{
+                  from{
+                    id
+                    username
+                  }
+                  text
+                }
+                __typename
+              }
+            }
+          }
+        `;
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": objectId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        // console.warn("prevstate is", previousState)
+
+        Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { lastMessage : { from: value.from, text: value.text , __typename: "Message"} });
+
+        // console.warn("prevstate is",  previousState.object.tasks)
+
+        data = {
+          object: {
+            tasks:  previousState.object.tasks,
+            __typename: "Object"
+          }
+        };
+
+        break;
       case "updateTask":
         query = gql`
           query object($id: ID!) {
