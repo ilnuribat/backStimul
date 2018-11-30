@@ -165,8 +165,9 @@ class Private extends React.Component {
                           }
 
                           return(
-                            <div className="RowBg Row" key={'users-'+i}>
-                              <UserRow key={'users-'+i} size="32" icon="1" id={e.id} name={e.name} click={(usid, usname, usicon)=>this.openPrivate(e.id)}>
+                            <div className="RowBg Row" key={'users-'+i} onClick={()=>this.openPrivate(e.id)}>
+                              <div>{e.id}</div>
+                              <UserRow key={'users-'+i} size="32" icon="1" id={e.id} name={e.name} >
                               </UserRow>
                               {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
                             </div>

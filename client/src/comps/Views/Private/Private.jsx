@@ -18,7 +18,6 @@ class Private extends Component {
     super(props)
     this.state = {
       chatId: '',
-      getchat: '',
     }
 
     this.setStateProps = this.setStateProps.bind(this)
@@ -27,20 +26,28 @@ class Private extends Component {
 
   componentWillMount(){
 
-    const {getchat, getPlaceName, location} = this.props;
-
-
-    
-
+    const { getPlaceName, location} = this.props;
     let { setPlaceName } = this.props;
+
+
     if(location && location.state && location.state.taskId){
 
       console.log(this.props.location)
 
+      localStorage.setItem('chatId', location.state.taskId)
+
       this.setState({
-        chatId: this.props.location.taskId
+        chatId: location.state.taskId,
       })
+    }else if(localStorage.getItem('chatId')){
+      this.setState({
+        chatId: localStorage.getItem('chatId'),
+      })
+    }else{
+
     }
+    
+
     let place = 'Private';
 
     if(getPlaceName && getPlaceName.placename != place){
@@ -55,39 +62,87 @@ class Private extends Component {
     
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentWillUpdate(prevProps, prevState, snapshot) {
     const { location } = this.props;
-    const { chatId } = this.state;
-    let id = "";
-    let tid = "";
-    let Mount = false;
 
-    if(location.state && location.state.taskId && location.state.taskId !== chatId){
-      tid = location.state.taskId
-      localStorage.setItem('chatId', tid)
+
+    // if(location && location.state && location.state.taskId && location.state.taskId !== prevState.chatId){
+    //   localStorage.setItem('chatId', location.state.taskId)
+
+    //   this.setState({
+    //     chatId: location.state.taskId,
+    //   })
+    // }
+  
+    // const { chatId } = this.state;
+    // let id = "";
+    // let tid = "";
+    // let Mount = false;
+
+    // if(location.state && location.state.taskId && location.state.taskId !== chatId){
+    //   tid = location.state.taskId
+    //   localStorage.setItem('chatId', tid)
+
+
+    //   this.openChat(tid)
+    // }
+
+
+    if(location && location.state && location.state.taskId && location.state.taskId !== prevState.chatId){
+      localStorage.setItem('chatId', location.state.taskId)
 
       this.setState({
-        chatId: tid,
-      });
+        chatId: location.state.taskId,
+      })
     }
-    if(prevState.chatId !== chatId){
-      tid = chatId
-      localStorage.setItem('chatId', tid)
 
-      this.setState({
-        chatId: tid,
-      });
-    }
+
+    console.log("PREV STATE", prevState);
+    console.log("THIS STATE", this.state);
+    
+
+    
+
+    // if(prevState.chatId !== this.state.chatId){
+    //   localStorage.setItem('chatId', this.state.chatId)
+    //   this.setState({
+    //     chatId: this.state.chatId,
+    //   })
+    // }else if(location && location.state && location.state.taskId && location.state.taskId === this.state.chatId){
+
+    //   console.log(this.props.location)
+
+    //   localStorage.setItem('chatId', location.state.taskId)
+
+    //   this.setState({
+    //     chatId: location.state.taskId,
+    //   })
+    // }else{
+    //   console.log(this.props.location)
+
+    //   localStorage.setItem('chatId', '')
+    //   this.setState({
+    //     chatId: '',
+    //   })
+    // }
 
   }
   shouldComponentUpdate(nextProps, nextState){
 
-    if(nextProps.location.state != this.props.location.state){
+    if(nextState != this.state){
       return true
     }
+    // if( nextProps.location.state !== this.props.location.state ){
+    //   return false
+    // }
+    // if(nextState === this.state && nextProps.location.state === this.props.location.state){
+    //   return false
+    // }
+    // if(nextState === this.state){
+    //   return false
+    // }
 
-
-    return true
+    return false
 
   }
 
@@ -131,10 +186,21 @@ class Private extends Component {
     console.log("ChatId === open",id);
     
 
-    if(!id) return true;
-    this.setState({
-      chatId: id,
-    })
+    if(id && id !== this.state.chatId){
+      localStorage.setItem('chatId', id)
+      this.setState({
+        chatId: id,
+      })
+    }
+    if(!id || id === this.state.chatId){
+      localStorage.setItem('chatId', '')
+      this.setState({
+        chatId: "",
+      })
+    }else{
+
+    }
+
   }
 
 
