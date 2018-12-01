@@ -67,12 +67,44 @@ async function authorize(ws) {
     });
 }
 
+async function subscribeOnce(ws) {
+  return new Promise((resolve, reject) => {
+    ws.send(JSON.stringify({
+      id: 1,
+      type: 'start',
+      payload: {
+        query: `
+          subscription {
+            messageAdded {
+              id
+              text
+              from {
+                id
+                username
+              }
+              to {
+                id
+                name
+              }
+            }
+          }
+        `,
+      },
+    }));
+    ws.once('message', (data) => {
+      console.log(JSON.parse(data));
+      resolve();
+      reject();
+    });
+  });
+}
 
 async function test() {
   try {
     const ws = await openConnect();
 
     await authorize(ws);
+    await subscribeOnce(ws);
   } catch (err) {
     console.error(err);
   }
