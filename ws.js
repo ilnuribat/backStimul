@@ -1,51 +1,81 @@
+require('dotenv').config();
 const WebSocket = require('ws');
 
-const ws = new WebSocket('ws://localhost:8500/graphql', ['graphql-ws']);
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYWIzY2Y0M2YxYTA4MTMyYWUzNTIwNiIsInBhc3N3b3JkIjoicVBrT0hPd3dTTyIsImlhdCI6MTUzOTI0NjIzOH0.2N1YSGTeU0c0xf0Dyy6cVhhlvYkxX4DjQqp6M4hbHrw';
+const { token } = process.env;
 
-ws.on('open', () => {
-  console.log('open');
+async function openConnect() {
+  return new Promise((resolve, reject) => {
+    const ws = new WebSocket(
+      'ws://dev.scis.xyz:8500/graphql',
+      ['graphql-ws'],
+      {
+        headers: {},
+      },
+    );
 
-  ws.send(JSON.stringify({
-    type: 'connection_init',
-    payload: {
-      Authorization: `Bearer ${token}`,
-    },
-  }), (err) => {
-    if (err) {
-      throw err;
-    }
-    ws.once('message', (data) => {
-      console.log('connection_ack', { data });
-      ws.send(JSON.stringify({
-        id: '1',
-        type: 'start',
-        payload: {
-          variables: {},
-          extensions: {},
-          operationName: null,
-          query: `subscription {
-              messageAdded {
-                id
-                text
-              }
-            }
-          `,
-        },
-      }), (err1) => {
-        console.log('subscribe to new messages', err1);
-        ws.onmessage = ({ data: dMessage }) => {
-          console.log('new message', dMessage);
-        };
-      });
+    const connectionErrorHandler = (code) => {
+      console.log('connectionErrorHandler', { code });
+      reject(code);
+    };
+    const connectionOpennedHandler = () => {
+      console.log('connected');
+      resolve(ws);
+    };
+
+    ws.on('error', connectionErrorHandler);
+    ws.once('open', connectionOpennedHandler);
+  });
+}
+
+async function authorize(ws) {
+  const auth = new Promise((resolve, reject) => {
+    ws.send(JSON.stringify({
+      type: 'connection_init',
+      payload: {
+        Authorization: `Bearer ${token}`,
+      },
+    }), (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        setTimeout(
+          () => reject(new Error('timeout error')),
+          1000,
+        );
+
+        ws.once('message', (data) => {
+          const body = JSON.parse(data);
+
+          if (body.type === 'connection_ack') {
+            resolve();
+          } else if (body.type === 'connection_error') {
+            reject(body.payload);
+          } else {
+            reject(new Error('unknown'));
+          }
+        });
+      }
     });
   });
-  console.log('closed!');
-});
 
-ws.on('close', code => console.log('close', { code }));
-ws.on('error', () => console.log('error'));
-ws.on('ping', () => console.log('ping'));
-ws.on('pong', () => console.log('pong'));
-ws.on('upgrade', () => console.log('upgrade'));
-ws.on('unexpected-response', () => console.log('unexpected-response'));
+  return auth
+    .then(() => {
+      console.log('authorized');
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+
+async function test() {
+  try {
+    const ws = await openConnect();
+
+    await authorize(ws);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+test();
