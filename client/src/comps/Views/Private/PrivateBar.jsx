@@ -135,12 +135,19 @@ class PrivateBar extends React.Component {
     }
   }
 
+  // setBlogPostViewsAsync = async () => {
+  //   this.setState({ privsOpen: !this.state.privsOpen }, () => Promise.resolve());
+  // }
+
   privsOpen(){
+    console.log("privsOpen");
+    
     this.setState({
       privsOpen: !this.state.privsOpen
     })
   }
   tasksOpen(){
+    console.log("tasksOpen");
     this.setState({
       tasksOpen: !this.state.tasksOpen
     })
@@ -185,7 +192,7 @@ class PrivateBar extends React.Component {
 
                     return(
                       <div className="Chats">
-                        <div className="Row Header" onClick={this.privsOpen}>
+                        <div className="Row Header" onClick={this.tasksOpen}>
                           <h4>Беседы задач</h4>
                         </div>
                         <div className="ChatsScroll">
@@ -238,7 +245,7 @@ class PrivateBar extends React.Component {
                             }
                           </div>) : null}
                         </div>
-                        <div className="Row Header" onClick={()=>{ console.log("privsOpen", privsOpen); this.setState({privsOpen: !privsOpen,}) }}>
+                        <div className="Row Header" onClick={this.privsOpen}>
                           <h4>Личные беседы</h4>
                         </div>
                         <div className="ChatsScroll">
