@@ -3,6 +3,7 @@ import moment from 'moment';
 import momentRu from 'moment/locale/ru';
 import PropTypes from 'prop-types';
 import { Query } from "react-apollo";
+import _ from 'lodash';
 
 import client from "../../../client";
 import { qauf, _url, colorHash } from '../../../constants';
@@ -11,6 +12,7 @@ import { MESSAGE_QUERY } from "../../../GraphQL/Qur/Query";
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { Svg } from '../../Parts/SVG/index';
 import { UserRow } from "../../Parts/Rows/Rows";
+import { remove } from "winston";
 
 moment.locale('ru')
 
@@ -22,17 +24,10 @@ const toBottom = () => {
   }
 }
 
+let subsMsgs = []
 
 
 export default class MessagesList extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      subsMsgs: [],
-    }
-  }
-
-
   componentDidMount() {
     // this.props.subscribeToNewMessages();
     toBottom();
@@ -45,16 +40,30 @@ export default class MessagesList extends Component {
   }
 
   subscribeToRead = (id) => {
-    console.warn("SUBS", id)
-    client.subscribe({
-      query: MESSAGE_READ,
-      variables: { id: id },
-    }).subscribe({
-      next(data) {
-        console.warn("MESSAGE ISREAD!! UPDATED", data.data.messageRead)
-      }
-    })
+    //FIXME: timeout????
+    setTimeout(() => {
+      if (!subsMsgs.find(k => k === id)) {
+        client.query({ query: MESSAGE_QUERY, variables: { id: id }}).then(result => {
+          if (!result.data.message.isRead) {
+            const unsub = client.subscribe({
+              query: MESSAGE_READ,
+              variables: { id: id },
+            }).subscribe({
+              next(data) {
+                // console.warn("MESSAGE ISREAD!! UPDATED", data.data.messageRead)
+                subsMsgs = subsMsgs.filter(el => el != id)
+                unsub.unsubscribe()
+              }
+            })
 
+            subsMsgs = [...subsMsgs, id]
+            console.warn("ARRAY!", subsMsgs)
+            console.warn(unsub)
+          } //if
+        } //query
+        )
+      }
+    }, 200)
 
   }
 
@@ -170,7 +179,7 @@ export default class MessagesList extends Component {
                         <div className="chatIcon">
                           { read ? (
                             <div className="events"><Svg svg="dblcheckack" /> </div>
-                          ) : ( <Svg svg="dblcheckack" /> ) }
+                          ) : ( <Svg svg="dblcheck" /> ) }
                         </div>
                       ) : null }
 

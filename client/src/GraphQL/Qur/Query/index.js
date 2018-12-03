@@ -291,6 +291,7 @@ export const PRIV_QUERY = gql`
 export const MESSAGE_QUERY = gql `
   query message($id: ID!){
     message(id: $id ){
+          id
           isRead
           text
       }
