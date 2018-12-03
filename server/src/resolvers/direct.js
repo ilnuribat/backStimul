@@ -35,9 +35,14 @@ module.exports = {
       } = messageConnection || {};
       // before - last, after - first
 
-      const where = formWhere({ id, before, after });
+      const where = formWhere({ id, ...messageConnection });
+      const sort = { _id: 1 };
 
-      const messages = await Message.find(where).limit(first || last);
+      if (last) {
+        sort._id = -1;
+      }
+
+      const messages = await Message.find(where).sort(sort).limit(first || last);
 
       const pageInfo = await getPageInfo({
         messages, groupId: id, before, after,
