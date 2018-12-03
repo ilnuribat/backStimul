@@ -62,12 +62,10 @@ class Private extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // console.warn("PRE!!changestate",this.state.chatId, prevProps.location.state.id, prevState)
-    if (this.props.location && this.props.location.state && prevProps.location && prevProps.location.state && prevProps.location.state.id
-      && this.state.chatId !== this.props.location.state.id &&  prevProps.location.state.id != this.props.location.state.id ) {
-      console.warn("changestate",  this.props.location.state.id, this.state.chatId)
+    // console.warn("PRE!!changestate",this.state.chatId, prevState.chatId)
+    if (this.props.location && this.props.location.state && prevProps.location && prevProps.location.state
+      && prevProps.location.state.id && this.state.chatId !== this.props.location.state.id && this.state.chatId === prevState.chatId)
       this.setState ({ chatId: this.props.location.state.id  })
-    }
   }
 
   componentWillUnmount(){
