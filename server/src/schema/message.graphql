@@ -47,5 +47,5 @@ type Mutation {
 
 type Subscription {
   messageAdded(groupId: String): Message
-  messageRead(id: ID!): MessageReadEvent
+  messageRead(id: ID!): Message
 }

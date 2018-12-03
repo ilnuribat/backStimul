@@ -13,5 +13,5 @@ type Query {
 }
 
 type Mutation {
-  directMessage(id: ID): Group
+  directMessage(id: ID): Direct
 }
