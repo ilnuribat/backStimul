@@ -68,7 +68,7 @@ export default class MessagesList extends Component {
     if(time){
 
       let a = '';
-      let dif = moment(  moment(new Date()).format('YYYY MM D, h:mm:ss')  ).diff(   moment(time).format(' YYYY MM D, h:mm:ss')    ) / 3600000 ;
+      let dif = moment(  moment(moment()).format('YYYY MM D, h:mm:ss')  ).diff(   moment(time).format(' YYYY MM D, h:mm:ss')    ) / 3600000 ;
 
       if( dif > 12){
         a = moment(time).format('D MMM, h:mm');
