@@ -11,6 +11,7 @@ import { ALL_MESSAGE_CREATED, TASK_UPDATED, USER_TASK_UPDATED } from '../../Grap
 import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, privateListCacheUpdate, messagesCacheUpdate, objectCacheUpdate } from '../../GraphQL/Cache';
 import { getUnreadCount, TASK_INFO_SMALL } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
+import client from '../../client';
 
 class NavTop extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class NavTop extends Component {
     }
   }
 
-    subscribe = (client) => {
+    subscribe = () => {
       console.warn("countPriv", this.state.countPriv)
       client.subscribe({
         query: USER_TASK_UPDATED,
@@ -177,7 +178,7 @@ class NavTop extends Component {
     componentDidMount (){
       if (!this.isRunOnce) {
         this.queryCounterDirects()
-        this.subscribe(this.props.client)
+        this.subscribe()
         this.setState ({isRunOnce: true})
       }
     }

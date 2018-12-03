@@ -174,9 +174,7 @@ export default class MessagesList extends Component {
                               variables={{ id:node.id }}
                             >
                               {({ data, subscribeToMore }) => {
-                                // console.warn("SUBSC", node.id, subscribeToMore)
                                 subscribeToRead(subscribeToMore, node.id);
-
 
                                 return(
                                   <div className="events">{data.message && data.message.isRead ? <Svg svg="dblcheckack" /> : <Svg svg="dblcheck" />}  {
