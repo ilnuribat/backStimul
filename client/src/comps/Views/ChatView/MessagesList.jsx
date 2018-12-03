@@ -59,6 +59,24 @@ export default class MessagesList extends Component {
     toBottom();
   }
 
+  timeEdit(time){
+    if(time){
+
+      let a = '';
+      let dif = moment(  moment(new Date()).format('YYYY MM D, h:mm:ss')  ).diff(   moment(time).format(' YYYY MM D, h:mm:ss')    ) / 3600000 ;
+
+      if( dif > 12){
+        a = moment(time).format('D MMM, h:mm');
+      }else{
+        a = moment(time).format('Сегодня в h:mm');
+      }
+
+      return a;
+    }else{
+      return ''
+    }
+  }
+
   render(){
     const { data } = this.props;
     let datas = '';
@@ -89,7 +107,7 @@ export default class MessagesList extends Component {
               // console.log(e)
 
               let tr = 'them';
-              let createdAt = node.createdAt || "none";
+              let createdAt = node.createdAt;
               let text = node.text || "none";
               let id = node.userId || "none";
               let username;
@@ -100,7 +118,12 @@ export default class MessagesList extends Component {
                 username = "none";
               }
 
-              let date = moment(createdAt).format('D MMM, h:mm')/*.fromNow()*/ || "неизв.";
+              let date = "";
+
+              createdAt ? date = this.timeEdit(createdAt) : date = '0:00';
+
+              
+              // let date = moment(createdAt).format('D MMM, h:mm')/*.fromNow()*/ || "неизв.";
               let messageText = text;
               let read = node.isRead;
 

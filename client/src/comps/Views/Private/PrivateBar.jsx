@@ -115,23 +115,19 @@ class Private extends React.Component {
   timeEdit(time){
     if(time){
 
-      console.log(moment(new Date()).format('D MMM, h:mm:ss'));
-      console.log(moment(time).format('D MMM, h:mm:ss'));
-      console.log(moment(moment(new Date()).format('D MMM, h:mm:ss')).diff(moment(time).format('D MMM, h:mm:ss')));
-      console.log(moment(moment(new Date()).diff(time)).format('h:mm:ss'));
-      console.log(moment(moment(new Date()).diff(time)).hours());
-      
-      
+      let a = '';
+      let dif = moment(  moment(new Date()).format('YYYY MM D, h:mm:ss')  ).diff(   moment(time).format(' YYYY MM D, h:mm:ss')    ) / 3600000 ;
 
-      // let a = moment(time).format('D MMM, h:mm');
-      let a = moment(time).format('h:mm');
-      // a = moment(time).fromNow();
+      if( dif > 12){
+        a = moment(time).format('D MMM, h:mm');
+      }else{
+        a = moment(time).format('Сегодня в h:mm');
+      }
+
       return a;
     }else{
       return ''
     }
-    
-    
   }
 
   shouldComponentUpdate(nextProp) {
