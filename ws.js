@@ -1,30 +1,38 @@
 require('dotenv').config();
 const WebSocket = require('ws');
+const { EventEmitter } = require('events');
 
 const { token } = process.env;
 
+class Subscriber extends EventEmitter {
+  async auth() {
+    return new Promise((resolve, reject) => {
+      this.ws = new WebSocket(
+        'ws://dev.scis.xyz:8500/graphql',
+        ['graphql-ws'],
+        {
+          headers: {},
+        },
+      );
+      const connectionErrorHandler = (code) => {
+        console.log('connectionErrorHandler', { code });
+        reject(code);
+      };
+      const connectionOpennedHandler = () => {
+        console.log('connected');
+        resolve(this.ws);
+      };
+
+      this.ws.on('error', connectionErrorHandler);
+      this.ws.once('open', connectionOpennedHandler);
+    });
+  }
+}
+
+const wsClient = new Subscriber();
+
 async function openConnect() {
-  return new Promise((resolve, reject) => {
-    const ws = new WebSocket(
-      'ws://dev.scis.xyz:8500/graphql',
-      ['graphql-ws'],
-      {
-        headers: {},
-      },
-    );
-
-    const connectionErrorHandler = (code) => {
-      console.log('connectionErrorHandler', { code });
-      reject(code);
-    };
-    const connectionOpennedHandler = () => {
-      console.log('connected');
-      resolve(ws);
-    };
-
-    ws.on('error', connectionErrorHandler);
-    ws.once('open', connectionOpennedHandler);
-  });
+  return wsClient.auth();
 }
 
 async function authorize(ws) {
@@ -67,7 +75,7 @@ async function authorize(ws) {
     });
 }
 
-async function subscribeOnce(ws) {
+async function subscribeMessageAdded(ws) {
   return new Promise((resolve, reject) => {
     ws.send(JSON.stringify({
       id: 1,
@@ -92,9 +100,14 @@ async function subscribeOnce(ws) {
       },
     }));
     ws.once('message', (data) => {
-      console.log(JSON.parse(data));
-      resolve();
-      reject();
+      const body = JSON.parse(data);
+
+      console.log({ body });
+      if (Array.isArray(body.payload.errors)) {
+        reject(body.payload.errors);
+      } else {
+        resolve();
+      }
     });
   });
 }
@@ -104,7 +117,7 @@ async function test() {
     const ws = await openConnect();
 
     await authorize(ws);
-    await subscribeOnce(ws);
+    await subscribeMessageAdded(ws);
   } catch (err) {
     console.error(err);
   }
