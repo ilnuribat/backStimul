@@ -158,6 +158,10 @@ class NavBottom extends Component {
               background: ${BakgrColorPrimary};
               background-color: ${BakgrColorPrimary};
             }
+            .Chats .Row{
+              background: #fafbfb;
+              border-bottom: 1px solid #e6ecee;
+            }
 
           `}</style>) : null}
         </div>

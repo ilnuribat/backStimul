@@ -180,6 +180,7 @@ svg{
 @import './newcss/rows.css';
 @import './newcss/fakeselect.css';
 @import './newcss/search.css';
+@import './newcss/privates.css';
 
 .Button {
     width: 140px;

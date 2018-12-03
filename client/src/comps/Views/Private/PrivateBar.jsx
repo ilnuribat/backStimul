@@ -39,12 +39,12 @@ class Private extends React.Component {
     this.CreateNewGroup = this.CreateNewGroup.bind(this);
   }
 
-  openPrivate(gid, name){
+  openPrivate(gid, privateChat){
     // this.props.setPrivateChat({
     //   variables: { id: gid, name: name }
     // })
 
-    this.props.click(gid)
+    this.props.click(gid, privateChat)
 
     this.props.privateListCacheUpdate({
       variables:{
@@ -168,10 +168,10 @@ class Private extends React.Component {
 
                     return(
                       <div className="Chats">
-                        <div className="header">
+                        <div className="Row Header">
                           <h4>Беседы задач</h4>
                         </div>
-                        <div className="PrivateChatsUsers">{
+                        <div className="ChatsScroll">{
                         data.user.tasks && data.user.tasks.map((e,i, a)=>{
                           //Если не открытый чат
                           if (chatId !== e.id ) {
@@ -184,11 +184,14 @@ class Private extends React.Component {
                             });
                           }
 
+                          let sel = "";
+                          chatId === e.id ? sel = " SEL" :  sel = "";
+
                           return(
-                            <div className="RowBg Row" key={'users-'+i} onClick={()=>this.openPrivate(e.id)}>
+                            <div className={"Row" + sel} key={'users-'+i} onClick={()=>this.openPrivate(e.id, false)}>
                               {/* <div>{e.id}</div> */}
                               
-                              <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name} >
+                              <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name ? e.name.length > 70 ? e.name.substring(0, 70) + "..." : e.name : "noname" } >
                                 {e.lastMessage && e.lastMessage.text ? (
                                 
                                   <div className="RowChildren PadTop5">
@@ -213,10 +216,10 @@ class Private extends React.Component {
                           )
                         })
                       }</div>
-                      <div className="header">
+                      <div className="Row Header">
                         <h4>Личные беседы</h4>
                       </div>
-                      <div className="PrivateChatsUsers">{
+                      <div className="ChatsScroll">{
                         data.user.directs && data.user.directs.map((e,i, a)=>{
                           //Если не открытый чат
                           if (chatId !== e.id ) {
@@ -229,11 +232,14 @@ class Private extends React.Component {
                             });
                           }
 
+                          let sel = "";
+                          chatId === e.id ? sel = " SEL" :  sel = "";
+
                           return(
-                            <div className="RowBg Row" key={'users-'+i} onClick={()=>this.openPrivate(e.id)}>
+                            <div className={"Row" + sel} key={'users-'+i} onClick={()=>this.openPrivate(e.id, true)}>
                               {/* <div>{e.id}</div> */}
                               
-                              <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name} >
+                              <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name ? e.name.length > 70 ? e.name.substring(0, 70) + "..." : e.name : "noname" } >
                                 {e.lastMessage && e.lastMessage.text ? (
                                 
                                   <div className="RowChildren PadTop5">

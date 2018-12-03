@@ -146,10 +146,10 @@ module.exports = {
           },
           groupId: message.groupId,
           userId: { $ne: user.id },
-        });
+        }).lean();
 
         messages.forEach((m) => {
-          pubsub.publish(MESSAGE_READ, { messageRead: { isRead: true, id: m._id.toString(), ...m } });
+          pubsub.publish(MESSAGE_READ, { messageRead: { isRead: true, ...m } });
         });
       }
 
@@ -181,7 +181,7 @@ module.exports = {
     messageRead: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([MESSAGE_READ]),
-        ({ messageRead }, args) => messageRead.id === args.id,
+        ({ messageRead }, args) => messageRead._id.equals(args.id),
       ),
     },
   },

@@ -1,0 +1,42 @@
+.Chats{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+}
+.ChatsScroll{
+  display: block;
+  height: 40%;
+  max-height: 400px;
+  min-height: 300px;
+  height: 100%;
+  max-height: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overflow: hidden;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+}
+.Chats .Row.Header{
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.Chats .Row{
+  margin: 0;
+  padding: 2px 2px 2px 5px;
+  height: 64px;
+  overflow: hidden;
+  width: 100%;
+  background: #363941;
+  border:0 none transparent;
+  border-bottom: 1px solid #2c2e33;
+}
+.Chats .Row.SEL{
+  background: transparent;
+}
