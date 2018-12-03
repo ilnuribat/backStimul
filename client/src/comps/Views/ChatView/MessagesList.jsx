@@ -68,7 +68,7 @@ export default class MessagesList extends Component {
       if( dif > 12){
         a = moment(time).format('D MMM, h:mm');
       }else{
-        a = moment(time).format('Сегодня в h:mm');
+        a = moment(time).format('h:mm');
       }
 
       return a;

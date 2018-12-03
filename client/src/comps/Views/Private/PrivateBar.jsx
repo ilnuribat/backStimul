@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { setChat, getChat, cSetCountPrivates, cSetChats, privateListCacheUpdate } from '../../../GraphQL/Cache';
 import { qauf, _url } from '../../../constants';
 import Loading from '../../Loading';
-import { PRIVS_QUERY, USERS_QUERY, cGetChats } from '../../../GraphQL/Qur/Query';
+import { PRIVS_QUERY, USERS_QUERY, cGetChats, CHATS_QUERY } from '../../../GraphQL/Qur/Query';
 // import { MESSAGE_CREATED } from '../../../GraphQL/Qur/Subscr';
 import { createDirect } from '../../../GraphQL/Qur/Mutation';
 import { UserRow } from '../../Parts/Rows/Rows';
@@ -121,7 +121,7 @@ class Private extends React.Component {
       if( dif > 12){
         a = moment(time).format('D MMM, h:mm');
       }else{
-        a = moment(time).format('Сегодня в h:mm');
+        a = moment(time).format('h:mm');
       }
 
       return a;
@@ -142,13 +142,10 @@ class Private extends React.Component {
     return (
       <div className="f-column-l">
         <div className="tab-roll">
-          <div className="header">
-            <h4>Личные чаты</h4>
-          </div>
           <div className="content">
             <div className="content-scroll">
 
-              <Query query={PRIVS_QUERY}>
+              <Query query={CHATS_QUERY}>
                 {({ loading, error, data}) => {
                   // ref1 = refetch;
                   if (loading){
@@ -166,12 +163,16 @@ class Private extends React.Component {
                     );
                   }
 
-                  if(data && data.user && data.user.directs){
+                  if(data && data.user){
                     let privs = 0;
 
                     return(
-                      <div className="PrivateChatsUsers">{
-                        data.user.directs.map((e,i, a)=>{
+                      <div className="Chats">
+                        <div className="header">
+                          <h4>Беседы задач</h4>
+                        </div>
+                        <div className="PrivateChatsUsers">{
+                        data.user.tasks && data.user.tasks.map((e,i, a)=>{
                           //Если не открытый чат
                           if (chatId !== e.id ) {
                             privs = privs + e.unreadCount;
@@ -212,13 +213,60 @@ class Private extends React.Component {
                           )
                         })
                       }</div>
+                      <div className="header">
+                        <h4>Личные беседы</h4>
+                      </div>
+                      <div className="PrivateChatsUsers">{
+                        data.user.directs && data.user.directs.map((e,i, a)=>{
+                          //Если не открытый чат
+                          if (chatId !== e.id ) {
+                            privs = privs + e.unreadCount;
+                            // subscrMes(subscribeToMore, e.id, refetch)
+                          }
+                          if (i === a.length-1) {
+                            this.props.cSetCountPrivates({
+                              variables: { unr: privs }
+                            });
+                          }
+
+                          return(
+                            <div className="RowBg Row" key={'users-'+i} onClick={()=>this.openPrivate(e.id)}>
+                              {/* <div>{e.id}</div> */}
+                              
+                              <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name} >
+                                {e.lastMessage && e.lastMessage.text ? (
+                                
+                                  <div className="RowChildren PadTop5">
+                                    <div className="col">
+                                      {e.lastMessage.from && e.lastMessage.from.username  ? <div className="UserNameText">{e.lastMessage.from.username}</div> : null}
+                                      <div className="MessageSimpleText">"{e.lastMessage.text}"</div>
+                                    </div>
+                                    <div className="col">
+                                      {e.lastMessage.createdAt ? (<div className="MessageSimpleText Row3">
+                                        {e.lastMessage.isRead ? <Svg svg="read" size="16" view="inline MR5"/> : null}
+                                        {this.timeEdit(e.lastMessage.createdAt)}</div>) : null }
+                                    </div>
+
+                                    
+                                  </div>
+                                ) : null}
+                              </UserRow>
+
+                              {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
+                            </div>
+
+                          )
+                        })
+                        }</div>
+
+                      </div>
                     )
 
-                  }else{
+                  }
+                  else{
                     return(
                       <div className="errorMessage" >Нет данных</div>
                     )
-
                   }
 
                 }}
