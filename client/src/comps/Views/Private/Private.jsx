@@ -4,7 +4,7 @@ import { Query, graphql, compose  } from "react-apollo";
 import PropTypes from 'prop-types';
 import ChatView from '../ChatView/ChatView';
 import { getChat, setChat, setPlaceName, getPlaceName } from '../../../GraphQL/Cache';
-import { PRIV_QUERY, TASK_QUERY } from '../../../GraphQL/Qur/Query';
+import { PRIV_QUERY, TASK_MESSAGES } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar';
 import PrivateBar from './PrivateBar';
@@ -104,7 +104,9 @@ class Private extends Component {
   render() {
     const { chatId, privateChat } = this.state;
     let CHATQUERY;
-    privateChat ? CHATQUERY = PRIV_QUERY : CHATQUERY = TASK_QUERY
+
+    privateChat ? CHATQUERY = PRIV_QUERY : CHATQUERY = TASK_MESSAGES
+
     return(
       <Fragment>
         <Content view="OvH Row OvH Pad10">
@@ -149,7 +151,7 @@ class Private extends Component {
                       </ContentInner>
                     )
                   }
-}}
+                }}
               </Query>)
               :
               (

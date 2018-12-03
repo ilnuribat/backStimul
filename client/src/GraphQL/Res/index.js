@@ -134,6 +134,8 @@ export default {
     messagesCacheUpdate: (_, {lastMessage, queryName},  { cache }) => {
       const tname = queryName.charAt(0).toUpperCase()+queryName.substring(1)
 
+      console.warn("queryName is", queryName, tname)
+
       const query = gql`
         query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
           ${queryName}(id: $id ) @client {
@@ -157,13 +159,14 @@ export default {
       try {
         previousState = cache.readQuery({ query, variables: {"id": lastMessage.groupId}});
       } catch (error) {
-        console.warn("cache is empty!")
+        console.warn("cache is messagesCacheUpdate empty!", lastMessage)
 
         return null
       }
 
-      // console.warn("lastMessage is", lastMessage)
-      // console.warn("prevstate is", previousState)
+      console.warn("lastMessage is", lastMessage)
+      console.warn("prevstate is", previousState)
+      console.warn("queryName is", queryName, tname)
 
       const newFeedItem = {cursor: lastMessage.id, node: {...lastMessage,  __typename: "Message"},
         __typename: "MessageEdge" };
