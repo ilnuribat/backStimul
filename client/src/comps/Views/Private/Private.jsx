@@ -138,7 +138,7 @@ class Private extends Component {
                   // console.warn ("REFRESH", data.direct)
                   // console.warn ("REFRESH", data.task)
 
-                  if(data && data.direct || data && data.task){
+                  if(data && (data.task || data.direct )){
                     return(
                       <ContentInner view="Row OvH Pad010">
                         <ChatView id={chatId} name={privateChat === true ? data.direct.name : data.task.name } data={privateChat === true ? data.direct : data.task} />

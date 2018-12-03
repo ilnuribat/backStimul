@@ -35,12 +35,12 @@ class PrivateBar extends React.Component {
       userwarn: "",
       warnMe: "",
       tasksOpen: true,
-      privsOpen: true,
+      privsOpen: false,
     }
 
     this.newUser = this.newUser.bind(this);
     this.tasksOpen = this.tasksOpen.bind(this);
-    this.privsOpen = this.privsOpen.bind(this);
+    this.privsOpen1 = this.privsOpen1.bind(this);
     this.CreateNewGroup = this.CreateNewGroup.bind(this);
   }
 
@@ -139,24 +139,24 @@ class PrivateBar extends React.Component {
   //   this.setState({ privsOpen: !this.state.privsOpen }, () => Promise.resolve());
   // }
 
-  privsOpen(){
-    console.log("privsOpen");
-    
+  privsOpen1(){
     this.setState({
       privsOpen: !this.state.privsOpen
     })
   }
+
   tasksOpen(){
-    console.log("tasksOpen");
+    // console.warn("tasksOpen");
     this.setState({
       tasksOpen: !this.state.tasksOpen
     })
   }
 
-  shouldComponentUpdate(nextProp) {
-    if (!_.isEqual(nextProp.getPrivateChat.id, this.props.getPrivateChat.id)) return true
-    else return false
-  }
+  // shouldComponentUpdate(nextProp, nextState) {
+  //   if (!_.isEqual(nextProp.getPrivateChat.id, this.props.getPrivateChat.id)) return true
+
+  //   return true
+  // }
 
   render(){
     let newChay;
@@ -217,10 +217,10 @@ class PrivateBar extends React.Component {
                                 return(
                                   <div className={"Row" + sel} key={'users-'+i} onClick={()=>this.openPrivate(e.id, false)}>
                                     {/* <div>{e.id}</div> */}
-                                  
+
                                     <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name ? e.name.length > 70 ? e.name.substring(0, 70) + "..." : e.name : "noname" } >
                                       {e.lastMessage && e.lastMessage.text ? (
-                                    
+
                                         <div className="RowChildren PadTop5">
                                           <div className="col">
                                             {e.lastMessage.from && e.lastMessage.from.username  ? <div className="UserNameText">{e.lastMessage.from.username}</div> : null}
@@ -232,7 +232,7 @@ class PrivateBar extends React.Component {
                                               {this.timeEdit(e.lastMessage.createdAt)}</div>) : null }
                                           </div>
 
-                                        
+
                                         </div>
                                       ) : null}
                                     </UserRow>
@@ -245,7 +245,7 @@ class PrivateBar extends React.Component {
                             }
                           </div>) : null}
                         </div>
-                        <div className="Row Header" onClick={this.privsOpen}>
+                        <div className="Row Header" onClick={this.privsOpen1}>
                           <h4>Личные беседы</h4>
                         </div>
                         <div className="ChatsScroll">
@@ -270,10 +270,10 @@ class PrivateBar extends React.Component {
                                 return(
                                   <div className={"Row" + sel} key={'users-'+i} onClick={()=>this.openPrivate(e.id, true)}>
                                     {/* <div>{e.id}</div> */}
-                              
+
                                     <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name ? e.name.length > 70 ? e.name.substring(0, 70) + "..." : e.name : "noname" } >
                                       {e.lastMessage && e.lastMessage.text ? (
-                                
+
                                         <div className="RowChildren PadTop5">
                                           <div className="col">
                                             {e.lastMessage.from && e.lastMessage.from.username  ? <div className="UserNameText">{e.lastMessage.from.username}</div> : null}
@@ -285,7 +285,7 @@ class PrivateBar extends React.Component {
                                               {this.timeEdit(e.lastMessage.createdAt)}</div>) : null }
                                           </div>
 
-                                    
+
                                         </div>
                                       ) : null}
                                     </UserRow>
