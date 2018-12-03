@@ -80,6 +80,7 @@ class Private extends Component {
 
     if(id && id !== this.state.chatId){
       localStorage.setItem('chatId', id)
+      localStorage.setItem('privateChat', priv)
       this.setState({
         chatId: id,
         privateChat: priv === true ? true : false,
@@ -88,6 +89,7 @@ class Private extends Component {
     }
     if(!id || id === this.state.chatId){
       localStorage.setItem('chatId', '')
+      localStorage.setItem('privateChat', '')
       this.setState({
         chatId: "",
         chatLocation: true,

@@ -220,7 +220,7 @@ class Private extends React.Component {
                         <h4>Личные беседы</h4>
                       </div>
                       <div className="ChatsScroll">{
-                        data.user.directs && data.user.directs.map((e,i, a)=>{
+                        data.user.directs && data.user.directs.map((e, i, a)=>{
                           //Если не открытый чат
                           if (chatId !== e.id ) {
                             privs = privs + e.unreadCount;
