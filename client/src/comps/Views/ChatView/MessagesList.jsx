@@ -2,8 +2,6 @@ import React, { Component, Fragment } from "react";
 import moment from 'moment';
 import momentRu from 'moment/locale/ru';
 import PropTypes from 'prop-types';
-import { Query } from "react-apollo";
-import _ from 'lodash';
 
 import client from "../../../client";
 import { qauf, _url, colorHash } from '../../../constants';
@@ -12,7 +10,6 @@ import { MESSAGE_QUERY } from "../../../GraphQL/Qur/Query";
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { Svg } from '../../Parts/SVG/index';
 import { UserRow } from "../../Parts/Rows/Rows";
-import { remove } from "winston";
 
 moment.locale('ru')
 
