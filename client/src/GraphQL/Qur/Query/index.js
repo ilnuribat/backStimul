@@ -166,6 +166,40 @@ export const PRIVS_QUERY = gql `
       }
     }
 `;
+export const CHATS_QUERY = gql `
+    query{
+      user{
+        directs{
+          id
+          name
+          unreadCount
+          lastMessage{
+          from{
+            id
+            username
+          }
+          text
+          isRead
+          createdAt
+        }
+        }
+        tasks{
+          id
+          name
+          unreadCount
+          lastMessage{
+          from{
+            id
+            username
+          }
+          text
+          isRead
+          createdAt
+        }
+        }
+      }
+    }
+`;
 
 export const TASKS_QUERY = gql `
     query{
