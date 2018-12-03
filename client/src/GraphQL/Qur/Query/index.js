@@ -234,7 +234,34 @@ export const TASKS_QUERY = gql `
     }
 `;
 
-export const PRIV_QUERY = gql `
+export const TASK_QUERY = gql`
+  query($id: ID!){
+      task(id: $id ){
+        name
+    unreadCount
+    users{
+      id
+      username
+    }
+    messages{
+      edges{
+        cursor
+        node{
+          isRead
+          id
+          from{
+            id
+            username
+          }
+          createdAt
+          text
+        }
+      }
+    }
+      }
+  }
+`;
+export const PRIV_QUERY = gql`
   query ($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
       direct(id: $id ){
           name

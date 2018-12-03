@@ -1,0 +1,14 @@
+.Chats{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.ChatsScroll{
+  display: block;
+  height: 40%;
+  max-height: 400px;
+  min-height: 300px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

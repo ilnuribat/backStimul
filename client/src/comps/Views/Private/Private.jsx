@@ -4,7 +4,7 @@ import { Query, graphql, compose  } from "react-apollo";
 import PropTypes from 'prop-types';
 import ChatView from '../ChatView/ChatView';
 import { getChat, setChat, setPlaceName, getPlaceName } from '../../../GraphQL/Cache';
-import { PRIV_QUERY } from '../../../GraphQL/Qur/Query';
+import { PRIV_QUERY, TASK_QUERY } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar';
 import PrivateBar from './PrivateBar';
@@ -18,6 +18,7 @@ class Private extends Component {
     super(props)
     this.state = {
       chatId: '',
+      privateChat: true,
       chatLocation: false,
     }
 
@@ -75,14 +76,15 @@ class Private extends Component {
     })
   }
 
-  openChat(id){
-    console.warn("ChatId === open",id);
-
+  openChat(id, priv){
+    // console.warn("ChatId === open",id);
+    // console.warn("ChatId === priv",priv);
 
     if(id && id !== this.state.chatId){
       localStorage.setItem('chatId', id)
       this.setState({
         chatId: id,
+        privateChat: priv === true ? true : false,
         chatLocation: true,
       })
     }
@@ -100,18 +102,19 @@ class Private extends Component {
 
 
   render() {
-    const { chatId } = this.state;
-
+    const { chatId, privateChat } = this.state;
+    let CHATQUERY;
+    privateChat ? CHATQUERY = PRIV_QUERY : CHATQUERY = TASK_QUERY
     return(
       <Fragment>
         <Content view="OvH Row OvH Pad10">
           <InnerBar>
-            <PrivateBar chatId={chatId} click={(id)=>this.openChat(id)} />
+            <PrivateBar chatId={chatId} click={(id, pr)=>this.openChat(id,pr)} />
           </InnerBar>
           {
             chatId ?
               (<Query
-                query={PRIV_QUERY}
+                query={CHATQUERY}
                 variables={{ id: `${chatId}` }}
               >
                 {({ loading, error, data }) => {
@@ -130,18 +133,23 @@ class Private extends Component {
                       </div>
                     );
                   }
-                  console.warn ("REFRESH", data.direct)
+                  // console.warn ("REFRESH", data.direct)
+                  // console.warn ("REFRESH", data.task)
 
-                  if (!data || !data.direct)
-                    return <Loading />
-
-
-                  if(data && data.direct)
+                  if(data && data.direct || data && data.task){
                     return(
                       <ContentInner view="Row OvH Pad010">
-                        <ChatView id={chatId} name={data.direct.name} data={ data.direct } />
+                        <ChatView id={chatId} name={privateChat === true ? data.direct.name : data.task.name } data={privateChat === true ? data.direct : data.task} />
                       </ContentInner>
-                    )}}
+                    )
+                  }else{
+                    return(
+                      <ContentInner view="Row OvH Pad10">
+                        <div className="errorMessage">Выберите чат</div>
+                      </ContentInner>
+                    )
+                  }
+}}
               </Query>)
               :
               (
