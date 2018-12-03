@@ -23,6 +23,8 @@ class NavTop extends Component {
 
     subscribe = () => {
       console.warn("countPriv", this.state.countPriv)
+
+      //Пишем в кеш тасков добавление или удаление тасков или пользователей в них (последнее автоматом)
       client.subscribe({
         query: USER_TASK_UPDATED,
       }).subscribe({
@@ -67,9 +69,8 @@ class NavTop extends Component {
           // ... call updateQuery to integrate the new comment
           // into the existing list of comments
           let equalGroupMessage
-          //пишем мессагу в кэш
-
           // console.warn(data.data.messageAdded)
+          //пишем мессагу в кэш
 
           client.mutate({
             mutation: lastMessageCache,
