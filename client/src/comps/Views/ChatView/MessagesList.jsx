@@ -60,7 +60,7 @@ export default class MessagesList extends Component {
         } //query
         )
       }
-    }, 200)
+    }, 0)
 
   }
 
