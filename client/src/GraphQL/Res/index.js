@@ -134,10 +134,9 @@ export default {
     messagesCacheUpdate: (_, {lastMessage, queryName},  { cache }) => {
       const tname = queryName.charAt(0).toUpperCase()+queryName.substring(1)
 
-      console.warn("queryName is", queryName, tname)
-
+      // console.warn("queryName is", queryName, tname)
       const query = gql`
-        query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
+        query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}) {
           ${queryName}(id: $id ) @client {
             messages(messageConnection: $messageConnection) {
               edges {

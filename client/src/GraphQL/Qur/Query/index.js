@@ -235,7 +235,7 @@ export const TASKS_QUERY = gql `
 `;
 
 export const PRIV_QUERY = gql`
-  query ($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
+  query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}){
       direct(id: $id ){
           name
           unreadCount
@@ -271,7 +271,7 @@ export const MESSAGE_QUERY = gql `
   }
 `;
 export const TASK_MESSAGES = gql `
-  query ($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
+  query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}){
     task(id: $id ){
           name
           # users{
