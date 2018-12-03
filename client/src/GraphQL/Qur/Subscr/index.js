@@ -46,6 +46,7 @@ export const ALL_MESSAGE_CREATED = gql`
 export const MESSAGE_READ = gql`
   subscription messageRead($id: ID!){
       messageRead(id: $id){
+        id
         isRead
       }
   }

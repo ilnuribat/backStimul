@@ -4,7 +4,6 @@ import momentRu from 'moment/locale/ru';
 import PropTypes from 'prop-types';
 import { Query } from "react-apollo";
 
-import client from "../../../client";
 import { qauf, _url, colorHash } from '../../../constants';
 import { MESSAGE_READ } from "../../../GraphQL/Qur/Subscr";
 import { MESSAGE_QUERY } from "../../../GraphQL/Qur/Query";
@@ -22,16 +21,32 @@ const toBottom = () => {
   }
 }
 
+const subscribeToRead = (subscribeToMore, id) =>{
+  // console.warn("SUBS", subscribeToMore, id)
 
+  return subscribeToMore({
+    document: MESSAGE_READ,
+    variables: { id: id },
+    shouldResubscribe: false,
+    updateQuery: (prev, { subscriptionData }) => {
+      if (!subscriptionData.data) return prev;
+
+      return Object.assign({}, prev, {
+        message:{
+          isRead: true,
+          text: prev.message.text,
+          __typename: prev.message.__typename,
+        }
+      });
+
+    },
+    onError: (err)=>{
+      console.warn('ERR-----',err)
+    },
+  })
+}
 
 export default class MessagesList extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      subsMsgs: [],
-    }
-  }
-
 
   componentDidMount() {
     // this.props.subscribeToNewMessages();
@@ -42,20 +57,6 @@ export default class MessagesList extends Component {
     // console.warn("UPDATE!");
     // this.props.subscribeToNewMessages();
     toBottom();
-  }
-
-  subscribeToRead = (id) => {
-    console.warn("SUBS", id)
-    client.subscribe({
-      query: MESSAGE_READ,
-      variables: { id: id },
-    }).subscribe({
-      next(data) {
-        console.warn("MESSAGE ISREAD!! UPDATED", data.data.messageRead)
-      }
-    })
-
-
   }
 
   timeEdit(time){
@@ -121,7 +122,7 @@ export default class MessagesList extends Component {
 
               createdAt ? date = this.timeEdit(createdAt) : date = '0:00';
 
-
+              
               // let date = moment(createdAt).format('D MMM, h:mm')/*.fromNow()*/ || "неизв.";
               let messageText = text;
               let read = node.isRead;
@@ -130,7 +131,6 @@ export default class MessagesList extends Component {
                 tr = 'me';
                 username = "Я";
                 username = "";
-                if (!read) this.subscribeToRead(node.id);
               }else{
                 if( n === l ){
                   let notread = messageRead_MUT(node.id);
@@ -168,8 +168,21 @@ export default class MessagesList extends Component {
                     <div className="f-row">
                       { id === uid ? (
                         <div className="chatIcon">
-                          { read ? (
-                            <div className="events"><Svg svg="dblcheckack" /> </div>
+                          { !read ? (
+                            <Query
+                              query={MESSAGE_QUERY}
+                              variables={{ id:node.id }}
+                            >
+                              {({ data, subscribeToMore }) => {
+                                subscribeToRead(subscribeToMore, node.id);
+
+                                return(
+                                  <div className="events">{data.message && data.message.isRead ? <Svg svg="dblcheckack" /> : <Svg svg="dblcheck" />}  {
+                                    // console.warn('subs read data',data)
+                                  }</div>
+                                )}
+                              }
+                            </Query>
                           ) : ( <Svg svg="dblcheckack" /> ) }
                         </div>
                       ) : null }
