@@ -163,9 +163,9 @@ export default {
         return null
       }
 
-      console.warn("lastMessage is", lastMessage)
-      console.warn("prevstate is", previousState)
-      console.warn("queryName is", queryName, tname)
+      // console.warn("lastMessage is", lastMessage)
+      // console.warn("prevstate is", previousState)
+      // console.warn("queryName is", queryName, tname)
 
       const newFeedItem = {cursor: lastMessage.id, node: {...lastMessage,  __typename: "Message"},
         __typename: "MessageEdge" };

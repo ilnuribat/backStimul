@@ -136,7 +136,7 @@ export default class MessagesList extends Component {
                 tr = 'me';
                 username = "Я";
                 username = "";
-                if (!read) this.subscribeToRead(node.id);
+                // if (!read) this.subscribeToRead(node.id);
               }else{
                 if( n === l ){
                   let notread = messageRead_MUT(node.id);
@@ -161,8 +161,6 @@ export default class MessagesList extends Component {
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
                       {/* <UserRow name={username} icon="1" view="Col" /> */}
                     </div>
-
-
                   ) : (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
                       {id !== uid ? (<UserRow name={username} icon="1" view="Col" />) : null}
