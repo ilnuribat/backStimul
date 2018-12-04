@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import { colorHash } from '../../../constants';
 import { selectUser, appendUser, getChat } from "../../../GraphQL/Cache";
 
-selectUser
+
 class AddNew extends Component {
   constructor(props){
     super(props)
@@ -48,7 +48,12 @@ class AddNew extends Component {
 
   submitHandler = e => {
     e.preventDefault()
-
+    
+    console.log('====================================');
+    console.log(1);
+    console.log('====================================');
+    
+    
     let { input } = this.state;
     const { add, appendUser, getchat, id } = this.props;
     let inp = input[0];
