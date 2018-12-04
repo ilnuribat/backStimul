@@ -193,7 +193,7 @@ export default {
 
       return {lastMessage, __typename: tname };
     },
-    chatListCacheUpdate: (_, { value, queryName },  { cache }) => {
+    chatListCacheUpdate: (_, { value, queryName, counter },  { cache }) => {
       const query = gql`
           query {
             user @client {
@@ -227,10 +227,13 @@ export default {
 
       if (!value.addUser) {
         let filter
+        let count = 0
+
+        if (counter) count = 1
 
         queryName === "directs" ? filter = previousState.user.directs.filter(directs => directs.id === value.groupId)[0] :
           filter = previousState.user.tasks.filter(tasks => tasks.id === value.groupId)[0]
-        !value.reset ? Object.assign(filter, { unreadCount: filter.unreadCount + 1, lastMessage : { from: value.from, text: value.text, createdAt: value.createdAt,  __typename: "Message"} }) :
+        !value.reset ? Object.assign(filter, { unreadCount: filter.unreadCount + count, lastMessage : { from: value.from, text: value.text, createdAt: value.createdAt,  __typename: "Message"} }) :
           Object.assign(filter, { unreadCount: 0, lastMessage: filter.lastMessage })
 
         data = {

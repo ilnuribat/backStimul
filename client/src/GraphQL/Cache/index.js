@@ -280,8 +280,8 @@ export const objectCacheUpdate = gql `
   }
 `;
 export const chatListCacheUpdate = gql `
-  mutation chatListCacheUpdate($value: Object!, $queryName: String!) {
-    chatListCacheUpdate(value: $value, queryName: $queryName) @client
+  mutation chatListCacheUpdate($value: Object!, $queryName: String!, $counter: Bool) {
+    chatListCacheUpdate(value: $value, queryName: $queryName, counter: $counter) @client
   }
 `;
 export const delInfo = gql `

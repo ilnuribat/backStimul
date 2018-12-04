@@ -84,38 +84,52 @@ class NavTop extends Component {
             if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
             //проверяем на совпадение группы мессаги и текущего привата
             client.query({ query: getlastMessageCache }).then(result => {
-              equalGroupMessage = _.isEqual(result.data.lastMessage.groupId, result.data.id)
-              if (!equalGroupMessage && data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
+              !result.data.id ? equalGroupMessage = _.isEqual(result.data.lastMessage.groupId, localStorage.getItem('chatId')) :
+                equalGroupMessage = _.isEqual(result.data.lastMessage.groupId, result.data.id)
+              if (!equalGroupMessage) {
+                if (data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
                 //если не совпадают, читаем все непрочитанные приваты
-                client.query({ query: cGetCountPrivates }).then(result => {
-                  const unr = result.data.unr + 1
-                  //пишем суумму всех непрочитанных приватов
+                  client.query({ query: cGetCountPrivates }).then(result => {
+                    const unr = result.data.unr + 1
+                    //пишем суумму всех непрочитанных приватов
+                    // this.saveCountPrivs(unr)
 
-                  // this.saveCountPrivs(unr)
-                  client.mutate({
-                    mutation: cSetCountPrivates,
-                    variables: {
-                      unr: unr
-                    },
+                    client.mutate({
+                      mutation: cSetCountPrivates,
+                      variables: {
+                        unr: unr
+                      },
                     // update: ({ data }) => { console.warn("DATA IS" ,data)}
-                  }).then(result => {
-                    if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
-                  })
-                });
+                    }).then(result => {
+                      if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
+                    })
+                  });
+                } // if #2
+                //пишем в кеш lastmessage + счетчик
+                client.mutate({
+                  mutation: chatListCacheUpdate,
+                  variables:{
+                    value: data.data.messageAdded,
+                    queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
+                    counter: true,
+                  }
+                })
+              } // if #1
+              else {
+                //пишем в кеш lastmessage
+                client.mutate({
+                  mutation: chatListCacheUpdate,
+                  variables:{
+                    value: data.data.messageAdded,
+                    queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
+                    counter: false,
+                  }
+                })
               }
             })
           })
 
-          //пишем в кеш юзербаров приватный счетчик
-          client.mutate({
-            mutation: chatListCacheUpdate,
-            variables:{
-              value: data.data.messageAdded,
-              queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
-            }
-          }).then(result => {
-            if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
-          })
+
 
           //Пишем в кеш (если он есть конечно) нужной группы полученную мессагу
           client.mutate({
@@ -123,7 +137,7 @@ class NavTop extends Component {
             variables: {
               lastMessage: data.data.messageAdded,
               queryName: data.data.messageAdded.isDirect ? "direct" : "task",
-            },
+            }
           })
           //Пишем lastmessage в кеш таска
           if (!data.data.messageAdded.isDirect)
