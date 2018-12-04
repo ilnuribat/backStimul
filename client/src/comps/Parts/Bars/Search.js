@@ -87,22 +87,7 @@ export class Search extends Component {
   }
 
   componentWillUpdate(){
-    // !this.state.chObj &&
-    // !this.state.chTsk &&
-    // !this.state.chDcs &&
-    // !this.state.chUsr &&
-    // !this.state.chMsg ? this.setState({chAll: true,}) : null
   }
-
-  // shouldComponentUpdate(nextProps, nextState){
-    // if(nextState.chAll === this.state.chAll){
-    //   return false
-    // }
-    // if(nextState === this.state){
-    //   return false
-    // }
-    // return true
-  // }
 
   render() {
 
