@@ -455,15 +455,13 @@ export const getUnreadCount = () => `
           id
           unreadCount
         }
-        groups {
+        tasks {
           id
           unreadCount
         }
       }
     }
 `;
-
-
 
 
 export const getObjectTasks2 = (id) => `

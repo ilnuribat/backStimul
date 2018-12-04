@@ -8,7 +8,7 @@ import { graphql, compose } from "react-apollo";
 import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED, TASK_UPDATED, USER_TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
-import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, privateListCacheUpdate, messagesCacheUpdate, objectCacheUpdate } from '../../GraphQL/Cache';
+import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, chatListCacheUpdate, messagesCacheUpdate, objectCacheUpdate } from '../../GraphQL/Cache';
 import { getUnreadCount, TASK_INFO_SMALL } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 import client from '../../client';
@@ -90,7 +90,7 @@ class NavTop extends Component {
                 client.query({ query: cGetCountPrivates }).then(result => {
                   const unr = result.data.unr + 1
                   //пишем суумму всех непрочитанных приватов
-                  console.warn("ОБАВЛЕМ КАУНТЕР", unr)
+
                   // this.saveCountPrivs(unr)
                   client.mutate({
                     mutation: cSetCountPrivates,
@@ -101,21 +101,20 @@ class NavTop extends Component {
                   }).then(result => {
                     if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
                   })
-
                 });
-
-                //пишем в кеш юзербаров приватный счетчик
-                client.mutate({
-                  mutation: privateListCacheUpdate,
-                  variables:{
-                    value: {id: result.data.lastMessage.groupId},
-                  }
-                }).then(result => {
-                  if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
-                })
               }
-
             })
+          })
+
+          //пишем в кеш юзербаров приватный счетчик
+          client.mutate({
+            mutation: chatListCacheUpdate,
+            variables:{
+              value: data.data.messageAdded,
+              queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
+            }
+          }).then(result => {
+            if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
           })
 
           //Пишем в кеш (если он есть конечно) нужной группы полученную мессагу
@@ -148,20 +147,21 @@ class NavTop extends Component {
 
     queryCounterDirects () {
       qauf(getUnreadCount(), _url, localStorage.getItem('auth-token')).then(a=>{
-        if(a && a.data && a.data.user && a.data.user.directs){
+        if(a && a.data && a.data.user){
           let privs = 0;
 
-          a.data && a.data.user && a.data.user.directs && a.data.user.directs.map((e) => {
+
+          a.data.user.directs && a.data.user.directs.map((e) => {
             if(e && e.unreadCount){
               privs = privs + e.unreadCount
             }
-
-
-            return null
           })
-          // this.saveCountPrivs(privs)
-
-          this.props.client.mutate({
+          a.data.user.tasks && a.data.user.tasks.map((e) => {
+            if(e && e.unreadCount){
+              privs = privs + e.unreadCount
+            }
+          })
+          client.mutate({
             mutation: cSetCountPrivates,
             variables: {
               unr: privs

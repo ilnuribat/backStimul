@@ -4,7 +4,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import moment from 'moment';
-import { getChat, cSetCountPrivates, privateListCacheUpdate } from '../../../GraphQL/Cache';
+import { getChat, cSetCountPrivates, chatListCacheUpdate } from '../../../GraphQL/Cache';
 import { qauf, _url } from '../../../constants';
 import Loading from '../../Loading';
 import { USERS_QUERY, CHATS_QUERY } from '../../../GraphQL/Qur/Query';
@@ -13,16 +13,6 @@ import { createDirect } from '../../../GraphQL/Qur/Mutation';
 import { UserRow } from '../../Parts/Rows/Rows';
 import Svg from '../../Parts/SVG/svg';
 
-// let ref1;
-
-// const subscrMes = (subscribeToMore,idu, refetch)=>{
-//   return subscribeToMore({ document: MESSAGE_CREATED, variables: {id: idu,},
-//     updateQuery: () => {
-//       refetch().then(()=>{
-//       })
-//     },
-//   });
-// };
 
 class PrivateBar extends React.Component {
   constructor(props) {
@@ -45,16 +35,12 @@ class PrivateBar extends React.Component {
   }
 
   openPrivate(gid, privateChat){
-    // this.props.setPrivateChat({
-    //   variables: { id: gid, name: name }
-    // })
-    console.warn("OPEN CHAT", privateChat)
-
     this.props.click(gid, privateChat)
 
-    this.props.privateListCacheUpdate({
+    this.props.chatListCacheUpdate({
       variables:{
-        value: {id: gid, reset: true, name: privateChat ? "directs" : "tasks" }
+        value: {groupId: gid, reset: true},
+        queryName: privateChat ? "directs" : "tasks"
       }
     })
   }
@@ -103,9 +89,10 @@ class PrivateBar extends React.Component {
       qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
         if(a && a.data){
           // ref1()
-          this.props.privateListCacheUpdate({
+          this.props.chatListCacheUpdate({
             variables:{
-              value: {id: uid, name: newUser, addUser: true}
+              value: {id: a.data.directMessage.id, name: newUser, addUser: true},
+              queryName: "directs"
             }
           })
         }
@@ -163,7 +150,6 @@ class PrivateBar extends React.Component {
     let newChay;
     const { chatId } = this.props;
     let { tasksOpen, privsOpen } = this.state;
-    console.warn("AAAAAAAAAAAAAA")
 
     return (
       <div className="f-column-l">
@@ -371,11 +357,11 @@ PrivateBar.propTypes = {
   }),
   cSetCountPrivates: PropTypes.func.isRequired,
   getChat: PropTypes.object.isRequired,
-  privateListCacheUpdate: PropTypes.func.isRequired
+  chatListCacheUpdate: PropTypes.func.isRequired
 };
 
 export default compose(
   graphql(cSetCountPrivates, { name: 'cSetCountPrivates' }),
-  graphql(privateListCacheUpdate, { name: 'privateListCacheUpdate' }),
+  graphql(chatListCacheUpdate, { name: 'chatListCacheUpdate' }),
   graphql(getChat, { name: 'getChat' }),
 )(PrivateBar);

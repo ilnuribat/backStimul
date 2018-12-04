@@ -158,7 +158,7 @@ export default {
       try {
         previousState = cache.readQuery({ query, variables: {"id": lastMessage.groupId}});
       } catch (error) {
-        console.warn("cache is messagesCacheUpdate empty!", lastMessage)
+        console.warn("cache is messagesCacheUpdate empty!")
 
         return null
       }
@@ -193,14 +193,22 @@ export default {
 
       return {lastMessage, __typename: tname };
     },
-    privateListCacheUpdate: (_, { value },  { cache }) => {
+    chatListCacheUpdate: (_, { value, queryName },  { cache }) => {
       const query = gql`
           query {
             user @client {
-              ${value.name} {
+              ${queryName} {
                 id
                 name
                 unreadCount
+                lastMessage{
+                  createdAt
+                  from{
+                    id
+                    username
+                  }
+                  text
+                }
               }
             }
           }
@@ -215,32 +223,26 @@ export default {
 
         return null
       }
-      console.warn("prevstate unrPrivatesCacheUpdate is", previousState, value)
+      // console.warn("prevstate unrPrivatesCacheUpdate is", previousState, value)
 
-      if (value && !value.addUser) {
+      if (!value.addUser) {
         let filter
 
-        value.name === "directs" ? filter = previousState.user.directs.filter(directs => directs.id === value.id)[0] :
-          filter = previousState.user.tasks.filter(tasks => tasks.id === value.id)[0]
-
-        !value.reset ? Object.assign(filter, { unreadCount: filter.unreadCount + 1 }) :
-          Object.assign(filter, { unreadCount: 0 })
+        queryName === "directs" ? filter = previousState.user.directs.filter(directs => directs.id === value.groupId)[0] :
+          filter = previousState.user.tasks.filter(tasks => tasks.id === value.groupId)[0]
+        !value.reset ? Object.assign(filter, { unreadCount: filter.unreadCount + 1, lastMessage : { from: value.from, text: value.text, createdAt: value.createdAt,  __typename: "Message"} }) :
+          Object.assign(filter, { unreadCount: 0, lastMessage: filter.lastMessage })
 
         data = {
           user: {
-            [value.name]: value.name === "directs" ? [...previousState.user.directs] : [...previousState.user.tasks],
+            [queryName]: queryName === "directs" ? [...previousState.user.directs] : [...previousState.user.tasks],
             __typename: "User",
           }
         };
       } else {
-        let filter
-
-        value.name === "directs" ? filter = [...previousState.user.directs, {...value, unreadCount: 0, __typename: "Direct"}]  :
-          filter = [...previousState.user.tasks, {...value, unreadCount: 0, __typename: "Task"}]
-
         data = {
           user: {
-            [value.name]: filter,
+            directs: [...previousState.user.directs, {...value, unreadCount: 0, lastMessage: null, __typename: "Direct"}],
             __typename: "User",
           }
         };
@@ -260,7 +262,7 @@ export default {
       let previousState;
 
       if (value && value.key && value.key==="status") value.value = parseInt(value.value)
-      console.warn("ДАННЫЕ!", taskId, objectId, action, value);
+      // console.warn("ДАННЫЕ!", taskId, objectId, action, value);
 
       switch (action) {
       case "lastMessage":

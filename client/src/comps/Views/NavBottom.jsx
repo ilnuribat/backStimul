@@ -7,9 +7,9 @@ import { graphql, compose } from "react-apollo";
 // import Logo from './Logo.jpg'
 import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
-import { ALL_MESSAGE_CREATED } from '../../GraphQL/Qur/Subscr';
-import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate, privateListCacheUpdate } from '../../GraphQL/Cache';
-import { getUnreadCount } from '../../GraphQL/Qur/Query';
+
+import { cGetCountPrivates } from '../../GraphQL/Cache';
+
 import { UserRow } from '../Parts/Rows/Rows';
 
 class NavBottom extends Component {
@@ -113,25 +113,25 @@ class NavBottom extends Component {
               background: transparent;
               background-color: transparent;
             }
-            
+
             .searchTag
             {
               background:${BakgrColorPrimary};
               background-color: ${BakgrColorPrimary};
               color:${ColorParent};
             }
-            .Chat       
+            .Chat
             {
               background: ${BakgrColorSlave};
               background-color: ${BakgrColorSlave};
               color:${ColorParent};
             }
-            
+
             .EditForm label input, label.LabelInputText input,
             label.LabelSelect input, label.LabelInputDate input,
             label.LabelInputList input
             ,.ChatForm .textarea-wrapper
-            
+
             {
               background: ${BakgrColorPrimary};
               background-color: ${BakgrColorPrimary};

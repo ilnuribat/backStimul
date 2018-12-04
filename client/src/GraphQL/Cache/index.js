@@ -279,9 +279,9 @@ export const objectCacheUpdate = gql `
     objectCacheUpdate(action: $action, value: $value, objectId: $objectId, taskId: $taskId) @client
   }
 `;
-export const privateListCacheUpdate = gql `
-  mutation privateListCacheUpdate($value: Object!) {
-    privateListCacheUpdate(value: $value) @client
+export const chatListCacheUpdate = gql `
+  mutation chatListCacheUpdate($value: Object!, $queryName: String!) {
+    chatListCacheUpdate(value: $value, queryName: $queryName) @client
   }
 `;
 export const delInfo = gql `

@@ -10,7 +10,7 @@ type User {
   username: String
   messages: [Message]
   groups: [Group]
-  directs: [Group]
+  directs: [Direct]
   tasks: [Task]
 }
 
