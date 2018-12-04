@@ -4,10 +4,10 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import moment from 'moment';
-import { setChat, getChat, cSetCountPrivates, cSetChats, privateListCacheUpdate } from '../../../GraphQL/Cache';
+import { getChat, cSetCountPrivates, privateListCacheUpdate } from '../../../GraphQL/Cache';
 import { qauf, _url } from '../../../constants';
 import Loading from '../../Loading';
-import { USERS_QUERY, cGetChats, CHATS_QUERY } from '../../../GraphQL/Qur/Query';
+import { USERS_QUERY, CHATS_QUERY } from '../../../GraphQL/Qur/Query';
 // import { MESSAGE_CREATED } from '../../../GraphQL/Qur/Subscr';
 import { createDirect } from '../../../GraphQL/Qur/Mutation';
 import { UserRow } from '../../Parts/Rows/Rows';
@@ -163,6 +163,7 @@ class PrivateBar extends React.Component {
     let newChay;
     const { chatId } = this.props;
     let { tasksOpen, privsOpen } = this.state;
+    console.warn("AAAAAAAAAAAAAA")
 
     return (
       <div className="f-column-l">
@@ -238,7 +239,7 @@ class PrivateBar extends React.Component {
                                       ) : null}
                                     </UserRow>
 
-                                    {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
+                                    {e.unreadCount && this.props.getChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
                                   </div>
 
                                 )
@@ -291,7 +292,7 @@ class PrivateBar extends React.Component {
                                       ) : null}
                                     </UserRow>
 
-                                    {e.unreadCount && this.props.getPrivateChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
+                                    {e.unreadCount && this.props.getChat.id !== e.id  ? (<span className="maxiCounter">{e.unreadCount}</span>) : null}
                                   </div>
 
                                 )
@@ -369,16 +370,12 @@ PrivateBar.propTypes = {
     chats: PropTypes.array,
   }),
   cSetCountPrivates: PropTypes.func.isRequired,
-  getPrivateChat: PropTypes.object.isRequired,
-  setPrivateChat: PropTypes.func.isRequired,
+  getChat: PropTypes.object.isRequired,
   privateListCacheUpdate: PropTypes.func.isRequired
 };
 
 export default compose(
   graphql(cSetCountPrivates, { name: 'cSetCountPrivates' }),
   graphql(privateListCacheUpdate, { name: 'privateListCacheUpdate' }),
-  graphql(cSetChats, { name: 'cSetChats' }),
-  graphql(cGetChats, { name: 'cGetChats' }),
-  graphql(getChat, { name: 'getPrivateChat' }),
-  graphql(setChat, { name: 'setPrivateChat' }),
+  graphql(getChat, { name: 'getChat' }),
 )(PrivateBar);

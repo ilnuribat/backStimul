@@ -25,8 +25,8 @@ export const getChat = gql `
   query private{
       id @client
       name @client
-      unr @client
-      priv @client
+      # unr @client
+      # priv @client
   }
 `;
 export const cGetCountPrivates = gql `
