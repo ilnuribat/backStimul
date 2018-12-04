@@ -197,7 +197,7 @@ export default {
       const query = gql`
           query {
             user @client {
-              directs {
+              ${value.name} {
                 id
                 name
                 unreadCount
@@ -215,23 +215,32 @@ export default {
 
         return null
       }
-      // console.warn("prevstate unrPrivatesCacheUpdate is", previousState, value)
+      console.warn("prevstate unrPrivatesCacheUpdate is", previousState, value)
 
       if (value && !value.addUser) {
-        let filter = previousState.user.directs.filter(directs => directs.id === value.id)[0]
+        let filter
 
-        if (!value.reset) Object.assign(filter, { unreadCount: filter.unreadCount + 1 })
-        else  Object.assign(filter, { unreadCount: 0 })
+        value.name === "directs" ? filter = previousState.user.directs.filter(directs => directs.id === value.id)[0] :
+          filter = previousState.user.tasks.filter(tasks => tasks.id === value.id)[0]
+
+        !value.reset ? Object.assign(filter, { unreadCount: filter.unreadCount + 1 }) :
+          Object.assign(filter, { unreadCount: 0 })
+
         data = {
           user: {
-            directs: [...previousState.user.directs],
+            [value.name]: value.name === "directs" ? [...previousState.user.directs] : [...previousState.user.tasks],
             __typename: "User",
           }
         };
       } else {
+        let filter
+
+        value.name === "directs" ? filter = [...previousState.user.directs, {...value, unreadCount: 0, __typename: "Direct"}]  :
+          filter = [...previousState.user.tasks, {...value, unreadCount: 0, __typename: "Task"}]
+
         data = {
           user: {
-            directs: [...previousState.user.directs, {...value, unreadCount: 0, __typename: "Group"}],
+            [value.name]: filter,
             __typename: "User",
           }
         };

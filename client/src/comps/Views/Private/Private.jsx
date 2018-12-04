@@ -44,8 +44,6 @@ class Private extends Component {
       this.setState({
         chatId: localStorage.getItem('chatId'),
       })
-    }else{
-
     }
 
 
@@ -94,8 +92,6 @@ class Private extends Component {
         chatId: "",
         chatLocation: true,
       })
-    }else{
-
     }
 
   }

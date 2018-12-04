@@ -3,10 +3,8 @@ import moment from 'moment';
 import momentRu from 'moment/locale/ru';
 import PropTypes from 'prop-types';
 
-import client from "../../../client";
+
 import { qauf, _url, colorHash } from '../../../constants';
-import { MESSAGE_READ } from "../../../GraphQL/Qur/Subscr";
-import { MESSAGE_QUERY } from "../../../GraphQL/Qur/Query";
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { Svg } from '../../Parts/SVG/index';
 import { UserRow } from "../../Parts/Rows/Rows";
@@ -21,12 +19,14 @@ const toBottom = () => {
   }
 }
 
-let subsMsgs = []
+// let subsMsgs = []
 
 
 export default class MessagesList extends Component {
   componentDidMount() {
     // this.props.subscribeToNewMessages();
+    // document.getElementById("messageList").addEventListener('scroll', this.handleScroll, { passive: true })
+
     toBottom();
   }
 
@@ -36,33 +36,37 @@ export default class MessagesList extends Component {
     toBottom();
   }
 
-  subscribeToRead = (id) => {
-    //FIXME: timeout????
-    setTimeout(() => {
-      if (!subsMsgs.find(k => k === id)) {
-        client.query({ query: MESSAGE_QUERY, variables: { id: id }}).then(result => {
-          if (!result.data.message.isRead) {
-            const unsub = client.subscribe({
-              query: MESSAGE_READ,
-              variables: { id: id },
-            }).subscribe({
-              next(data) {
-                // console.warn("MESSAGE ISREAD!! UPDATED", data.data.messageRead)
-                subsMsgs = subsMsgs.filter(el => el != id)
-                unsub.unsubscribe()
-              }
-            })
+  // handleScroll(event) {
+  //   console.warn(event, event.target.scrollTop)
+  // }
 
-            subsMsgs = [...subsMsgs, id]
-            console.warn("ARRAY!", subsMsgs)
-            console.warn(unsub)
-          } //if
-        } //query
-        )
-      }
-    }, 0)
+  // subscribeToRead = (id) => {
+  //   //FIXME: timeout????
+  //   setTimeout(() => {
+  //     if (!subsMsgs.find(k => k === id)) {
+  //       client.query({ query: MESSAGE_QUERY, variables: { id: id }}).then(result => {
+  //         if (!result.data.message.isRead) {
+  //           const unsub = client.subscribe({
+  //             query: MESSAGE_READ,
+  //             variables: { id: id },
+  //           }).subscribe({
+  //             next(data) {
+  //               // console.warn("MESSAGE ISREAD!! UPDATED", data.data.messageRead)
+  //               subsMsgs = subsMsgs.filter(el => el != id)
+  //               unsub.unsubscribe()
+  //             }
+  //           })
 
-  }
+  //           subsMsgs = [...subsMsgs, id]
+  //           console.warn("ARRAY!", subsMsgs)
+  //           console.warn(unsub)
+  //         } //if
+  //       } //query
+  //       )
+  //     }
+  //   }, 0)
+
+  // }
 
   timeEdit(time){
     if(time){
@@ -139,6 +143,7 @@ export default class MessagesList extends Component {
                 // if (!read) this.subscribeToRead(node.id);
               }else{
                 if( n === l ){
+                  // console.warn ("LAST MESSAGE!")
                   let notread = messageRead_MUT(node.id);
 
                   qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{

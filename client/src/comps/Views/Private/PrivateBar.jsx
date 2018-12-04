@@ -7,7 +7,7 @@ import moment from 'moment';
 import { setChat, getChat, cSetCountPrivates, cSetChats, privateListCacheUpdate } from '../../../GraphQL/Cache';
 import { qauf, _url } from '../../../constants';
 import Loading from '../../Loading';
-import { PRIVS_QUERY, USERS_QUERY, cGetChats, CHATS_QUERY } from '../../../GraphQL/Qur/Query';
+import { USERS_QUERY, cGetChats, CHATS_QUERY } from '../../../GraphQL/Qur/Query';
 // import { MESSAGE_CREATED } from '../../../GraphQL/Qur/Subscr';
 import { createDirect } from '../../../GraphQL/Qur/Mutation';
 import { UserRow } from '../../Parts/Rows/Rows';
@@ -48,12 +48,13 @@ class PrivateBar extends React.Component {
     // this.props.setPrivateChat({
     //   variables: { id: gid, name: name }
     // })
+    console.warn("OPEN CHAT", privateChat)
 
     this.props.click(gid, privateChat)
 
     this.props.privateListCacheUpdate({
       variables:{
-        value: {id: gid, reset: true}
+        value: {id: gid, reset: true, name: privateChat ? "directs" : "tasks" }
       }
     })
   }
