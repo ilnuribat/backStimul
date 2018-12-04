@@ -216,7 +216,7 @@ class PrivateBar extends React.Component {
                                           </div>
                                           <div className="col">
                                             {e.lastMessage.createdAt ? (<div className="MessageSimpleText Row3">
-                                              {e.lastMessage.isRead ? <Svg svg="read" size="16" view="inline MR5"/> : null}
+                                              {/* {e.lastMessage.isRead ? <Svg svg="read" size="16" view="inline MR5"/> : null} */}
                                               {this.timeEdit(e.lastMessage.createdAt)}</div>) : null }
                                           </div>
 
@@ -269,7 +269,7 @@ class PrivateBar extends React.Component {
                                           </div>
                                           <div className="col">
                                             {e.lastMessage.createdAt ? (<div className="MessageSimpleText Row3">
-                                              {e.lastMessage.isRead ? <Svg svg="read" size="16" view="inline MR5"/> : null}
+                                              {/* {e.lastMessage.isRead ? <Svg svg="read" size="16" view="inline MR5"/> : null} */}
                                               {this.timeEdit(e.lastMessage.createdAt)}</div>) : null }
                                           </div>
 
