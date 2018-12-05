@@ -12,7 +12,7 @@ import DataQuery from '../../Parts/DataQuery';
 import Loading from '../../Loading';
 import { qauf, _url } from '../../../constants';
 import { setChat, setInfo, rootId, objectCacheUpdate } from '../../../GraphQL/Cache';
-import { getObjectTasks, glossaryStatus, TASKS_QUERY, checkObject, TASK_INFO, TASK_MESSAGES } from '../../../GraphQL/Qur/Query';
+import { getObjectTasks, glossaryStatus, TASKS_QUERY, checkObject, GR_QUERY } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
 import '../../../newcss/task.css';
@@ -81,6 +81,7 @@ class Board extends Component {
 
   componentWillMount(){
     const { location } = this.props;
+    const { objectId, taskId } = this.state;
     let id = "";
     let tid = "";
     let Mount = false;
@@ -95,9 +96,9 @@ class Board extends Component {
         objectId: id,
       });
     }
-    if(location.state && location.state.id){
+    if(location.state && location.state.taskId && location.state.taskId){
       Mount = true;
-      tid = location.state.id
+      tid = location.state.taskId
       localStorage.setItem('taskId', tid)
 
       this.setState({
@@ -113,14 +114,15 @@ class Board extends Component {
         objectId: id,
       });
     }
-    if(!location.state || !location.state.id && localStorage.getItem('taskId') ){
+    if(!location.state || !location.state.taskId ){
       Mount = true;
       tid = localStorage.getItem('taskId')
       this.setState({
-        toTask: true,
+        toTask: false,
         taskId: tid,
       });
     }
+
 
     if(id && Mount){
       this.chkObject(id)
@@ -154,30 +156,39 @@ class Board extends Component {
   }
 
   toTask(id, name){
-    if(id){
+
+    console.warn("To TASK ID")
+    console.warn(id)
+
+    if(id && id !== this.state.taskId){
       localStorage.setItem('taskId', id)
+      this.props.setChat({
+        variables: {
+          id: id === this.state.taskId ? "" : id,
+          name: id === this.state.taskId ? "" : name,
+          priv: false,
+        }
+      });
+      this.setState({
+        toTask: id === this.state.taskId ? false : true,
+        taskId: id === this.state.taskId ? "" : id,
+        taskName: id === this.state.taskId ? "" : name
+      })
+    }else{
+      this.setState({
+        toTask: false,
+        taskId: "",
+        taskName:""
+      })
     }
 
-    this.props.setChat({
-      variables: {
-        id: id === this.state.taskId ? "" : id,
-        name: id === this.state.taskId ? "" : name,
-        priv: false,
-      }
-    });
 
-    this.setState({
-      toTask: id === this.state.taskId ? false : true,
-      taskId: id === this.state.taskId ? "" : id,
-      taskName: id === this.state.taskId ? "" : name
-    })
 
-    if (id === this.state.taskId) {
-      localStorage.setItem('taskId', "")
-    }
+
+
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState, snapshot) {
     const { location } = this.props;
     const { objectId, taskId } = this.state;
     let id = "";
@@ -185,14 +196,27 @@ class Board extends Component {
     let Mount = false;
 
     if(location.state && location.state.objectId && location.state.objectId !== objectId){
-      Mount = true;
       id = location.state.objectId
       // localStorage.setItem('objectId', id)
+      this.setState({
+        objectId: id,
+        toTask: tid,
+        taskId: tid,
+      });
+      this.chkObject(id)
+      this.glossStatus(id)
     }
-    if(location.state && location.state.id && location.state.id !== taskId){
-      Mount = true;
-      tid = location.state.id
+    if(location.state && location.state.taskId && location.state.taskId !== taskId){
+      id = location.state.objectId
+      tid = location.state.taskId
       // localStorage.setItem('taskId', tid)
+      this.setState({
+        objectId: id,
+        toTask: tid,
+        taskId: tid,
+      });
+      this.chkObject(id)
+      this.glossStatus(id)
     }
 
     // if(!location.state || !location.state.objectId){
@@ -202,7 +226,7 @@ class Board extends Component {
     //     objectId: id,
     //   });
     // }
-    // if(!location.state || !location.state.id ){
+    // if(!location.state || !location.state.taskId ){
     //   Mount = true;
     //   tid = localStorage.getItem('taskId')
     //   this.setState({
@@ -212,20 +236,20 @@ class Board extends Component {
     // }
 
 
-    if(id && Mount){
-      this.setState({
-        objectId: id,
-        toTask: tid ? true : false,
-        taskId: tid ? tid : "",
-      });
-      this.chkObject(id)
-      this.glossStatus(id)
-    }
+    // if(id && Mount){
+    //   this.setState({
+    //     objectId: id,
+    //     toTask: tid ? true : false,
+    //     taskId: tid ? tid : "",
+    //   });
+    //   this.chkObject(id)
+    //   this.glossStatus(id)
+    // }
 
     // if(prevProps.location.state == this.props.location.state) return false
 
     // location.state && location.state.objectId ? id = location.state.objectId : id = localStorage.getItem('objectId')
-    // location.state && location.state.id ? taskId = location.state.id : id = localStorage.getItem('taskId')
+    // location.state && location.state.taskId ? taskId = location.state.taskId : id = localStorage.getItem('taskId')
 
     // if(id){
     //   this.setState({
@@ -236,9 +260,13 @@ class Board extends Component {
     //   this.glossStatus(id)
     // }
   }
-  shouldComponentUpdate(nextProps){
+  shouldComponentUpdate(nextProps, nextState){
 
     if(nextProps.location.state != this.props.location.state){
+      return true
+    }
+
+    if(nextState.taskData !== this.state.taskData){
       return true
     }
 
@@ -287,13 +315,13 @@ class Board extends Component {
   deleteTask () {
     qauf(deleteTask(this.state.taskIdCreate), _url, localStorage.getItem('auth-token')).then(a=>{
       console.warn("delete task done", a)
-      // this.props.objectCacheUpdate({
-      //   variables:{
-      //     action: "deleteTask",
-      //     taskId: this.state.taskIdCreate,
-      //     objectId: this.state.objectId
-      //   }
-      // })
+      this.props.objectCacheUpdate({
+        variables:{
+          action: "deleteTask",
+          taskId: this.state.taskIdCreate,
+          objectId: this.state.objectId
+        }
+      })
       this.changeDelModal("")
     }).catch((e)=>{
       console.warn(e);
@@ -336,14 +364,14 @@ class Board extends Component {
     if (!this.state.taskIdCreate)
       qauf(crTask(`{${changes}, objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("create task done", a.data.createTask.id)
-        // this.props.objectCacheUpdate({
-        //   variables:{
-        //     value: {[change] : value},
-        //     action: "createTask",
-        //     taskId: a.data.createTask.id,
-        //     objectId: this.state.objectId
-        //   }
-        // })
+        this.props.objectCacheUpdate({
+          variables:{
+            value: {[change] : value},
+            action: "createTask",
+            taskId: a.data.createTask.id,
+            objectId: this.state.objectId
+          }
+        })
         this.modalMessage("Изменения сохранены");
         this.setState({
           taskIdCreate: a.data.createTask.id,
@@ -356,14 +384,14 @@ class Board extends Component {
       qauf(updTask(this.state.taskIdCreate,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("update task done", a)
         this.modalMessage("Изменения сохранены");
-        // this.props.objectCacheUpdate({
-        //   variables:{
-        //     value: {value : value, key : change},
-        //     action: "updateTask",
-        //     taskId: this.state.taskIdCreate,
-        //     objectId: this.state.objectId
-        //   }
-        // })
+        this.props.objectCacheUpdate({
+          variables:{
+            value: {value : value, key : change},
+            action: "updateTask",
+            taskId: this.state.taskIdCreate,
+            objectId: this.state.objectId
+          }
+        })
       }).catch((e)=>{
         this.modalMessage("Ошибка " + e);
         console.warn(e);
@@ -385,7 +413,7 @@ class Board extends Component {
 
 
   render(){
-    const { objectId, status, taskId, toTask, showChilds } = this.state;
+    const { taskData, objectId, status, taskId, toTask, taskName, showChilds, HaveObj, openTask } = this.state;
     const { setInfo } = this.props;
 
 
@@ -421,7 +449,6 @@ class Board extends Component {
 
               let arr = _.sortBy(data.object.tasks, 'status');
               let cols = [[],[],[],[],[],[],[]];
-              const taskData = data.object.tasks.filter((task) => (task.id === this.state.taskId))[0]
 
               arr = _.sortBy(data.object.tasks, 'unreadCount');
               _.forEach(arr, (result)=>{
@@ -438,7 +465,7 @@ class Board extends Component {
                   <Content view="Board">
                     {toTask && taskId ?
                       <InnerBar view="Pad0">
-                        <Query query={TASK_MESSAGES} variables={{ id: `${taskId}` }} >
+                        <Query query={GR_QUERY} variables={{ id: `${taskId}` }} >
                           {({ loading, error, data }) => {
                             let a = false;
 
@@ -479,7 +506,7 @@ class Board extends Component {
                             </Link></div>) : null
                         }
                         <div className="BoardTopCenter">
-                          <h1>{data.object.name}</h1>
+                      <h1>{data.object.address && data.object.address.value ? data.object.address.value : null}{data.object.address && data.object.address.value ? <Svg size="24" view="InlBl" svg="toright" /> : null}{data.object.name}</h1>
                           <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
                         </div>
 
@@ -515,7 +542,36 @@ class Board extends Component {
                     <Panel>
 
                       {toTask ? (
-                        <TaskView taskId={this.state.taskId} objectId={this.state.objectId} data={taskData} />
+                        <Query query={GR_QUERY} variables={{ id: `${taskId}` }} >
+                          {({ loading, error, data }) => {
+                            let a = false;
+
+                            if (loading){
+
+                              return (
+                                <div style={{ paddingTop: 20, margin: "auto"}}>
+                                  <Loading />
+                                </div>
+                              );
+                            }
+                            if (error){
+
+                              return (
+                                <div className="errMess">
+                                  {error.message}
+                                </div>
+                              );
+                            }
+                            if (a && !data || !data.task)
+                              return null
+
+                            return(
+                              <TaskView taskId={this.state.taskId} objectId={this.state.objectId} data={data.task} />
+                            )
+                          }}
+                        </Query>
+
+
                       ) : ( <TextRow name="Информация" view="Pad510 BigName">
                         <TextRow name="" view="Pad510 MT10">
                           {data.object.name}
@@ -539,7 +595,7 @@ class Board extends Component {
                               <div>
                                 {
                                   data.object.docs ? data.object.docs.map(
-                                    (e)=>{
+                                    (e,i)=>{
                                       return(
                                         <FileRow key={e.id} name={e.name} id={e.id} icon="doc" />
                                       )
@@ -605,9 +661,10 @@ class Board extends Component {
 
                       <ModalRow>
                         <ModalCol>
-                          <div className="ModalBlockName">
-                                Срок истечения
-                          </div>
+                          <ModalBlockName>
+                            Срок истечения
+                          </ModalBlockName>
+
                           <label htmlFor="dateout" className="LabelInputDate">
                             <input type="date" name="dateout" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
                           </label>
@@ -646,7 +703,7 @@ class Board extends Component {
               )
 
             }else{
-              // console.log("Data and error",data, error)
+              console.log("Data and error",data, error)
 
               return(<div className="errMess">
                 Объект не найден

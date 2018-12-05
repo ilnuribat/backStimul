@@ -2,9 +2,11 @@ import React, { Component, Fragment } from "react";
 import moment from 'moment';
 import momentRu from 'moment/locale/ru';
 import PropTypes from 'prop-types';
-
+import { Query } from "react-apollo";
 
 import { qauf, _url, colorHash } from '../../../constants';
+import { MESSAGE_READ } from "../../../GraphQL/Qur/Subscr";
+import { MESSAGE_QUERY } from "../../../GraphQL/Qur/Query";
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { Svg } from '../../Parts/SVG/index';
 import { UserRow } from "../../Parts/Rows/Rows";
@@ -19,14 +21,35 @@ const toBottom = () => {
   }
 }
 
-// let subsMsgs = []
+const subscribeToRead = (subscribeToMore, id) =>{
+  // console.warn("SUBS", subscribeToMore, id)
 
+  return subscribeToMore({
+    document: MESSAGE_READ,
+    variables: { id: id },
+    shouldResubscribe: false,
+    updateQuery: (prev, { subscriptionData }) => {
+      if (!subscriptionData.data) return prev;
+
+      return Object.assign({}, prev, {
+        message:{
+          isRead: true,
+          text: prev.message.text,
+          __typename: prev.message.__typename,
+        }
+      });
+
+    },
+    onError: (err)=>{
+      console.warn('ERR-----',err)
+    },
+  })
+}
 
 export default class MessagesList extends Component {
+
   componentDidMount() {
     // this.props.subscribeToNewMessages();
-    // document.getElementById("messageList").addEventListener('scroll', this.handleScroll, { passive: true })
-
     toBottom();
   }
 
@@ -36,59 +59,20 @@ export default class MessagesList extends Component {
     toBottom();
   }
 
-  // handleScroll(event) {
-  //   console.warn(event, event.target.scrollTop)
-  // }
-
-  // subscribeToRead = (id) => {
-  //   //FIXME: timeout????
-  //   setTimeout(() => {
-  //     if (!subsMsgs.find(k => k === id)) {
-  //       client.query({ query: MESSAGE_QUERY, variables: { id: id }}).then(result => {
-  //         if (!result.data.message.isRead) {
-  //           const unsub = client.subscribe({
-  //             query: MESSAGE_READ,
-  //             variables: { id: id },
-  //           }).subscribe({
-  //             next(data) {
-  //               // console.warn("MESSAGE ISREAD!! UPDATED", data.data.messageRead)
-  //               subsMsgs = subsMsgs.filter(el => el != id)
-  //               unsub.unsubscribe()
-  //             }
-  //           })
-
-  //           subsMsgs = [...subsMsgs, id]
-  //           console.warn("ARRAY!", subsMsgs)
-  //           console.warn(unsub)
-  //         } //if
-  //       } //query
-  //       )
-  //     }
-  //   }, 0)
-
-  // }
-
-  timeEdit(time) {
-    if (time) {
+  timeEdit(time){
+    if(time){
 
       let a = '';
-      let dif = '';
+      let dif = moment(  moment(new Date()).format('YYYY MM D, h:mm:ss')  ).diff(   moment(time).format(' YYYY MM D, h:mm:ss')    ) / 3600000 ;
 
-      /** If day off */
-      dif = moment(moment().toISOString()).diff(moment(time).toISOString()) / 3600000;//3600000;
-
-      if (moment(time).format("YYYY") !== moment().format("YYYY")) {
-        a = moment(time).format("YYYY DD MMM, hh:mm");
-      }
-      else if (dif < 12 && moment(time).format("YYYY") == moment().format("YYYY")) {
-        a = moment(time).format("DD MMM, hh:mm");
-      }
-      else {
-        a = moment(time).format("hh:mm");
+      if( dif > 12){
+        a = moment(time).format('D MMM, h:mm');
+      }else{
+        a = moment(time).format('h:mm');
       }
 
       return a;
-    } else {
+    }else{
       return ''
     }
   }
@@ -138,7 +122,7 @@ export default class MessagesList extends Component {
 
               createdAt ? date = this.timeEdit(createdAt) : date = '0:00';
 
-
+              
               // let date = moment(createdAt).format('D MMM, h:mm')/*.fromNow()*/ || "неизв.";
               let messageText = text;
               let read = node.isRead;
@@ -147,10 +131,8 @@ export default class MessagesList extends Component {
                 tr = 'me';
                 username = "Я";
                 username = "";
-                // if (!read) this.subscribeToRead(node.id);
               }else{
                 if( n === l ){
-                  // console.warn ("LAST MESSAGE!")
                   let notread = messageRead_MUT(node.id);
 
                   qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
@@ -173,6 +155,8 @@ export default class MessagesList extends Component {
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
                       {/* <UserRow name={username} icon="1" view="Col" /> */}
                     </div>
+
+
                   ) : (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
                       {id !== uid ? (<UserRow name={username} icon="1" view="Col" />) : null}
@@ -184,9 +168,22 @@ export default class MessagesList extends Component {
                     <div className="f-row">
                       { id === uid ? (
                         <div className="chatIcon">
-                          { read ? (
-                            <div className="events"><Svg svg="dblcheckack" /> </div>
-                          ) : ( <Svg svg="dblcheck" /> ) }
+                          { !read ? (
+                            <Query
+                              query={MESSAGE_QUERY}
+                              variables={{ id:node.id }}
+                            >
+                              {({ data, subscribeToMore }) => {
+                                subscribeToRead(subscribeToMore, node.id);
+
+                                return(
+                                  <div className="events">{data.message && data.message.isRead ? <Svg svg="dblcheckack" /> : <Svg svg="dblcheck" />}  {
+                                    // console.warn('subs read data',data)
+                                  }</div>
+                                )}
+                              }
+                            </Query>
+                          ) : ( <Svg svg="dblcheckack" /> ) }
                         </div>
                       ) : null }
 

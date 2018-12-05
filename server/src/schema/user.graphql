@@ -4,14 +4,13 @@ input AuthUserInput {
   password: String!
 }
 
-
 type User {
   id: ID! # unique id for the user
   email: String! # we will also require a unique email per user
   username: String
   messages: [Message]
   groups: [Group]
-  directs: [Group]
+  directs: [Direct]
   tasks: [Task]
 }
 

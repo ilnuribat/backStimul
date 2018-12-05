@@ -61,7 +61,7 @@ class Task extends Component {
               </div>
               <div className="ChatMessage">
                 "{
-                  lastMessage.text.substring(0, 50) + "..." 
+                  lastMessage.text ? lastMessage.text.length > 50 ? lastMessage.text.substring(0, 50) + "..." : lastMessage.text : "noname"  
                 }"
               </div>
 

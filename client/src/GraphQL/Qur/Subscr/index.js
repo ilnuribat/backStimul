@@ -46,6 +46,7 @@ export const ALL_MESSAGE_CREATED = gql`
 export const MESSAGE_READ = gql`
   subscription messageRead($id: ID!){
       messageRead(id: $id){
+        id
         isRead
       }
   }
@@ -57,43 +58,71 @@ export const SUBS_GR = (id) => `
           text
   }
 `;
-export const taskUpdated = gql`
-subscription taskUpdated($id: ID!){
-  taskUpdated(id: $id){
+export const TASK_UPDATED = gql`
+subscription {
+  taskUpdated{
         id
         name
-        users{
-          id
-          username
-        }
-        unreadCount
+        parentId
+        objectId
+        endDate
         status
+        # users{
+        #   id
+        #   username
+        # }
         assignedTo{
           id
           username
         }
-        lastMessage{
-          from{
-            id
-            username
-          }
-          text
-        }
-        endDate
-        address{
-          value
-          coordinates
+        files {
+          id
+          date
+          mimeType
+          name
+          size
         }
       }
 }`;
 
-export const userTaskUpdated = gql`
-  subscription userTaskUpdated($id: ID!){
-    userTaskUpdated(id: $id){
+export const USER_TASK_UPDATED = gql`
+  subscription {
+    userTaskUpdated{
           action
           user{
               id
               username
+          }
+          task {
+            id
+            name
+            parentId
+            objectId
+            endDate
+            status
+            unreadCount
+            assignedTo{
+              id
+              username
+            }
+            files {
+              id
+              date
+              mimeType
+              name
+              size
+            }
+            users{
+              id
+              username
+            }
+            lastMessage{
+              from{
+                id
+                username
+              }
+              text
+            }
           }
       }
   }

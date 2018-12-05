@@ -110,6 +110,7 @@ module.exports = {
           $ne: user.id,
         },
       }).sort({ _id: 1 });
+      // вытащить свой курсор
       const myOldCursor = await UserGroup.findOne({
         groupId: message.groupId,
         userId: user.id,
@@ -132,6 +133,9 @@ module.exports = {
       // Если мой курсор был старее всех остальных
       // значит все сообщения в этом отрезке должны быть прочитаны.
       if (myOldCursor.lastReadCursor < lastAnotherReadCursor.lastReadCursor) {
+        // важно понимать, что endCursor может быть и меньше чем lastAnotherCursor
+        // например, зашли в чат и увидели только начало непрочитанных сообщений.
+        // тогда отрезок прочитанных сообщений будет от myOldCursor до message._id
         const endCursor = lastAnotherReadCursor.lastReadCursor < message._id
           ? lastAnotherReadCursor.lastReadCursor
           : message._id;
@@ -142,9 +146,11 @@ module.exports = {
           },
           groupId: message.groupId,
           userId: { $ne: user.id },
-        });
+        }).lean();
 
-        messages.map(m => pubsub.publish(MESSAGE_READ, { messageRead: { isRead: true, id: m._id.toString() } }));
+        messages.forEach((m) => {
+          pubsub.publish(MESSAGE_READ, { messageRead: { isRead: true, ...m } });
+        });
       }
 
       return userGroup.nModified;
@@ -154,7 +160,7 @@ module.exports = {
     messageAdded: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([MESSAGE_ADDED]),
-        async ({ messageAdded: { groupId: mGroupId } }, { groupId }, user) => {
+        async ({ messageAdded: { groupId: mGroupId } }, { groupId }, { user }) => {
           if (groupId) {
             return mGroupId.toString() === groupId;
           }
@@ -175,7 +181,7 @@ module.exports = {
     messageRead: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([MESSAGE_READ]),
-        ({ messageRead: { id: mId } }, { id }) => mId === id,
+        ({ messageRead }, args) => messageRead._id.equals(args.id),
       ),
     },
   },

@@ -153,6 +153,49 @@ export const PRIVS_QUERY = gql `
           id
           name
           unreadCount
+          lastMessage{
+          from{
+            id
+            username
+          }
+          text
+          isRead
+          createdAt
+        }
+        }
+      }
+    }
+`;
+export const CHATS_QUERY = gql `
+    query{
+      user{
+        directs{
+          id
+          name
+          unreadCount
+          lastMessage{
+          from{
+            id
+            username
+          }
+          text
+          isRead
+          createdAt
+        }
+        }
+        tasks{
+          id
+          name
+          unreadCount
+          lastMessage{
+          from{
+            id
+            username
+          }
+          text
+          isRead
+          createdAt
+        }
         }
       }
     }
@@ -191,9 +234,10 @@ export const TASKS_QUERY = gql `
     }
 `;
 
-export const PRIV_QUERY = gql `
-  query ($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
+export const PRIV_QUERY = gql`
+  query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}){
       direct(id: $id ){
+          name
           unreadCount
           messages(messageConnection: $messageConnection) {
               edges {
@@ -212,6 +256,7 @@ export const PRIV_QUERY = gql `
                   }
               }
           }
+          __typename
       }
   }
 `;
@@ -219,35 +264,35 @@ export const PRIV_QUERY = gql `
 export const MESSAGE_QUERY = gql `
   query message($id: ID!){
     message(id: $id ){
+          id
           isRead
           text
       }
   }
 `;
-
-export const GR_QUERY = gql `
-  query ($id: ID!, $messageConnection: ConnectionInput = {first: 0}){
+export const TASK_MESSAGES = gql `
+  query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}){
     task(id: $id ){
           name
-          users{
-              id
-              username
-          }
-          parentId
-          objectId
-          status
-          endDate
-          assignedTo{
-            id
-            username
-          }
-          files {
-            id
-            size
-            name
-            mimeType
-            date
-          }
+          # users{
+          #     id
+          #     username
+          # }
+          # parentId
+          # objectId
+          # status
+          # endDate
+          # assignedTo{
+          #   id
+          #   username
+          # }
+          # files {
+          #   id
+          #   size
+          #   name
+          #   mimeType
+          #   date
+          # }
           messages(messageConnection: $messageConnection) {
               edges {
                   cursor
@@ -271,6 +316,43 @@ export const GR_QUERY = gql `
       }
   }
 `;
+export const TASK_INFO = gql `
+  query ($id: ID!){
+    task(id: $id ){
+          id
+          name
+          users{
+              id
+              username
+          }
+          parentId
+          objectId
+          status
+          endDate
+          assignedTo{
+            id
+            username
+          }
+          files {
+            id
+            size
+            name
+            mimeType
+            date
+          }
+      }
+  }
+`;
+
+export const TASK_INFO_SMALL = gql `
+  query ($id: ID!){
+    task(id: $id ){
+          objectId
+      }
+  }
+`;
+
+
 export const getObjectInfo = gql `
  query getObjectInfo($id: ID!){
   object (id: $id) {
@@ -373,15 +455,13 @@ export const getUnreadCount = () => `
           id
           unreadCount
         }
-        groups {
+        tasks {
           id
           unreadCount
         }
       }
     }
 `;
-
-
 
 
 export const getObjectTasks2 = (id) => `
@@ -436,6 +516,7 @@ export const checkObject = (id) => `
 export const getObjectTasks = gql `
  query getObjectTasks($id: ID!){
   object (id: $id) {
+      # id
       name
       parentId
       address{
@@ -445,6 +526,7 @@ export const getObjectTasks = gql `
       tasks{
         id
         parentId
+        objectId
         name
         endDate
         status
@@ -456,6 +538,13 @@ export const getObjectTasks = gql `
         users{
           id
           username
+        }
+        files {
+          id
+          size
+          name
+          mimeType
+          date
         }
         lastMessage{
           from{

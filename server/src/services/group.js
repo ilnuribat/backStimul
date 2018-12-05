@@ -37,9 +37,22 @@ async function getMessages(parent, { messageConnection }, { user }) {
     first, last, before, after,
   } = messageConnection || {};
     // before - last, after - first
-  const where = formWhere({ id, before, after });
+  const where = formWhere({ id, ...messageConnection });
+  const sort = { _id: 1 };
 
-  let messages = await Message.find(where).limit(first || last).lean();
+  if (last) {
+    sort._id = -1;
+  }
+
+  let messages = await Message
+    .find(where)
+    .sort(sort)
+    .limit(first || last)
+    .lean();
+
+  if (last) {
+    messages = messages.reverse();
+  }
   const oldestCursor = await UserGroup.findOne({
     groupId: id,
     userId: {

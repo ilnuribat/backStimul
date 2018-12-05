@@ -131,10 +131,12 @@ export default {
       return {barType, barShow, __typename: 'Bar' };
     },
 
-    messagesListCacheUpdate: (_, {lastMessage, queryName},  { cache }) => {
-      // console.warn("query" , queryName)
+    messagesCacheUpdate: (_, {lastMessage, queryName},  { cache }) => {
+      const tname = queryName.charAt(0).toUpperCase()+queryName.substring(1)
+
+      // console.warn("queryName is", queryName, tname)
       const query = gql`
-        query messagesListList($id: ID!, $messageConnection: ConnectionInput = {first: 0}) {
+        query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}) {
           ${queryName}(id: $id ) @client {
             messages(messageConnection: $messageConnection) {
               edges {
@@ -156,13 +158,14 @@ export default {
       try {
         previousState = cache.readQuery({ query, variables: {"id": lastMessage.groupId}});
       } catch (error) {
-        console.warn("cache is empty!")
+        console.warn("cache is messagesCacheUpdate empty!")
 
         return null
       }
 
       // console.warn("lastMessage is", lastMessage)
       // console.warn("prevstate is", previousState)
+      // console.warn("queryName is", queryName, tname)
 
       const newFeedItem = {cursor: lastMessage.id, node: {...lastMessage,  __typename: "Message"},
         __typename: "MessageEdge" };
@@ -177,7 +180,7 @@ export default {
             edges: edges,
             __typename: "MessageConnection",
           },
-          __typename: queryName.charAt(0).toUpperCase()
+          __typename: tname
         }
       };
 
@@ -188,7 +191,73 @@ export default {
       });
 
 
-      return {lastMessage, __typename: queryName.charAt(0).toUpperCase()  };
+      return {lastMessage, __typename: tname };
+    },
+    chatListCacheUpdate: (_, { value, queryName, counter },  { cache }) => {
+      const query = gql`
+          query {
+            user @client {
+              ${queryName} {
+                id
+                name
+                unreadCount
+                lastMessage{
+                  createdAt
+                  from{
+                    id
+                    username
+                  }
+                  text
+                }
+              }
+            }
+          }
+      `;
+      let previousState;
+      let data;
+
+      try {
+        previousState = cache.readQuery({ query });
+      } catch (error) {
+        console.warn("cache is empty!")
+
+        return null
+      }
+      // console.warn("prevstate unrPrivatesCacheUpdate is", previousState, value)
+
+      if (!value.addUser) {
+        let filter
+        let count = 0
+
+        if (counter) count = 1
+
+        queryName === "directs" ? filter = previousState.user.directs.filter(directs => directs.id === value.groupId)[0] :
+          filter = previousState.user.tasks.filter(tasks => tasks.id === value.groupId)[0]
+        !value.reset ? Object.assign(filter, { unreadCount: filter.unreadCount + count, lastMessage : { from: value.from, text: value.text, createdAt: value.createdAt,  __typename: "Message"} }) :
+          Object.assign(filter, { unreadCount: 0, lastMessage: filter.lastMessage })
+
+        data = {
+          user: {
+            [queryName]: queryName === "directs" ? [...previousState.user.directs] : [...previousState.user.tasks],
+            __typename: "User",
+          }
+        };
+      } else {
+        data = {
+          user: {
+            directs: [...previousState.user.directs, {...value, unreadCount: 0, lastMessage: null, __typename: "Direct"}],
+            __typename: "User",
+          }
+        };
+      }
+
+      cache.writeQuery({
+        query,
+        data,
+      });
+
+      return true;
+
     },
     privateListCacheUpdate: (_, { value },  { cache }) => {
       const query = gql`
@@ -248,9 +317,49 @@ export default {
       let previousState;
 
       if (value && value.key && value.key==="status") value.value = parseInt(value.value)
-      console.warn("ДАННЫЕ!", taskId, objectId, action, value);
+      // console.warn("ДАННЫЕ!", taskId, objectId, action, value);
 
       switch (action) {
+      case "lastMessage":
+        query = gql`
+          query object($id: ID!) {
+            object(id: $id ) @client {
+              __typename
+              tasks {
+                id
+                lastMessage{
+                  from{
+                    id
+                    username
+                  }
+                  text
+                }
+                __typename
+              }
+            }
+          }
+        `;
+        try {
+          previousState = cache.readQuery({ query, variables: {"id": objectId}});
+        } catch (error) {
+          console.warn("cache is empty!")
+
+          return null
+        }
+        // console.warn("prevstate is", previousState)
+
+        Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { lastMessage : { from: value.from, text: value.text , __typename: "Message"} });
+
+        // console.warn("prevstate is",  previousState.object.tasks)
+
+        data = {
+          object: {
+            tasks:  previousState.object.tasks,
+            __typename: "Object"
+          }
+        };
+
+        break;
       case "updateTask":
         query = gql`
           query object($id: ID!) {
@@ -302,11 +411,19 @@ export default {
                 name
                 endDate
                 parentId
+                objectId
                 status
                 unreadCount
                 assignedTo{
                   id
                   username
+                }
+                files {
+                  id
+                  size
+                  name
+                  mimeType
+                  date
                 }
                 users{
                   id
@@ -335,17 +452,19 @@ export default {
         data = {
           object: {
             tasks:  [...previousState.object.tasks, {
-              id: taskId,
-              // ...value,
-              name: value.name ? value.name : "Не указано",
-              users: value.users ? value.users : null,
-              unreadCount: value.unreadCount ? value.unreadCount : 0 ,
-              lastMessage: value.lastMessage ? value.lastMessage : null,
-              status: value.status ? value.status : null,
-              parentId: value.parentId ? value.parentId : null,
-              assignedTo: value.assignedTo ?  value.assignedTo :null,
-              endDate: value.endDate ? value.endDate :null,
-              __typename: "Task"
+              // id: taskId,
+              ...value,
+              // objectId,
+              // files: value.files ?  value.files :null,
+              // name: value.name ? value.name : "Не указано",
+              // users: value.users ? value.users : null,
+              // unreadCount: value.unreadCount ? value.unreadCount : 0 ,
+              // lastMessage: value.lastMessage ? value.lastMessage : null,
+              // status: value.status ? value.status : null,
+              // parentId: value.parentId ? value.parentId : null,
+              // assignedTo: value.assignedTo ?  value.assignedTo :null,
+              // endDate: value.endDate ? value.endDate :null,
+              // __typename: "Task"
             }],
             __typename: "Object"
           }
@@ -356,7 +475,6 @@ export default {
         query = gql`
           query object($id: ID!) {
             object(id: $id ) @client {
-              __typename
               tasks {
                 id
                 name

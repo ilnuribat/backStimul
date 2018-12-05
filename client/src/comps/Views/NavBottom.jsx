@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom';
-import _ from 'lodash';
+// import PropTypes from 'prop-types'
+// import { Link } from 'react-router-dom';
+// import _ from 'lodash';
 import { graphql, compose } from "react-apollo";
 // import NavTopInner from './NavTopInner';
 // import Logo from './Logo.jpg'
-import logoImg from '../Img/Logo';
-import { qauf, _url } from '../../constants';
-import { ALL_MESSAGE_CREATED } from '../../GraphQL/Qur/Subscr';
-import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, messagesListCacheUpdate, privateListCacheUpdate } from '../../GraphQL/Cache';
-import { getUnreadCount } from '../../GraphQL/Qur/Query';
-import { UserRow } from '../Parts/Rows/Rows';
+// import logoImg from '../Img/Logo';
+// import { qauf, _url } from '../../constants';
+
+import { cGetCountPrivates } from '../../GraphQL/Cache';
+
+// import { UserRow } from '../Parts/Rows/Rows';
 
 class NavBottom extends Component {
   constructor(props) {
@@ -23,63 +23,63 @@ class NavBottom extends Component {
     this.changeTheme = this.changeTheme.bind(this)
   }
 
-    componentDidMount (){
-      if(localStorage.getItem('theme')){
-        this.setState({
-          theme: localStorage.getItem('theme'),
-        })
-      }
+  componentDidMount (){
+    if(localStorage.getItem('theme')){
+      this.setState({
+        theme: localStorage.getItem('theme'),
+      })
+    }
+  }
+
+  changeTheme(){
+    if(!this.state.theme){
+      localStorage.setItem('theme', 'white')
+      this.setState({
+        theme: 'white',
+      });
+    }
+    else if(this.state.theme === 'white'){
+      localStorage.setItem('theme', 'gold')
+      this.setState({
+        theme: 'gold',
+      });
+    }else{
+      localStorage.setItem('theme', '')
+      this.setState({
+        theme: '',
+      });
+    }
+  }
+
+  render() {
+    let ColorParent, ColorSecond,BakgrColorPrimary,BakgrColorSecondary,BakgrColorMaster,BakgrColorSlave;
+
+    if(this.state.theme === 'white'){
+      ColorParent = "#222";
+      ColorSecond = "#666";
+      BakgrColorPrimary = "#f4f8f9";
+      BakgrColorSecondary = "#3e74b27c";
+      BakgrColorMaster = "#ffffff";
+      BakgrColorSlave = "#eaedee";
     }
 
-    changeTheme(){
-      if(!this.state.theme){
-        localStorage.setItem('theme', 'white')
-        this.setState({
-          theme: 'white',
-        });
-      }
-      else if(this.state.theme === 'white'){
-        localStorage.setItem('theme', 'gold')
-        this.setState({
-          theme: 'gold',
-        });
-      }else{
-        localStorage.setItem('theme', '')
-        this.setState({
-          theme: '',
-        });
-      }
+    if(this.state.theme === 'gold'){
+      ColorParent = "#222";
+      ColorSecond = "#666";
+      BakgrColorPrimary = "#d9ddb9";
+      BakgrColorSecondary = "#3e74b27c";
+      BakgrColorMaster = "#bba927";
+      BakgrColorSlave = "#d9ddb9";
     }
 
-    render() {
-      let ColorParent, ColorSecond,BakgrColorPrimary,BakgrColorSecondary,BakgrColorMaster,BakgrColorSlave;
-
-      if(this.state.theme === 'white'){
-        ColorParent = "#222";
-        ColorSecond = "#666";
-        BakgrColorPrimary = "#f4f8f9";
-        BakgrColorSecondary = "#3e74b27c";
-        BakgrColorMaster = "#ffffff";
-        BakgrColorSlave = "#eaedee";
-      }
-
-      if(this.state.theme === 'gold'){
-        ColorParent = "#222";
-        ColorSecond = "#666";
-        BakgrColorPrimary = "#d9ddb9";
-        BakgrColorSecondary = "#3e74b27c";
-        BakgrColorMaster = "#f2d819";
-        BakgrColorSlave = "#eaedee";
-      }
 
 
 
+    return (
+      <div className = "NavBottom" >
+        <div className={"ColorButton " + this.state.theme } onClick={this.changeTheme}></div>
 
-      return (
-        <div className = "NavBottom" >
-          <div className={"ColorButton " + this.state.theme } onClick={this.changeTheme}></div>
-
-          {this.state.theme ? (<style type="text/css">{`
+        {this.state.theme ? (<style type="text/css">{`
             body,h1,h2,h3,h4,h5,p,div,span,
             .TileBoardTopCenter,.TileBoardTop .TileBoardTopName h1,
             .TileBoardTop .TileBoardTopCenter h1,
@@ -92,7 +92,8 @@ class NavBottom extends Component {
             {color:${ColorParent};}
             .grey p, .cgr p,
             .grey, .cgr,
-            .UserRow .UserName
+            .UserRow .UserName,
+            .UserNameText
             {
               color:${ColorSecond};
             }
@@ -112,25 +113,22 @@ class NavBottom extends Component {
               background: transparent;
               background-color: transparent;
             }
-            
             .searchTag
             {
               background:${BakgrColorPrimary};
               background-color: ${BakgrColorPrimary};
               color:${ColorParent};
             }
-            .Chat       
+            .Chat
             {
               background: ${BakgrColorSlave};
               background-color: ${BakgrColorSlave};
               color:${ColorParent};
             }
-            
             .EditForm label input, label.LabelInputText input,
             label.LabelSelect input, label.LabelInputDate input,
             label.LabelInputList input
             ,.ChatForm .textarea-wrapper
-            
             {
               background: ${BakgrColorPrimary};
               background-color: ${BakgrColorPrimary};
@@ -153,11 +151,22 @@ class NavBottom extends Component {
             .FileIcon .Svg{
               background: ${BakgrColorPrimary};
             }
+            .EditForm label, label.LabelInputText, label.LabelSelect, label.LabelInputDate, label.LabelInputList{
+              background: ${BakgrColorPrimary};
+              background-color: ${BakgrColorPrimary};
+            }
+            .Chats .Row{
+              background: #fafbfb;
+              border-bottom: 1px solid #e6ecee;
+            }
+            .ChatForm input, .ChatForm textarea{
+              color:#222;
+            }
 
           `}</style>) : null}
-        </div>
-      )
-    }
+      </div>
+    )
+  }
 }
 
 

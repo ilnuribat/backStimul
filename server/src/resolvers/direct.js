@@ -1,7 +1,5 @@
 const { Group, Message, User } = require('../models');
-const {
-  getPageInfo, formWhere, getDirectChats,
-} = require('../services/chat');
+const { getDirectChats } = require('../services/chat');
 const groupService = require('../services/group');
 const { directMessage } = require('../services/chat');
 
@@ -23,34 +21,7 @@ module.exports = {
     },
     users: groupService.getMembers,
     unreadCount: groupService.unreadCount,
-    messages: async (parent, { messageConnection }) => {
-      const { id } = parent;
-      const group = await Group.findById(id);
-
-      if (!group /* || group.code */) {
-        throw new Error('no group found');
-      }
-      const {
-        first, last, before, after,
-      } = messageConnection || {};
-      // before - last, after - first
-
-      const where = formWhere({ id, before, after });
-
-      const messages = await Message.find(where).limit(first || last);
-
-      const pageInfo = await getPageInfo({
-        messages, groupId: id, before, after,
-      });
-
-      return {
-        pageInfo,
-        edges: messages.map(m => ({
-          node: m,
-          cursor: m.id,
-        })),
-      };
-    },
+    messages: groupService.getMessages,
   },
   Query: {
     directs: async (parent, args, { user }) => {

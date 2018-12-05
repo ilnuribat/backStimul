@@ -25,8 +25,8 @@ export const getChat = gql `
   query private{
       id @client
       name @client
-      unr @client
-      priv @client
+      # unr @client
+      # priv @client
   }
 `;
 export const cGetCountPrivates = gql `
@@ -262,9 +262,9 @@ export const setTemp = gql `
     }
   }
 `;
-export const messagesListCacheUpdate = gql `
-  mutation messagesListCacheUpdate($lastMessage: Object!, $queryName: String!) {
-    messagesListCacheUpdate(lastMessage: $lastMessage, queryName: $queryName) @client {
+export const messagesCacheUpdate = gql `
+  mutation messagesCacheUpdate($lastMessage: Object!, $queryName: String!) {
+    messagesCacheUpdate(lastMessage: $lastMessage, queryName: $queryName) @client {
       lastMessage
     }
   }
@@ -279,9 +279,9 @@ export const objectCacheUpdate = gql `
     objectCacheUpdate(action: $action, value: $value, objectId: $objectId, taskId: $taskId) @client
   }
 `;
-export const privateListCacheUpdate = gql `
-  mutation privateListCacheUpdate($value: Object!) {
-    privateListCacheUpdate(value: $value) @client
+export const chatListCacheUpdate = gql `
+  mutation chatListCacheUpdate($value: Object!, $queryName: String!, $counter: Bool) {
+    chatListCacheUpdate(value: $value, queryName: $queryName, counter: $counter) @client
   }
 `;
 export const delInfo = gql `

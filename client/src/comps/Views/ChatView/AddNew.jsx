@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import { colorHash } from '../../../constants';
 import { selectUser, appendUser, getChat } from "../../../GraphQL/Cache";
 
-selectUser
+
 class AddNew extends Component {
   constructor(props){
     super(props)
@@ -48,9 +48,14 @@ class AddNew extends Component {
 
   submitHandler = e => {
     e.preventDefault()
-
+    
+    console.log('====================================');
+    console.log(1);
+    console.log('====================================');
+    
+    
     let { input } = this.state;
-    const { add, appendUser, getchat } = this.props;
+    const { add, appendUser, getchat, id } = this.props;
     let inp = input[0];
 
     inp = inp.replace(/\s\s/g,'');
@@ -60,7 +65,7 @@ class AddNew extends Component {
     this.setState({
       input: [''],
     })
-    let gid =  getchat.id || localStorage.getItem('gid') || 1;
+    let gid =  getchat.id || id || localStorage.getItem('gid') || 1;
 
     let message = appendUser.userName?'@'+appendUser.userName + ' ' + inp:inp;
 

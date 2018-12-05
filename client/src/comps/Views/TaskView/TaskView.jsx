@@ -6,23 +6,19 @@ import _ from 'lodash';
 import axios from 'axios';
 import 'animate.css';
 import moment from 'moment';
-// import momentRu from 'moment/locale/ru';
 import { qauf, _url } from '../../../constants';
 import { uploadFile, removeFile, updTask } from '../../../GraphQL/Qur/Mutation';
-import { selectUser, taskCacheUpdate, objectCacheUpdate } from '../../../GraphQL/Cache';
+import { selectUser, objectCacheUpdate } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, getObjectTasksSmall } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
-// import Bar from '../../Lays/Bar/index';
-// import Panel from '../../Lays/Panel/index';
 import '../../../newcss/taskview.css'
-import { UserRow, FileRow, ResponsibleRow } from '../../Parts/Rows/Rows';
+import { UserRow, FileRow, ResponsibleRow, TextRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
-// import Svg from '../../Parts/SVG'
 import InnerBar from '../../Lays/InnerBar/InnerBar';
-
-// import ContentInner from '../../Lays/ContentInner/ContentInner';
 import { FakeSelect } from '../../Parts/FakeSelect/FakeSelect';
 import Svg from '../../Parts/SVG';
+import Loading from '../../Loading';
+
 
 moment.locale('ru')
 
@@ -87,75 +83,74 @@ class TaskView extends Component {
     })
   }
 
-  updateCacheFile (data) {
-    this.props.taskCacheUpdate({
-      variables:{
-        value: data,
-        action: "uploadFile",
-        taskId: this.props.taskId,
-      }
-    })
-  }
+  // updateCacheFile (data) {
+  //   this.props.taskCacheUpdate({
+  //     variables:{
+  //       value: data,
+  //       action: "uploadFile",
+  //       taskId: this.props.taskId,
+  //     }
+  //   })
+  // }
 
   deleteFile (id) {
     qauf(removeFile(id), _url, localStorage.getItem('auth-token')).then((a)=>{
       // console.warn(a)
-      this.props.taskCacheUpdate({
-        variables:{
-          value: {id: id},
-          action: "deleteFile",
-          taskId: this.props.taskId,
-        }
-      })
+      // this.props.taskCacheUpdate({
+      //   variables:{
+      //     value: {id: id},
+      //     action: "deleteFile",
+      //     taskId: this.props.taskId,
+      //   }
+      // })
     }).catch((e)=>{
       console.warn(e);
     });
   }
 
-  writeTaskData(value, change, quota, userName) {
+  writeTaskData(value, change, quota) {
     let cap = "";
+
+    if (quota) cap = '"';
 
     // if (value && value.name) {
     //   localStorage.setItem('grnm',value.name);
     //   this.setState({taskName: value.name})
     // }
-
-    if (quota) cap = '"';
     // console.warn("writeData", e, change, this.props.taskId)
     qauf(updTask(this.props.taskId,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
-      // console.warn("update task done", a)
       this.modalMessage(a.data.updateTask);
-      switch (change) {
-      case "assignedTo":
-        this.props.taskCacheUpdate({
-          variables:{
-            action: change,
-            value: { id: value, username: userName, key: change },
-            taskId: this.props.taskId,
-          }
-        })
-        break;
-      default:
-        this.props.taskCacheUpdate({
-          variables:{
-            value: { value : value, key : change },
-            action: change,
-            taskId: this.props.taskId,
-          }
-        })
+      // switch (change) {
+      // case "assignedTo":
+      //   this.props.taskCacheUpdate({
+      //     variables:{
+      //       action: change,
+      //       value: { id: value, username: userName, key: change },
+      //       taskId: this.props.taskId,
+      //     }
+      //   })
+      //   break;
+      // default:
+      //   this.props.taskCacheUpdate({
+      //     variables:{
+      //       value: { value : value, key : change },
+      //       action: change,
+      //       taskId: this.props.taskId,
+      //     }
+      //   })
 
-        if (change !== "addUser" && change !== "delUser") {
-          this.props.objectCacheUpdate({
-            variables:{
-              value: { value: value, key: change },
-              action: "updateTask",
-              taskId: this.props.taskId,
-              objectId: this.props.objectId
-            }
-          })
-        }
-        break;
-      }
+      //   if (change !== "addUser" && change !== "delUser") {
+      //     this.props.objectCacheUpdate({
+      //       variables:{
+      //         value: { value: value, key: change },
+      //         action: "updateTask",
+      //         taskId: this.props.taskId,
+      //         objectId: this.props.objectId
+      //       }
+      //     })
+      //   }
+      //   break;
+      // }
     }).catch((e)=>{
       console.warn(e);
     })
@@ -247,20 +242,20 @@ class TaskView extends Component {
       qauf(q(), _url, localStorage.getItem('auth-token')).then(a=>{
 
         this.modalMessage(a.data.updateUsersTask);
-        !dels ?
-          this.props.taskCacheUpdate({
-            variables:{
-              action: "addUser",
-              value: { id: userId, username: this.state.newUser },
-              taskId: this.props.taskId,
-            }
-          }) : this.props.taskCacheUpdate({
-            variables:{
-              action: "delUser",
-              value: { id: userId },
-              taskId: this.props.taskId,
-            }
-          })
+        // !dels ?
+        //   this.props.taskCacheUpdate({
+        //     variables:{
+        //       action: "addUser",
+        //       value: { id: userId, username: this.state.newUser },
+        //       taskId: this.props.taskId,
+        //     }
+        //   }) : this.props.taskCacheUpdate({
+        //     variables:{
+        //       action: "delUser",
+        //       value: { id: userId },
+        //       taskId: this.props.taskId,
+        //     }
+        //   })
 
         this.setState({
           newUser: "",
@@ -292,6 +287,9 @@ class TaskView extends Component {
       method: 'GET',
       responseType: 'blob', // important
     }).then((response) => {
+
+
+
       const url = window.URL.createObjectURL(new Blob([response.data], {type: file.mimeType}));
       const link = document.createElement('a');
 
@@ -310,135 +308,160 @@ class TaskView extends Component {
     // let data = dataObject.filter((task) => (task.id === taskId))[0]
 
     // console.warn("TASKID", data)
+    if(data){
 
-    let dataValue;
 
-    let taskStatus = data.status
+      let dataValue;
 
-    if (data.endDate) dataValue = data.endDate.replace(/T.*$/gi, "")
+      let taskStatus = data.status
 
-    return(
-      <Content view="OvH">
-        <InnerBar>
-          <div className="tab-roll">
-            <div className="header"><h4>Пользователи</h4></div>
-            <div className="content">
-              <div className="content-scroll">
+      if (data.endDate) dataValue = data.endDate.replace(/T.*$/gi, "")
 
-                {data.users && data.users.map(
-                  (e,i)=>{
-                    return(
-                      <div className="username" role="presentation" key={'usr-'+i} >
-                        {localStorage.getItem('userid') !== e.id ?
-                          <UserRow id={e.id} name={e.username} icon="1" ondelete={(id)=>this.userAdd(id, false)} />
-                          : null }
-                        <div className="hoverTrigger">
-                          <div className="hover">
-                            <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
-                            <div className="btn v2" onClick={()=>this.userAdd(e.id)}>Удалить {e.username}</div>
+      return(
+        <Content view="OvH">
+          <InnerBar>
+            <TextRow name="Информация" view="BigName">
+              <TextRow name="" view="Pad510 MT10">
+                {
+                  data.name
+                }
+              </TextRow>
+              <TextRow name="" view="cgr Pad510 s">
+                {
+                  dataValue ? moment(dataValue).format('D MMMM, h:mm') : null
+                }
+              </TextRow>
+              <TextRow name="" view="cgr Pad510 s">
+                {
+                  this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Новая"
+                }
+              </TextRow>
+
+
+              <TextRow name="" view="cgr Pad510 s">
+                {data && data.assignedTo && data.assignedTo.id && data.assignedTo.username ? (
+                  <UserRow size="24" id={data.assignedTo.id} name={data.assignedTo.username ? data.assignedTo.username : "Нет имени"} icon="1" />
+                ): "Ответственный не назначен"}
+              </TextRow>
+            </TextRow>
+            <div className="tab-roll">
+              <div className="header"><h4>Пользователи</h4></div>
+              <div className="content">
+                <div className="content-scroll">
+
+                  {data.users && data.users.map(
+                    (e,i)=>{
+                      return(
+                        <div className="username" role="presentation" key={'usr-'+i} >
+                          {localStorage.getItem('userid') !== e.id ?
+                            <UserRow id={e.id} name={e.username} icon="1" ondelete={(id)=>this.userAdd(id, false)} />
+                            : null }
+                          <div className="hoverTrigger">
+                            <div className="hover">
+                              <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
+                              <div className="btn v2" onClick={()=>this.userAdd(e.id)}>Удалить {e.username}</div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )
+                      )
+                    }
+                  )
                   }
-                )
-                }
-              </div>
-
-              <div className="FakeLinkSvg"><Svg svg="expose" size="32" /></div>
-            </div>
-          </div>
-          <div className="tab-roll">
-            <div className="header"><h4>Документы</h4></div>
-            <div className="content">
-              <div className="content-scroll">
-                {data.files && data.files.length > 0 ? data.files.map(
-                  (e)=>{
-                    return(
-                      <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
-                    )
-                  }
-                ) : (
-                  <div>
-                    {/* <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
-                                  <FileRow name="Фото подвала.jpg" id="id1237" icon="img" /> */}
-                    <div className="FakeLink">Файлов нет</div>
-                  </div>
-                )
-                }
-              </div>
-            </div>
-          </div>
-
-          <div className="content">
-            <div className="Btn v1" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
-          </div>
-
-        </InnerBar>
-        {modal ? (
-          <Modal close={()=>{ this.setState({modal: !modal}) }} message={this.state.modalMessageShow?this.state.modalMessage:""}>
-
-            <ModalRow>
-              <ModalCol>
-                <InputWrapper name={data.name} save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
-                            Название
-                </InputWrapper>
-              </ModalCol>
-            </ModalRow>
-
-
-            <ModalRow>
-              <ModalCol>
-                <ModalBlockName>
-                            Статус
-                </ModalBlockName>
-
-                <ResponsibleRow >
-                  <UserRow id={taskStatus || "1"} name={this.state.status.find(x => x.id == taskStatus) && this.state.status.find(x => x.id == taskStatus).name ? this.state.status.find(x => x.id == taskStatus).name : "Новая"}/>
-                  {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus || "1"}/> : null}
-                </ResponsibleRow>
-
-              </ModalCol>
-
-              <ModalCol>
-                <ModalBlockName>
-                            Ответственный
-                </ModalBlockName>
-                <ResponsibleRow >
-                  <UserRow id={data.assignedTo && data.assignedTo.id ? data.assignedTo.id : "0"} name={data.assignedTo && data.assignedTo.username ? data.assignedTo.username : "не указано"} ondelete={()=>this.writeTaskData(null, "assignedTo", false, null)}/>
-                  <FakeSelect array={data.users} onselect={(id,name,icon)=>{this.writeTaskData(id, "assignedTo",true, name)}} defaultid={data.assignedTo && data.assignedTo.id ? data.assignedTo.id : "0"} />
-                </ResponsibleRow>
-              </ModalCol>
-            </ModalRow>
-
-            <ModalRow>
-              <ModalCol>
-                <div className="ModalBlockName">
-                          Срок истечения
                 </div>
-                <label htmlFor="dateselect" className="LabelInputDate">
-                  <input type="date" name="dateselect" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
-                </label>
-              </ModalCol>
 
-              <ModalCol>
-                <ModalBlockName>
+                <div className="FakeLinkSvg"><Svg svg="expose" size="32" /></div>
+              </div>
+            </div>
+            <div className="tab-roll">
+              <div className="header"><h4>Документы</h4></div>
+              <div className="content">
+                <div className="content-scroll">
+                  {data.files && data.files.length > 0 ? data.files.map(
+                    (e)=>{
+                      return(
+                        <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
+                      )
+                    }
+                  ) : (
+                    <div>
+                      {/* <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+                                  <FileRow name="Фото подвала.jpg" id="id1237" icon="img" /> */}
+                      <div className="FakeLink">Файлов нет</div>
+                    </div>
+                  )
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div className="content">
+              <div className="Btn v1" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
+            </div>
+
+          </InnerBar>
+          {modal ? (
+            <Modal close={()=>{ this.setState({modal: !modal}) }} message={this.state.modalMessageShow?this.state.modalMessage:""}>
+
+              <ModalRow>
+                <ModalCol>
+                  <InputWrapper name={data.name} save="Сохранить" click={(name)=>this.writeTaskData(name, 'name', true)}>
+                            Название
+                  </InputWrapper>
+                </ModalCol>
+              </ModalRow>
+
+
+              <ModalRow>
+                <ModalCol>
+                  <ModalBlockName>
+                            Статус
+                  </ModalBlockName>
+
+                  <ResponsibleRow >
+                    <UserRow id={taskStatus || "1"} name={this.state.status.find(x => x.id == taskStatus) && this.state.status.find(x => x.id == taskStatus).name ? this.state.status.find(x => x.id == taskStatus).name : "Новая"}/>
+                    {status ? <FakeSelect array={status} onselect={(id, name, icon)=>{this.writeTaskData(id, "status", false)}} defaultid={taskStatus || "1"}/> : null}
+                  </ResponsibleRow>
+
+                </ModalCol>
+
+                <ModalCol>
+                  <ModalBlockName>
+                            Ответственный
+                  </ModalBlockName>
+                  <ResponsibleRow >
+                    <UserRow id={data.assignedTo && data.assignedTo.id ? data.assignedTo.id : "0"} name={data.assignedTo && data.assignedTo.username ? data.assignedTo.username : "не указано"} ondelete={()=>this.writeTaskData(null, "assignedTo", false, null)}/>
+                    <FakeSelect array={data.users} onselect={(id,name,icon)=>{this.writeTaskData(id, "assignedTo",true)}} defaultid={data.assignedTo && data.assignedTo.id ? data.assignedTo.id : "0"} />
+                  </ResponsibleRow>
+                </ModalCol>
+              </ModalRow>
+
+              <ModalRow>
+                <ModalCol>
+                  <ModalBlockName>
+                  Срок истечения
+                  </ModalBlockName>
+                  <label htmlFor="dateselect" className="LabelInputDate">
+                    <input type="date" name="dateselect" defaultValue={ dataValue } placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
+                  </label>
+                </ModalCol>
+
+                <ModalCol>
+                  <ModalBlockName>
                           Добавить родительскую задачу
-                </ModalBlockName>
-                <ResponsibleRow >
-                  <UserRow id={data.parentId} name={allTasks.find(x => x.id == data.parentId) ? allTasks.find(x => x.id == data.parentId).name : "не указано"} ondelete={()=>this.writeTaskData(null, "parentId", false)}/>
-                  <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.parentId} />
-                </ResponsibleRow>
+                  </ModalBlockName>
+                  <ResponsibleRow >
+                    <UserRow id={data.parentId} name={allTasks.find(x => x.id == data.parentId) ? allTasks.find(x => x.id == data.parentId).name : "не указано"} ondelete={()=>this.writeTaskData(null, "parentId", false)}/>
+                    <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.parentId} />
+                  </ResponsibleRow>
 
-                {/* <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.parentId} /> */}
-              </ModalCol>
-            </ModalRow>
-            <ModalRow>
-              <ModalCol>
-                <ModalBlockName>
-                          Добавить пользователя
-                </ModalBlockName>
-                <div className="content">
+                  {/* <FakeSelect array={allTasks} onselect={(id,name,icon)=>{this.writeTaskData(id, "parentId",true)}} defaultid={data.parentId} /> */}
+                </ModalCol>
+              </ModalRow>
+              <ModalRow>
+                <ModalCol>
+                  <ModalBlockName>
+                  Добавить пользователя
+                  </ModalBlockName>
                   <label className="LabelInputList" htmlFor="users">
                     <input type="list" name="users" list="users" autoComplete="on" value={this.state.newUser} onChange={this.newUser} />
                     {
@@ -459,58 +482,62 @@ class TaskView extends Component {
                       }
                     </datalist>
                   </label>
-                </div>
-
-              </ModalCol>
-            </ModalRow>
-            <ModalCol>
-              <ModalBlockName>
-                        Добавить вложения
-              </ModalBlockName>
-              {data.files && data.files.length > 0 ? data.files.map((e)=>{
-                return(
-                  <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
-                )
-              }
-              ) : (
-                <div>
-                  <div className="FakeLink">Файлов нет</div>
-                </div>
-              )
-              }
+                </ModalCol>
+              </ModalRow>
               <ModalCol>
-                {/* <div className="files-drop"> */}
-                {/* <Svg svg="tocloud" inline={0} />переместите файлы сюдa */}
-                <Mutation mutation={uploadFile} onCompleted={(data) => {
+                <ModalBlockName>
+                Добавить вложения
+                </ModalBlockName>
+                {data.files && data.files.length > 0 ? data.files.map((e)=>{
+                  return(
+                    <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
+                  )
+                }
+                ) : (
+                  <div>
+                    <div className="FakeLink">Файлов нет</div>
+                  </div>
+                )
+                }
+                <ModalCol>
+                  {/* <div className="files-drop"> */}
+                  {/* <Svg svg="tocloud" inline={0} />переместите файлы сюдa */}
+                  <Mutation mutation={uploadFile} onCompleted={(data) => {
                   // console.warn(data)
-                  this.modalMessage(data.uploadFile);
-                  this.updateCacheFile(data.uploadFile)
-                }}>
-                  {upload => (
-                    <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
-                      <p>Переместите сюда файлы или нажмите для добавления.</p>
-                    </Dropzone>
-                  )}
-                </Mutation>
-                {/* </div> */}
+                    this.modalMessage(data.uploadFile);
+                    // this.updateCacheFile(data.uploadFile)
+                  }}>
+                    {upload => (
+                      <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
+                        <Svg svg="tocloud" inline={0} />Переместите сюда файлы или нажмите для добавления.
+                      </Dropzone>
+                    )}
+                  </Mutation>
+                  {/* </div> */}
+                </ModalCol>
               </ModalCol>
-            </ModalCol>
-          </Modal>
-        ) : null
-        }
-      </Content>
-    )}
+            </Modal>
+          ) : null
+          }
+        </Content>
+      )
+    }else{
+      return(
+        <Loading />
+      )
+
+
+    }
+  }
 }
 
 
 TaskView.propTypes = {
   selectUser: PropTypes.func.isRequired,
-  taskCacheUpdate: PropTypes.func.isRequired,
   objectCacheUpdate: PropTypes.func.isRequired,
 };
 
 export default compose(
-  graphql(taskCacheUpdate, { name: 'taskCacheUpdate' }),
   graphql(objectCacheUpdate, { name: 'objectCacheUpdate' }),
   graphql(selectUser, { name: 'selectUser' }),
 )(TaskView);
