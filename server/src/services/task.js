@@ -164,7 +164,7 @@ async function searchTasks(user, regExp, limit = 10, statuses) {
     'tasks.name': regExp,
   };
 
-  if (statuses) {
+  if (Array.isArray(statuses) && statuses.length) {
     $match['tasks.status'] = {
       $in: statuses,
     };
