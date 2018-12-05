@@ -18,15 +18,16 @@ before(async function () {
     password: this.password,
   });
 
-  const generatedToken = generateToken(this.user);
+  this.generatedToken = generateToken(this.user);
 
   this.request = ({
     query,
     token,
     bearer,
-    Authorization,
+    noAuthorization,
   }) => {
-    const headerName = Authorization ? 'none' : 'Authorization';
+    const headerName = noAuthorization ? 'none' : 'Authorization';
+
     let headerValue = '';
 
     if (bearer === false) {
@@ -38,7 +39,7 @@ before(async function () {
     if (token) {
       headerValue += token;
     } else {
-      headerValue += generatedToken;
+      headerValue += this.generatedToken;
     }
 
     return requester
