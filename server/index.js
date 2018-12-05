@@ -91,19 +91,14 @@ const subscriptionServer = SubscriptionServer.create({
   path: '/graphql',
 });
 
-subscriptionServer.onConnect = async (connectionParams) => {
-  const [type = '', body] = connectionParams.Authorization.split(' ');
+async function subscriptionConnectHandler(connectionParams) {
+  const [type, body] = connectionParams.Authorization.split(' ');
 
   if (type.toLowerCase() !== 'bearer') {
     throw new Error('its not bearer');
   }
 
   const res = jwt.verify(body, JWT_SECRET);
-
-  if (!res || !res.id) {
-    throw new Error('bad payload');
-  }
-
   const user = await User.findById(res.id);
 
   if (!user) {
@@ -111,7 +106,9 @@ subscriptionServer.onConnect = async (connectionParams) => {
   }
 
   return { user };
-};
+}
+
+subscriptionServer.onConnect = subscriptionConnectHandler;
 
 async function start() {
   await connectToMongo();
@@ -129,4 +126,8 @@ async function start() {
 
 start();
 
-module.exports = { app, server };
+module.exports = {
+  app,
+  server,
+  subscriptionConnectHandler,
+};

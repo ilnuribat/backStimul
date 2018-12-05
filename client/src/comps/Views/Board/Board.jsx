@@ -41,6 +41,7 @@ class Board extends Component {
       status: [],
       toRoot: false,
       toTask: false,
+      taskData: {},
       showChilds: false,
       modal: false,
       modalDelete: false,
@@ -121,7 +122,6 @@ class Board extends Component {
       });
     }
 
-
     if(id && Mount){
       this.chkObject(id)
       this.glossStatus(id)
@@ -170,14 +170,14 @@ class Board extends Component {
       toTask: id === this.state.taskId ? false : true,
       taskId: id === this.state.taskId ? "" : id,
       taskName: id === this.state.taskId ? "" : name
-
     })
 
-    if (id === this.state.taskId) localStorage.setItem('taskId', "")
-
+    if (id === this.state.taskId) {
+      localStorage.setItem('taskId', "")
+    }
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate() {
     const { location } = this.props;
     const { objectId, taskId } = this.state;
     let id = "";
@@ -236,7 +236,7 @@ class Board extends Component {
     //   this.glossStatus(id)
     // }
   }
-  shouldComponentUpdate(nextProps, nextState){
+  shouldComponentUpdate(nextProps){
 
     if(nextProps.location.state != this.props.location.state){
       return true
@@ -539,7 +539,7 @@ class Board extends Component {
                               <div>
                                 {
                                   data.object.docs ? data.object.docs.map(
-                                    (e,i)=>{
+                                    (e)=>{
                                       return(
                                         <FileRow key={e.id} name={e.name} id={e.id} icon="doc" />
                                       )
@@ -646,7 +646,7 @@ class Board extends Component {
               )
 
             }else{
-              console.log("Data and error",data, error)
+              // console.log("Data and error",data, error)
 
               return(<div className="errMess">
                 Объект не найден

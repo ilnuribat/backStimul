@@ -9,7 +9,7 @@ async function search(parent, {
 }, { user }) {
   const result = [];
   let tempRes;
-  const words = query.split(/\s/);
+  const words = query.replace(/\W/g, ' ').split(/\s/);
   const regExQuery = new RegExp(words.join('|'), 'i');
 
   if (type) {

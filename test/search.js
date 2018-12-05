@@ -17,8 +17,10 @@ describe('search', () => {
       assert.isUndefined(errors);
       assert.isObject(data);
       assert.isArray(data.search.users);
-      assert.equal(data.search.users.length, 1);
-      assert.equal(data.search.users[0].id, this.user.id);
+      assert.includeDeepMembers(data.search.users, [{
+        id: this.user.id,
+        email: this.user.email,
+      }]);
     });
   });
 });

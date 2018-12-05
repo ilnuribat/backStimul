@@ -170,7 +170,7 @@ class NavTop extends Component {
             variables: {
               unr: privs
             }
-            // update: ({ data }) => { console.warn("DATA IS" ,data)}
+          // update: ({ data }) => { console.warn("DATA IS" ,data)}
           }).then(result => {
             if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
           })
@@ -213,6 +213,8 @@ class NavTop extends Component {
 NavTop.propTypes = {
   cGetCountPrivates: PropTypes.object.isRequired,
   client: PropTypes.object,
+  // name: PropTypes.string,
+  // children: PropTypes.array,
 };
 
 export default compose(

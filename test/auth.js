@@ -1,6 +1,9 @@
 const { assert } = require('chai');
 const bcrypt = require('bcrypt');
+const { Types: { ObjectId } } = require('mongoose');
 const { User } = require('../server/src/models');
+const { subscriptionConnectHandler } = require('../server');
+const { generateToken } = require('../server/src/services/user');
 
 describe('login', () => {
   it('correct credentials', async function () {
@@ -23,6 +26,16 @@ describe('login', () => {
 
     assert.isObject(login);
     assert.isString(login.token);
+  });
+  it('no Authorization header', async function () {
+    await this.request({
+      noAuthorization: true,
+      query: `{
+        user {
+          id
+        }
+      }`,
+    });
   });
   it('wrong credentials', async function () {
     const { data, errors } = await this.request({
@@ -81,5 +94,51 @@ describe('signup', () => {
     await User.deleteOne({
       email: this.newUserEmail,
     });
+  });
+});
+
+describe('subscription onConnect', () => {
+  it('good credentials', async function () {
+    const context = await subscriptionConnectHandler({
+      Authorization: `Bearer ${this.generatedToken}`,
+    });
+
+    assert.isObject(context);
+    assert.isObject(context.user);
+    assert.equal(context.user.id, this.user.id);
+  });
+  it('no bearer', async () => {
+    try {
+      await subscriptionConnectHandler({ Authorization: '' });
+
+      throw new Error();
+    } catch (err) {
+      assert.equal(err.message, 'its not bearer');
+    }
+  });
+  it('invalid jwt', async () => {
+    try {
+      await subscriptionConnectHandler({ Authorization: 'Bearer asdf;klj' });
+
+      throw new Error();
+    } catch (err) {
+      assert.include(err.message, 'jwt');
+    }
+  });
+  it('no user found', async () => {
+    try {
+      await subscriptionConnectHandler({
+        Authorization: `Bearer ${
+          generateToken({
+            id: ObjectId.createFromTime(0),
+            password: '1',
+          })
+        }`,
+      });
+
+      throw new Error();
+    } catch (err) {
+      assert.include(err.message, 'no user found');
+    }
   });
 });
