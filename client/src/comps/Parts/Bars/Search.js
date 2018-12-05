@@ -44,11 +44,40 @@ export class Search extends Component {
   }
 
   handleInputChange(event) {
+    let { chAll } = this.state;
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    target.type === 'checkbox' && target.name !== 'chAll' ? this.setState({chAll: false, [name]: value }) : this.setState({[name]: value});
+    if (target.type === 'checkbox' && target.name !== 'chAll' ){
+      this.setState({ chAll: false, [name]: value })
+    } else if (target.type === 'checkbox' && target.name === 'chAll'){
+      this.setState({ chAll: true,
+        chObj: false,
+        chDcs: false,
+        chMsg: false,
+        chUsr: false,
+        chTsk: false,
+        chTskNew: false,
+        chTskWrk: false,
+        chTskChk: false,
+        chTskEnd: false,
+      })
+    }else{
+      this.setState({ chAll: true,
+        chObj: false,
+        chDcs: false,
+        chMsg: false,
+        chUsr: false,
+        chTsk: false,
+        chTskNew: false,
+        chTskWrk: false,
+        chTskChk: false,
+        chTskEnd: false,
+      });
+    }
+
+    // target.type === 'checkbox' && target.name !== 'chAll' ? this.setState({chAll: false, [name]: value }) : this.setState({[name]: value});
 
     // !this.state.chObj && !this.state.chTsk && !this.state.chDcs && !this.state.chUsr && !this.state.chMsg ? this.setState({chAll: true,}) : null
   }
@@ -58,22 +87,7 @@ export class Search extends Component {
   }
 
   componentWillUpdate(){
-    // !this.state.chObj &&
-    // !this.state.chTsk &&
-    // !this.state.chDcs &&
-    // !this.state.chUsr &&
-    // !this.state.chMsg ? this.setState({chAll: true,}) : null
   }
-
-  // shouldComponentUpdate(nextProps, nextState){
-    // if(nextState.chAll === this.state.chAll){
-    //   return false
-    // }
-    // if(nextState === this.state){
-    //   return false
-    // }
-    // return true
-  // }
 
   render() {
 
@@ -129,6 +143,7 @@ export class Search extends Component {
     query search($query: String!){
       search(query: $query){
         ${SearchBody}
+        __typename
       }
     }
     `;
@@ -216,7 +231,7 @@ export class Search extends Component {
                       data.search.tasks && data.search.tasks.length > 0 ? Search.tasks = data.search.tasks : null
                       data.search.objects && data.search.objects.length > 0 ? Search.objects = data.search.objects : null
                       data.search.users && data.search.users.length > 0 ? Search.users = data.search.users : null
-                      data.search.users && data.search.files.length > 0 ? Search.files = data.search.files : null
+                      data.search.files && data.search.files.length > 0 ? (Search.files = data.search.files) : null;
 
                       // Search ? console.log("Search", Search) : null
 

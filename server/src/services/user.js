@@ -11,7 +11,7 @@ async function getTasks(userId) {
     },
     code: null,
   }).sort({
-    lastMessageAt: 1,
+    lastMessageAt: -1,
   });
 }
 

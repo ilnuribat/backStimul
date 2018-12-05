@@ -212,7 +212,7 @@ class NavTop extends Component {
 
 NavTop.propTypes = {
   cGetCountPrivates: PropTypes.object.isRequired,
-  client: PropTypes.object.isRequired,
+  client: PropTypes.object,
 };
 
 export default compose(

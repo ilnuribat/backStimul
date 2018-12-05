@@ -109,12 +109,19 @@ class PrivateBar extends React.Component {
     if(time){
 
       let a = '';
-      let dif = moment(  moment(moment()).format('YYYY MM D, h:mm:ss')  ).diff(   moment(time).format(' YYYY MM D, h:mm:ss')    ) / 3600000 ;
+      let dif = '';
 
-      if( dif > 12){
-        a = moment(time).format('D MMM, h:mm');
-      }else{
-        a = moment(time).format('h:mm');
+      /** If day off */
+      dif = moment(moment().toISOString()).diff(moment(time).toISOString()) / 3600000;//3600000;
+
+      if(moment(time).format("YYYY") !== moment().format("YYYY")){
+        a = moment(time).format("YYYY DD MMM, hh:mm");
+      }
+      else if (dif < 12 && moment(time).format("YYYY") == moment().format("YYYY")) {
+        a = moment(time).format("DD MMM, hh:mm");
+      }
+      else {
+        a = moment(time).format("hh:mm");
       }
 
       return a;
