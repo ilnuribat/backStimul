@@ -60,7 +60,7 @@ async function migrateAll() {
     await up(nativeClient.db('guov'));
     logger.info('successs migration');
 
-    await model.create({ name: m });
+    // await model.create({ name: m });
   });
 
   await mongoose.disconnect();
