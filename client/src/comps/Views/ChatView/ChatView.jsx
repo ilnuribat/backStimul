@@ -77,6 +77,7 @@ class ChatView extends Component {
           <UserRow id="id" name={this.props.name} icon="1" iconright="1"></UserRow>
         </div>
         <section id="messageList" ref={this.messageList} className="messages ChatMessages">
+        <div id="PaddedComp" className="PaddedComp"></div>
           <MessagesList {...this.props} />
         </section>
 

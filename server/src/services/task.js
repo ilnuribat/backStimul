@@ -159,7 +159,14 @@ async function deleteTask(parent, { id }) {
   return res.n;
 }
 
-async function searchTasks(user, regExp, limit = 10) {
+async function searchTasks(user, regExp, limit = 10, status) {
+  const $match = {
+    'tasks.name': regExp,
+  };
+
+  if (status) {
+    $match['tasks.status'] = status;
+  }
   const res = await UserGroup.aggregate([{
     $match: {
       userId: user._id,
@@ -178,9 +185,7 @@ async function searchTasks(user, regExp, limit = 10) {
   }, {
     $unwind: '$tasks',
   }, {
-    $match: {
-      'tasks.name': regExp,
-    },
+    $match,
   }, {
     $limit: limit,
   }]);

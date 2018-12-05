@@ -83,7 +83,6 @@ class NavTop extends Component {
                 client.query({ query: cGetCountPrivates }).then(result => {
                   const unr = result.data.unr + 1
                   //пишем суумму всех непрочитанных приватов
-                  // this.saveCountPrivs(unr)
 
                   client.mutate({
                     mutation: cSetCountPrivates,
@@ -119,96 +118,6 @@ class NavTop extends Component {
             }
           })
 
-
-
-
-          //Пишем в кеш (если он есть конечно) нужной группы полученную мессагу
-          client.mutate({
-            mutation: objectCacheUpdate,
-            variables:{
-              value: newData.task,
-              action: "createTask",
-              taskId: newData.task.id,
-              objectId: newData.task.objectId
-            }
-          })
-        }})
-
-      client.subscribe({
-        query: TASK_UPDATED,
-      }).subscribe({
-        next(data) {
-          console.warn("TASK UPDATED", data.data.taskUpdated)
-        }
-      })
-      // call the "subscribe" method on Apollo Client
-      //Подпись на все сообщения, адресованные тебе
-      client.subscribe({
-        query: ALL_MESSAGE_CREATED,
-      }).subscribe({
-        next(data) {
-        // ... call updateQuery to integrate the new comment
-        // into the existing list of comments
-          let equalGroupMessage
-          // console.warn(data.data.messageAdded)
-          //пишем мессагу в кэш
-
-          client.mutate({
-            mutation: lastMessageCache,
-            variables: {
-              lastMessage: data.data.messageAdded.text,
-              lastMessageId: data.data.messageAdded.id,
-              lastMessageGroupId: data.data.messageAdded.groupId
-            },
-          // update: ({ data }) => { console.warn("DATA IS" ,data)}
-          }).then(result => {
-            if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
-            //проверяем на совпадение группы мессаги и текущего привата
-            client.query({ query: getlastMessageCache }).then(result => {
-              !result.data.id ? equalGroupMessage = _.isEqual(result.data.lastMessage.groupId, localStorage.getItem('chatId')) :
-                equalGroupMessage = _.isEqual(result.data.lastMessage.groupId, result.data.id)
-              if (!equalGroupMessage) {
-                if (data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
-                  //если не совпадают, читаем все непрочитанные приваты
-                  client.query({ query: cGetCountPrivates }).then(result => {
-                    const unr = result.data.unr + 1
-                    //пишем суумму всех непрочитанных приватов
-                    // this.saveCountPrivs(unr)
-
-                    client.mutate({
-                      mutation: cSetCountPrivates,
-                      variables: {
-                        unr: unr
-                      },
-                      // update: ({ data }) => { console.warn("DATA IS" ,data)}
-                    }).then(result => {
-                      if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
-                    })
-                  });
-                } // if #2
-                //пишем в кеш lastmessage + счетчик
-                client.mutate({
-                  mutation: chatListCacheUpdate,
-                  variables:{
-                    value: data.data.messageAdded,
-                    queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
-                    counter: true,
-                  }
-                })
-              } // if #1
-              else {
-              //пишем в кеш lastmessage
-                client.mutate({
-                  mutation: chatListCacheUpdate,
-                  variables:{
-                    value: data.data.messageAdded,
-                    queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
-                    counter: false,
-                  }
-                })
-              }
-            })
-          })
 
 
 

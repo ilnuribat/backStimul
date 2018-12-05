@@ -25,7 +25,7 @@ const toBottom = () => {
 export default class MessagesList extends Component {
   componentDidMount() {
     // this.props.subscribeToNewMessages();
-    // document.getElementById("messageList").addEventListener('scroll', this.handleScroll, { passive: true })
+    document.getElementById("messageList").addEventListener('scroll', this.handleScroll, { passive: true })
 
     toBottom();
   }
@@ -36,9 +36,13 @@ export default class MessagesList extends Component {
     toBottom();
   }
 
-  // handleScroll(event) {
-  //   console.warn(event, event.target.scrollTop)
-  // }
+  handleScroll(event) {
+    if (event.target.scrollTop == 0){
+      console.warn(event, event.target.scrollTop)
+      document.getElementById("PaddedComp").style.height = "30px"
+      setTimeout(()=>{document.getElementById("PaddedComp").style.height = "0"}, 300)
+    }
+  }
 
   // subscribeToRead = (id) => {
   //   //FIXME: timeout????
@@ -178,7 +182,7 @@ export default class MessagesList extends Component {
                       {id !== uid ? (<UserRow name={username} icon="1" view="Col" />) : null}
                     </div>
                   )}
-                  <blockquote className={"msgs"}>
+                  <blockquote className={"msgs"} id={id}>
 
                     <div className="text prewr">{messageText}</div>
                     <div className="f-row">

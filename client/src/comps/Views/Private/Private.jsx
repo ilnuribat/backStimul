@@ -12,7 +12,7 @@ import Loading from '../../Loading';
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 import ContentInner from '../../Lays/ContentInner/ContentInner';
 import TaskView from '../TaskView/TaskView';
-import { TextRow } from '../../Parts/Rows/Rows';
+// import { TextRow } from '../../Parts/Rows/Rows';
 
 class Private extends Component {
   constructor(props) {
@@ -97,61 +97,55 @@ class Private extends Component {
 
   }
 
-  setData(data, name){
-    if (this.state[name] != data){
-      this.setState({
-        [name]: data,
-      })
-    }
-
-  }
-
   render() {
-    const { chatId, privateChat, TaskData, PrivateData } = this.state;
+    const { chatId, privateChat,  } = this.state;
     let CHATQUERY;
 
     privateChat ? CHATQUERY = PRIV_QUERY : CHATQUERY = TASK_MESSAGES
 
+
     return <Fragment>
-        <Content view="OvH Row OvH Pad10">
-          <InnerBar>
-            <PrivateBar chatId={chatId} click={(id, pr) => this.openChat(id, pr)} />
-          </InnerBar>
-          {chatId ? <Query query={CHATQUERY} variables={{ id: `${chatId}` }}>
-              {({ loading, error, data }) => {
-                if (loading) {
-                  return <div style={{ paddingTop: 20, margin: "auto" }}>
-                      <Loading />
-                    </div>;
-                }
-                if (error) {
-                  return <div className="errMess">{error.message}</div>;
-                }
-                // console.warn ("REFRESH", data.direct)
-                // console.warn ("REFRESH", data.task)
+      <Content view="OvH Row OvH Pad10">
+        <InnerBar>
+          <PrivateBar chatId={chatId} click={(id, pr) => this.openChat(id, pr)} />
+        </InnerBar>
+        {chatId ? <Query query={CHATQUERY} variables={{ id: `${chatId}` }}>
+          {({ loading, error, data }) => {
+            if (loading) {
+              return <div style={{ paddingTop: 20, margin: "auto" }}>
+                <Loading />
+              </div>;
+            }
+            if (error) {
+              return <div className="errMess">{error.message}</div>;
+            }
 
-                if (data && (data.task || data.direct)) {
-                  if (data.task) this.setData(data.task, "TaskData");
-                  if (data.direct) this.setData(data.direct, "PrivateData");
 
-                  return <ContentInner view="Row OvH Pad010">
-                      <ChatView id={chatId} name={privateChat === true ? data.direct.name : data.task.name} data={privateChat === true ? data.direct : data.task} />
-                    </ContentInner>;
-                } else {
-                  return <ContentInner view="Row OvH Pad10">
-                      <div className="errorMessage">Выберите чат</div>
-                    </ContentInner>;
-                }
-              }}
-            </Query> : <ContentInner view="Row OvH Pad10">
-              <div className="errorMessage">Выберите чат</div>
-            </ContentInner>}
+            if (data && (data.task || data.direct)) {
 
-          <InnerBar>
-            {chatId && TaskData ? <TaskView taskId={chatId} objectId={TaskData.objectId} data={TaskData} /> : ''}
-          </InnerBar>
-        </Content>
-      </Fragment>;
+              return (
+                <Fragment>
+                  <ContentInner view="Row OvH Pad010">
+                    <ChatView id={chatId} name={privateChat === true ? data.direct.name : data.task.name} data={privateChat === true ? data.direct : data.task} />
+                  </ContentInner>
+                  {data.task ? <InnerBar>
+                    <TaskView taskId={chatId} objectId={data.task.objectId} data={data.task} />
+                  </InnerBar> : ''}
+                </Fragment>
+              )
+            } else {
+              return <ContentInner view="Row OvH Pad10">
+                <div className="errorMessage">Выберите чат</div>
+              </ContentInner>;
+            }
+          }}
+        </Query> : <ContentInner view="Row OvH Pad10">
+          <div className="errorMessage">Выберите чат</div>
+        </ContentInner>}
+
+
+      </Content>
+    </Fragment>;
   }
 }
 

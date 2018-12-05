@@ -36,20 +36,19 @@ const stateLink = withClientState({
   cache,
   resolvers,
   defaults: {
-    ureaded: 0,
     chats: [],
     currentGroup: "",
+    groupName: "",
     userName: "",
     userId: 0,
-    groupName: "",
     id: "",
     name: "",
     unr: 0,
     priv: 0,
-    meid: "",
-    mename: "",
-    memail: "",
-    tempObj:"",
+    // meid: "",
+    // mename: "",
+    // memail: "",
+    // tempObj:"",
     __info:[],
     ref: false,
     ActUrl: "",
@@ -67,12 +66,12 @@ const stateLink = withClientState({
       type: "no",
       __typename: "place",
     },
-    lastMessage: {
-      groupId: "",
-      id: "",
-      text: "",
-      __typename: "lastMessageCache"
-    }
+    // lastMessage: {
+    //   groupId: "",
+    //   id: "",
+    //   text: "",
+    //   __typename: "lastMessageCache"
+    // }
   }
 });
 
