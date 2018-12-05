@@ -2,12 +2,13 @@ import React, { Component, Fragment } from "react";
 import moment from 'moment';
 import momentRu from 'moment/locale/ru';
 import PropTypes from 'prop-types';
-
+import client from '../../../client';
 
 import { qauf, _url, colorHash } from '../../../constants';
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { Svg } from '../../Parts/SVG/index';
 import { UserRow } from "../../Parts/Rows/Rows";
+import { PRIV_QUERY2, PRIV_QUERY } from "../../../GraphQL/Qur/Query";
 
 moment.locale('ru')
 
@@ -23,6 +24,11 @@ const toBottom = () => {
 
 
 export default class MessagesList extends Component {
+  constructor(props) {
+    super(props)
+    this.handleScroll = this.handleScroll.bind(this)
+  }
+
   componentDidMount() {
     // this.props.subscribeToNewMessages();
     document.getElementById("messageList").addEventListener('scroll', this.handleScroll, { passive: true })
@@ -41,6 +47,10 @@ export default class MessagesList extends Component {
       console.warn(event, event.target.scrollTop)
       document.getElementById("PaddedComp").style.height = "30px"
       setTimeout(()=>{document.getElementById("PaddedComp").style.height = "0"}, 300)
+      console.warn("DATA IS", this.props.data)
+      client.query({ query: PRIV_QUERY,  variables:{ id: this.props.data.id, messageConnection: {last: 150} } })
+        .then(result => console.warn(result))
+
     }
   }
 
@@ -103,6 +113,8 @@ export default class MessagesList extends Component {
     let uid = localStorage.getItem('userid');
     let same = false;
     let usid = "";
+
+    console.warn("aaa", data.id)
 
     if(data && data.messages && data.messages.edges ){
       datas = data.messages.edges;
