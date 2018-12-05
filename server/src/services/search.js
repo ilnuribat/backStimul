@@ -9,7 +9,7 @@ async function search(parent, {
 }, { user }) {
   const result = [];
   let tempRes;
-  const words = query.replace(/^[a-zа-яё0-9]/ig, ' ').split(' ').filter(s => s.length);
+  const words = query.replace(/[^a-zа-яё0-9\ ]/ig, ' ').split(' ').filter(s => s.length);
   const regExQuery = new RegExp(words.join('|'), 'i');
 
   if (type) {

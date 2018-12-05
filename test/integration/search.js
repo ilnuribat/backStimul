@@ -17,7 +17,7 @@ describe('integration: search', () => {
     await User.deleteOne({ email: this.tmpEmail });
   });
   it('search with special characters', async function () {
-    const res = await search(null, { query: 'test \'!@#$%^&*&*)(' }, { user: this.user });
+    const res = await search(null, { query: 'test \sdfфыва !\ @#$%^&*&*)(' }, { user: this.user });
 
     assert.isArray(res);
   });
