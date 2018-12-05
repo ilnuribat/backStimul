@@ -3,7 +3,7 @@ const { search } = require('../services/search');
 
 module.exports = {
   SearchType: {
-    tasks: (parent, args, ctx) => search(null, { type: 'TASKS', ...ctx.args }, ctx),
+    tasks: (parent, args, ctx) => search(null, { type: 'TASKS', ...ctx.args, ...args }, ctx),
     users: (parent, args, ctx) => search(null, { type: 'USERS', ...ctx.args }, ctx),
     objects: (parent, args, ctx) => search(null, { type: 'OBJECTS', ...ctx.args }, ctx),
     messages: (parent, args, ctx) => search(null, { type: 'MESSAGES', ...ctx.args }, ctx),
