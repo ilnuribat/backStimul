@@ -274,25 +274,25 @@ export const TASK_MESSAGES = gql `
   query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}){
     task(id: $id ){
           name
-          # users{
-          #     id
-          #     username
-          # }
-          # parentId
-          # objectId
-          # status
-          # endDate
-          # assignedTo{
-          #   id
-          #   username
-          # }
-          # files {
-          #   id
-          #   size
-          #   name
-          #   mimeType
-          #   date
-          # }
+          users{
+              id
+              username
+          }
+          parentId
+          objectId
+          status
+          endDate
+          assignedTo{
+            id
+            username
+          }
+          files {
+            id
+            size
+            name
+            mimeType
+            date
+          }
           messages(messageConnection: $messageConnection) {
               edges {
                   cursor

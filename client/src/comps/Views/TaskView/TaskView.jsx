@@ -319,7 +319,7 @@ class TaskView extends Component {
 
       return(
         <Content view="OvH">
-          <InnerBar>
+          {/* <InnerBar> */}
             <TextRow name="Информация" view="BigName">
               <TextRow name="" view="Pad510 MT10">
                 {
@@ -398,7 +398,7 @@ class TaskView extends Component {
               <div className="Btn v1" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
             </div>
 
-          </InnerBar>
+          {/* </InnerBar> */}
           {modal ? (
             <Modal close={()=>{ this.setState({modal: !modal}) }} message={this.state.modalMessageShow?this.state.modalMessage:""}>
 
