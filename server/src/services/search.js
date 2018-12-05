@@ -7,7 +7,7 @@ const { searchFiles } = require('../services/files');
 async function search(parent, { query, type, limit = 10 }, { user }) {
   const result = [];
   let tempRes;
-  const words = query.split(/\s/);
+  const words = query.replace(/\W/g, ' ').split(/\s/);
   const regExQuery = new RegExp(words.join('|'), 'i');
 
   if (type) {

@@ -16,11 +16,16 @@ describe('integration: search', () => {
   after(async function () {
     await User.deleteOne({ email: this.tmpEmail });
   });
+  it('search with special characters', async function () {
+    const res = await search(null, { query: 'test \'!@#$%^&*&*)(' }, { user: this.user });
+
+    assert.isArray(res);
+  });
   it('search User', async function () {
     const res = await search(null, { query: 'test@User.guov' }, { user: this.user });
 
     assert.isArray(res);
-    assert.equal(res.length, 1);
+    assert.isAtLeast(res.length, 1);
 
     const { email, __typename } = res[0];
 
