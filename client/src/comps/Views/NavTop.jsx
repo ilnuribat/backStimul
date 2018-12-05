@@ -8,7 +8,7 @@ import { graphql, compose } from "react-apollo";
 import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED, TASK_UPDATED, USER_TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
-import { lastMessageCache, getlastMessageCache, cGetCountPrivates, cSetCountPrivates, chatListCacheUpdate, messagesCacheUpdate, objectCacheUpdate } from '../../GraphQL/Cache';
+import { cGetCountPrivates, cSetCountPrivates, chatListCacheUpdate, messagesCacheUpdate, objectCacheUpdate, getChat } from '../../GraphQL/Cache';
 import { getUnreadCount, TASK_INFO_SMALL } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 import client from '../../client';
@@ -72,62 +72,52 @@ class NavTop extends Component {
           // console.warn(data.data.messageAdded)
           //пишем мессагу в кэш
 
-          client.mutate({
-            mutation: lastMessageCache,
-            variables: {
-              lastMessage: data.data.messageAdded.text,
-              lastMessageId: data.data.messageAdded.id,
-              lastMessageGroupId: data.data.messageAdded.groupId
-            },
-            // update: ({ data }) => { console.warn("DATA IS" ,data)}
-          }).then(result => {
-            if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
-            //проверяем на совпадение группы мессаги и текущего привата
-            client.query({ query: getlastMessageCache }).then(result => {
-              !result.data.id ? equalGroupMessage = _.isEqual(result.data.lastMessage.groupId, localStorage.getItem('chatId')) :
-                equalGroupMessage = _.isEqual(result.data.lastMessage.groupId, result.data.id)
-              if (!equalGroupMessage) {
-                if (data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
+          //проверяем на совпадение группы мессаги и текущего чата
+          client.query({ query: getChat }).then(result => {
+            !result.data.id ? equalGroupMessage = _.isEqual(data.data.messageAdded.groupId, localStorage.getItem('chatId')) :
+              equalGroupMessage = _.isEqual(data.data.messageAdded.groupId, result.data.id)
+            if (!equalGroupMessage) {
+              if (data.data.messageAdded.from.id !== localStorage.getItem('userid')) {
                 //если не совпадают, читаем все непрочитанные приваты
-                  client.query({ query: cGetCountPrivates }).then(result => {
-                    const unr = result.data.unr + 1
-                    //пишем суумму всех непрочитанных приватов
-                    // this.saveCountPrivs(unr)
+                client.query({ query: cGetCountPrivates }).then(result => {
+                  const unr = result.data.unr + 1
+                  //пишем суумму всех непрочитанных приватов
+                  // this.saveCountPrivs(unr)
 
-                    client.mutate({
-                      mutation: cSetCountPrivates,
-                      variables: {
-                        unr: unr
-                      },
+                  client.mutate({
+                    mutation: cSetCountPrivates,
+                    variables: {
+                      unr: unr
+                    },
                     // update: ({ data }) => { console.warn("DATA IS" ,data)}
-                    }).then(result => {
-                      if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
-                    })
-                  });
-                } // if #2
-                //пишем в кеш lastmessage + счетчик
-                client.mutate({
-                  mutation: chatListCacheUpdate,
-                  variables:{
-                    value: data.data.messageAdded,
-                    queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
-                    counter: true,
-                  }
-                })
-              } // if #1
-              else {
-                //пишем в кеш lastmessage
-                client.mutate({
-                  mutation: chatListCacheUpdate,
-                  variables:{
-                    value: data.data.messageAdded,
-                    queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
-                    counter: false,
-                  }
-                })
-              }
-            })
+                  }).then(result => {
+                    if (result.errors) console.warn("ERROR WRITE TO CACHE: ", result.errors)
+                  })
+                });
+              } // if #2
+              //пишем в кеш lastmessage + счетчик
+              client.mutate({
+                mutation: chatListCacheUpdate,
+                variables:{
+                  value: data.data.messageAdded,
+                  queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
+                  counter: true,
+                }
+              })
+            } // if #1
+            else {
+              //пишем в кеш lastmessage
+              client.mutate({
+                mutation: chatListCacheUpdate,
+                variables:{
+                  value: data.data.messageAdded,
+                  queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
+                  counter: false,
+                }
+              })
+            }
           })
+
 
 
 
