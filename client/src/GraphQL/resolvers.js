@@ -130,7 +130,7 @@ export default {
       try {
         previousState = cache.readQuery({ query, variables: {"id": lastMessageGroupId}});
       } catch (error) {
-        console.warn("cache is empty!")
+        console.warn("cache is empty! 1")
 
         return null
       }
@@ -184,7 +184,7 @@ export default {
       try {
         previousState = cache.readQuery({ query, variables: {"id": lastMessageGroupId}});
       } catch (error) {
-        console.warn("cache is empty!")
+        console.warn("cache is empty! 2")
 
         return null
       }
@@ -253,7 +253,7 @@ export default {
       try {
         previousState = cache.readQuery({ query, variables: { id: objectId } });
       } catch (error) {
-        console.warn("cache is empty!")
+        console.warn("cache is empty! 3")
 
         return null
       }

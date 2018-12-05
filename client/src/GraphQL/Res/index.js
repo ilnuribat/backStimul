@@ -48,12 +48,6 @@ export default {
       return {id, message, type , __typename: '__Info' };
     },
 
-    // tempObj: (_, { tempObj },  { cache }) => {
-    //   cache.writeData({ data: { tempObj: tempObj, } });
-
-    //   return {tempObj, __typename: 'tempObj' };
-    // },
-
     setDash: (_, { Dash },  { cache }) => {
       cache.writeData({ data: { Dash: Dash, } });
 
@@ -77,12 +71,12 @@ export default {
       return {userName, userId, __typename: 'selectUser' };
     },
 
-    lastMessageCache: (_, { lastMessage, lastMessageId, lastMessageGroupId },  { cache }) => {
+    // lastMessageCache: (_, { lastMessage, lastMessageId, lastMessageGroupId },  { cache }) => {
 
-      cache.writeData({ data: { lastMessage: {text: lastMessage, id: lastMessageId, groupId: lastMessageGroupId, __typename: 'lastMessageCache' } }});
+    //   cache.writeData({ data: { lastMessage: {text: lastMessage, id: lastMessageId, groupId: lastMessageGroupId, __typename: 'lastMessageCache' } }});
 
-      return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'lastMessageCache' };
-    },
+    //   return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'lastMessageCache' };
+    // },
 
     meSet: (_, { meid, mename, memail },  { cache }) => {
       cache.writeData({ data: { meid: meid, mename: mename, memail: memail } });
@@ -138,6 +132,7 @@ export default {
       const query = gql`
         query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}) {
           ${queryName}(id: $id ) @client {
+            id
             messages(messageConnection: $messageConnection) {
               edges {
                 cursor
@@ -176,6 +171,7 @@ export default {
 
       const data = {
         [queryName]: {
+          id: queryName === "task" ? previousState.task.id : previousState.direct.id,
           messages:{
             edges: edges,
             __typename: "MessageConnection",
