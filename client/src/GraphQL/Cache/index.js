@@ -34,16 +34,16 @@ export const cGetCountPrivates = gql `
     unr @client
   }
 `;
-export const getlastMessageCache = gql `
-  query getlastMessageCache{
-      lastMessage @client {
-        groupId
-        id
-        text
-      }
-      id @client
-  }
-`;
+// export const getlastMessageCache = gql `
+//   query getlastMessageCache{
+//       lastMessage @client {
+//         groupId
+//         id
+//         text
+//       }
+//       id @client
+//   }
+// `;
 export const tempObjGet = gql `
   query tempObjGet{
         tempObj @client
@@ -384,12 +384,12 @@ export const sBar = gql `
   }
 `;
 
-export const lastMessageCache = gql `
-  mutation lastMessageCache($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
-    lastMessageCache(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
-      lastMessage
-      lastMessageId
-      lastMessageGroupId
-    }
-  }
-`;
+// export const lastMessageCache = gql `
+//   mutation lastMessageCache($lastMessage: String!, $lastMessageId: String!, $lastMessageGroupId: String!) {
+//     lastMessageCache(lastMessage: $lastMessage, lastMessageId: $lastMessageId, lastMessageGroupId: $lastMessageGroupId) @client {
+//       lastMessage
+//       lastMessageId
+//       lastMessageGroupId
+//     }
+//   }
+// `;
