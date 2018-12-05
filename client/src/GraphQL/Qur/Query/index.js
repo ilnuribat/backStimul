@@ -237,6 +237,7 @@ export const TASKS_QUERY = gql `
 export const PRIV_QUERY = gql`
   query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}){
       direct(id: $id ){
+          id
           name
           unreadCount
           messages(messageConnection: $messageConnection) {
@@ -270,52 +271,53 @@ export const MESSAGE_QUERY = gql `
       }
   }
 `;
-export const TASK_MESSAGES = gql `
-  query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}){
-    task(id: $id ){
-          name
-          users{
-              id
-              username
-          }
-          parentId
-          objectId
-          status
-          endDate
-          assignedTo{
-            id
-            username
-          }
-          files {
-            id
-            size
-            name
-            mimeType
-            date
-          }
-          messages(messageConnection: $messageConnection) {
-              edges {
-                  cursor
-                  node {
-                      isRead
-                      id
-                      userId
-                      from {
-                      id
-                      username
-                      }
-                      createdAt
-                      text
-                  }
-              }
-              pageInfo {
-                  hasNextPage
-                  hasPreviousPage
-              }
-          }
-      }
-  }
-`;
+export const TASK_MESSAGES = gql`
+         query($id: ID!, $messageConnection: ConnectionInput = { last: 50 }) {
+           task(id: $id) {
+             id
+             name
+             users {
+               id
+               username
+             }
+             parentId
+             objectId
+             status
+             endDate
+             assignedTo {
+               id
+               username
+             }
+             files {
+               id
+               size
+               name
+               mimeType
+               date
+             }
+             messages(messageConnection: $messageConnection) {
+               edges {
+                 cursor
+                 node {
+                   id
+                   isRead
+                   userId
+                   from {
+                     id
+                     username
+                   }
+                   createdAt
+                   text
+                 }
+               }
+               pageInfo {
+                 hasNextPage
+                 hasPreviousPage
+               }
+             }
+           }
+         }
+       `;
 export const TASK_INFO = gql `
   query ($id: ID!){
     task(id: $id ){

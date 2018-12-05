@@ -13,6 +13,7 @@ import { getUnreadCount, TASK_INFO_SMALL } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 import client from '../../client';
 
+
 class NavTop extends Component {
   constructor(props) {
     super(props)

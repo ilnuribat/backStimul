@@ -132,6 +132,7 @@ export default {
       const query = gql`
         query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}) {
           ${queryName}(id: $id ) @client {
+            id
             messages(messageConnection: $messageConnection) {
               edges {
                 cursor
@@ -170,6 +171,7 @@ export default {
 
       const data = {
         [queryName]: {
+          id: queryName === "task" ? previousState.task.id : previousState.direct.id,
           messages:{
             edges: edges,
             __typename: "MessageConnection",
