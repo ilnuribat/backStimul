@@ -31,12 +31,16 @@ module.exports = {
 
       return getDirectChats(user);
     },
-    direct: async (parent, { id }) => Group.findOne({
-      _id: id,
-      code: {
-        $exists: true,
-      },
-    }),
+    direct: async (parent, { id, messageConnection }, ctx) => {
+      ctx.messageConnection = messageConnection;
+
+      return Group.findOne({
+        _id: id,
+        code: {
+          $exists: true,
+        },
+      });
+    },
   },
   Mutation: {
     directMessage,

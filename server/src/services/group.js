@@ -26,7 +26,7 @@ function lastMessage({ id }) {
   return Message.findOne({ groupId: id }).sort({ _id: -1 });
 }
 
-async function getMessages(parent, { messageConnection }, { user }) {
+async function getMessages(parent, { messageConnection }, { user, messageConnection: overrideMessageConnection }) {
   const { id } = parent;
   const group = await Group.findById(id);
 
@@ -35,7 +35,7 @@ async function getMessages(parent, { messageConnection }, { user }) {
   }
   const {
     first, last, before, after,
-  } = messageConnection || {};
+  } = messageConnection || overrideMessageConnection || {};
     // before - last, after - first
   const where = formWhere({ id, ...messageConnection });
   const sort = { _id: 1 };

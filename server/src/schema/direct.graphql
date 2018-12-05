@@ -9,7 +9,7 @@ type Direct {
 
 type Query {
   directs: [Direct]
-  direct(id: ID!): Direct
+  direct(id: ID!, messageConnection: ConnectionInput): Direct
 }
 
 type Mutation {
