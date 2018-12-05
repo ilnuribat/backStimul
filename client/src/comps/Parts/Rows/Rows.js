@@ -60,7 +60,7 @@ export const UserRow = ({ children, id, name, iconright, username, url, userid, 
 }
 export const ButtonRow = ({ children, id, name, url, icon, click, box, iconright, size, type, view })=>{
   return(
-    <div className={`ButtonRow${view?" "+view:""}`} onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("button", id,url )}}>
+    <div className={`ButtonRow${view ? " " + view : ""}`} onClick={() => { click ? click({ id: id, url: url, type: type }) : console.log("button", id, url) }} onMouseDown="return false" onSelectstart="return false" >
       {icon && !iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
       {children || name ? (<div className="ButtonName">{children || name}</div>):null}
       {icon && iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
