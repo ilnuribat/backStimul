@@ -8,7 +8,7 @@ import { qauf, _url, colorHash } from '../../../constants';
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { Svg } from '../../Parts/SVG/index';
 import { UserRow } from "../../Parts/Rows/Rows";
-import { PRIV_QUERY2, PRIV_QUERY } from "../../../GraphQL/Qur/Query";
+import { PRIV_QUERY } from "../../../GraphQL/Qur/Query";
 
 moment.locale('ru')
 
@@ -47,8 +47,8 @@ export default class MessagesList extends Component {
       console.warn(event, event.target.scrollTop)
       document.getElementById("PaddedComp").style.height = "30px"
       setTimeout(()=>{document.getElementById("PaddedComp").style.height = "0"}, 300)
-      console.warn("DATA IS", this.props.data)
-      client.query({ query: PRIV_QUERY,  variables:{ id: this.props.data.id, messageConnection: {last: 150} } })
+      console.warn("DATA IS", this.props.data.messages.edges[0].cursor)
+      client.query({ query: PRIV_QUERY,  variables:{ id: this.props.data.id, messageConnection: {last: 10, before: this.props.data.messages.edges[0].cursor } } })
         .then(result => console.warn(result))
 
     }
