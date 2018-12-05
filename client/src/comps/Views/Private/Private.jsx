@@ -107,51 +107,56 @@ class Private extends Component {
   }
 
   render() {
-    const { chatId, privateChat, TaskData, PrivateData } = this.state;
+    const { chatId, privateChat, TaskData } = this.state;
     let CHATQUERY;
+    let NewTaskData;
 
     privateChat ? CHATQUERY = PRIV_QUERY : CHATQUERY = TASK_MESSAGES
 
+
     return <Fragment>
-        <Content view="OvH Row OvH Pad10">
-          <InnerBar>
-            <PrivateBar chatId={chatId} click={(id, pr) => this.openChat(id, pr)} />
-          </InnerBar>
-          {chatId ? <Query query={CHATQUERY} variables={{ id: `${chatId}` }}>
-              {({ loading, error, data }) => {
-                if (loading) {
-                  return <div style={{ paddingTop: 20, margin: "auto" }}>
-                      <Loading />
-                    </div>;
-                }
-                if (error) {
-                  return <div className="errMess">{error.message}</div>;
-                }
-                // console.warn ("REFRESH", data.direct)
-                // console.warn ("REFRESH", data.task)
+      <Content view="OvH Row OvH Pad10">
+        <InnerBar>
+          <PrivateBar chatId={chatId} click={(id, pr) => this.openChat(id, pr)} />
+        </InnerBar>
+        {chatId ? <Query query={CHATQUERY} variables={{ id: `${chatId}` }}>
+          {({ loading, error, data }) => {
+            if (loading) {
+              return <div style={{ paddingTop: 20, margin: "auto" }}>
+                <Loading />
+              </div>;
+            }
+            if (error) {
+              return <div className="errMess">{error.message}</div>;
+            }
+            // console.warn ("REFRESH", data.direct)
+            // console.warn ("REFRESH", data.task)
 
-                if (data && (data.task || data.direct)) {
-                  if (data.task) this.setData(data.task, "TaskData");
-                  if (data.direct) this.setData(data.direct, "PrivateData");
+            if (data && (data.task || data.direct)) {
+              // if (data.task) this.setData(data.task, "TaskData");
+              // if (data.direct) this.setData(data.direct, "PrivateData");
+              if (data.task) NewTaskData = data.task
+              console.warn("TASK DATA", NewTaskData, chatId)
 
-                  return <ContentInner view="Row OvH Pad010">
-                      <ChatView id={chatId} name={privateChat === true ? data.direct.name : data.task.name} data={privateChat === true ? data.direct : data.task} />
-                    </ContentInner>;
-                } else {
-                  return <ContentInner view="Row OvH Pad10">
-                      <div className="errorMessage">Выберите чат</div>
-                    </ContentInner>;
-                }
-              }}
-            </Query> : <ContentInner view="Row OvH Pad10">
-              <div className="errorMessage">Выберите чат</div>
-            </ContentInner>}
+              return <ContentInner view="Row OvH Pad010">
+                <ChatView id={chatId} name={privateChat === true ? data.direct.name : data.task.name} data={privateChat === true ? data.direct : data.task} />
+              </ContentInner>;
+            } else {
+              return <ContentInner view="Row OvH Pad10">
+                <div className="errorMessage">Выберите чат</div>
+              </ContentInner>;
+            }
+          }}
+        </Query> : <ContentInner view="Row OvH Pad10">
+          <div className="errorMessage">Выберите чат</div>
+        </ContentInner>}
 
-          <InnerBar>
-            {chatId && TaskData ? <TaskView taskId={chatId} objectId={TaskData.objectId} data={TaskData} /> : ''}
-          </InnerBar>
-        </Content>
-      </Fragment>;
+        <InnerBar>
+          {console.warn("TASK DATA222", NewTaskData, chatId)}
+          {chatId && NewTaskData ? <TaskView taskId={chatId} objectId={NewTaskData.objectId} data={NewTaskData} /> : ''}
+        </InnerBar>
+      </Content>
+    </Fragment>;
   }
 }
 
