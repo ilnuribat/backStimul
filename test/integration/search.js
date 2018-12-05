@@ -26,11 +26,7 @@ describe('integration: search', () => {
 
     assert.isArray(res);
     assert.isAtLeast(res.length, 1);
-
-    const { email, __typename } = res[0];
-
-    assert.equal(email, this.email);
-    assert.equal(__typename, 'User');
+    assert.include(res.map(r => r.email), this.user.email);
   });
   it('search with wrong type', async function () {
     const res = await search(null, { query: 'test', type: 'wrong' }, { user: this.user });
