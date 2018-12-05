@@ -8,7 +8,7 @@ enum SEARCH_TYPE {
 type SearchType {
   messages: [Message]
   objects: [Object]
-  tasks(status: Int): [Task]
+  tasks(statuses: [Int]): [Task]
   users: [User]
   files: [File]
 }
