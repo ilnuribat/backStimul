@@ -83,7 +83,6 @@ class NavTop extends Component {
                 client.query({ query: cGetCountPrivates }).then(result => {
                   const unr = result.data.unr + 1
                   //пишем суумму всех непрочитанных приватов
-                  // this.saveCountPrivs(unr)
 
                   client.mutate({
                     mutation: cSetCountPrivates,

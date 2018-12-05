@@ -155,7 +155,7 @@ a{
   background-color: #3d4147;
   padding:10px;
   overflow: hidden;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 svg{
   fill: #3e75b2;
@@ -359,4 +359,9 @@ h1{
 }
 .ML5{
   margin: 0 0 0 5px ;
+}
+
+#PaddedComp{
+  height: 0;
+  transition: all 0.15s ease-in-out;
 }
