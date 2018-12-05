@@ -35,7 +35,7 @@ async function getMessages(parent, { messageConnection }, { user, messageConnect
   }
   const {
     first, last, before, after,
-  } = messageConnection || overrideMessageConnection || {};
+  } = messageConnection || {};
     // before - last, after - first
   const where = formWhere({ id, ...messageConnection });
   const sort = { _id: 1 };
