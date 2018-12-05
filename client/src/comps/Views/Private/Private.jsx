@@ -12,7 +12,7 @@ import Loading from '../../Loading';
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 import ContentInner from '../../Lays/ContentInner/ContentInner';
 import TaskView from '../TaskView/TaskView';
-import { TextRow } from '../../Parts/Rows/Rows';
+// import { TextRow } from '../../Parts/Rows/Rows';
 
 class Private extends Component {
   constructor(props) {
@@ -97,19 +97,9 @@ class Private extends Component {
 
   }
 
-  setData(data, name){
-    if (this.state[name] != data){
-      this.setState({
-        [name]: data,
-      })
-    }
-
-  }
-
   render() {
-    const { chatId, privateChat, TaskData } = this.state;
+    const { chatId, privateChat,  } = this.state;
     let CHATQUERY;
-    let NewTaskData;
 
     privateChat ? CHATQUERY = PRIV_QUERY : CHATQUERY = TASK_MESSAGES
 
@@ -129,18 +119,20 @@ class Private extends Component {
             if (error) {
               return <div className="errMess">{error.message}</div>;
             }
-            // console.warn ("REFRESH", data.direct)
-            // console.warn ("REFRESH", data.task)
+
 
             if (data && (data.task || data.direct)) {
-              // if (data.task) this.setData(data.task, "TaskData");
-              // if (data.direct) this.setData(data.direct, "PrivateData");
-              if (data.task) NewTaskData = data.task
-              console.warn("TASK DATA", NewTaskData, chatId)
 
-              return <ContentInner view="Row OvH Pad010">
-                <ChatView id={chatId} name={privateChat === true ? data.direct.name : data.task.name} data={privateChat === true ? data.direct : data.task} />
-              </ContentInner>;
+              return (
+                <Fragment>
+                  <ContentInner view="Row OvH Pad010">
+                    <ChatView id={chatId} name={privateChat === true ? data.direct.name : data.task.name} data={privateChat === true ? data.direct : data.task} />
+                  </ContentInner>
+                  {data.task ? <InnerBar>
+                    <TaskView taskId={chatId} objectId={data.task.objectId} data={data.task} />
+                  </InnerBar> : ''}
+                </Fragment>
+              )
             } else {
               return <ContentInner view="Row OvH Pad10">
                 <div className="errorMessage">Выберите чат</div>
@@ -151,10 +143,7 @@ class Private extends Component {
           <div className="errorMessage">Выберите чат</div>
         </ContentInner>}
 
-        <InnerBar>
-          {console.warn("TASK DATA222", NewTaskData, chatId)}
-          {chatId && NewTaskData ? <TaskView taskId={chatId} objectId={NewTaskData.objectId} data={NewTaskData} /> : ''}
-        </InnerBar>
+
       </Content>
     </Fragment>;
   }
