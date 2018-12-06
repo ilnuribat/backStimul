@@ -291,14 +291,29 @@ export default {
 
       if (!value.addUser) {
         let filter
+        let filterSort
         let count = 0
 
         if (counter) count = 1
 
         queryName === "directs" ? filter = previousState.user.directs.filter(directs => directs.id === value.groupId)[0] :
           filter = previousState.user.tasks.filter(tasks => tasks.id === value.groupId)[0]
+
         !value.reset ? Object.assign(filter, { unreadCount: filter.unreadCount + count, lastMessage : { isRead: false, from: value.from, text: value.text, createdAt: value.createdAt,  __typename: "Message"} }) :
           Object.assign(filter, { unreadCount: 0, lastMessage: filter.lastMessage })
+
+        queryName === "directs" ? filterSort = previousState.user.directs :  filterSort = previousState.user.tasks
+
+        filterSort.sort((a, b)=>{
+          let firstData
+          let secondData
+
+          a.lastMessage && a.lastMessage.createdAt ? firstData = new Date(a.lastMessage.createdAt) : firstData = new Date(0)
+          b.lastMessage && b.lastMessage.createdAt ? secondData = new Date(b.lastMessage.createdAt) : secondData = new Date(0)
+
+          return secondData.getTime() - firstData.getTime()
+        })
+
 
         data = {
           user: {
