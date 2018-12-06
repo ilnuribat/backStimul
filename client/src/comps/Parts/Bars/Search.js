@@ -4,11 +4,11 @@ import React, { Component } from 'react'
 // import { compose, graphql } from 'react-apollo';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import Loading from '../../Loading';
 import { checkServerIdentity } from 'tls';
-import {UserRow} from '../../Parts/Rows/Rows';
+import { UserRow } from '../../Parts/Rows/Rows';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
-import Loading from '../../Loading';
 import { FileRow } from '../Rows/Rows';
 
 
@@ -27,7 +27,7 @@ export class Search extends Component {
       chTskWrk: false,
       chTskChk: false,
       chTskEnd: false,
-      value:'',
+      value: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -37,7 +37,7 @@ export class Search extends Component {
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    this.setState({ value: event.target.value });
   }
 
   handleSubmit(event) {
@@ -52,15 +52,15 @@ export class Search extends Component {
     let nameArray = target.name.split(',');
     name = nameArray[0];
 
-    if (target.type === 'checkbox' && value === true){
+    if (target.type === 'checkbox' && value === true) {
 
       this.setState({
-        statuses: [...statuses, Number(nameArray[1]) ],
-        [name]: value, 
-      }, ()=>{
+        statuses: [...statuses, Number(nameArray[1])],
+        [name]: value,
+      }, () => {
 
       });
-    }else{
+    } else {
       let keyNumInd = statuses.indexOf(Number(nameArray[1]));
 
       statuses.splice(keyNumInd, 1);
@@ -122,7 +122,7 @@ export class Search extends Component {
 
   }
 
-  componentWillUpdate(){
+  componentWillUpdate() {
   }
 
   render() {
@@ -165,17 +165,16 @@ export class Search extends Component {
       name
     }`;
 
-    let {children} = this.props;
-    let {value, statuses} = this.state;
+    let { children } = this.props;
+    let { value, statuses } = this.state;
     let statusChecked = '';
     let statusValues = '';
-    // let query = value;
 
-    if(statuses){
+    if (statuses) {
       statusChecked = "$statuses: [Int]";
       statusValues = "(statuses: $statuses )";
     }
-    
+
 
     let SearchBody = `
     ${this.state.chAll || this.state.chObj ? Obj : ""}
@@ -196,93 +195,40 @@ export class Search extends Component {
 
     let Search = gql(SearchGql);
     let checks = [
-      {name: 'chAll', text:'Все', id:'0', some:'data'},
-      {name: 'chObj', text:'Объекты', id:'0', some:'data'},
-      {name: 'chTsk', text:'Задачи', id:'0', some:'data'},
-      {name: 'chUsr', text:'Сотрудники', id:'0', some:'data'},
-      {name: 'chMsg', text:'Сообщения', id:'0', some:'data'},
-      {name: 'chDcs', text:'Документы', id:'0', some:'data'},
+      { name: 'chAll', text: 'Все', id: '0', some: 'data' },
+      { name: 'chObj', text: 'Объекты', id: '0', some: 'data' },
+      { name: 'chTsk', text: 'Задачи', id: '0', some: 'data' },
+      { name: 'chUsr', text: 'Сотрудники', id: '0', some: 'data' },
+      { name: 'chMsg', text: 'Сообщения', id: '0', some: 'data' },
+      { name: 'chDcs', text: 'Документы', id: '0', some: 'data' },
     ];
     let checksTasks = [
-      {name: 'chTskNew', text:'Новые', id:'0', status:'1'},
-      {name: 'chTskWrk', text:'В работе', id:'0', status:'3'},
-      {name: 'chTskChk', text:'Проверяются', id:'0', status:'4'},
-      {name: 'chTskEnd', text:'Завершенные', id:'0', status:'5'},
+      { name: 'chTskNew', text: 'Новые', id: '0', status: '1' },
+      { name: 'chTskWrk', text: 'В работе', id: '0', status: '3' },
+      { name: 'chTskChk', text: 'Проверяются', id: '0', status: '4' },
+      { name: 'chTskEnd', text: 'Завершенные', id: '0', status: '5' },
     ];
     let statusesArray = [
-      {name: 'Новая', status:'1'},
-      {name: 'В работе', status:'3'},
-      {name: 'Проверяется', status:'4'},
-      {name: 'Завершена', status:'5'},
+      { name: 'Новая', status: '1' },
+      { name: 'В работе', status: '3' },
+      { name: 'Проверяется', status: '4' },
+      { name: 'Завершена', status: '5' },
     ];
 
 
 
     return <div className="Search">
-<<<<<<< HEAD
-        <div className="SearchTop">
-          <form onSubmit={this.handleSubmit}>
-            <label className="LabelInputText" htmlFor="searchinput">
-              <input type="text" name="searchinput" value={value} onChange={this.handleChange} placeholder="Найти задачи, человека, объект..." />
-            </label>
-
-            <div className="searchTags">
-              <div className="searchTagsRow">
-                {checks.map((e, i) => {
-                  return <label className={this.state[e.name] ? "searchTag sel" : "searchTag"} htmlFor={e.name} key={"check" + i}>
-                      <input id={e.name} name={e.name} type="checkbox" sid={e.name} checked={this.state[e.name]} onChange={this.handleInputChange} />
-                      <span className="searchTagText">{e.text}</span>
-                    </label>;
-                })}
-              </div>
-              <div className="searchTagsRow">
-                {this.state.chTsk ? checksTasks.map((e, i) => {
-                return <label className={this.state[e.name] ? "searchTag sel" : "searchTag"} htmlFor={e.name} key={"checkTsk" + i}>
-                  <input id={e.name} name={[e.name, e.status]} type="checkbox" checked={this.state[e.name]} onChange={this.handleInputChangeStatuses} />
-                    <span className="searchTagText">
-                      {e.text}
-                    </span>
-                  </label>;
-                    }) : null}
-              </div>
-            </div>
-          </form>
-        </div>
-        <div className="SearchBody">
-          {value ? <Query query={Search} variables={{ query: value, statuses: statuses ? statuses : ""  }}>
-              {({ data, loading, error }) => {
-                if (error) {
-                  console.log(error);
-
-                  return <div id="SeacrhInner">{error.message}</div>;
-                }
-                if (loading) return "загрузка";
-                if (data && data.search) {
-                  let Search = {};
-
-                  data.search.messages && data.search.messages.length > 0 ? (Search.messages = data.search.messages) : null;
-                  data.search.tasks && data.search.tasks.length > 0 ? (Search.tasks = data.search.tasks) : null;
-                  data.search.objects && data.search.objects.length > 0 ? (Search.objects = data.search.objects) : null;
-                  data.search.users && data.search.users.length > 0 ? (Search.users = data.search.users) : null;
-                  data.search.files && data.search.files.length > 0 ? (Search.files = data.search.files) : null;
-
-                  // Search ? console.log("Search", Search) : null
-
-                  // Search ? (
-                  return <div id="SeacrhInner">
-                      {Search.tasks ? <h3 className="BlockHeader">
-=======
       <div className="SearchTop">
         <form onSubmit={this.handleSubmit}>
           <label className="LabelInputText" htmlFor="searchinput">
             <input type="text" name="searchinput" value={value} onChange={this.handleChange} placeholder="Найти задачи, человека, объект..." />
           </label>
 
-          <div className="searchTags" onMouseDown="return false" onSelectstart="return false">
+          <div className="searchTags">
             <div className="searchTagsRow">
               {checks.map((e, i) => {
                 return <label className={this.state[e.name] ? "searchTag sel" : "searchTag"} htmlFor={e.name} key={"check" + i}>
-                  <input id={e.name} name={e.name} type="checkbox" checked={this.state[e.name]} onChange={this.handleInputChange} />
+                  <input id={e.name} name={e.name} type="checkbox" sid={e.name} checked={this.state[e.name]} onChange={this.handleInputChange} />
                   <span className="searchTagText">{e.text}</span>
                 </label>;
               })}
@@ -290,8 +236,10 @@ export class Search extends Component {
             <div className="searchTagsRow">
               {this.state.chTsk ? checksTasks.map((e, i) => {
                 return <label className={this.state[e.name] ? "searchTag sel" : "searchTag"} htmlFor={e.name} key={"checkTsk" + i}>
-                  <input id={e.name} name={e.name} type="checkbox" checked={this.state[e.name]} onChange={this.handleInputChange} />
-                  <span className="searchTagText">{e.text}</span>
+                  <input id={e.name} name={[e.name, e.status]} type="checkbox" checked={this.state[e.name]} onChange={this.handleInputChangeStatuses} />
+                  <span className="searchTagText">
+                    {e.text}
+                  </span>
                 </label>;
               }) : null}
             </div>
@@ -299,7 +247,7 @@ export class Search extends Component {
         </form>
       </div>
       <div className="SearchBody">
-        {value ? <Query query={Search} variables={{ query: value }}>
+        {value ? <Query query={Search} variables={{ query: value, statuses: statuses ? statuses : "" }}>
           {({ data, loading, error }) => {
             if (error) {
               console.log(error);
@@ -316,14 +264,11 @@ export class Search extends Component {
               data.search.users && data.search.users.length > 0 ? (Search.users = data.search.users) : null;
               data.search.files && data.search.files.length > 0 ? (Search.files = data.search.files) : null;
 
-              // Search ? console.log("Search", Search) : null
-
               // Search ? (
               return <div id="SeacrhInner">
                 {Search.tasks ? <h3 className="BlockHeader">
->>>>>>> c8bcbffbf75a8ca475dde59ee7c9672a9b1e774d
-                          Задачи
-                </h3> : null}
+                  Задачи
+                        </h3> : null}
                 {Search.tasks ? <div className="BlockContent">
                   {Search.tasks.map(e => (
                     <Link
@@ -351,51 +296,6 @@ export class Search extends Component {
                                   : "SearchEndDate"
                               }
                             >
-<<<<<<< HEAD
-                              <div className="SearchTask" key={e.id}>
-                                <div className="SearchTaskTop" key={e.id}>
-                                  {e.name ? (
-                                    <span className="SearchName">
-                                      {e.name}
-                                    </span>
-                                  ) : null}
-                                  {e.endDate ? (
-                                    <span
-                                      className={
-                                        moment(e.endDate).fromNow()
-                                          ? "SearchEndDate"
-                                          : "SearchEndDate"
-                                      }
-                                    >
-                                      {moment(e.endDate).format(
-                                        "D MMM, h:mm"
-                                      )}
-                                    </span>
-                                  ) : null}
-
-                                  <span className="SearchStatus">
-                                    {e.status
-                                      ? statusesArray.find(
-                                          x => x.status == e.status
-                                        ).name
-                                      : "Новая"}
-                                  </span>
-                                </div>
-                                {e.assignedTo ? (
-                                  <UserRow
-                                    view="Boxed"
-                                    id={e.assignedTo.id}
-                                    icon="1"
-                                    name={e.assignedTo.username}
-                                    key={e.assignedTo.id}
-                                  />
-                                ) : null}
-                              </div>
-                            </Link>
-                          ))}
-                        </div> : null}
-                      {Search.objects ? <h3 className="BlockHeader">
-=======
                               {moment(e.endDate).format(
                                 "D MMM, h:mm"
                               )}
@@ -404,7 +304,7 @@ export class Search extends Component {
 
                           <span className="SearchStatus">
                             {e.status
-                              ? statuses.find(
+                              ? statusesArray.find(
                                 x => x.status == e.status
                               ).name
                               : "Новая"}
@@ -424,9 +324,8 @@ export class Search extends Component {
                   ))}
                 </div> : null}
                 {Search.objects ? <h3 className="BlockHeader">
->>>>>>> c8bcbffbf75a8ca475dde59ee7c9672a9b1e774d
-                          Объекты
-                </h3> : null}
+                  Объекты
+                        </h3> : null}
                 {Search.objects ? <div className="BlockContent">
                   {Search.objects.map(e => (
                     <Link
@@ -450,8 +349,8 @@ export class Search extends Component {
                   ))}
                 </div> : null}
                 {Search.users ? <h3 className="BlockHeader">
-                          Пользователи
-                </h3> : null}
+                  Пользователи
+                        </h3> : null}
                 {Search.users ? <div className="BlockContent">
                   {Search.users.map(e => (
                     <Link
@@ -469,8 +368,8 @@ export class Search extends Component {
                   ))}
                 </div> : null}
                 {Search.messages ? <h3 className="BlockHeader">
-                          Сообщения
-                </h3> : null}
+                  Сообщения
+                        </h3> : null}
                 {Search.messages ? <div className="BlockContent">
                   {Search.messages.map(e => (
                     <Link
@@ -493,13 +392,13 @@ export class Search extends Component {
                         >
                           {e.isDirect ? (
                             <div className="small cgr">
-                                      Личный чат
-                            </div>
+                              Личный чат
+                                    </div>
                           ) : null}
                         </UserRow>
                       ) : (
-                        ""
-                      )}
+                          ""
+                        )}
                       <div className="SearchMessage" key={e.id}>
                         {e.text}
                       </div>
@@ -507,8 +406,8 @@ export class Search extends Component {
                   ))}
                 </div> : null}
                 {Search.files ? <h3 className="BlockHeader">
-                          Документы
-                </h3> : null}
+                  Документы
+                        </h3> : null}
                 {Search.files ? <div className="BlockContent">
                   {Search.files.map(e =>
                     e.name ? (
@@ -520,8 +419,8 @@ export class Search extends Component {
                         key={"file" + e.id}
                       />
                     ) : (
-                      ""
-                    )
+                        ""
+                      )
                   )}
                 </div> : null}
               </div>;
