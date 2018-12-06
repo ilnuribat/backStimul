@@ -21,9 +21,6 @@ class PrivateBar extends React.Component {
     this.state = {
       chatId: "",
       newUser: "",
-      newChay: "",
-      userwarn: "",
-      warnMe: "",
       tasksOpen: true,
       privsOpen: false,
     }
@@ -135,6 +132,7 @@ class PrivateBar extends React.Component {
     const { chatId } = this.props;
     let { tasksOpen, privsOpen } = this.state;
 
+
     return (
       <div className="f-column-l">
         <div className="tab-roll">
@@ -152,6 +150,8 @@ class PrivateBar extends React.Component {
                     );
                   }
                   if (error){
+                    console.warn("error??", error)
+
                     return (
                       <div style={{ paddingTop: 20 }}>
                         <Loading />
@@ -203,8 +203,6 @@ class PrivateBar extends React.Component {
                                               {/* {e.lastMessage.isRead ? <Svg svg="read" size="16" view="inline MR5"/> : null} */}
                                               {timeEdit(e.lastMessage.createdAt)}</div>) : null }
                                           </div>
-
-
                                         </div>
                                       ) : null}
                                     </UserRow>

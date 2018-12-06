@@ -270,6 +270,7 @@ export default {
                     id
                     username
                   }
+                  isRead
                   text
                 }
               }
@@ -296,7 +297,7 @@ export default {
 
         queryName === "directs" ? filter = previousState.user.directs.filter(directs => directs.id === value.groupId)[0] :
           filter = previousState.user.tasks.filter(tasks => tasks.id === value.groupId)[0]
-        !value.reset ? Object.assign(filter, { unreadCount: filter.unreadCount + count, lastMessage : { from: value.from, text: value.text, createdAt: value.createdAt,  __typename: "Message"} }) :
+        !value.reset ? Object.assign(filter, { unreadCount: filter.unreadCount + count, lastMessage : { isRead: false, from: value.from, text: value.text, createdAt: value.createdAt,  __typename: "Message"} }) :
           Object.assign(filter, { unreadCount: 0, lastMessage: filter.lastMessage })
 
         data = {
@@ -308,7 +309,10 @@ export default {
       } else {
         data = {
           user: {
-            directs: [...previousState.user.directs, {...value, unreadCount: 0, lastMessage: null, __typename: "Direct"}],
+            directs: [...previousState.user.directs, {
+              ...value, unreadCount: 0,
+              lastMessage: null,
+              __typename: "Direct"}],
             __typename: "User",
           }
         };
@@ -317,7 +321,7 @@ export default {
       cache.writeQuery({
         query,
         data,
-      });
+      })
 
       return true;
 

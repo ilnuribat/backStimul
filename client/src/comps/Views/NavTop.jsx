@@ -8,7 +8,7 @@ import { graphql, compose } from "react-apollo";
 import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED, TASK_UPDATED, USER_TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
-import { cGetCountPrivates, cSetCountPrivates, chatListCacheUpdate, messagesCacheUpdate, objectCacheUpdate, getChat } from '../../GraphQL/Cache';
+import { cGetCountPrivates, cSetCountPrivates, chatListCacheUpdate, messagesCacheUpdate, objectCacheUpdate, getChat, getCUser } from '../../GraphQL/Cache';
 import { getUnreadCount, TASK_INFO_SMALL } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 import client from '../../client';
@@ -106,15 +106,21 @@ class NavTop extends Component {
               })
             } // if #1
             else {
-              //пишем в кеш lastmessage
-              client.mutate({
-                mutation: chatListCacheUpdate,
-                variables:{
-                  value: data.data.messageAdded,
-                  queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
-                  counter: false,
-                }
-              })
+              client.query({ query: getCUser })
+                .then(result =>
+                {
+                  console.warn(result)
+                  client.mutate({
+                    mutation: chatListCacheUpdate,
+                    variables:{
+                      value: data.data.messageAdded,
+                      queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
+                    }
+                  }).then(() => client.query({ query: getCUser }).then(result => console.warn(result)))
+                })
+
+              // пишем в кеш lastmessage
+
             }
           })
 

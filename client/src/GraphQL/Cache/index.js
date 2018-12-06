@@ -126,30 +126,34 @@ export const getPlaceName = gql `
 
 export const getCUser = gql `
 query getCUser{
-    user @client{
-      groups{
-        id
-        name
-        users{
+  user @client {
+    directs {
+      id
+      name
+      unreadCount
+      lastMessage{
+        createdAt
+        from{
           id
           username
         }
-        unreadCount
-        status
-        assignedTo{
-          id
-          username
-        }
-        lastMessage{
-          from{
-            id
-            username
-          }
-          text
-        }
-        endDate
+        text
       }
     }
+    tasks {
+      id
+      name
+      unreadCount
+      lastMessage{
+        createdAt
+        from{
+          id
+          username
+        }
+        text
+      }
+    }
+  }
 }`;
 
 export const getObjectTasksTemp = gql `
