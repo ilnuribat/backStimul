@@ -255,6 +255,58 @@ export default {
       return true;
 
     },
+    privateListCacheUpdate: (_, { value },  { cache }) => {
+      const query = gql`
+          query {
+            user @client {
+              directs {
+                id
+                name
+                unreadCount
+              }
+            }
+          }
+      `;
+      let previousState;
+      let data;
+
+      try {
+        previousState = cache.readQuery({ query });
+      } catch (error) {
+        console.warn("cache is empty!")
+
+        return null
+      }
+      // console.warn("prevstate unrPrivatesCacheUpdate is", previousState, value)
+
+      if (value && !value.addUser) {
+        let filter = previousState.user.directs.filter(directs => directs.id === value.id)[0]
+
+        if (!value.reset) Object.assign(filter, { unreadCount: filter.unreadCount + 1 })
+        else  Object.assign(filter, { unreadCount: 0 })
+        data = {
+          user: {
+            directs: [...previousState.user.directs],
+            __typename: "User",
+          }
+        };
+      } else {
+        data = {
+          user: {
+            directs: [...previousState.user.directs, {...value, unreadCount: 0, __typename: "Group"}],
+            __typename: "User",
+          }
+        };
+      }
+
+      cache.writeQuery({
+        query,
+        data,
+      });
+
+      return true;
+
+    },
     objectCacheUpdate: (_, { value, action, objectId, taskId },  { cache }) => {
       let data;
       let query;

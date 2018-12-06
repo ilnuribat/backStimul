@@ -159,13 +159,15 @@ async function deleteTask(parent, { id }) {
   return res.n;
 }
 
-async function searchTasks(user, regExp, limit = 10, status) {
+async function searchTasks(user, regExp, limit = 10, statuses) {
   const $match = {
     'tasks.name': regExp,
   };
 
-  if (status) {
-    $match['tasks.status'] = status;
+  if (Array.isArray(statuses) && statuses.length) {
+    $match['tasks.status'] = {
+      $in: statuses,
+    };
   }
   const res = await UserGroup.aggregate([{
     $match: {

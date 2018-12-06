@@ -61,6 +61,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  
 }
 .UserRow .UserIcon{
   /* flex:1 1 auto; */

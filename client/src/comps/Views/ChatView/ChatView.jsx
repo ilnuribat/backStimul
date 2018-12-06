@@ -33,7 +33,7 @@ const subscribeToRead = (id) => {
       query: MESSAGE_READ,
       variables: { id: id },
     }).subscribe({
-      next(data) {
+      next() {
         // console.warn("MESSAGE ISREAD!! UPDATED", data.data.messageRead)
         subsMsgs = subsMsgs.filter(el => el != id)
         unsub.unsubscribe()

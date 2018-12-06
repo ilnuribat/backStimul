@@ -5,11 +5,11 @@ const { searchUsers } = require('../services/user');
 const { searchFiles } = require('../services/files');
 
 async function search(parent, {
-  query, type, limit = 10, status,
+  query, type, limit = 10, statuses,
 }, { user }) {
   const result = [];
   let tempRes;
-  const words = query.split(/\s/);
+  const words = query.replace(/[^a-zа-яё0-9\ ]/ig, ' ').split(' ').filter(s => s.length);
   const regExQuery = new RegExp(words.join('|'), 'i');
 
   if (type) {
@@ -31,7 +31,7 @@ async function search(parent, {
         })));
         break;
       case 'TASKS':
-        tempRes = await searchTasks(user, regExQuery, limit, status);
+        tempRes = await searchTasks(user, regExQuery, limit, statuses);
 
         result.push(...tempRes.map(t => ({
           __typename: 'Task',
