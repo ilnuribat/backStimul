@@ -299,25 +299,40 @@ export default {
         queryName === "directs" ? filter = previousState.user.directs.filter(directs => directs.id === value.groupId)[0] :
           filter = previousState.user.tasks.filter(tasks => tasks.id === value.groupId)[0]
 
-        !value.reset ? Object.assign(filter, { unreadCount: filter.unreadCount + count, lastMessage : { isRead: false, from: value.from, text: value.text, createdAt: value.createdAt,  __typename: "Message"} }) :
+        if (!value.reset) {
+          Object.assign(filter, { unreadCount: filter.unreadCount + count, lastMessage : { isRead: false, from: value.from, text: value.text, createdAt: value.createdAt,  __typename: "Message"} })
+          queryName === "directs" ? filterSort = [filter, ...previousState.user.directs.filter(directs => directs.id !== value.groupId)] :
+            filterSort = [filter, ...previousState.user.tasks.filter(tasks => tasks.id !== value.groupId)]
+        } else {
           Object.assign(filter, { unreadCount: 0, lastMessage: filter.lastMessage })
+          queryName === "directs" ? filterSort = [...previousState.user.directs] : filterSort = [...previousState.user.tasks]
+        }
 
-        queryName === "directs" ? filterSort = previousState.user.directs :  filterSort = previousState.user.tasks
+        // queryName === "directs" ? filterSort = previousState.user.directs :  filterSort = previousState.user.tasks
 
-        filterSort.sort((a, b)=>{
-          let firstData
-          let secondData
+        // filterSort.sort((a, b)=>{
+        //   let firstData
+        //   let secondData
 
-          a.lastMessage && a.lastMessage.createdAt ? firstData = new Date(a.lastMessage.createdAt) : firstData = new Date(0)
-          b.lastMessage && b.lastMessage.createdAt ? secondData = new Date(b.lastMessage.createdAt) : secondData = new Date(0)
+        //   a.lastMessage && a.lastMessage.createdAt ? firstData = new Date(a.lastMessage.createdAt) : firstData = new Date(0)
+        //   b.lastMessage && b.lastMessage.createdAt ? secondData = new Date(b.lastMessage.createdAt) : secondData = new Date(0)
 
-          return secondData.getTime() - firstData.getTime()
-        })
+        //   return secondData.getTime() - firstData.getTime()
+        // })
+
+        // queryName === "directs" ? filterSort = previousState.user.directs :  filterSort = previousState.user.tasks
+
+        // filterSort.sort((a, b)=>{
+        //   const firstData = b.lastMessage && b.lastMessage.createdAt ? b.lastMessage.createdAt : "0"
+        //   const secondData = a.lastMessage && a.lastMessage.createdAt ? a.lastMessage.createdAt : "0"
+
+        //   return firstData.localeCompare(secondData);
+        // })
 
 
         data = {
           user: {
-            [queryName]: queryName === "directs" ? [...previousState.user.directs] : [...previousState.user.tasks],
+            [queryName]: filterSort,
             __typename: "User",
           }
         };
