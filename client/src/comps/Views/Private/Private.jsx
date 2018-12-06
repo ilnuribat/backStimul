@@ -37,13 +37,16 @@ class Private extends Component {
       // console.warn(this.props.location)
 
       localStorage.setItem('chatId', location.state.id)
+      if (location.state.privateChat) localStorage.setItem('privateChat', 1)
 
       this.setState({
         chatId: location.state.id,
+        privateChat: location.state.privateChat || true
       })
     }else if(localStorage.getItem('chatId')){
       this.setState({
         chatId: localStorage.getItem('chatId'),
+        privateChat: localStorage.getItem('privateChat') == 1 || !localStorage.getItem('privateChat') ? true : false
       })
     }
 
@@ -61,10 +64,12 @@ class Private extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // console.warn("PRE!!changestate",this.state.chatId, prevState.chatId)
-    if (this.props.location && this.props.location.state && prevProps.location && prevProps.location.state
-      && prevProps.location.state.id && this.state.chatId !== this.props.location.state.id && this.state.chatId === prevState.chatId)
-      this.setState ({ chatId: this.props.location.state.id  })
+    const { location } = this.props
+    const { chatId } = this.state
+
+    if (location && location.state && prevProps.location && prevProps.location.state
+      && prevProps.location.state.id && chatId !== location.state.id && chatId === prevState.chatId)
+      this.setState ({ chatId: location.state.id, privateChat: location.state.privateChat == 1 || !localStorage.getItem('privateChat') ? true : false })
   }
 
   componentWillUnmount(){
@@ -74,12 +79,9 @@ class Private extends Component {
   }
 
   openChat(id, priv){
-    // console.warn("ChatId === open",id);
-    // console.warn("ChatId === priv",priv);
-
     if(id && id !== this.state.chatId){
       localStorage.setItem('chatId', id)
-      localStorage.setItem('privateChat', priv)
+      localStorage.setItem('privateChat', priv ? 1 : 0)
       this.setState({
         chatId: id,
         privateChat: priv === true ? true : false,
@@ -88,21 +90,19 @@ class Private extends Component {
     }
     if(!id || id === this.state.chatId){
       localStorage.setItem('chatId', '')
-      localStorage.setItem('privateChat', '')
+      localStorage.setItem('privateChat', 1)
       this.setState({
         chatId: "",
         chatLocation: true,
       })
     }
-
   }
 
   render() {
-    const { chatId, privateChat,  } = this.state;
+    const { chatId, privateChat } = this.state;
     let CHATQUERY;
 
     privateChat ? CHATQUERY = PRIV_QUERY : CHATQUERY = TASK_MESSAGES
-
 
     return <Fragment>
       <Content view="OvH Row OvH Pad10">
@@ -122,11 +122,13 @@ class Private extends Component {
 
 
             if (data && (data.task || data.direct)) {
+              // console.warn("AAAAAAAA", data.direct, data.direct.name, privateChat, typeof privateChat)
+              let allData = data.direct || data.task;
 
               return (
                 <Fragment>
                   <ContentInner view="Row OvH Pad010">
-                    <ChatView id={chatId} priv={privateChat} name={privateChat === true ? data.direct.name : data.task.name} data={privateChat === true ? data.direct : data.task} />
+                    <ChatView id={chatId} priv={allData.__typename === "Direct" ? true : false} name={ allData.__typename === "Direct" ? data.direct.name : data.task.name } data={ allData.__typename === "Direct" ? data.direct : data.task } />
                   </ContentInner>
                   {data.task ? <InnerBar>
                     <TaskView taskId={chatId} objectId={data.task.objectId} data={data.task} />
