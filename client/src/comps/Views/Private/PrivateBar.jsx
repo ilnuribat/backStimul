@@ -3,9 +3,9 @@ import { graphql, compose, Query  } from "react-apollo";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 
-import moment from 'moment';
+
 import { getChat, cSetCountPrivates, chatListCacheUpdate } from '../../../GraphQL/Cache';
-import { qauf, _url } from '../../../constants';
+import { qauf, _url, timeEdit } from '../../../constants';
 import Loading from '../../Loading';
 import { USERS_QUERY, CHATS_QUERY } from '../../../GraphQL/Qur/Query';
 // import { MESSAGE_CREATED } from '../../../GraphQL/Qur/Subscr';
@@ -105,30 +105,7 @@ class PrivateBar extends React.Component {
 
   }
 
-  timeEdit(time){
-    if(time){
 
-      let a = '';
-      let dif = '';
-
-      /** If day off */
-      dif = moment(moment().toISOString()).diff(moment(time).toISOString()) / 3600000;//3600000;
-
-      if(moment(time).format("YYYY") !== moment().format("YYYY")){
-        a = moment(time).format("YYYY DD MMM, hh:mm");
-      }
-      else if (dif < 12 && moment(time).format("YYYY") == moment().format("YYYY")) {
-        a = moment(time).format("DD MMM, hh:mm");
-      }
-      else {
-        a = moment(time).format("hh:mm");
-      }
-
-      return a;
-    }else{
-      return ''
-    }
-  }
 
   // setBlogPostViewsAsync = async () => {
   //   this.setState({ privsOpen: !this.state.privsOpen }, () => Promise.resolve());
@@ -224,7 +201,7 @@ class PrivateBar extends React.Component {
                                           <div className="col">
                                             {e.lastMessage.createdAt ? (<div className="MessageSimpleText Row3">
                                               {/* {e.lastMessage.isRead ? <Svg svg="read" size="16" view="inline MR5"/> : null} */}
-                                              {this.timeEdit(e.lastMessage.createdAt)}</div>) : null }
+                                              {timeEdit(e.lastMessage.createdAt)}</div>) : null }
                                           </div>
 
 
@@ -277,7 +254,7 @@ class PrivateBar extends React.Component {
                                           <div className="col">
                                             {e.lastMessage.createdAt ? (<div className="MessageSimpleText Row3">
                                               {/* {e.lastMessage.isRead ? <Svg svg="read" size="16" view="inline MR5"/> : null} */}
-                                              {this.timeEdit(e.lastMessage.createdAt)}</div>) : null }
+                                              {timeEdit(e.lastMessage.createdAt)}</div>) : null }
                                           </div>
 
 

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import ColorHash from 'color-hash';
 
 export const colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
@@ -5,7 +6,34 @@ export const colorHash = new ColorHash({lightness: 0.7, hue: 0.8});
 
 export const savePlace =(id,name,type)=>{
   localStorage.setItem("place", `"id":"${id}","name":"${name}","type":"${type}"`);
+
   return true;
+}
+
+export const timeEdit = (time) => {
+  if(time){
+
+    let a = '';
+
+    // const dif = moment(moment().toISOString()).diff(moment(time).toISOString()) / 3600000;//3600000;
+
+    if(moment(time).format("YYYY") !== moment().format("YYYY")){
+      a = moment(time).format("YYYY DD MMM, HH:mm");
+    }
+    else if (moment(time).format("DD MMM") !== moment().format("DD MMM")) {
+      a = moment(time).format("DD MMM, HH:mm");
+    }
+    // else if (dif < 12 && moment(time).format("YYYY") == moment().format("YYYY")) {
+    //   a = moment(time).format("hh:mm");
+    // }
+    else {
+      a = moment(time).format("HH:mm");
+    }
+
+    return a;
+  }else{
+    return ''
+  }
 }
 
 export const colors = {

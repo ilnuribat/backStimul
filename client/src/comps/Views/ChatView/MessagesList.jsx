@@ -4,7 +4,7 @@ import momentRu from 'moment/locale/ru';
 import PropTypes from 'prop-types';
 import client from '../../../client';
 
-import { qauf, _url, colorHash } from '../../../constants';
+import { qauf, _url, colorHash, timeEdit } from '../../../constants';
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { Svg } from '../../Parts/SVG/index';
 import { UserRow } from "../../Parts/Rows/Rows";
@@ -96,31 +96,6 @@ export default class MessagesList extends Component {
 
   // }
 
-  timeEdit(time) {
-    if (time) {
-
-      let a = '';
-      let dif = '';
-
-      /** If day off */
-      dif = moment(moment().toISOString()).diff(moment(time).toISOString()) / 3600000;//3600000;
-
-      if (moment(time).format("YYYY") !== moment().format("YYYY")) {
-        a = moment(time).format("YYYY DD MMM, hh:mm");
-      }
-      else if (dif < 12 && moment(time).format("YYYY") == moment().format("YYYY")) {
-        a = moment(time).format("DD MMM, hh:mm");
-      }
-      else {
-        a = moment(time).format("hh:mm");
-      }
-
-      return a;
-    } else {
-      return ''
-    }
-  }
-
   render(){
     const { data } = this.props;
     let datas = '';
@@ -164,7 +139,7 @@ export default class MessagesList extends Component {
 
               let date = "";
 
-              createdAt ? date = this.timeEdit(createdAt) : date = '0:00';
+              createdAt ? date = timeEdit(createdAt) : date = '0:00';
 
 
               // let date = moment(createdAt).format('D MMM, h:mm')/*.fromNow()*/ || "неизв.";
