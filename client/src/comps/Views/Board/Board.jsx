@@ -462,7 +462,7 @@ class Board extends Component {
                               return null
 
                             return(
-                              <ChatView id={taskId} data={ data.task } name={data.task.name} />
+                              <ChatView id={taskId} priv={false} data={ data.task } name={data.task.name} />
                             )
                           }}
                         </Query>

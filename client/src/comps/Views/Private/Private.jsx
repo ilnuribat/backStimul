@@ -126,7 +126,7 @@ class Private extends Component {
               return (
                 <Fragment>
                   <ContentInner view="Row OvH Pad010">
-                    <ChatView id={chatId} name={privateChat === true ? data.direct.name : data.task.name} data={privateChat === true ? data.direct : data.task} />
+                    <ChatView id={chatId} priv={privateChat} name={privateChat === true ? data.direct.name : data.task.name} data={privateChat === true ? data.direct : data.task} />
                   </ContentInner>
                   {data.task ? <InnerBar>
                     <TaskView taskId={chatId} objectId={data.task.objectId} data={data.task} />

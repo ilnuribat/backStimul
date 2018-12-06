@@ -269,6 +269,11 @@ export const messagesCacheUpdate = gql `
     }
   }
 `;
+export const messagesCacheUpdateLazy = gql `
+  mutation messagesCacheUpdateLazy($lastMessage: Object!, $queryName: String!) {
+    messagesCacheUpdateLazy(lastMessage: $lastMessage, queryName: $queryName) @client
+  }
+`;
 export const taskCacheUpdate = gql `
   mutation taskCacheUpdate($action: String!, $value: Object, $taskId: String!) {
     taskCacheUpdate(action: $action, value: $value, taskId: $taskId) @client

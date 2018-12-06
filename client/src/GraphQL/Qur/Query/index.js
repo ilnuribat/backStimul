@@ -235,7 +235,7 @@ export const TASKS_QUERY = gql `
 `;
 
 export const PRIV_QUERY = gql`
-  query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}){
+  query ($id: ID!, $messageConnection: ConnectionInput = {last: 30}){
       direct(id: $id ){
           id
           name
@@ -272,7 +272,7 @@ export const MESSAGE_QUERY = gql `
   }
 `;
 export const TASK_MESSAGES = gql`
-         query($id: ID!, $messageConnection: ConnectionInput = { last: 50 }) {
+         query($id: ID!, $messageConnection: ConnectionInput = { last: 30 }) {
            task(id: $id) {
              id
              name

@@ -124,13 +124,80 @@ export default {
 
       return {barType, barShow, __typename: 'Bar' };
     },
+    messagesCacheUpdateLazy: (_, {lastMessage, queryName},  { cache }) => {
+      const tname = queryName.charAt(0).toUpperCase()+queryName.substring(1)
 
+      // console.warn("queryName is", queryName, tname)
+      const query = gql`
+        query ($id: ID!, $messageConnection: ConnectionInput = {last: 30}) {
+          ${queryName}(id: $id ) @client {
+            id
+            messages(messageConnection: $messageConnection) {
+              edges {
+                cursor
+                node {
+                  id
+                  text
+                }
+              }
+            }
+            __typename
+          }
+        # id @client
+        }
+      `;
+
+      let previousState;
+
+      try {
+        previousState = cache.readQuery({ query, variables: {"id": lastMessage.id}});
+      } catch (error) {
+        console.warn("cache is messagesCacheUpdateLazy empty!")
+
+        return null
+      }
+
+      // console.warn("lastMessage is", lastMessage.messages.edges)
+      // console.warn("prevstate is", previousState)
+      // console.warn("queryName is", queryName, tname)
+
+      const newFeedItem = lastMessage.messages.edges;
+
+      let edges;
+
+      // edges = previousState.direct.messages.edges
+      queryName === "task" ? edges = previousState.task.messages.edges : edges = previousState.direct.messages.edges
+
+      newFeedItem.reverse().map(message => edges = [message, ...edges])
+
+      // console.warn("NEW is", edges)
+
+      const data = {
+        [queryName]: {
+          id: queryName === "task" ? previousState.task.id : previousState.direct.id,
+          messages: {
+            edges: edges,
+            __typename: "MessageConnection",
+          },
+          __typename: tname
+        }
+      };
+
+      cache.writeQuery({
+        query,
+        data,
+        variables: {"id": queryName === "task" ? previousState.task.id : previousState.direct.id}
+      });
+
+
+      return true;
+    },
     messagesCacheUpdate: (_, {lastMessage, queryName},  { cache }) => {
       const tname = queryName.charAt(0).toUpperCase()+queryName.substring(1)
 
       // console.warn("queryName is", queryName, tname)
       const query = gql`
-        query ($id: ID!, $messageConnection: ConnectionInput = {last: 50}) {
+        query ($id: ID!, $messageConnection: ConnectionInput = {last: 30}) {
           ${queryName}(id: $id ) @client {
             id
             messages(messageConnection: $messageConnection) {

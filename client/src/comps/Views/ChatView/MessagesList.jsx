@@ -8,7 +8,8 @@ import { qauf, _url, colorHash } from '../../../constants';
 import { messageRead_MUT } from "../../../GraphQL/Qur/Mutation";
 import { Svg } from '../../Parts/SVG/index';
 import { UserRow } from "../../Parts/Rows/Rows";
-import { PRIV_QUERY } from "../../../GraphQL/Qur/Query";
+import { PRIV_QUERY, TASK_MESSAGES } from "../../../GraphQL/Qur/Query";
+import { messagesCacheUpdateLazy } from "../../../GraphQL/Cache";
 
 moment.locale('ru')
 
@@ -43,14 +44,27 @@ export default class MessagesList extends Component {
   }
 
   handleScroll(event) {
-    if (event.target.scrollTop == 0){
-      console.warn(event, event.target.scrollTop)
-      document.getElementById("PaddedComp").style.height = "30px"
-      setTimeout(()=>{document.getElementById("PaddedComp").style.height = "0"}, 300)
-      console.warn("DATA IS", this.props.data.messages.edges[0].cursor)
-      client.query({ query: PRIV_QUERY,  variables:{ id: this.props.data.id, messageConnection: {last: 10, before: this.props.data.messages.edges[0].cursor } } })
-        .then(result => console.warn(result))
 
+    if (event.target.scrollTop == 0){
+      const a = document.getElementById("messageList");
+      const oldHeight = a.scrollHeight
+
+      document.getElementById("PaddedComp").style.height = "30px"
+      client.query({ query: this.props.priv ? PRIV_QUERY : TASK_MESSAGES,  variables:{ id: this.props.data.id, messageConnection: {last: 30, before: this.props.data.messages.edges[0].cursor } } })
+        .then(result => {
+          client.mutate({
+            mutation: messagesCacheUpdateLazy,
+            variables: {
+              lastMessage: this.props.priv ? result.data.direct : result.data.task,
+              queryName: this.props.priv ? "direct" : "task"
+            }
+          })
+            .then(()=>
+            {
+              a.scrollTop = a.scrollHeight - oldHeight
+              // setTimeout(()=>{document.getElementById("PaddedComp").style.height = "0"}, 300)
+            })
+        })
     }
   }
 
@@ -113,8 +127,6 @@ export default class MessagesList extends Component {
     let uid = localStorage.getItem('userid');
     let same = false;
     let usid = "";
-
-    console.warn("aaa", data.id)
 
     if(data && data.messages && data.messages.edges ){
       datas = data.messages.edges;
@@ -183,7 +195,7 @@ export default class MessagesList extends Component {
               usid = id;
 
               return(
-                <div className={'msg '+ tr} key={'chat-'+i} from={id}>
+                <div className={'msg '+ tr} key={'chat-'+i} from={id} id={id}>
                   {/* <div className="msg-flex"> */}
                   {same ? (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
@@ -194,7 +206,7 @@ export default class MessagesList extends Component {
                       {id !== uid ? (<UserRow name={username} icon="1" view="Col" />) : null}
                     </div>
                   )}
-                  <blockquote className={"msgs"} id={id}>
+                  <blockquote className={"msgs"}>
 
                     <div className="text prewr">{messageText}</div>
                     <div className="f-row">
@@ -226,4 +238,5 @@ export default class MessagesList extends Component {
 
 MessagesList.propTypes = {
   data:PropTypes.object.isRequired,
+  priv: PropTypes.bool.isRequired,
 };
