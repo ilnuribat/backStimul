@@ -60,7 +60,7 @@ export const UserRow = ({ children, id, name, iconright, username, url, userid, 
 }
 export const ButtonRow = ({ children, id, name, url, icon, click, box, iconright, size, type, view })=>{
   return(
-    <div className={`ButtonRow${view ? " " + view : ""}`} onClick={() => { click ? click({ id: id, url: url, type: type }) : console.log("button", id, url) }} onMouseDown="return false" onSelectstart="return false" >
+    <div className={`ButtonRow${view ? " " + view : ""}`} onClick={() => { click ? click({ id: id, url: url, type: type }) : console.log("button", id, url) }} >
       {icon && !iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
       {children || name ? (<div className="ButtonName">{children || name}</div>):null}
       {icon && iconright ? (<div className="ButtonIcon" style={size ? {"width":size+'px', "height":size+'px'} : null}><Svg svg={icon} /></div>): null}
@@ -86,6 +86,18 @@ export const ButtonTo = ({ children, id, name, linkstate, linkurl, url, icon, cl
     </div>
   )
 }
+
+export const InputTextRow = ({ rightside, placeholderValue, children, change, def, click, type, view }) => {
+         return <label className={"InputTextRow" + (view ? " " + view : "")}>
+             {!rightside && children ? children : null}
+             <input type={type ? type : "text"} vlaue={def} placeholder={placeholderValue ? placeholderValue : "Введите текст"} onClick={click && typeof click === "function" ? e => {
+                       click(e);
+                     } : null} onChange={change && typeof change === "function" ? e => {
+                       change(e);
+                     } : null} />
+             {rightside && children ? children : null}
+           </label>;
+       };
 
 export class ResponsibleRow extends Component {
   constructor(props) {
