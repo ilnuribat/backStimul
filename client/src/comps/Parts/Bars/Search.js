@@ -22,6 +22,7 @@ export class Search extends Component {
       chMsg: false,
       chUsr: false,
       chTsk: false,
+      statuses: [],
       chTskNew: false,
       chTskWrk: false,
       chTskChk: false,
@@ -32,6 +33,7 @@ export class Search extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleInputChangeStatuses = this.handleInputChangeStatuses.bind(this);
   }
 
   handleChange(event) {
@@ -39,8 +41,41 @@ export class Search extends Component {
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
     event.preventDefault();
+  }
+
+  handleInputChangeStatuses(event) {
+    let { chAll, statuses } = this.state;
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    let name = target.name;
+    let nameArray = target.name.split(',');
+    name = nameArray[0];
+
+    if (target.type === 'checkbox' && value === true){
+
+      this.setState({
+        statuses: [...statuses, Number(nameArray[1]) ],
+        [name]: value, 
+      }, ()=>{
+
+      });
+    }else{
+      let keyNumInd = statuses.indexOf(Number(nameArray[1]));
+
+      statuses.splice(keyNumInd, 1);
+
+      this.setState(
+        {
+          statuses: [...statuses],
+          [name]: value
+        },
+        () => {
+
+        }
+      );
+
+    }
   }
 
   handleInputChange(event) {
@@ -49,27 +84,31 @@ export class Search extends Component {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    if (target.type === 'checkbox' && target.name !== 'chAll' ){
-      this.setState({ chAll: false, [name]: value })
-    } else if (target.type === 'checkbox' && target.name === 'chAll'){
-      this.setState({ chAll: true,
+    if (target.type === "checkbox" && target.name !== "chAll") {
+      this.setState({ chAll: false, [name]: value });
+    } else if (target.type === "checkbox" && target.name === "chAll") {
+      this.setState({
+        chAll: true,
         chObj: false,
         chDcs: false,
         chMsg: false,
         chUsr: false,
         chTsk: false,
+        statuses: [],
         chTskNew: false,
         chTskWrk: false,
         chTskChk: false,
         chTskEnd: false,
-      })
-    }else{
-      this.setState({ chAll: true,
+      });
+    } else {
+      this.setState({
+        chAll: true,
         chObj: false,
         chDcs: false,
         chMsg: false,
         chUsr: false,
         chTsk: false,
+        statuses: [],
         chTskNew: false,
         chTskWrk: false,
         chTskChk: false,
@@ -77,9 +116,6 @@ export class Search extends Component {
       });
     }
 
-    // target.type === 'checkbox' && target.name !== 'chAll' ? this.setState({chAll: false, [name]: value }) : this.setState({[name]: value});
-
-    // !this.state.chObj && !this.state.chTsk && !this.state.chDcs && !this.state.chUsr && !this.state.chMsg ? this.setState({chAll: true,}) : null
   }
 
   static propTypes = {
@@ -98,20 +134,8 @@ export class Search extends Component {
         value
       }
     }`;
-    let TaskStatus = status =>{return `
-      tasks(status: ${status} ){
-        id
-        name
-        objectId
-        assignedTo{
-          id
-          username
-        }
-        endDate
-        status
-      }`};
 
-    let Tsk = `tasks{
+    let Tsk = `tasks(statuses: $statuses){
       id
       name
       objectId
@@ -142,10 +166,15 @@ export class Search extends Component {
     }`;
 
     let {children} = this.props;
-    let {value} = this.state;
+    let {value, statuses} = this.state;
+    let statusChecked = '';
+    let statusValues = '';
     // let query = value;
 
-
+    if(statuses){
+      statusChecked = "$statuses: [Int]";
+      statusValues = "(statuses: $statuses )";
+    }
     
 
     let SearchBody = `
@@ -155,8 +184,9 @@ export class Search extends Component {
     ${this.state.chAll || this.state.chMsg ? Msg : ""}
     ${this.state.chAll || this.state.chDcs ? Dcs : ""}
     `;
+
     let SearchGql = `
-    query search($query: String!){
+    query search($query: String!, $statuses: [Int]){
       search(query: $query){
         ${SearchBody}
         __typename
@@ -179,7 +209,7 @@ export class Search extends Component {
       {name: 'chTskChk', text:'Проверяются', id:'0', status:'4'},
       {name: 'chTskEnd', text:'Завершенные', id:'0', status:'5'},
     ];
-    let statuses = [
+    let statusesArray = [
       {name: 'Новая', status:'1'},
       {name: 'В работе', status:'3'},
       {name: 'Проверяется', status:'4'},
@@ -195,28 +225,30 @@ export class Search extends Component {
               <input type="text" name="searchinput" value={value} onChange={this.handleChange} placeholder="Найти задачи, человека, объект..." />
             </label>
 
-            <div className="searchTags" onMouseDown="return false" onSelectstart="return false">
+            <div className="searchTags">
               <div className="searchTagsRow">
                 {checks.map((e, i) => {
                   return <label className={this.state[e.name] ? "searchTag sel" : "searchTag"} htmlFor={e.name} key={"check" + i}>
-                      <input id={e.name} name={e.name} type="checkbox" checked={this.state[e.name]} onChange={this.handleInputChange} />
+                      <input id={e.name} name={e.name} type="checkbox" sid={e.name} checked={this.state[e.name]} onChange={this.handleInputChange} />
                       <span className="searchTagText">{e.text}</span>
                     </label>;
                 })}
               </div>
               <div className="searchTagsRow">
                 {this.state.chTsk ? checksTasks.map((e, i) => {
-                      return <label className={this.state[e.name] ? "searchTag sel" : "searchTag"} htmlFor={e.name} key={"checkTsk" + i}>
-                          <input id={e.name} name={e.name} type="checkbox" checked={this.state[e.name]} onChange={this.handleInputChange} />
-                          <span className="searchTagText">{e.text}</span>
-                        </label>;
+                return <label className={this.state[e.name] ? "searchTag sel" : "searchTag"} htmlFor={e.name} key={"checkTsk" + i}>
+                  <input id={e.name} name={[e.name, e.status]} type="checkbox" checked={this.state[e.name]} onChange={this.handleInputChangeStatuses} />
+                    <span className="searchTagText">
+                      {e.text}
+                    </span>
+                  </label>;
                     }) : null}
               </div>
             </div>
           </form>
         </div>
         <div className="SearchBody">
-          {value ? <Query query={Search} variables={{ query: value }}>
+          {value ? <Query query={Search} variables={{ query: value, statuses: statuses ? statuses : ""  }}>
               {({ data, loading, error }) => {
                 if (error) {
                   console.log(error);
@@ -275,7 +307,7 @@ export class Search extends Component {
 
                                   <span className="SearchStatus">
                                     {e.status
-                                      ? statuses.find(
+                                      ? statusesArray.find(
                                           x => x.status == e.status
                                         ).name
                                       : "Новая"}
