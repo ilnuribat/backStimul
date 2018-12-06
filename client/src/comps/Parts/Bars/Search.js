@@ -65,16 +65,15 @@ export class Search extends Component {
 
       statuses.splice(keyNumInd, 1);
 
-      this.setState(
-        {
-          statuses: [...statuses],
-          [name]: value
-        },
-        () => {
+        this.setState(
+          {
+            statuses: [...statuses],
+            [name]: value
+          },
+          () => {
 
-        }
-      );
-
+          }
+        );
     }
   }
 
@@ -166,11 +165,11 @@ export class Search extends Component {
     }`;
 
     let { children } = this.props;
-    let { value, statuses } = this.state;
+    let { value, statuses, chTsk } = this.state;
     let statusChecked = '';
     let statusValues = '';
 
-    if (statuses) {
+    if (chTsk && statuses) {
       statusChecked = "$statuses: [Int]";
       statusValues = "(statuses: $statuses )";
     }
@@ -247,7 +246,7 @@ export class Search extends Component {
         </form>
       </div>
       <div className="SearchBody">
-        {value ? <Query query={Search} variables={{ query: value, statuses: statuses ? statuses : "" }}>
+        {value ? <Query query={Search} variables={{ query: value, statuses: chTsk && statuses ? statuses : "" }}>
           {({ data, loading, error }) => {
             if (error) {
               console.log(error);

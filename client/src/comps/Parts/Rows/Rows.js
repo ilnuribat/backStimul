@@ -87,15 +87,17 @@ export const ButtonTo = ({ children, id, name, linkstate, linkurl, url, icon, cl
   )
 }
 
-export const InputTextRow = ({ rightside, children, change, default, click, type, view  })=>{
-  return(
-    <label className={"InputTextRow" + (view ? " "+view : "") } >
-      {!rightside && children ? children : null }
-      <input type={type ? type : "text"} vlaue={default} placeholder={placeholder ? placeholder : "Введите текст"} onClick={click && typeof click === "function" ? (e)=>{click(e)} : null } onChange={change && typeof change === "function" ? (e)=>{change(e)} : null }  />
-      {rightside && children ? children : null }
-    </label>
-  )
-}
+export const InputTextRow = ({ rightside, placeholderValue, children, change, def, click, type, view }) => {
+         return <label className={"InputTextRow" + (view ? " " + view : "")}>
+             {!rightside && children ? children : null}
+             <input type={type ? type : "text"} vlaue={def} placeholder={placeholderValue ? placeholderValue : "Введите текст"} onClick={click && typeof click === "function" ? e => {
+                       click(e);
+                     } : null} onChange={change && typeof change === "function" ? e => {
+                       change(e);
+                     } : null} />
+             {rightside && children ? children : null}
+           </label>;
+       };
 
 export class ResponsibleRow extends Component {
   constructor(props) {
