@@ -476,10 +476,11 @@ class Board extends Component {
                             // }, ()=>{
                             //   localStorage.getItem('taskId', '');
                             // })
-                             return "Выберите или создайте задачу"
-                            } 
+                              return < div className="errorMessage" > Выберите или создайте задачу </div>
+                              
+                         } 
 
-                          }}
+                       }}
                         </Query>
                       </InnerBar> : null }
                     <ContentInner view="Board-Content-Wrap">
