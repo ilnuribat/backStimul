@@ -26,6 +26,7 @@ class PrivateBar extends React.Component {
     this.tasksOpen = this.tasksOpen.bind(this);
     this.privsOpen1 = this.privsOpen1.bind(this);
     this.CreateNewGroup = this.CreateNewGroup.bind(this);
+
   }
 
   openPrivate(gid, privateChat){
