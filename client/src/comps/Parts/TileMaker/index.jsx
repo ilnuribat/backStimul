@@ -9,6 +9,7 @@ import Tiled from '../Tiled/index';
 import { createObject, changeObject } from '../../../GraphQL/Qur/Mutation/index';
 import Modal from '../../Lays/Modal/Modal';
 import { ButtonRow } from '../Rows/Rows';
+import Redirect from 'react-router-dom/Redirect';
 
 
 
@@ -27,6 +28,7 @@ class TileMaker extends Component {
       addressList:'',
       value: '',
       stateName:'',
+      toBoard: false,
     }
 
     this.open = this.open.bind(this)
@@ -109,7 +111,10 @@ class TileMaker extends Component {
   }
   open(){
     let { create } = this.state;
-    this.setState({create: !create})
+    this.setState({
+      create: !create,
+      toBoard: true,
+    })
   }
   create(){
     let { create } = this.state;
@@ -118,10 +123,9 @@ class TileMaker extends Component {
 
   render() {
     let { edit, children, id, name, addr } = this.props;
-    let { create, value, addressList, stateName } = this.state;
+    let { create, value, addressList, stateName, toBoard } = this.state;
     if(create){
       let input;
-
       let address;
       let _id;
       let mutation = createObject
@@ -131,10 +135,12 @@ class TileMaker extends Component {
         mutation = changeObject
         variables = {id: `"${_id}"`, name: `"${input}"`, address: `"${address}"` }
       }
-
+      
+      // toBoard ? (<Redirect to={pathname: '/board', state: { objectId: "" }} /> ) : null
+      
       return (
         <Modal close={(e)=>{this.open();edit ? this.props.setEdit() : null}}>
-          <div className="animated flipInY" style={{"width":"90%","margin":"0 auto"}}>
+          <div className="animated bounceIn" style={{"width":"90%","margin":"0 auto"}}>
             <Mutation mutation={mutation} variables={variables}>
               {(MakeTile, { data }) => (
                   <form
@@ -146,8 +152,14 @@ class TileMaker extends Component {
                         MakeTile({ variables: { id: id, name: input.value, address: address.value } });
                         // this.props.setEdit();
                       } else {
-                        MakeTile({ variables: { name: input.value, address: address.value } });
+                        MakeTile({ variables: { name: input.value, address: address.value } })
+                        .then((a,b)=>{
+                          console.log("data", a, b )
+                        });
                       }
+
+                      console.warn("data",data)
+
                       input.value = "";
                       address.value = "";
                       this.open();
@@ -191,7 +203,6 @@ class TileMaker extends Component {
                     </div>
                     <div>
                       <ButtonRow><button className="butterNo" type="submit">Добавить</button></ButtonRow>
-                      
                     </div>
                   </form>
               )}
