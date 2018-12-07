@@ -414,6 +414,8 @@ class Board extends Component {
               let selectedChilds = false;
               let objData = data.object;
 
+              console.log("objData",objData)
+
               if (this.state.curParentId && this.state.showChilds)
               {
                 data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
@@ -460,11 +462,18 @@ class Board extends Component {
                               );
                             }
 
-                            if (data && data.task && data.task.objectId === objData.id){
+
+                            console.log("data.task.objectId", data.task.objectId)
+                            console.log("data.task.objectId", objData.id)
+
+
+                            if (data && data.task && data.task.objectId === objectId){
                               return (
                                 <ChatView id={taskId} priv={false} data={data.task} name={data.task.name} />
                               )
-                            }else{
+                            }
+                            
+                            else{
                             // if (a && !data || !data.task)
                             // this.setState({
                             //   toTask: false,
