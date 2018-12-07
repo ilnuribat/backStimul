@@ -26,7 +26,7 @@ function lastMessage({ id }) {
   return Message.findOne({ groupId: id }).sort({ _id: -1 });
 }
 
-async function getMessages(parent, { messageConnection }, { user, messageConnection: overrideMessageConnection }) {
+async function getMessages(parent, { messageConnection }, { user }) {
   const { id } = parent;
   const group = await Group.findById(id);
 

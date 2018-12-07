@@ -5,6 +5,7 @@ type TaskStatus {
 
 type Glossary {
   taskStatuses: [TaskStatus]
+  abstractResource(id: ID!): String
 }
 
 type Query {

@@ -173,6 +173,10 @@ export const CHATS_QUERY = gql `
           id
           name
           unreadCount
+          users {
+            id
+            username
+          }
           lastMessage{
           from{
             id

@@ -18,8 +18,8 @@ class PrivateBar extends React.Component {
     this.state = {
       chatId: "",
       newUser: "",
-      tasksOpen: true,
-      privsOpen: false,
+      tasksOpen: false,
+      privsOpen: true,
     }
 
     this.newUser = this.newUser.bind(this);
@@ -116,9 +116,9 @@ class PrivateBar extends React.Component {
 
   render(){
     let newChay;
+    let chatUsers = []
     const { chatId } = this.props;
     let { tasksOpen, privsOpen } = this.state;
-
 
     return (
       <div className="f-column-l">
@@ -148,6 +148,16 @@ class PrivateBar extends React.Component {
 
                   if(data && data.user){
                     let privs = 0;
+
+                    if (data.user.directs) {
+                      data.user.directs.map((e)=>{
+                        chatUsers = [...chatUsers, e.users[0]]
+                        chatUsers = [...chatUsers, e.users[1]]
+                      }
+                      )
+                      chatUsers = [...new Set(chatUsers)]
+                      console.warn("chatusers", chatUsers)
+                    }
 
                     return(
                       <div className="Chats">
@@ -253,46 +263,49 @@ class PrivateBar extends React.Component {
                                 )
                               })
                             }
+
+
+                            <div className="header">
+                              <h4>Добавить личный чат</h4>
+                            </div>
+                            <Query query={USERS_QUERY}>
+                              {({ loading, data }) => {
+                                if (loading) {
+                                  return (
+                                    <div style={{ paddingTop: 20 }}>
+                                      <Loading />
+                                    </div>
+                                  );
+                                }
+
+                                if (data && data.users) {
+                                  return (
+
+                                    <label className="LabelInputList Pad" htmlFor="users">
+                                      <input ref={node => { newChay = node }} type="list" name="users" list="users" autoComplete="on" valueid="" onChange={(e) => this.newUser(e, data.users)} />
+                                      <div className="Button3" onClick={() => this.CreateNewGroup(data.users, newChay)}>+</div>
+
+                                      <datalist id="users">
+                                        {
+                                          data.users && data.users.map((e) => (
+                                            <option key={e.id} data-id={e.id} valueid={e.id} valuename={e.username} >{e.username}</option>
+                                          )
+                                          )
+                                        }
+                                      </datalist>
+                                    </label>
+                                  )
+                                } else {
+                                  return (
+                                    <div>Нет данных</div>
+                                  )
+                                }
+
+                              }}
+                            </Query>
                           </div>) : null}
                         </div>
-                        <div className="header">
-                          <h4>Добавить личный чат</h4>
-                        </div>
-                        <Query query={USERS_QUERY}>
-                          {({ loading, data }) => {
-                            if (loading) {
-                              return (
-                                <div style={{ paddingTop: 20 }}>
-                                  <Loading />
-                                </div>
-                              );
-                            }
 
-                            if (data && data.users) {
-                              return (
-
-                                <label className="LabelInputList Pad" htmlFor="users">
-                                  <input ref={node => { newChay = node }} type="list" name="users" list="users" autoComplete="on" valueid="" onChange={(e) => this.newUser(e, data.users)} />
-                                  <div className="Button3" onClick={() => this.CreateNewGroup(data.users, newChay)}>+</div>
-
-                                  <datalist id="users">
-                                    {
-                                      data.users && data.users.map((e) => (
-                                        <option key={e.id} data-id={e.id} valueid={e.id} valuename={e.username} >{e.username}</option>
-                                      )
-                                      )
-                                    }
-                                  </datalist>
-                                </label>
-                              )
-                            } else {
-                              return (
-                                <div>Нет данных</div>
-                              )
-                            }
-
-                          }}
-                        </Query>
                       </div>
                     )
 
@@ -308,7 +321,6 @@ class PrivateBar extends React.Component {
             </div>
           </div>
         </div>
-
         </div>
     )
   }
