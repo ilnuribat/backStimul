@@ -23,7 +23,7 @@ class NavTop extends Component {
   }
 
     subscribe = () => {
-      console.warn("countPriv", this.state.countPriv)
+      // console.warn("countPriv", this.state.countPriv)
 
       //Пишем в кеш тасков добавление или удаление тасков или пользователей в них (последнее автоматом)
       client.subscribe({

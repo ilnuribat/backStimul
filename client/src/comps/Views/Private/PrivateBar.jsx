@@ -83,7 +83,7 @@ class PrivateBar extends React.Component {
         if(a && a.data){
           this.props.chatListCacheUpdate({
             variables:{
-              value: {id: a.data.directMessage.id, name: newUser, addUser: true},
+              value: {id: a.data.directMessage.id, name: newUser, users: [{id: uid, username: newUser, __typename: "User"}], addUser: true},
               queryName: "directs"
             }
           })
@@ -157,7 +157,6 @@ class PrivateBar extends React.Component {
                       }
                       )
                       chatUsers = [...new Set(chatUsers)]
-                      console.warn("chatusers", chatUsers)
                     }
 
                     return(
@@ -288,7 +287,7 @@ class PrivateBar extends React.Component {
 
                                       <datalist id="users">
                                         {
-                                          data.users && data.users.map((e) => (
+                                          data.users && _.differenceWith(data.users, chatUsers, _.isEqual).map((e)=>(
                                             <option key={e.id} data-id={e.id} valueid={e.id} valuename={e.username} >{e.username}</option>
                                           )
                                           )

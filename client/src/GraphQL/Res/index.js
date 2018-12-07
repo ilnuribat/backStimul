@@ -264,6 +264,10 @@ export default {
                 id
                 name
                 unreadCount
+                users {
+                  id
+                  username
+                }
                 lastMessage{
                   createdAt
                   from{
