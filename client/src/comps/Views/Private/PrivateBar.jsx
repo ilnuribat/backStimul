@@ -255,7 +255,44 @@ class PrivateBar extends React.Component {
                             }
                           </div>) : null}
                         </div>
+                        <div className="header">
+                          <h4>Добавить личный чат</h4>
+                        </div>
+                        <Query query={USERS_QUERY}>
+                          {({ loading, data }) => {
+                            if (loading) {
+                              return (
+                                <div style={{ paddingTop: 20 }}>
+                                  <Loading />
+                                </div>
+                              );
+                            }
 
+                            if (data && data.users) {
+                              return (
+
+                                <label className="LabelInputList Pad" htmlFor="users">
+                                  <input ref={node => { newChay = node }} type="list" name="users" list="users" autoComplete="on" valueid="" onChange={(e) => this.newUser(e, data.users)} />
+                                  <div className="Button3" onClick={() => this.CreateNewGroup(data.users, newChay)}>+</div>
+
+                                  <datalist id="users">
+                                    {
+                                      data.users && data.users.map((e) => (
+                                        <option key={e.id} data-id={e.id} valueid={e.id} valuename={e.username} >{e.username}</option>
+                                      )
+                                      )
+                                    }
+                                  </datalist>
+                                </label>
+                              )
+                            } else {
+                              return (
+                                <div>Нет данных</div>
+                              )
+                            }
+
+                          }}
+                        </Query>
                       </div>
                     )
 
@@ -271,49 +308,8 @@ class PrivateBar extends React.Component {
             </div>
           </div>
         </div>
-        <div className="tab-roll">
-          <div className="header">
-            <h4>Добавить личный чат</h4>
-          </div>
-          {
-            <Query query={USERS_QUERY}>
-              {({ loading, data }) => {
-                if (loading){
-                  return (
-                    <div style={{ paddingTop: 20 }}>
-                      <Loading />
-                    </div>
-                  );
-                }
 
-                if(data && data.users){
-                  return(
-
-                    <label className="LabelInputList Pad" htmlFor="users">
-                      <input ref={node=>{newChay = node}} type="list" name="users" list="users" autoComplete="on" valueid="" onChange={(e)=>this.newUser(e, data.users)} />
-                      <div className="Button3" onClick={()=>this.CreateNewGroup(data.users, newChay)}>+</div>
-
-                      <datalist id="users">
-                        {
-                          data.users && data.users.map((e)=>(
-                            <option key={e.id} data-id={e.id} valueid={e.id} valuename={e.username} >{e.username}</option>
-                          )
-                          )
-                        }
-                      </datalist>
-                    </label>
-                  )
-                }else{
-                  return(
-                    <div>Нет данных</div>
-                  )
-                }
-
-              }}
-            </Query>
-          }
         </div>
-      </div>
     )
   }
 }
