@@ -110,6 +110,7 @@ class LeafletMap extends Component {
               }
 
               if(data && data.objects){
+
                 let centerLon = 37.43
                 let centerLat = 55.797
                 let currentZoom = 10
@@ -119,7 +120,8 @@ class LeafletMap extends Component {
                 let maxLon = 0.00
 
                 data.objects.map((post) => {
-                  if(!post.address || !post.address.coordinates){
+                  if(!post.address || !post.address.coordinates || !post.address.coordinates[0] || !post.address.coordinates[1]){
+
                     return true
                   }
 
@@ -138,6 +140,7 @@ class LeafletMap extends Component {
                 const ZOOM_MAX = 21;
 
                 const latFraction = (latRad(maxLat) - latRad(minLat)) / Math.PI;
+
                 const lngDiff = maxLon - minLon
                 const lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
 
@@ -315,7 +318,7 @@ const Panel = ({ data, type, name, click })  => {
   return (
     data.map((post) =>
       // post.status == type &&
-      post.address && post.address.coordinates && post.address.coordinates.length >0 ?
+      post.address && post.address.coordinates && post.address.coordinates.length >0 && post.address.coordinates[0] && post.address.coordinates[1] ?
         <Marker key={post.id} position={post.address.coordinates} icon={SwitchIcon(1)}>
           <Popup >
             <div className="mapModal" >
