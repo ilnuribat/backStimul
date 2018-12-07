@@ -136,9 +136,10 @@ class TileMaker extends Component {
     let { edit, children, id, name, addr } = this.props;
     let { create, value, addressList, stateName, toBoard, toBoardId } = this.state;
 
-    toBoard && toBoardId ? (<Redirect to={{ pathname: '/board', state: { objectId: toBoardId } }} />) : null
-
-    if(create){
+    if (toBoard && toBoardId){
+      console.log("===================", toBoard, toBoardId)
+      return (<Redirect to={{ pathname: '/board', state: { objectId: toBoardId } }} />)
+    }else if(create){
       let input;
       let address;
       let _id;
@@ -181,10 +182,11 @@ class TileMaker extends Component {
 
                           console.log("data", a, a.data, a.data.createObject)
                           a && a.data && a.data.createObject && a.data.createObject.id ? 
-                            this.setState({
+
+                          this.setState({
                               create: !create,
                               toBoard: true,
-                              toBoardId: id,
+                              toBoardId: a.data.createObject.id,
                             })
                             : this.setState({
                               create: !create,

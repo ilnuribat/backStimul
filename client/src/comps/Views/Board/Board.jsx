@@ -462,11 +462,6 @@ class Board extends Component {
                               );
                             }
 
-
-                            console.log("data.task.objectId", data.task.objectId)
-                            console.log("data.task.objectId", objData.id)
-
-
                             if (data && data.task && data.task.objectId === objectId){
                               return (
                                 <ChatView id={taskId} priv={false} data={data.task} name={data.task.name} />
