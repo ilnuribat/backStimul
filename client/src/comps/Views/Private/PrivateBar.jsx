@@ -18,8 +18,8 @@ class PrivateBar extends React.Component {
     this.state = {
       chatId: "",
       newUser: "",
-      tasksOpen: true,
-      privsOpen: false,
+      tasksOpen: false,
+      privsOpen: true,
     }
 
     this.newUser = this.newUser.bind(this);
@@ -116,9 +116,9 @@ class PrivateBar extends React.Component {
 
   render(){
     let newChay;
+    let chatUsers = []
     const { chatId } = this.props;
     let { tasksOpen, privsOpen } = this.state;
-
 
     return (
       <div className="f-column-l">
@@ -148,6 +148,16 @@ class PrivateBar extends React.Component {
 
                   if(data && data.user){
                     let privs = 0;
+
+                    if (data.user.directs) {
+                      data.user.directs.map((e)=>{
+                        chatUsers = [...chatUsers, e.users[0]]
+                        chatUsers = [...chatUsers, e.users[1]]
+                      }
+                      )
+                      chatUsers = [...new Set(chatUsers)]
+                      console.warn("chatusers", chatUsers)
+                    }
 
                     return(
                       <div className="Chats">
@@ -294,11 +304,11 @@ class PrivateBar extends React.Component {
                       <div className="Button3" onClick={()=>this.CreateNewGroup(data.users, newChay)}>+</div>
 
                       <datalist id="users">
+                        {console.warn(chatUsers, data.users)}
                         {
-                          data.users && data.users.map((e)=>(
+                          data.users && _.differenceWith(chatUsers, data.users, _.isEqual).map((e)=>(
                             <option key={e.id} data-id={e.id} valueid={e.id} valuename={e.username} >{e.username}</option>
-                          )
-                          )
+                          ))
                         }
                       </datalist>
                     </label>
