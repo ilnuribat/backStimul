@@ -474,12 +474,11 @@ class Board extends Component {
                             //   toTask: false,
                             //   taskId: ''
                             // }, ()=>{
-                            //   localStorage.getItem('taskId', '');
-                            // })
+                              localStorage.setItem('taskId', '');
                               return < div className="errorMessage" > Выберите или создайте задачу </div>
+                            // })
                               
                          } 
-
                        }}
                         </Query>
                       </InnerBar> : null }

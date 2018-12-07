@@ -136,10 +136,7 @@ class TileBoard extends Component {
                   this.cleanStorage();
                   console.log(error);
 
-                  return <Redirect to={{
-                    pathname: '/',
-                    state: { rootid: "" }
-                  }} />
+                  return <Redirect to={{pathname: '/', state: { rootid: "" } }} />
                 }
                 if (loading) return <Loading />;
 

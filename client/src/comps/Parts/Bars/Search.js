@@ -165,11 +165,11 @@ export class Search extends Component {
     }`;
 
     let { children } = this.props;
-    let { value, statuses, chTsk } = this.state;
+    let { value, statuses, chTsk, chAll } = this.state;
     let statusChecked = '';
     let statusValues = '';
 
-    if (chTsk && statuses) {
+    if (chTsk && statuses || chAll) {
       statusChecked = "$statuses: [Int]";
       statusValues = "(statuses: $statuses )";
     }
@@ -184,7 +184,7 @@ export class Search extends Component {
     `;
 
     let SearchGql = `
-    query search($query: String!, $statuses: [Int]){
+    query search($query: String!, ${statusChecked}){
       search(query: $query){
         ${SearchBody}
         __typename
@@ -215,6 +215,9 @@ export class Search extends Component {
     ];
 
 
+    let vars = {};
+    vars.query = value;
+    chTsk && statuses || chAll ? vars.statuses = [...statuses]: null
 
     return <div className="Search">
       <div className="SearchTop">
@@ -246,7 +249,7 @@ export class Search extends Component {
         </form>
       </div>
       <div className="SearchBody">
-        {value ? <Query query={Search} variables={{ query: value, statuses: chTsk && statuses ? [...statuses] : [] }}>
+        {value ? <Query query={Search} variables={vars}>
           {({ data, loading, error }) => {
             if (error) {
               console.log(error);

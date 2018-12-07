@@ -396,6 +396,10 @@ query rootObject($id: ID){
     rootObject(id: $id){
       id
       name
+      # crumbs{
+      #   id
+      #   name
+      # }
       parentId
       addresses{
         id
