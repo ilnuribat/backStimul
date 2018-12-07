@@ -246,7 +246,7 @@ export class Search extends Component {
         </form>
       </div>
       <div className="SearchBody">
-        {value ? <Query query={Search} variables={{ query: value, statuses: chTsk && statuses ? statuses : "" }}>
+        {value ? <Query query={Search} variables={{ query: value, statuses: chTsk && statuses ? statuses : [""] }}>
           {({ data, loading, error }) => {
             if (error) {
               console.log(error);
