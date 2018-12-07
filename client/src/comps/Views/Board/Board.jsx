@@ -539,6 +539,7 @@ class Board extends Component {
 
                       </div>
 
+
                       {treeView ? (
                         <ContentInner view="Board-Content-Tree">
                           {
