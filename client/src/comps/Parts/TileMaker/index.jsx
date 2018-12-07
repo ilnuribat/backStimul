@@ -4,12 +4,12 @@ import { Mutation } from 'react-apollo';
 import axios from 'axios';
 import 'animate.css';
 
+import Redirect from 'react-router-dom/Redirect';
 import { SvgPlusBox } from '../SVG';
 import Tiled from '../Tiled/index';
 import { createObject, changeObject } from '../../../GraphQL/Qur/Mutation/index';
 import Modal from '../../Lays/Modal/Modal';
 import { ButtonRow } from '../Rows/Rows';
-import Redirect from 'react-router-dom/Redirect';
 
 
 
@@ -43,6 +43,7 @@ class TileMaker extends Component {
 
   componentDidMount(){
     let {edit} = this.props;
+
     if(edit){
       this.setState({edit: true,create: true,})
     }
@@ -108,6 +109,7 @@ class TileMaker extends Component {
   }
   edit(){
     let { edit } = this.state;
+
     this.setState({edit: !edit})
   }
   open(id){
@@ -129,6 +131,7 @@ class TileMaker extends Component {
   }
   create(){
     let { create } = this.state;
+
     this.setState({create: !create})
   }
 
@@ -138,6 +141,7 @@ class TileMaker extends Component {
 
     if (toBoard && toBoardId){
       console.log("===================", toBoard, toBoardId)
+
       return (<Redirect to={{ pathname: '/board', state: { objectId: toBoardId } }} />)
     }else if(create){
       let input;
@@ -158,14 +162,14 @@ class TileMaker extends Component {
           <div className="animated bounceIn" style={{"width":"90%","margin":"0 auto"}}>
             <Mutation mutation={mutation} variables={variables}>
               {(MakeTile, { data }) => (
-                  <form
-                    onSubmit={e => {
-                      e.preventDefault();
+                <form
+                  onSubmit={e => {
+                    e.preventDefault();
 
-                      if (edit) {
-                        let addr = value || address.value;
+                    if (edit) {
+                      let addr = value || address.value;
 
-                        MakeTile({ variables: { id: id, name: input.value, address: address.value } })
+                      MakeTile({ variables: { id: id, name: input.value, address: address.value } })
                         .then(()=>{
                           // this.props.setEdit();
                           input.value = "";
@@ -173,8 +177,8 @@ class TileMaker extends Component {
                           this.open();
                         });
 
-                      } else {
-                        MakeTile({ variables: { name: input.value, address: address.value } })
+                    } else {
+                      MakeTile({ variables: { name: input.value, address: address.value } })
                         .then((a)=>{
                           console.log("data", a )
                           input.value = "";
@@ -182,8 +186,7 @@ class TileMaker extends Component {
 
                           console.log("data", a, a.data, a.data.createObject)
                           a && a.data && a.data.createObject && a.data.createObject.id ? 
-
-                          this.setState({
+                            this.setState({
                               create: !create,
                               toBoard: true,
                               toBoardId: a.data.createObject.id,
@@ -192,49 +195,49 @@ class TileMaker extends Component {
                               create: !create,
                             });
                         });
-                      }
-                    }}
-                  >
-                    <div>
-                      <input
-                        type="text"
-                        ref={node => {
-                          input = node;
-                        }}
-                        value={stateName}
-                        placeholder="Название"
-                        onChange={this.newName}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="list" list="addresses" autoComplete="on"
-                        ref={node => {
-                          address = node;
-                        }}
-                        placeholder="Адрес"
-                        required
-                        value={value} onChange={this.newAddress}
-                      />
-                      <datalist id="addresses" >
+                    }
+                  }}
+                >
+                  <div>
+                    <input
+                      type="text"
+                      ref={node => {
+                        input = node;
+                      }}
+                      value={stateName}
+                      placeholder="Название"
+                      onChange={this.newName}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="list" list="addresses" autoComplete="on"
+                      ref={node => {
+                        address = node;
+                      }}
+                      placeholder="Адрес"
+                      required
+                      value={value} onChange={this.newAddress}
+                    />
+                    <datalist id="addresses" >
 
-                        {addressList && addressList.map((e,i)=>{
+                      {addressList && addressList.map((e,i)=>{
 
-                          return(
-                            <div className="parentQ" key={e.value}>
-                              <option key={'addr' + i} value={e.value}>
-                                {value}
-                                {e.data.geo_lat && e.data.geo_lon ? (" " + e.data.geo_lat +":"+ e.data.geo_lon) : ""}
-                              </option>
-                            </div>
-                          )})}
-                      </datalist>
-                    </div>
-                    <div>
-                      <ButtonRow><button className="butterNo" type="submit">Добавить</button></ButtonRow>
-                    </div>
-                  </form>
+                        return(
+                          <div className="parentQ" key={e.value}>
+                            <option key={'addr' + i} value={e.value}>
+                              {value}
+                              {e.data.geo_lat && e.data.geo_lon ? (" " + e.data.geo_lat +":"+ e.data.geo_lon) : ""}
+                            </option>
+                          </div>
+                        )})}
+                    </datalist>
+                  </div>
+                  <div>
+                    <ButtonRow><button className="butterNo" type="submit">Добавить</button></ButtonRow>
+                  </div>
+                </form>
               )}
             </Mutation>
             {/* <ButtonRow сlick={(e)=>{e.preventDefault();this.open();edit ? this.props.setEdit() : null}}>отмена</ButtonRow> */}
@@ -243,6 +246,7 @@ class TileMaker extends Component {
         </Modal>
       );
     }
+
     return(
       <div className="pull animated flipInY" onClick={()=>{this.setState({create: !this.state.create})}}>
         {
