@@ -49,6 +49,7 @@ class Board extends Component {
       modalMessageShow: false,
       modalMessage: "",
       modalNameCreator: "",
+      treeView: false,
     };
 
     this.daTa = this.daTa.bind(this)
@@ -64,6 +65,8 @@ class Board extends Component {
     this.deleteTask = this.deleteTask.bind(this)
     this.changeDelModal = this.changeDelModal.bind(this)
     this.modalMessage = this.modalMessage.bind(this)
+    this.toTreeView = this.toTreeView.bind(this)
+    this.MaptoTree = this.MaptoTree.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
@@ -383,11 +386,45 @@ class Board extends Component {
     })
   }
 
+  toTreeView(){
+    this.setState(
+      {
+        treeView: !this.state.treeView,
+      }
+    )
+  }
+
+  MaptoTree(array) {
+
+
+  }
+
 
   render(){
-    const { objectId, status, taskId, toTask, showChilds } = this.state;
+    const { objectId, status, taskId, toTask, showChilds, treeView } = this.state;
     const { setInfo } = this.props;
+    let ObjectData;
 
+    var arrObjRoot = [
+      { id: "5bfbb898ac706b2510353da6", parentId: "5bfbb813ac706b40c0353d92", objectId: "5bfbb802ac706bcf83353d8b", name: "прочитать теорию управления, Сергей сказал прочитать)", endDate: "2018-11-01T00:00:00+00:00", }
+      , { id: "5bffa4fdd8b6859e89d4fe8b", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "test websockets1112", endDate: "2018-11-01T00:00:00+00:00", }
+      , { id: "5bfffd8f39bf3ef6d263131b", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Реал тайм в доске", endDate: null, }
+      , { id: "5c011f185347022478a8c895", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "ssss", endDate: null, }
+      , { id: "5c0a6f3ecc45c712545178bd", parentId: "5bffa4fdd8b6859e89d4fe8b", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 1", endDate: null, }
+      , { id: "5c0a6f58cc45c784ec5178c0", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 3", endDate: null, }
+      , { id: "5c0a6f70cc45c7159b5178c3", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 4", endDate: null, }
+      , { id: "5c0a6f95cc45c718805178c8", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 5", endDate: null, }
+    ];
+    var arrObjRootTree = [
+      { id: "5bfbb898ac706b2510353da6", parentId: "5bfbb813ac706b40c0353d92", objectId: "5bfbb802ac706bcf83353d8b", name: "прочитать теорию управления, Сергей сказал прочитать)", endDate: "2018-11-01T00:00:00+00:00", }
+      , { id: "5bffa4fdd8b6859e89d4fe8b", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "test websockets1112", endDate: "2018-11-01T00:00:00+00:00", }
+      , { id: "5bfffd8f39bf3ef6d263131b", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Реал тайм в доске", endDate: null, }
+      , { id: "5c011f185347022478a8c895", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "ssss", endDate: null, }
+      , { id: "5c0a6f3ecc45c712545178bd", parentId: "5bffa4fdd8b6859e89d4fe8b", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 1", endDate: null, }
+      , { id: "5c0a6f58cc45c784ec5178c0", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 3", endDate: null, }
+      , { id: "5c0a6f70cc45c7159b5178c3", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 4", endDate: null, }
+      , { id: "5c0a6f95cc45c718805178c8", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 5", endDate: null, }
+    ];
 
     if(objectId && status){
 
@@ -411,6 +448,7 @@ class Board extends Component {
             }
 
             if(data && data.object){
+              ObjectData = data.object;
               let selectedChilds = false;
               let objData = data.object;
 
@@ -496,35 +534,64 @@ class Board extends Component {
                         <div className="BoardTopCenter">
                           <h1>{data.object.name}</h1>
                           <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
+                          <ButtonRow icon="plus" iconright="1" click={this.toTreeView}>Дерево</ButtonRow>
                         </div>
 
                       </div>
-                      <ContentInner view="Board-Content">
+
+                      {treeView ? (
+                        <ContentInner view="Board-Content-Tree">
+                          {
+                            console.log("ObjectData.tasks", ObjectData.tasks)
+                          }
+
+                          {
+                            console.log("ObjectData.tasks.mapped", this.MaptoTree(ObjectData.tasks))
+                          }
+
+                          {ObjectData && ObjectData.tasks.map((a, i, earr) => {
+                            return(
+                              <ul>
+                                <li>
+                                  <div>
+                                    {a.name}
+                                  </div>
+                                </li>
+                              </ul>
+                            )
+                          })
+                            
+                        }
+                        </ContentInner>
+                      ) : (
+                          <ContentInner view="Board-Content">
                         {
                           status && status.map((e,i)=>{
                             if( i === 0 ){
-                              return(true)
-                            }
+                              return (true)
+                    }
 
-                            return(
+                    return(
                               <Column key={e.id} id={e.id} status={e.name} name={e.name} >
-                                {e.id == 1 ? <ButtonRow icon="plus" view="MiniBox" iconright="1" click={this.changeModal}></ButtonRow>  : null}
-                                {
-                                  cols[e.id].map((task)=>{
-                                    if(this.state.curParentId === task.id ){
-                                      selectedChilds = showChilds;
-                                    }else { selectedChilds = false; }
+                        {e.id == 1 ? <ButtonRow icon="plus" view="MiniBox" iconright="1" click={this.changeModal}></ButtonRow> : null}
+                        {
+                          cols[e.id].map((task) => {
+                            if (this.state.curParentId === task.id) {
+                              selectedChilds = showChilds;
+                            } else { selectedChilds = false; }
 
-                                    return(
-                                      <Task showother={this.state.showChilds} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null } name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal}/>
-                                    )
-                                  })
-                                }
-                              </Column>
+                            return (
+                              <Task showother={this.state.showChilds} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal} />
                             )
                           })
                         }
+                      </Column>
+                      )
+                    })
+                  }
                       </ContentInner>
+                      ) }
+
                     </ContentInner>
 
                     <Panel>

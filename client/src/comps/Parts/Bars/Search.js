@@ -4,11 +4,11 @@ import React, { Component } from 'react'
 // import { compose, graphql } from 'react-apollo';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import Loading from '../../Loading';
 import { checkServerIdentity } from 'tls';
 import { UserRow } from '../../Parts/Rows/Rows';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import Loading from '../../Loading';
 import { FileRow } from '../Rows/Rows';
 
 
@@ -50,6 +50,7 @@ export class Search extends Component {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     let name = target.name;
     let nameArray = target.name.split(',');
+
     name = nameArray[0];
 
     if (target.type === 'checkbox' && value === true) {
@@ -65,15 +66,15 @@ export class Search extends Component {
 
       statuses.splice(keyNumInd, 1);
 
-        this.setState(
-          {
-            statuses: [...statuses],
-            [name]: value
-          },
-          () => {
+      this.setState(
+        {
+          statuses: [...statuses],
+          [name]: value
+        },
+        () => {
 
-          }
-        );
+        }
+      );
     }
   }
 
@@ -216,6 +217,7 @@ export class Search extends Component {
 
 
     let vars = {};
+
     vars.query = value;
     chTsk && statuses || chAll ? vars.statuses = [...statuses]: null
 
@@ -270,7 +272,7 @@ export class Search extends Component {
               return <div id="SeacrhInner">
                 {Search.tasks ? <h3 className="BlockHeader">
                   Задачи
-                        </h3> : null}
+                </h3> : null}
                 {Search.tasks ? <div className="BlockContent">
                   {Search.tasks.map(e => (
                     <Link
@@ -327,7 +329,7 @@ export class Search extends Component {
                 </div> : null}
                 {Search.objects ? <h3 className="BlockHeader">
                   Объекты
-                        </h3> : null}
+                </h3> : null}
                 {Search.objects ? <div className="BlockContent">
                   {Search.objects.map(e => (
                     <Link
@@ -352,7 +354,7 @@ export class Search extends Component {
                 </div> : null}
                 {Search.users ? <h3 className="BlockHeader">
                   Пользователи
-                        </h3> : null}
+                </h3> : null}
                 {Search.users ? <div className="BlockContent">
                   {Search.users.map(e => (
                     <Link
@@ -371,7 +373,7 @@ export class Search extends Component {
                 </div> : null}
                 {Search.messages ? <h3 className="BlockHeader">
                   Сообщения
-                        </h3> : null}
+                </h3> : null}
                 {Search.messages ? <div className="BlockContent">
                   {Search.messages.map(e => (
                     <Link
@@ -395,12 +397,12 @@ export class Search extends Component {
                           {e.isDirect ? (
                             <div className="small cgr">
                               Личный чат
-                                    </div>
+                            </div>
                           ) : null}
                         </UserRow>
                       ) : (
-                          ""
-                        )}
+                        ""
+                      )}
                       <div className="SearchMessage" key={e.id}>
                         {e.text}
                       </div>
@@ -409,7 +411,7 @@ export class Search extends Component {
                 </div> : null}
                 {Search.files ? <h3 className="BlockHeader">
                   Документы
-                        </h3> : null}
+                </h3> : null}
                 {Search.files ? <div className="BlockContent">
                   {Search.files.map(e =>
                     e.name ? (
@@ -421,8 +423,8 @@ export class Search extends Component {
                         key={"file" + e.id}
                       />
                     ) : (
-                        ""
-                      )
+                      ""
+                    )
                   )}
                 </div> : null}
               </div>;
