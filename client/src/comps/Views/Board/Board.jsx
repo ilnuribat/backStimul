@@ -412,6 +412,7 @@ class Board extends Component {
 
             if(data && data.object){
               let selectedChilds = false;
+              let objData = data.object;
 
               if (this.state.curParentId && this.state.showChilds)
               {
@@ -458,12 +459,22 @@ class Board extends Component {
                                 </div>
                               );
                             }
-                            if (a && !data || !data.task)
-                              return null
 
-                            return(
-                              <ChatView id={taskId} priv={false} data={ data.task } name={data.task.name} />
-                            )
+                            if (data && data.task && data.task.objectId === objData.id){
+                              return (
+                                <ChatView id={taskId} priv={false} data={data.task} name={data.task.name} />
+                              )
+                            }else{
+                            // if (a && !data || !data.task)
+                            // this.setState({
+                            //   toTask: false,
+                            //   taskId: ''
+                            // }, ()=>{
+                            //   localStorage.getItem('taskId', '');
+                            // })
+                             return "Выберите или создайте задачу"
+                            } 
+
                           }}
                         </Query>
                       </InnerBar> : null }
@@ -528,7 +539,7 @@ class Board extends Component {
 
                         </TextRow>
                         <TextRow name="" view="cgr Pad510 s">
-                    Задачи: {data.object.tasks.length} штуки
+                          Задачи: {data.object.tasks.length}
                         </TextRow>
                         <TextRow name="" view="cgr Pad510 s">
                         </TextRow>

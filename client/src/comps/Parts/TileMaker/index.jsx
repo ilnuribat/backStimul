@@ -29,6 +29,7 @@ class TileMaker extends Component {
       value: '',
       stateName:'',
       toBoard: false,
+      toBoardId: '',
     }
 
     this.open = this.open.bind(this)
@@ -109,12 +110,22 @@ class TileMaker extends Component {
     let { edit } = this.state;
     this.setState({edit: !edit})
   }
-  open(){
+  open(id){
     let { create } = this.state;
-    this.setState({
-      create: !create,
-      toBoard: true,
-    })
+
+
+    if(id){
+      this.setState({
+        create: !create,
+        toBoard: true,
+        toBoardId: id,
+      })
+    }else{
+      this.setState({
+        create: !create,
+      })
+    }
+
   }
   create(){
     let { create } = this.state;
@@ -123,20 +134,23 @@ class TileMaker extends Component {
 
   render() {
     let { edit, children, id, name, addr } = this.props;
-    let { create, value, addressList, stateName, toBoard } = this.state;
+    let { create, value, addressList, stateName, toBoard, toBoardId } = this.state;
+
+    toBoard && toBoardId ? (<Redirect to={{ pathname: '/board', state: { objectId: toBoardId } }} />) : null
+
     if(create){
       let input;
       let address;
       let _id;
-      let mutation = createObject
-      let variables = {name: `"${input}"`, address: `"${address}"` }
+      let mutation = createObject;
+      let variables = {name: `"${input}"`, address: `"${address}"` };
 
       if (edit) {
         mutation = changeObject
         variables = {id: `"${_id}"`, name: `"${input}"`, address: `"${address}"` }
       }
       
-      // toBoard ? (<Redirect to={pathname: '/board', state: { objectId: "" }} /> ) : null
+      
       
       return (
         <Modal close={(e)=>{this.open();edit ? this.props.setEdit() : null}}>
@@ -146,23 +160,37 @@ class TileMaker extends Component {
                   <form
                     onSubmit={e => {
                       e.preventDefault();
+
                       if (edit) {
                         let addr = value || address.value;
 
-                        MakeTile({ variables: { id: id, name: input.value, address: address.value } });
-                        // this.props.setEdit();
+                        MakeTile({ variables: { id: id, name: input.value, address: address.value } })
+                        .then(()=>{
+                          // this.props.setEdit();
+                          input.value = "";
+                          address.value = "";
+                          this.open();
+                        });
+
                       } else {
                         MakeTile({ variables: { name: input.value, address: address.value } })
-                        .then((a,b)=>{
-                          console.log("data", a, b )
+                        .then((a)=>{
+                          console.log("data", a )
+                          input.value = "";
+                          address.value = "";
+
+                          console.log("data", a, a.data, a.data.createObject)
+                          a && a.data && a.data.createObject && a.data.createObject.id ? 
+                            this.setState({
+                              create: !create,
+                              toBoard: true,
+                              toBoardId: id,
+                            })
+                            : this.setState({
+                              create: !create,
+                            });
                         });
                       }
-
-                      console.warn("data",data)
-
-                      input.value = "";
-                      address.value = "";
-                      this.open();
                     }}
                   >
                     <div>
