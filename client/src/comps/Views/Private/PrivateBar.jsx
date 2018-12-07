@@ -3,15 +3,12 @@ import { graphql, compose, Query  } from "react-apollo";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 
-
 import { getChat, cSetCountPrivates, chatListCacheUpdate } from '../../../GraphQL/Cache';
 import { qauf, _url, timeEdit } from '../../../constants';
 import Loading from '../../Loading';
 import { USERS_QUERY, CHATS_QUERY } from '../../../GraphQL/Qur/Query';
-// import { MESSAGE_CREATED } from '../../../GraphQL/Qur/Subscr';
 import { createDirect } from '../../../GraphQL/Qur/Mutation';
 import { UserRow } from '../../Parts/Rows/Rows';
-import Svg from '../../Parts/SVG/svg';
 
 
 class PrivateBar extends React.Component {
@@ -33,17 +30,17 @@ class PrivateBar extends React.Component {
 
   openPrivate(gid, privateChat){
     this.props.click(gid, privateChat)
-
-    this.props.chatListCacheUpdate({
-      variables:{
-        value: {groupId: gid, reset: true},
-        queryName: privateChat ? "directs" : "tasks"
-      }
-    })
+    //FIXME: что-то тут не так, ругается но обновляет.
+    setTimeout(()=>{
+      this.props.chatListCacheUpdate({
+        variables:{
+          value: {groupId: gid, reset: true},
+          queryName: privateChat ? "directs" : "tasks"
+        }
+      })}, 400)
   }
 
   newUser(e,users){
-
     if(e && e.target && e.target.value){
       let user = _.find(users, (obj)=> { return obj.username === e.target.value; });
 
@@ -55,9 +52,7 @@ class PrivateBar extends React.Component {
       }else{
         console.warn("Неправильный юзер", user);
       }
-
     }
-
   }
 
   CreateNewGroup(users, nodeInput){
@@ -85,7 +80,6 @@ class PrivateBar extends React.Component {
     if(uid){
       qauf(createDirect(params), _url, localStorage.getItem('auth-token')).then(a=>{
         if(a && a.data){
-          // ref1()
           this.props.chatListCacheUpdate({
             variables:{
               value: {id: a.data.directMessage.id, name: newUser, addUser: true},
@@ -102,12 +96,6 @@ class PrivateBar extends React.Component {
 
   }
 
-
-
-  // setBlogPostViewsAsync = async () => {
-  //   this.setState({ privsOpen: !this.state.privsOpen }, () => Promise.resolve());
-  // }
-
   privsOpen1(){
     this.setState({
       privsOpen: !this.state.privsOpen
@@ -115,7 +103,6 @@ class PrivateBar extends React.Component {
   }
 
   tasksOpen(){
-    // console.warn("tasksOpen");
     this.setState({
       tasksOpen: !this.state.tasksOpen
     })

@@ -304,6 +304,7 @@ export default {
           queryName === "directs" ? filterSort = [filter, ...previousState.user.directs.filter(directs => directs.id !== value.groupId)] :
             filterSort = [filter, ...previousState.user.tasks.filter(tasks => tasks.id !== value.groupId)]
         } else {
+          console.warn("111")
           Object.assign(filter, { unreadCount: 0, lastMessage: filter.lastMessage })
           queryName === "directs" ? filterSort = [...previousState.user.directs] : filterSort = [...previousState.user.tasks]
         }
@@ -352,6 +353,10 @@ export default {
         query,
         data,
       })
+
+      // setTimeout(()=>{}, 0)
+
+
 
       return true;
 
