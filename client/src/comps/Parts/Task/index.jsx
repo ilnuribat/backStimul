@@ -19,9 +19,11 @@ class Task extends Component {
 
   render() {
 
-    const {children, name, id, endDate, lastMessage, click, childs, selected, selectedChilds, deleteTask, showother} = this.props;
+    const {children, name, id, endDate, lastMessage, click, childs, selected, selectedChilds, deleteTask, showother, status} = this.props;
     let sel = "";
     let oth = "";
+    let statusShit = 'истекает:';
+    let highlight = '';
 
     if(selected || selectedChilds){
       sel = " Sel";
@@ -30,8 +32,33 @@ class Task extends Component {
       oth = " Child"
     }
 
+    if(endDate){
+      let ym = moment(endDate).format("YYYY MM");
+      let y = moment(endDate).format("YYYY");
+      let m = moment(endDate).format("MM");
+      let d = moment(endDate).format("DD");
+      let h = moment(endDate).format("HH");
+      
+      let ymN = moment().format("YYYY MM");
+      let yN = moment().format("YYYY");
+      let mN = moment().format("MM");
+      let dN = moment().format("DD");
+      let hN = moment().format("HH");
+
+
+      if((ym === ymN && d < dN ) || (yN > y ) || ( mN > m && y <= yN ) && status != '5'){
+        highlight = " RedBg"
+        statusShit = 'истекла:'
+      }
+      else if((ym === ymN && d > dN && d - dN <= 3 ) && status != '5'){
+        highlight = " YlBg"
+      }else{
+        highlight = ''
+      }
+    }
+
     return(
-      <div className={`Task${sel}${oth}`} >
+      <div className={`Task${sel}${oth}${highlight}`} >
         <div style={{"display":"none"}}>
           {
             id
@@ -45,7 +72,7 @@ class Task extends Component {
         {
           endDate ? (
             <div className="endDate">
-              <span className="Pad">истекает:</span> 
+              <span className="Pad">{statusShit}</span> 
               { moment(endDate).format('D MMMM, h:mm')}
             </div>
           ): null

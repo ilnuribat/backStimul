@@ -26,6 +26,34 @@ import ContentInner from '../../Lays/ContentInner/ContentInner';
 import ChatView from '../ChatView/ChatView';
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 import TaskView from '../TaskView/TaskView';
+import moment from 'moment';
+
+
+let _BARR = [
+  { id: "5bfbb898ac706b2510353da6", parentId: "5bfbb813ac706b40c0353d92", objectId: "5bfbb802ac706bcf83353d8b", name: "прочитать теорию управления, Сергей сказал прочитать)", endDate: "2018-11-01T00:00:00+00:00", }
+  , { id: "5bffa4fdd8b6859e89d4fe8b", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "test websockets1112", endDate: "2018-11-01T00:00:00+00:00", }
+  , { id: "5bfffd8f39bf3ef6d263131b", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Реал тайм в доске", endDate: null, }
+  , { id: "5c011f185347022478a8c895", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "ssss", endDate: null, childs: [
+    { id: "5c0a6f3ecc45c712545178bd", parentId: "5bffa4fdd8b6859e89d4fe8b", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 1", endDate: null, }
+  , { id: "5c0a6f58cc45c784ec5178c0", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 3", endDate: null, }
+  , { id: "5c0a6f70cc45c7159b5178c3", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 4", endDate: null, }
+  , { id: "5c0a6f95cc45c718805178c8", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 5", endDate: null, }   
+  ]}
+  , { id: "5c0a6f3ecc45c712545178bd", parentId: "5bffa4fdd8b6859e89d4fe8b", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 1", endDate: null, childs: [
+    { id: "5c0a6f3ecc45c712545178bd", parentId: "5bffa4fdd8b6859e89d4fe8b", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 1", endDate: null, }
+  , { id: "5c0a6f58cc45c784ec5178c0", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 3", endDate: null, }
+  , { id: "5c0a6f70cc45c7159b5178c3", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 4", endDate: null, }
+  , { id: "5c0a6f95cc45c718805178c8", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 5", endDate: null, }   
+  ]}
+  , { id: "5c0a6f58cc45c784ec5178c0", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 3", endDate: null, }
+  , { id: "5c0a6f70cc45c7159b5178c3", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 4", endDate: null, childs: [
+    { id: "5c0a6f3ecc45c712545178bd", parentId: "5bffa4fdd8b6859e89d4fe8b", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 1", endDate: null, }
+  , { id: "5c0a6f58cc45c784ec5178c0", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 3", endDate: null, }
+  , { id: "5c0a6f70cc45c7159b5178c3", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 4", endDate: null, }
+  , { id: "5c0a6f95cc45c718805178c8", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 5", endDate: null, }   
+  ] }
+  , { id: "5c0a6f95cc45c718805178c8", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 5", endDate: null, }      
+]
 
 class Board extends Component {
 
@@ -396,6 +424,26 @@ class Board extends Component {
 
   MaptoTree(array) {
 
+    let _ARR = [...array],
+    _Edited = [];
+
+    let tree = (data, root) => {
+      var r;
+      data.forEach(function (a) {
+          this[a.id] = { id: a.id, text: a.name, children: this[a.id] && this[a.id].children };
+          if (a.parentId === root) {
+              r = this[a.id];
+          } else {
+              this[a.parentId] = this[a.parentId] || {};
+              this[a.parentId].children = this[a.parentId].children || [];
+              this[a.parentId].children.push(this[a.id]);
+          }
+      }, Object.create(null));
+      return r;
+  };
+  let _A = tree(array, 0);
+
+  return _A;
 
   }
 
@@ -547,18 +595,41 @@ class Board extends Component {
                           }
 
                           {
-                            console.log("ObjectData.tasks.mapped", this.MaptoTree(ObjectData.tasks))
+                            // console.log("ObjectData.tasks.mapped", this.MaptoTree(ObjectData.tasks))
                           }
+                          {
+                            this.MaptoTree(ObjectData.tasks)
+                          }
+                          <div className="TreeViewName TopLevel">
+                            {ObjectData.name}
+                          </div>
 
-                          {ObjectData && ObjectData.tasks.map((a, i, earr) => {
+                          {_BARR.map((a, i, earr) => {
                             return(
-                              <ul>
-                                <li>
-                                  <div>
-                                    {a.name}
-                                  </div>
-                                </li>
-                              </ul>
+                              <div className="TreeTask Parent">
+                                <div className="TreeName">
+                                
+                                <span>{a.name}</span>
+                                <span>{ moment(a.endDate).format('D MMMM, h:mm')}</span>
+                                <span>{a.status}</span>
+                                </div>
+                                <div className="TreeChildrens">
+                                  <ul className="TreeChildrens">
+                                      {
+                                        a.childs && a.childs.map((b)=>{
+                                            return(
+                                              <ul>
+                                                <li>
+                                                  {b.name}
+                                                </li>
+                                              </ul>
+                                            )
+                                          }
+                                        )
+                                      }
+                                  </ul>
+                                </div>
+                              </div>
                             )
                           })
                             
@@ -573,7 +644,7 @@ class Board extends Component {
                     }
 
                     return(
-                              <Column key={e.id} id={e.id} status={e.name} name={e.name} >
+                      <Column key={e.id} id={e.id} status={e.name} name={e.name} >
                         {e.id == 1 ? <ButtonRow icon="plus" view="MiniBox" iconright="1" click={this.changeModal}></ButtonRow> : null}
                         {
                           cols[e.id].map((task) => {
@@ -582,7 +653,7 @@ class Board extends Component {
                             } else { selectedChilds = false; }
 
                             return (
-                              <Task showother={this.state.showChilds} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal} />
+                              <Task showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal} />
                             )
                           })
                         }

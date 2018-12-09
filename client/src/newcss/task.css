@@ -74,6 +74,7 @@
   line-height: normal;
   letter-spacing: -0.2px;
   color: #a3b6c5;
+  color: #f4f8f9;
   overflow: hidden;
   /* text-overflow: ellipsis; */
   /* height: 12px; */
@@ -87,6 +88,7 @@
   line-height: normal;
   letter-spacing: -0.3px;
   color: #a3b6c5;
+  color: #f4f8f9;
   margin:5px 0;
 }
 .Task .TaskUser{

@@ -1,0 +1,29 @@
+ul.TreeUl, ul.TreeUl ul{
+  border: 1px solid salmon;
+  padding: 0 0 0 5px;
+}
+.TreeUl li{
+  margin:5px;
+}
+.Board-Content-Tree{
+  
+}
+.TreeViewName{
+  font-size: 25px;
+}
+.Board-Content-Tree{
+  padding: 0 0 0 10px;
+}
+.TreeTask{
+  position: relative;
+  padding: 10px;
+}
+.TreeTask.Parent:before{
+  
+}
+.TreeName{
+  font-size: 20px;
+}
+.TreeName span{
+  margin: 0 10px 0 0;
+}
