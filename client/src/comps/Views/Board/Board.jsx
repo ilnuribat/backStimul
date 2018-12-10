@@ -74,7 +74,7 @@ class ChildsMap extends Component {
             childs && showTree ? <div className="border"> </div> : null
           }
           {
-            childs ? !showTree ? <div className="TreePlus" onClick={() => { this.setState({ showTree: true }) }}>+</div> : <div className="TreeMinus" onClick={() => { this.setState({ showTree: false }) }}>-</div> : null
+            childs ? !showTree ? <div className="TreePlus" onClick={() => { this.setState({ showTree: true }) }}><Svg svg="plus" /></div> : <div className="TreeMinus" onClick={() => { this.setState({ showTree: false }) }}><Svg svg="minus" /></div> : null
           }
           <div className="TreeName">
             <span className="name">{ obj.name ? obj.name : "Без названия"}</span>
@@ -632,9 +632,11 @@ class Board extends Component {
                             console.log("ObjectData.tasks", ObjectData.tasks)
                           }
 
+                          <div className="inner">
                           <div className="TreeViewName TopLevel">
                             {ObjectData.name}
                           </div>
+                          <div className="border"></div>
                           {
                             console.log(status)
                           }
@@ -648,6 +650,7 @@ class Board extends Component {
                           {
                             // ObjectData.tasks ? <pre>{JSON.stringify(ObjectData.tasks, 0, 4)}</pre> : null
                           }
+                          </div>
                         </ContentInner>
                       ) : (
                         <ContentInner view="Board-Content">
