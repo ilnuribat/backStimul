@@ -39,7 +39,7 @@ class ChildsMap extends Component {
   }
 
   render(){
-    const { obj, statuses} = this.props;
+    const { obj, statuses, open} = this.props;
     const { showTree } = this.state;
 
     let childs = '';
@@ -100,7 +100,7 @@ class ChildsMap extends Component {
           {
             childs ? !showTree ? <div className="TreePlus" onClick={() => { this.setState({ showTree: true }) }}><Svg svg="plus" /></div> : <div className="TreeMinus" onClick={() => { this.setState({ showTree: false }) }}><Svg svg="minus" /></div> : null
           }
-          <div className="TreeName">
+          <div className="TreeName" onClick={() => { open && typeof open === 'function' ? open(obj.id,obj.name) : null }}>
             <span className="name">{ obj.name ? obj.name : "Без названия"}</span>
             {obj.endDate ? <span className={`endDate${highlight}`}>{moment(obj.endDate).format('D MMMM, h:mm')}</span> : null } 
             <span className={`status ${obj.status ? "sts" + obj.status : "sts0"}`}>{obj.status ? stName : "Новая"}</span>
@@ -112,7 +112,7 @@ class ChildsMap extends Component {
             childs && showTree ? <div className="border"> </div> : null
           }
           {
-            childs && showTree ? (<div className="TreeChilds">{obj.childs.map(e => { return (<ChildsMap statuses={statuses} key={e.id} obj={e} />)})} </div> ): null
+            childs && showTree ? (<div className="TreeChilds">{obj.childs.map(e => { return (<ChildsMap open={open} statuses={statuses} key={e.id} obj={e} />)})} </div> ): null
           }
 
         </div>
@@ -669,7 +669,7 @@ class Board extends Component {
                           {
                             tasks.map((a, i, earr) => {
                               return(
-                                <ChildsMap obj={a} statuses={status ? status : null}/>
+                                <ChildsMap open={this.toTask} obj={a} statuses={status ? status : null}/>
                               )
                             })
                           }
