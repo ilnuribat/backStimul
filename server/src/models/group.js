@@ -108,12 +108,20 @@ schema.static('getParentChain', async function (fiasId, level) {
     },
   }).lean();
 
-  return res.address.parentChain
+  const chain = res.address.parentChain
     .slice(0, level)
     .map(pc => ({
       id: pc.fiasId,
       name: `${pc.type}. ${pc.name}`,
     }));
+
+  chain.unshift({
+    id: null,
+    name: 'Россия',
+    type: '',
+  });
+
+  return chain;
 });
 
 module.exports = schema;
