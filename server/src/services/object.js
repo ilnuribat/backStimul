@@ -25,10 +25,13 @@ async function rootObjectQuery(parent, { id: addressId }) {
     });
   }
 
+  const crumbs = await Group.getParentChain(addressId, rootObject.level);
+
   return {
     ...rootObject,
     addresses,
     objects,
+    crumbs,
   };
 }
 
