@@ -44,7 +44,7 @@ class ChildsMap extends Component {
 
     let childs = '';
 
-    if (obj && obj.childs) {
+    if (obj && obj.childs && obj.childs.length > 0) {
       childs = ' Parent'
     }
 
@@ -471,13 +471,13 @@ class Board extends Component {
       var r;
 
       data.forEach(function (a) {
-        this[a.id] = { id: a.id, text: a.name, children: this[a.id] && this[a.id].children };
+        this[a.id] = { id: a.id, text: a.name, childs: this[a.id] && this[a.id].childs };
         if (a.parentId === root) {
           r = this[a.id];
         } else {
           this[a.parentId] = this[a.parentId] || {};
-          this[a.parentId].children = this[a.parentId].children || [];
-          this[a.parentId].children.push(this[a.id]);
+          this[a.parentId].childs = this[a.parentId].childs || [];
+          this[a.parentId].childs.push(this[a.id]);
         }
       }, Object.create(null));
 
@@ -544,12 +544,12 @@ class Board extends Component {
               let tasks = data.object.tasks.map(a => ({...a}));
 
               for (let i = 0; i < tasks.length; i ++) {
-                tasks[i].children = [];
+                tasks[i].childs = [];
 
                 for (let j = 0; j < tasks.length; j ++) {
                   if (i !== j) {
                     if (tasks[i].id == tasks[j].parentId) {
-                      tasks[i].children.push(tasks[j]);
+                      tasks[i].childs.push(tasks[j]);
                     }
                   }
                 }
@@ -639,7 +639,7 @@ class Board extends Component {
                             console.log(status)
                           }
                           {
-                            ObjectData.tasks.map((a, i, earr) => {
+                            tasks.map((a, i, earr) => {
                               return(
                                 <ChildsMap obj={a} statuses={status ? status : null}/>
                               )
