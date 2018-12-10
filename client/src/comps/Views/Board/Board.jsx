@@ -71,9 +71,6 @@ class ChildsMap extends Component {
       return (
         <div className={`TreeTask${childs}`}>
           {
-            childs && showTree ? <div className="border"> </div> : null
-          }
-          {
             childs ? !showTree ? <div className="TreePlus" onClick={() => { this.setState({ showTree: true }) }}><Svg svg="plus" /></div> : <div className="TreeMinus" onClick={() => { this.setState({ showTree: false }) }}><Svg svg="minus" /></div> : null
           }
           <div className="TreeName">
@@ -84,7 +81,9 @@ class ChildsMap extends Component {
           {obj.assignedTo && obj.assignedTo.id && obj.assignedTo.username ? <div className="holder">
             <UserRow id={obj.assignedTo.id} name={obj.assignedTo.username} icon="1" />
           </div> : null}
-
+          {
+            childs && showTree ? <div className="border"> </div> : null
+          }
           {
             childs && showTree ? (<div className="TreeChilds">{obj.childs.map(e => { return (<ChildsMap statuses={statuses} key={e.id} obj={e} />)})} </div> ): null
           }
