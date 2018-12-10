@@ -101,4 +101,19 @@ schema.static('getFiasIdLevel', async function (fiasId) {
   return res;
 });
 
+schema.static('getParentChain', async function (fiasId, level) {
+  const res = await this.findOne({
+    [`address.parentChain.${level}.fiasId`]: {
+      $eq: fiasId,
+    },
+  }).lean();
+
+  return res.address.parentChain
+    .slice(0, level)
+    .map(pc => ({
+      id: pc.fiasId,
+      name: `${pc.type}. ${pc.name}`,
+    }));
+});
+
 module.exports = schema;
