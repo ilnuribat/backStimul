@@ -16,14 +16,77 @@ ul.TreeUl, ul.TreeUl ul{
 }
 .TreeTask{
   position: relative;
-  padding: 10px;
+  padding: 0 0 0 0;
+  margin: 30px 0 0 20px;
 }
-.TreeTask.Parent:before{
-  
+.TreeTask::before{
+  position: absolute;
+  content: " ";
+  display: block;
+  width: 30px;
+  height: 2px;
+  left:-50px;
+  top:10px;
+  margin: 0 0 0 0;
+  background: #202225;
+}
+.TreeTask.Parent .border{
+  position: absolute;
+  display: block;
+  width: 2px;
+  height: 100%;
+  left:-50px;
+  top:10px;
+  margin: 0 0 0 0;
+  background: #202225;
 }
 .TreeName{
   font-size: 20px;
 }
+.TreeName .endDate{
+  font-size: 11px;
+  padding: 5px;
+  background-color: #3d4147;
+  border-radius: 5px;
+}
+.TreeName .status{
+  font-size: 12px;
+  padding: 5px;
+  color: #808fa3;
+  /* background-color: #3d4147; */
+  border-radius: 5px;
+}
+.TreeName .endDate.blu{
+  background-color: #3e75b2;
+}
+.TreeName .endDate.yel{
+  background-color: #d2903c;
+}
+.TreeName .endDate.yel{
+  background-color: #d2903c;
+}
+.TreeName .endDate.red{
+  background-color: #c45c5c;
+}
+.TreeName .status::before{
+  content: " ";
+  display:inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 100px;
+  margin-right:5px;
+  background-color: #3e75b2;
+}
+.TreeName .status.red::before{
+  background-color: #c45c89;
+}
+.TreeName .status.green::before{
+  background-color: #459e64;
+}
+
 .TreeName span{
   margin: 0 10px 0 0;
+}
+.TreeChilds{
+  padding: 0 0 0 10px;
 }

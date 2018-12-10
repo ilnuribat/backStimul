@@ -17,7 +17,7 @@ import Content from '../../Lays/Content';
 import '../../../newcss/boardview.css';
 import '../../../newcss/task.css';
 import { Svg } from '../../Parts/SVG/index';
-import { ButtonRow, TextRow, FileRow } from '../../Parts/Rows/Rows';
+import { ButtonRow, TextRow, FileRow, UserRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import { updTask, crTask, deleteTask } from '../../../GraphQL/Qur/Mutation';
 import Panel from '../../Lays/Panel/index';
@@ -29,31 +29,1210 @@ import TaskView from '../TaskView/TaskView';
 import moment from 'moment';
 
 
+const ChildsMap = ({obj, statuses})=>{
+  let childs = '';
+
+  if (obj && obj.childs) {
+    childs = ' Parent'
+  }
+
+  let statusName = (st, statuses)=>{
+
+    console.log(st);
+    console.log(statuses);
+    
+    let stName = statuses.find(e => { if (e.id == st) return e.name });
+
+    console.log(stName.name)
+    return stName.name;
+  }
+
+
+  if (obj) {
+    let stName = '';
+    if (obj.status && statuses){
+      stName = statusName(obj.status, statuses);
+    }
+    
+    return (
+      <div className={`TreeTask${childs}`}>
+        <div className="TreeName">
+          <span className="name">{ obj.name ? obj.name : "Без названия"}</span>
+          {obj.endDate ? <span className="endDate">{moment(obj.endDate).format('D MMMM, h:mm')}</span> : null } 
+          <span className="status">{obj.status ? stName : "Новая"}</span>
+        </div>
+        {obj.assignedTo && obj.assignedTo.id && obj.assignedTo.username ? <div className="holder">
+          <UserRow id={obj.assignedTo.id} name={obj.assignedTo.username} icon="1" />
+        </div> : null}
+
+        {
+          childs ? (<div className="TreeChilds">{obj.childs.map(e => { return (<ChildsMap statuses={statuses} key={e.id} obj={e} />)})} </div> ): null
+        }
+
+      </div>
+    )
+  }
+
+}
+
+
 let _BARR = [
-  { id: "5bfbb898ac706b2510353da6", parentId: "5bfbb813ac706b40c0353d92", objectId: "5bfbb802ac706bcf83353d8b", name: "прочитать теорию управления, Сергей сказал прочитать)", endDate: "2018-11-01T00:00:00+00:00", }
-  , { id: "5bffa4fdd8b6859e89d4fe8b", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "test websockets1112", endDate: "2018-11-01T00:00:00+00:00", }
-  , { id: "5bfffd8f39bf3ef6d263131b", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Реал тайм в доске", endDate: null, }
-  , { id: "5c011f185347022478a8c895", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "ssss", endDate: null, childs: [
-    { id: "5c0a6f3ecc45c712545178bd", parentId: "5bffa4fdd8b6859e89d4fe8b", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 1", endDate: null, }
-  , { id: "5c0a6f58cc45c784ec5178c0", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 3", endDate: null, }
-  , { id: "5c0a6f70cc45c7159b5178c3", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 4", endDate: null, }
-  , { id: "5c0a6f95cc45c718805178c8", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 5", endDate: null, }   
-  ]}
-  , { id: "5c0a6f3ecc45c712545178bd", parentId: "5bffa4fdd8b6859e89d4fe8b", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 1", endDate: null, childs: [
-    { id: "5c0a6f3ecc45c712545178bd", parentId: "5bffa4fdd8b6859e89d4fe8b", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 1", endDate: null, }
-  , { id: "5c0a6f58cc45c784ec5178c0", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 3", endDate: null, }
-  , { id: "5c0a6f70cc45c7159b5178c3", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 4", endDate: null, }
-  , { id: "5c0a6f95cc45c718805178c8", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 5", endDate: null, }   
-  ]}
-  , { id: "5c0a6f58cc45c784ec5178c0", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 3", endDate: null, }
-  , { id: "5c0a6f70cc45c7159b5178c3", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 4", endDate: null, childs: [
-    { id: "5c0a6f3ecc45c712545178bd", parentId: "5bffa4fdd8b6859e89d4fe8b", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 1", endDate: null, }
-  , { id: "5c0a6f58cc45c784ec5178c0", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 3", endDate: null, }
-  , { id: "5c0a6f70cc45c7159b5178c3", parentId: "5bfbb898ac706b2510353da6", objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 4", endDate: null, }
-  , { id: "5c0a6f95cc45c718805178c8", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 5", endDate: null, }   
-  ] }
-  , { id: "5c0a6f95cc45c718805178c8", parentId: null, objectId: "5bfbb802ac706bcf83353d8b", name: "Задача 5", endDate: null, }      
-]
+  {
+    id: "5bfbb898ac706b2510353da6",
+    parentId: "5bfbb813ac706b40c0353d92",
+    objectId: "5bfbb802ac706bcf83353d8b",
+    name: "прочитать теорию управления, Сергей сказал прочитать)",
+    endDate: "2018-12-11T00:00:00+00:00",
+    status: null,
+    unreadCount: 0,
+    childs: [
+      {
+        id: "5bfbb898ac706b2510353da6",
+        parentId: "5bfbb813ac706b40c0353d92",
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "прочитать теорию управления, Сергей сказал прочитать)",
+        endDate: "2018-12-11T00:00:00+00:00",
+        status: null,
+        unreadCount: 0,
+        assignedTo: {
+          id: "5bb47ba6b6fbb85c888364c5",
+          username: "Kirill",
+          "__typename": "UserTaskRole"
+        },
+        "users": [
+          {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd93c018bf42b9a1f3181",
+            username: "SET",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bb47ba6b6fbb85c888364c5",
+            username: "Kirill",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          },
+          {
+            id: "5bfd3986c3bfee178802cdc7",
+            username: "Алёнушко",
+            "__typename": "User"
+          }
+        ],
+        "files": [
+          {
+            id: "5bffa55dd8b6859bb6d4feaf",
+            "size": "1250711",
+            name: "Теория управления MVP.pdf",
+            "mimeType": "application/pdf",
+            "date": "2018-11-29T08:37:49.843Z",
+            "__typename": "File"
+          },
+          {
+            id: "5c016f704a78d1e6a380f88d",
+            "size": "76392",
+            name: "odessa-script.ttf",
+            "mimeType": "application/octet-stream",
+            "date": "2018-11-30T17:12:17.266Z",
+            "__typename": "File"
+          }
+        ],
+        "lastMessage": {
+          "from": {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          "text": "читать!",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+      {
+        id: "5bffa4fdd8b6859e89d4fe8b",
+        parentId: "5bfbb898ac706b2510353da6",
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "test websockets1112",
+        endDate: "2018-11-01T00:00:00+00:00",
+        status: 5,
+        unreadCount: 0,
+        assignedTo: {
+          id: "5bacd949018bf4b0da1f3182",
+          username: "Alex",
+          "__typename": "UserTaskRole"
+        },
+        "users": [
+          {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd93c018bf42b9a1f3181",
+            username: "SET",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bb47ba6b6fbb85c888364c5",
+            username: "Kirill",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          },
+          {
+            id: "5bfd3986c3bfee178802cdc7",
+            username: "Алёнушко",
+            "__typename": "User"
+          }
+        ],
+        "files": [
+          {
+            id: "5bffe5173fe5ce19c0399cb3",
+            "size": "5578",
+            name: "Новый текстовый документ.txt",
+            "mimeType": "text/plain",
+            "date": "2018-11-29T13:09:43.670Z",
+            "__typename": "File"
+          },
+          {
+            id: "5bffe54f3fe5ce19c0399cbb",
+            "size": "5578",
+            name: "Новый текстовый документ.txt",
+            "mimeType": "text/plain",
+            "date": "2018-11-29T13:10:39.070Z",
+            "__typename": "File"
+          }
+        ],
+        "lastMessage": {
+          "from": {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          "text": "1234",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+      {
+        id: "5bfffd8f39bf3ef6d263131b",
+        parentId: "5bfbb898ac706b2510353da6",
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "Реал тайм в доске",
+        endDate: "2018-12-08T00:00:00+00:00",
+        status: 4,
+        unreadCount: 0,
+        assignedTo: {
+          id: "5bacd8f3018bf43e4e1f317f",
+          username: "menog",
+          "__typename": "UserTaskRole"
+        },
+        "users": [
+          {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd93c018bf42b9a1f3181",
+            username: "SET",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bb47ba6b6fbb85c888364c5",
+            username: "Kirill",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          },
+          {
+            id: "5bfd3986c3bfee178802cdc7",
+            username: "Алёнушко",
+            "__typename": "User"
+          }
+        ],
+        "files": [
+          {
+            id: "5bfffe178c5c347bcc812b87",
+            "size": "324447",
+            name: "Frontend Developer ( React ).pdf",
+            "mimeType": "application/pdf",
+            "date": "2018-11-29T14:56:23.474Z",
+            "__typename": "File"
+          }
+        ],
+        "lastMessage": {
+          "from": {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          "text": "30",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+      {
+        id: "5c011f185347022478a8c895",
+        parentId: null,
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "ssss",
+        endDate: "2018-12-11T00:00:00+00:00",
+        status: 4,
+        unreadCount: 0,
+        assignedTo: null,
+        "users": [
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          }
+        ],
+        "files": [],
+        "lastMessage": {
+          "from": {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          "text": "11",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+    ],
+    assignedTo: {
+      id: "5bb47ba6b6fbb85c888364c5",
+      username: "Kirill",
+      "__typename": "UserTaskRole"
+    },
+    "users": [
+      {
+        id: "5bacd09031038439c0bd33e3",
+        username: "ilnur",
+        "__typename": "User"
+      },
+      {
+        id: "5bacd8f3018bf43e4e1f317f",
+        username: "menog",
+        "__typename": "User"
+      },
+      {
+        id: "5bacd93c018bf42b9a1f3181",
+        username: "SET",
+        "__typename": "User"
+      },
+      {
+        id: "5bacd949018bf4b0da1f3182",
+        username: "Alex",
+        "__typename": "User"
+      },
+      {
+        id: "5bb47ba6b6fbb85c888364c5",
+        username: "Kirill",
+        "__typename": "User"
+      },
+      {
+        id: "5bd86d46b1239fa30162de41",
+        username: "ux",
+        "__typename": "User"
+      },
+      {
+        id: "5bfd3986c3bfee178802cdc7",
+        username: "Алёнушко",
+        "__typename": "User"
+      }
+    ],
+    "files": [
+      {
+        id: "5bffa55dd8b6859bb6d4feaf",
+        "size": "1250711",
+        name: "Теория управления MVP.pdf",
+        "mimeType": "application/pdf",
+        "date": "2018-11-29T08:37:49.843Z",
+        "__typename": "File"
+      },
+      {
+        id: "5c016f704a78d1e6a380f88d",
+        "size": "76392",
+        name: "odessa-script.ttf",
+        "mimeType": "application/octet-stream",
+        "date": "2018-11-30T17:12:17.266Z",
+        "__typename": "File"
+      }
+    ],
+    "lastMessage": {
+      "from": {
+        id: "5bacd09031038439c0bd33e3",
+        username: "ilnur",
+        "__typename": "User"
+      },
+      "text": "читать!",
+      "__typename": "Message"
+    },
+    "__typename": "Task"
+  },
+  {
+    id: "5bffa4fdd8b6859e89d4fe8b",
+    parentId: "5bfbb898ac706b2510353da6",
+    objectId: "5bfbb802ac706bcf83353d8b",
+    name: "test websockets1112",
+    endDate: "2018-11-01T00:00:00+00:00",
+    status: 5,
+    unreadCount: 0,
+    childs: [
+      {
+        id: "5bfbb898ac706b2510353da6",
+        parentId: "5bfbb813ac706b40c0353d92",
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "прочитать теорию управления, Сергей сказал прочитать)",
+        endDate: "2018-12-11T00:00:00+00:00",
+        status: null,
+        unreadCount: 0,
+        assignedTo: {
+          id: "5bb47ba6b6fbb85c888364c5",
+          username: "Kirill",
+          "__typename": "UserTaskRole"
+        },
+        "users": [
+          {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd93c018bf42b9a1f3181",
+            username: "SET",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bb47ba6b6fbb85c888364c5",
+            username: "Kirill",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          },
+          {
+            id: "5bfd3986c3bfee178802cdc7",
+            username: "Алёнушко",
+            "__typename": "User"
+          }
+        ],
+        "files": [
+          {
+            id: "5bffa55dd8b6859bb6d4feaf",
+            "size": "1250711",
+            name: "Теория управления MVP.pdf",
+            "mimeType": "application/pdf",
+            "date": "2018-11-29T08:37:49.843Z",
+            "__typename": "File"
+          },
+          {
+            id: "5c016f704a78d1e6a380f88d",
+            "size": "76392",
+            name: "odessa-script.ttf",
+            "mimeType": "application/octet-stream",
+            "date": "2018-11-30T17:12:17.266Z",
+            "__typename": "File"
+          }
+        ],
+        "lastMessage": {
+          "from": {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          "text": "читать!",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+      {
+        id: "5bffa4fdd8b6859e89d4fe8b",
+        parentId: "5bfbb898ac706b2510353da6",
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "test websockets1112",
+        endDate: "2018-11-01T00:00:00+00:00",
+        status: 5,
+        unreadCount: 0,
+        assignedTo: {
+          id: "5bacd949018bf4b0da1f3182",
+          username: "Alex",
+          "__typename": "UserTaskRole"
+        },
+        "users": [
+          {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd93c018bf42b9a1f3181",
+            username: "SET",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bb47ba6b6fbb85c888364c5",
+            username: "Kirill",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          },
+          {
+            id: "5bfd3986c3bfee178802cdc7",
+            username: "Алёнушко",
+            "__typename": "User"
+          }
+        ],
+        "files": [
+          {
+            id: "5bffe5173fe5ce19c0399cb3",
+            "size": "5578",
+            name: "Новый текстовый документ.txt",
+            "mimeType": "text/plain",
+            "date": "2018-11-29T13:09:43.670Z",
+            "__typename": "File"
+          },
+          {
+            id: "5bffe54f3fe5ce19c0399cbb",
+            "size": "5578",
+            name: "Новый текстовый документ.txt",
+            "mimeType": "text/plain",
+            "date": "2018-11-29T13:10:39.070Z",
+            "__typename": "File"
+          }
+        ],
+        "lastMessage": {
+          "from": {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          "text": "1234",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+      {
+        id: "5bfffd8f39bf3ef6d263131b",
+        parentId: "5bfbb898ac706b2510353da6",
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "Реал тайм в доске",
+        endDate: "2018-12-08T00:00:00+00:00",
+        status: 4,
+        unreadCount: 0,
+        assignedTo: {
+          id: "5bacd8f3018bf43e4e1f317f",
+          username: "menog",
+          "__typename": "UserTaskRole"
+        },
+        "users": [
+          {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd93c018bf42b9a1f3181",
+            username: "SET",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bb47ba6b6fbb85c888364c5",
+            username: "Kirill",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          },
+          {
+            id: "5bfd3986c3bfee178802cdc7",
+            username: "Алёнушко",
+            "__typename": "User"
+          }
+        ],
+        "files": [
+          {
+            id: "5bfffe178c5c347bcc812b87",
+            "size": "324447",
+            name: "Frontend Developer ( React ).pdf",
+            "mimeType": "application/pdf",
+            "date": "2018-11-29T14:56:23.474Z",
+            "__typename": "File"
+          }
+        ],
+        "lastMessage": {
+          "from": {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          "text": "30",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+      {
+        id: "5c011f185347022478a8c895",
+        parentId: null,
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "ssss",
+        endDate: "2018-12-11T00:00:00+00:00",
+        status: 4,
+        unreadCount: 0,
+        assignedTo: null,
+        "users": [
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          }
+        ],
+        "files": [],
+        "lastMessage": {
+          "from": {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          "text": "11",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+    ],
+    assignedTo: {
+      id: "5bacd949018bf4b0da1f3182",
+      username: "Alex",
+      "__typename": "UserTaskRole"
+    },
+    "users": [
+      {
+        id: "5bacd09031038439c0bd33e3",
+        username: "ilnur",
+        "__typename": "User"
+      },
+      {
+        id: "5bacd8f3018bf43e4e1f317f",
+        username: "menog",
+        "__typename": "User"
+      },
+      {
+        id: "5bacd93c018bf42b9a1f3181",
+        username: "SET",
+        "__typename": "User"
+      },
+      {
+        id: "5bacd949018bf4b0da1f3182",
+        username: "Alex",
+        "__typename": "User"
+      },
+      {
+        id: "5bb47ba6b6fbb85c888364c5",
+        username: "Kirill",
+        "__typename": "User"
+      },
+      {
+        id: "5bd86d46b1239fa30162de41",
+        username: "ux",
+        "__typename": "User"
+      },
+      {
+        id: "5bfd3986c3bfee178802cdc7",
+        username: "Алёнушко",
+        "__typename": "User"
+      }
+    ],
+    "files": [
+      {
+        id: "5bffe5173fe5ce19c0399cb3",
+        "size": "5578",
+        name: "Новый текстовый документ.txt",
+        "mimeType": "text/plain",
+        "date": "2018-11-29T13:09:43.670Z",
+        "__typename": "File"
+      },
+      {
+        id: "5bffe54f3fe5ce19c0399cbb",
+        "size": "5578",
+        name: "Новый текстовый документ.txt",
+        "mimeType": "text/plain",
+        "date": "2018-11-29T13:10:39.070Z",
+        "__typename": "File"
+      }
+    ],
+    "lastMessage": {
+      "from": {
+        id: "5bacd09031038439c0bd33e3",
+        username: "ilnur",
+        "__typename": "User"
+      },
+      "text": "1234",
+      "__typename": "Message"
+    },
+    "__typename": "Task"
+  },
+  {
+    id: "5bfffd8f39bf3ef6d263131b",
+    parentId: "5bfbb898ac706b2510353da6",
+    objectId: "5bfbb802ac706bcf83353d8b",
+    name: "Реал тайм в доске",
+    endDate: "2018-12-08T00:00:00+00:00",
+    status: 4,
+    unreadCount: 0,
+    assignedTo: {
+      id: "5bacd8f3018bf43e4e1f317f",
+      username: "menog",
+      "__typename": "UserTaskRole"
+    },
+    "users": [
+      {
+        id: "5bacd09031038439c0bd33e3",
+        username: "ilnur",
+        "__typename": "User"
+      },
+      {
+        id: "5bacd8f3018bf43e4e1f317f",
+        username: "menog",
+        "__typename": "User"
+      },
+      {
+        id: "5bacd93c018bf42b9a1f3181",
+        username: "SET",
+        "__typename": "User"
+      },
+      {
+        id: "5bacd949018bf4b0da1f3182",
+        username: "Alex",
+        "__typename": "User"
+      },
+      {
+        id: "5bb47ba6b6fbb85c888364c5",
+        username: "Kirill",
+        "__typename": "User"
+      },
+      {
+        id: "5bd86d46b1239fa30162de41",
+        username: "ux",
+        "__typename": "User"
+      },
+      {
+        id: "5bfd3986c3bfee178802cdc7",
+        username: "Алёнушко",
+        "__typename": "User"
+      }
+    ],
+    "files": [
+      {
+        id: "5bfffe178c5c347bcc812b87",
+        "size": "324447",
+        name: "Frontend Developer ( React ).pdf",
+        "mimeType": "application/pdf",
+        "date": "2018-11-29T14:56:23.474Z",
+        "__typename": "File"
+      }
+    ],
+    "lastMessage": {
+      "from": {
+        id: "5bacd09031038439c0bd33e3",
+        username: "ilnur",
+        "__typename": "User"
+      },
+      "text": "30",
+      "__typename": "Message"
+    },
+    "__typename": "Task"
+  },
+  {
+    id: "5c011f185347022478a8c895",
+    parentId: null,
+    objectId: "5bfbb802ac706bcf83353d8b",
+    name: "ssss",
+    endDate: "2018-12-11T00:00:00+00:00",
+    status: 4,
+    unreadCount: 0,
+    assignedTo: null,
+    "users": [
+      {
+        id: "5bacd8f3018bf43e4e1f317f",
+        username: "menog",
+        "__typename": "User"
+      },
+      {
+        id: "5bacd949018bf4b0da1f3182",
+        username: "Alex",
+        "__typename": "User"
+      },
+      {
+        id: "5bd86d46b1239fa30162de41",
+        username: "ux",
+        "__typename": "User"
+      }
+    ],
+    "files": [],
+    "lastMessage": {
+      "from": {
+        id: "5bacd8f3018bf43e4e1f317f",
+        username: "menog",
+        "__typename": "User"
+      },
+      "text": "11",
+      "__typename": "Message"
+    },
+    "__typename": "Task"
+  },
+  {
+    id: "5c0a6f3ecc45c712545178bd",
+    parentId: "5bffa4fdd8b6859e89d4fe8b",
+    objectId: "5bfbb802ac706bcf83353d8b",
+    name: "Задача 1",
+    endDate: "2018-12-07T00:00:00+00:00",
+    status: 1,
+    unreadCount: 0,
+    assignedTo: null,
+    "users": [
+      {
+        id: "5bacd949018bf4b0da1f3182",
+        username: "Alex",
+        "__typename": "User"
+      }
+    ],
+    "files": [],
+    "lastMessage": null,
+    "__typename": "Task"
+  },
+  {
+    id: "5c0a6f58cc45c784ec5178c0",
+    parentId: "5bfbb898ac706b2510353da6",
+    objectId: "5bfbb802ac706bcf83353d8b",
+    name: "Задача 3",
+    endDate: "2019-01-09T00:00:00+00:00",
+    status: 3,
+    unreadCount: 0,
+    childs: [
+      {
+        id: "5bfbb898ac706b2510353da6",
+        parentId: "5bfbb813ac706b40c0353d92",
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "прочитать теорию управления, Сергей сказал прочитать)",
+        endDate: "2018-12-11T00:00:00+00:00",
+        status: null,
+        unreadCount: 0,
+        assignedTo: {
+          id: "5bb47ba6b6fbb85c888364c5",
+          username: "Kirill",
+          "__typename": "UserTaskRole"
+        },
+        "users": [
+          {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd93c018bf42b9a1f3181",
+            username: "SET",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bb47ba6b6fbb85c888364c5",
+            username: "Kirill",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          },
+          {
+            id: "5bfd3986c3bfee178802cdc7",
+            username: "Алёнушко",
+            "__typename": "User"
+          }
+        ],
+        "files": [
+          {
+            id: "5bffa55dd8b6859bb6d4feaf",
+            "size": "1250711",
+            name: "Теория управления MVP.pdf",
+            "mimeType": "application/pdf",
+            "date": "2018-11-29T08:37:49.843Z",
+            "__typename": "File"
+          },
+          {
+            id: "5c016f704a78d1e6a380f88d",
+            "size": "76392",
+            name: "odessa-script.ttf",
+            "mimeType": "application/octet-stream",
+            "date": "2018-11-30T17:12:17.266Z",
+            "__typename": "File"
+          }
+        ],
+        "lastMessage": {
+          "from": {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          "text": "читать!",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+      {
+        id: "5bffa4fdd8b6859e89d4fe8b",
+        parentId: "5bfbb898ac706b2510353da6",
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "test websockets1112",
+        endDate: "2018-11-01T00:00:00+00:00",
+        status: 5,
+        unreadCount: 0,
+        assignedTo: {
+          id: "5bacd949018bf4b0da1f3182",
+          username: "Alex",
+          "__typename": "UserTaskRole"
+        },
+        "users": [
+          {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd93c018bf42b9a1f3181",
+            username: "SET",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bb47ba6b6fbb85c888364c5",
+            username: "Kirill",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          },
+          {
+            id: "5bfd3986c3bfee178802cdc7",
+            username: "Алёнушко",
+            "__typename": "User"
+          }
+        ],
+        "files": [
+          {
+            id: "5bffe5173fe5ce19c0399cb3",
+            "size": "5578",
+            name: "Новый текстовый документ.txt",
+            "mimeType": "text/plain",
+            "date": "2018-11-29T13:09:43.670Z",
+            "__typename": "File"
+          },
+          {
+            id: "5bffe54f3fe5ce19c0399cbb",
+            "size": "5578",
+            name: "Новый текстовый документ.txt",
+            "mimeType": "text/plain",
+            "date": "2018-11-29T13:10:39.070Z",
+            "__typename": "File"
+          }
+        ],
+        "lastMessage": {
+          "from": {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          "text": "1234",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+      {
+        id: "5bfffd8f39bf3ef6d263131b",
+        parentId: "5bfbb898ac706b2510353da6",
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "Реал тайм в доске",
+        endDate: "2018-12-08T00:00:00+00:00",
+        status: 4,
+        unreadCount: 0,
+        assignedTo: {
+          id: "5bacd8f3018bf43e4e1f317f",
+          username: "menog",
+          "__typename": "UserTaskRole"
+        },
+        "users": [
+          {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd93c018bf42b9a1f3181",
+            username: "SET",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bb47ba6b6fbb85c888364c5",
+            username: "Kirill",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          },
+          {
+            id: "5bfd3986c3bfee178802cdc7",
+            username: "Алёнушко",
+            "__typename": "User"
+          }
+        ],
+        "files": [
+          {
+            id: "5bfffe178c5c347bcc812b87",
+            "size": "324447",
+            name: "Frontend Developer ( React ).pdf",
+            "mimeType": "application/pdf",
+            "date": "2018-11-29T14:56:23.474Z",
+            "__typename": "File"
+          }
+        ],
+        "lastMessage": {
+          "from": {
+            id: "5bacd09031038439c0bd33e3",
+            username: "ilnur",
+            "__typename": "User"
+          },
+          "text": "30",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+      {
+        id: "5c011f185347022478a8c895",
+        parentId: null,
+        objectId: "5bfbb802ac706bcf83353d8b",
+        name: "ssss",
+        endDate: "2018-12-11T00:00:00+00:00",
+        status: 4,
+        unreadCount: 0,
+        assignedTo: null,
+        "users": [
+          {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          {
+            id: "5bacd949018bf4b0da1f3182",
+            username: "Alex",
+            "__typename": "User"
+          },
+          {
+            id: "5bd86d46b1239fa30162de41",
+            username: "ux",
+            "__typename": "User"
+          }
+        ],
+        "files": [],
+        "lastMessage": {
+          "from": {
+            id: "5bacd8f3018bf43e4e1f317f",
+            username: "menog",
+            "__typename": "User"
+          },
+          "text": "11",
+          "__typename": "Message"
+        },
+        "__typename": "Task"
+      },
+    ],
+    assignedTo: null,
+    "users": [
+      {
+        id: "5bacd949018bf4b0da1f3182",
+        username: "Alex",
+        "__typename": "User"
+      }
+    ],
+    "files": [],
+    "lastMessage": null,
+    "__typename": "Task"
+  },
+  {
+    id: "5c0a6f70cc45c7159b5178c3",
+    parentId: "5bfbb898ac706b2510353da6",
+    objectId: "5bfbb802ac706bcf83353d8b",
+    name: "Задача 4",
+    endDate: "2018-12-05T00:00:00+00:00",
+    status: 4,
+    unreadCount: 0,
+    assignedTo: null,
+    "users": [
+      {
+        id: "5bacd949018bf4b0da1f3182",
+        username: "Alex",
+        "__typename": "User"
+      }
+    ],
+    "files": [],
+    "lastMessage": null,
+    "__typename": "Task"
+  },
+  {
+    id: "5c0a6f95cc45c718805178c8",
+    parentId: null,
+    objectId: "5bfbb802ac706bcf83353d8b",
+    name: "Задача 5",
+    endDate: "2018-11-08T00:00:00+00:00",
+    status: 4,
+    unreadCount: 0,
+    assignedTo: null,
+    "users": [
+      {
+        id: "5bacd949018bf4b0da1f3182",
+        username: "Alex",
+        "__typename": "User"
+      }
+    ],
+    "files": [],
+    "lastMessage": null,
+    "__typename": "Task"
+  }
+];
+
 
 class Board extends Component {
 
@@ -307,7 +1486,7 @@ class Board extends Component {
     if (this.state.status.length === 0)
       qauf(glossaryStatus(), _url, localStorage.getItem('auth-token')).then(a=>{
         this.setState({
-          status: ["",...a.data.glossary.taskStatuses],
+          status: [{id: 0, name: "Нет"},...a.data.glossary.taskStatuses],
         });
       })
         .catch((e)=>{
@@ -448,6 +1627,7 @@ class Board extends Component {
   }
 
 
+
   render(){
     const { objectId, status, taskId, toTask, showChilds, treeView } = this.state;
     const { setInfo } = this.props;
@@ -582,7 +1762,7 @@ class Board extends Component {
                         <div className="BoardTopCenter">
                           <h1>{data.object.name}</h1>
                           <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
-                          <ButtonRow icon="plus" iconright="1" click={this.toTreeView}>Дерево</ButtonRow>
+                          <ButtonRow iconright="1" click={this.toTreeView}>{treeView ? "Доска" : "Дерево" }</ButtonRow>
                         </div>
 
                       </div>
@@ -594,45 +1774,21 @@ class Board extends Component {
                             console.log("ObjectData.tasks", ObjectData.tasks)
                           }
 
-                          {
-                            // console.log("ObjectData.tasks.mapped", this.MaptoTree(ObjectData.tasks))
-                          }
-                          {
-                            this.MaptoTree(ObjectData.tasks)
-                          }
                           <div className="TreeViewName TopLevel">
                             {ObjectData.name}
                           </div>
-
-                          {_BARR.map((a, i, earr) => {
+                          {
+                            console.log(status)
+                          }
+                          {
+                            _BARR.map((a, i, earr) => {
                             return(
-                              <div className="TreeTask Parent">
-                                <div className="TreeName">
-                                
-                                <span>{a.name}</span>
-                                <span>{ moment(a.endDate).format('D MMMM, h:mm')}</span>
-                                <span>{a.status}</span>
-                                </div>
-                                <div className="TreeChildrens">
-                                  <ul className="TreeChildrens">
-                                      {
-                                        a.childs && a.childs.map((b)=>{
-                                            return(
-                                              <ul>
-                                                <li>
-                                                  {b.name}
-                                                </li>
-                                              </ul>
-                                            )
-                                          }
-                                        )
-                                      }
-                                  </ul>
-                                </div>
-                              </div>
+                              <ChildsMap obj={a} statuses={status ? status : null}/>
                             )
                           })
-                            
+                        }
+                        {
+                            // ObjectData.tasks ? <pre>{JSON.stringify(ObjectData.tasks, 0, 4)}</pre> : null
                         }
                         </ContentInner>
                       ) : (
