@@ -516,9 +516,6 @@ class Board extends Component {
             if(data && data.object){
               ObjectData = data.object;
               let selectedChilds = false;
-              let objData = data.object;
-
-              console.log("objData",objData)
 
               if (this.state.curParentId && this.state.showChilds)
               {
@@ -539,6 +536,24 @@ class Board extends Component {
                   cols[result.status].push(result);
                 }
               });
+
+              let tasks = data.object.tasks.map(a => ({...a}));
+
+              for (let i = 0; i < tasks.length; i ++) {
+                tasks[i].children = [];
+
+                for (let j = 0; j < tasks.length; j ++) {
+                  if (i !== j) {
+                    if (tasks[i].id == tasks[j].parentId) {
+                      tasks[i].children.push(tasks[j]);
+                    }
+                  }
+                }
+              }
+
+              tasks = tasks.filter(t => !t.parentId);
+
+              console.warn(tasks);
 
               return(
                 <Fragment>
