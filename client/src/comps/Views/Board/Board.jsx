@@ -29,50 +29,68 @@ import TaskView from '../TaskView/TaskView';
 import moment from 'moment';
 
 
-const ChildsMap = ({obj, statuses})=>{
-  let childs = '';
+class ChildsMap extends Component {
 
-  if (obj && obj.childs) {
-    childs = ' Parent'
-  }
-
-  let statusName = (st, statuses)=>{
-
-    console.log(st);
-    console.log(statuses);
-    
-    let stName = statuses.find(e => { if (e.id == st) return e.name });
-
-    console.log(stName.name)
-    return stName.name;
-  }
-
-
-  if (obj) {
-    let stName = '';
-    if (obj.status && statuses){
-      stName = statusName(obj.status, statuses);
+    constructor(props) {
+      super(props);
+      this.state = {
+        showTree: false,
+      };
     }
-    
-    return (
-      <div className={`TreeTask${childs}`}>
-        <div className="TreeName">
-          <span className="name">{ obj.name ? obj.name : "Без названия"}</span>
-          {obj.endDate ? <span className="endDate">{moment(obj.endDate).format('D MMMM, h:mm')}</span> : null } 
-          <span className="status">{obj.status ? stName : "Новая"}</span>
+
+render(){
+  const { obj, statuses} = this.props;
+  const { showTree } = this.state;
+
+    let childs = '';
+
+    if (obj && obj.childs) {
+      childs = ' Parent'
+    }
+
+    let statusName = (st, statuses)=>{
+
+      console.log(st);
+      console.log(statuses);
+      
+      let stName = statuses.find(e => { if (e.id == st) return e.name });
+
+      console.log(stName.name)
+      return stName.name;
+    }
+
+
+    if (obj) {
+      let stName = '';
+      if (obj.status && statuses){
+        stName = statusName(obj.status, statuses);
+      }
+      
+      return (
+        <div className={`TreeTask${childs}`}>
+          {
+            childs && showTree ? <div className="border"> </div> : null
+          }
+          {
+            childs ? !showTree ? <div className="TreePlus" onClick={() => { this.setState({ showTree: true }) }}>+</div> : <div className="TreeMinus" onClick={() => { this.setState({ showTree: false }) }}>-</div> : null
+          }
+          <div className="TreeName">
+            <span className="name">{ obj.name ? obj.name : "Без названия"}</span>
+            {obj.endDate ? <span className="endDate">{moment(obj.endDate).format('D MMMM, h:mm')}</span> : null } 
+            <span className="status">{obj.status ? stName : "Новая"}</span>
+          </div>
+          {obj.assignedTo && obj.assignedTo.id && obj.assignedTo.username ? <div className="holder">
+            <UserRow id={obj.assignedTo.id} name={obj.assignedTo.username} icon="1" />
+          </div> : null}
+
+          {
+            childs && showTree ? (<div className="TreeChilds">{obj.childs.map(e => { return (<ChildsMap statuses={statuses} key={e.id} obj={e} />)})} </div> ): null
+          }
+
         </div>
-        {obj.assignedTo && obj.assignedTo.id && obj.assignedTo.username ? <div className="holder">
-          <UserRow id={obj.assignedTo.id} name={obj.assignedTo.username} icon="1" />
-        </div> : null}
-
-        {
-          childs ? (<div className="TreeChilds">{obj.childs.map(e => { return (<ChildsMap statuses={statuses} key={e.id} obj={e} />)})} </div> ): null
-        }
-
-      </div>
-    )
+      )
+    }
   }
-
 }
 
 
