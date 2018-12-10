@@ -61,11 +61,38 @@ class ChildsMap extends Component {
     }
 
 
+
     if (obj) {
       let stName = '';
+      let highlight = '';
 
       if (obj.status && statuses){
         stName = statusName(obj.status, statuses);
+      }
+
+      if (obj.endDate) {
+        let ym = moment(obj.endDate).format("YYYY MM");
+        let y = moment(obj.endDate).format("YYYY");
+        let m = moment(obj.endDate).format("MM");
+        let d = moment(obj.endDate).format("DD");
+        let h = moment(obj.endDate).format("HH");
+
+        let ymN = moment().format("YYYY MM");
+        let yN = moment().format("YYYY");
+        let mN = moment().format("MM");
+        let dN = moment().format("DD");
+        let hN = moment().format("HH");
+
+
+        if ((ym === ymN && d < dN) || (yN > y) || (mN > m && y <= yN) && obj.status != '5') {
+          highlight = " redd"
+          // statusShit = 'истекла:'
+        }
+        else if ((ym === ymN && d > dN && d - dN <= 3) && obj.status != '5') {
+          highlight = " yeld"
+        } else {
+          // highlight = ''
+        }
       }
       
       return (
@@ -75,8 +102,8 @@ class ChildsMap extends Component {
           }
           <div className="TreeName">
             <span className="name">{ obj.name ? obj.name : "Без названия"}</span>
-            {obj.endDate ? <span className="endDate">{moment(obj.endDate).format('D MMMM, h:mm')}</span> : null } 
-            <span className="status">{obj.status ? stName : "Новая"}</span>
+            {obj.endDate ? <span className={`endDate${highlight}`}>{moment(obj.endDate).format('D MMMM, h:mm')}</span> : null } 
+            <span className={`status ${obj.status ? "sts" + obj.status : "sts0"}`}>{obj.status ? stName : "Новая"}</span>
           </div>
           {obj.assignedTo && obj.assignedTo.id && obj.assignedTo.username ? <div className="holder">
             <UserRow id={obj.assignedTo.id} name={obj.assignedTo.username} icon="1" />

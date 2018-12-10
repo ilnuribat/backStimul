@@ -62,10 +62,11 @@ ul.TreeUl, ul.TreeUl ul{
   font-size: 20px;
 }
 .TreeName .endDate{
+  display: inline-block;
   font-size: 11px;
-  padding: 5px;
+  padding: 2px 5px;
   background-color: #3d4147;
-  border-radius: 5px;
+  border-radius: 3px;
 }
 .TreeName .status{
   font-size: 12px;
@@ -77,13 +78,13 @@ ul.TreeUl, ul.TreeUl ul{
 .TreeName .endDate.blu{
   background-color: #3e75b2;
 }
-.TreeName .endDate.yel{
+.TreeName .endDate.grd{
   background-color: #d2903c;
 }
-.TreeName .endDate.yel{
+.TreeName .endDate.yeld{
   background-color: #d2903c;
 }
-.TreeName .endDate.red{
+.TreeName .endDate.redd{
   background-color: #c45c5c;
 }
 .TreeName .status::before{
@@ -95,11 +96,26 @@ ul.TreeUl, ul.TreeUl ul{
   margin-right:5px;
   background-color: #3e75b2;
 }
-.TreeName .status.red::before{
+
+.TreeName .status.sts1::before,
+.TreeName .status.sts0::before
+{
+  background-color: #3e75b2;
+}
+.TreeName .status.red::before,
+.TreeName .status.sts4::before
+{
   background-color: #c45c89;
 }
-.TreeName .status.green::before{
+.TreeName .status.green::before,
+.TreeName .status.sts3::before
+{
   background-color: #459e64;
+}
+.TreeName .status.wht::before,
+.TreeName .status.sts5::before
+{
+  background-color: #fff;
 }
 
 .TreeName span{
