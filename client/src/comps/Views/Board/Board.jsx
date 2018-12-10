@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { graphql, compose, Query } from "react-apollo";
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 // import { Redirect } from 'react-router';
@@ -26,21 +27,20 @@ import ContentInner from '../../Lays/ContentInner/ContentInner';
 import ChatView from '../ChatView/ChatView';
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 import TaskView from '../TaskView/TaskView';
-import moment from 'moment';
 
 
 class ChildsMap extends Component {
 
-    constructor(props) {
-      super(props);
-      this.state = {
-        showTree: false,
-      };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      showTree: false,
+    };
+  }
 
-render(){
-  const { obj, statuses} = this.props;
-  const { showTree } = this.state;
+  render(){
+    const { obj, statuses} = this.props;
+    const { showTree } = this.state;
 
     let childs = '';
 
@@ -56,12 +56,14 @@ render(){
       let stName = statuses.find(e => { if (e.id == st) return e.name });
 
       console.log(stName.name)
+
       return stName.name;
     }
 
 
     if (obj) {
       let stName = '';
+
       if (obj.status && statuses){
         stName = statusName(obj.status, statuses);
       }
@@ -463,25 +465,27 @@ class Board extends Component {
   MaptoTree(array) {
 
     let _ARR = [...array],
-    _Edited = [];
+      _Edited = [];
 
     let tree = (data, root) => {
       var r;
-      data.forEach(function (a) {
-          this[a.id] = { id: a.id, text: a.name, children: this[a.id] && this[a.id].children };
-          if (a.parentId === root) {
-              r = this[a.id];
-          } else {
-              this[a.parentId] = this[a.parentId] || {};
-              this[a.parentId].children = this[a.parentId].children || [];
-              this[a.parentId].children.push(this[a.id]);
-          }
-      }, Object.create(null));
-      return r;
-  };
-  let _A = tree(array, 0);
 
-  return _A;
+      data.forEach(function (a) {
+        this[a.id] = { id: a.id, text: a.name, children: this[a.id] && this[a.id].children };
+        if (a.parentId === root) {
+          r = this[a.id];
+        } else {
+          this[a.parentId] = this[a.parentId] || {};
+          this[a.parentId].children = this[a.parentId].children || [];
+          this[a.parentId].children.push(this[a.id]);
+        }
+      }, Object.create(null));
+
+      return r;
+    };
+    let _A = tree(array, 0);
+
+    return _A;
 
   }
 
@@ -594,11 +598,12 @@ class Board extends Component {
                             //   taskId: ''
                             // }, ()=>{
                               localStorage.setItem('taskId', '');
+
                               return < div className="errorMessage" > Выберите или создайте задачу </div>
-                            // })
+                              // })
                               
-                         } 
-                       }}
+                            } 
+                          }}
                         </Query>
                       </InnerBar> : null }
                     <ContentInner view="Board-Content-Wrap">
@@ -635,42 +640,42 @@ class Board extends Component {
                           }
                           {
                             ObjectData.tasks.map((a, i, earr) => {
-                            return(
-                              <ChildsMap obj={a} statuses={status ? status : null}/>
-                            )
-                          })
-                        }
-                        {
+                              return(
+                                <ChildsMap obj={a} statuses={status ? status : null}/>
+                              )
+                            })
+                          }
+                          {
                             // ObjectData.tasks ? <pre>{JSON.stringify(ObjectData.tasks, 0, 4)}</pre> : null
-                        }
+                          }
                         </ContentInner>
                       ) : (
-                          <ContentInner view="Board-Content">
-                        {
-                          status && status.map((e,i)=>{
-                            if( i === 0 ){
-                              return (true)
-                    }
+                        <ContentInner view="Board-Content">
+                          {
+                            status && status.map((e,i)=>{
+                              if( i === 0 ){
+                                return (true)
+                              }
 
-                    return(
-                      <Column key={e.id} id={e.id} status={e.name} name={e.name} >
-                        {e.id == 1 ? <ButtonRow icon="plus" view="MiniBox" iconright="1" click={this.changeModal}></ButtonRow> : null}
-                        {
-                          cols[e.id].map((task) => {
-                            if (this.state.curParentId === task.id) {
-                              selectedChilds = showChilds;
-                            } else { selectedChilds = false; }
+                              return(
+                                <Column key={e.id} id={e.id} status={e.name} name={e.name} >
+                                  {e.id == 1 ? <ButtonRow icon="plus" view="MiniBox" iconright="1" click={this.changeModal}></ButtonRow> : null}
+                                  {
+                                    cols[e.id].map((task) => {
+                                      if (this.state.curParentId === task.id) {
+                                        selectedChilds = showChilds;
+                                      } else { selectedChilds = false; }
 
-                            return (
-                              <Task showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal} />
-                            )
-                          })
-                        }
-                      </Column>
-                      )
-                    })
-                  }
-                      </ContentInner>
+                                      return (
+                                        <Task showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal} />
+                                      )
+                                    })
+                                  }
+                                </Column>
+                              )
+                            })
+                          }
+                        </ContentInner>
                       ) }
 
                     </ContentInner>
