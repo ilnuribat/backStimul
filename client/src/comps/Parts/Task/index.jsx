@@ -53,7 +53,7 @@ class Task extends Component {
       else if((ym === ymN && d > dN && d - dN <= 3 ) && status != '5'){
         highlight = " YlBg"
       }else{
-        highlight = ''
+        highlight = 'gr'
       }
     }
 

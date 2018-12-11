@@ -72,3 +72,6 @@
 .Tile svg:hover{
   opacity: 1;
 }
+.Tile.Object{
+  background: #314764;
+}

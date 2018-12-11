@@ -400,7 +400,7 @@ export class Search extends Component {
                               Личный чат
                             </div>
                           ) : <div className="small cgr">
-                            Чат задачи {e.objectId} {e.groupId}
+                            Чат задачи
                           </div> }
                         </UserRow>
                       ) : (
