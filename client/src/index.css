@@ -406,10 +406,10 @@ h1{
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(53, 134, 255, 0.548);
+  background: rgba(6, 37, 71, 0.795);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(85, 85, 85, 0.418); 
+  background: rgba(14, 52, 110, 0.699); 
 }
