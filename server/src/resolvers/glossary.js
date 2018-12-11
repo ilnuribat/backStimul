@@ -18,7 +18,7 @@ module.exports = {
       if (foundGroup.type === 'TASK') {
         return 'Task';
       }
-      if (foundGroup.type === 'TASK') {
+      if (foundGroup.type === 'OBJECTS') {
         return 'Object';
       }
 
