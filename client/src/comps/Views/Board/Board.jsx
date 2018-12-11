@@ -284,6 +284,7 @@ class Board extends Component {
     let Mount = false;
 
     if(location.state && location.state.objectId && location.state.objectId !== objectId){
+      console.warn("REMOUNT ID!!")
       Mount = true;
       id = location.state.objectId
       // localStorage.setItem('objectId', id)
@@ -311,9 +312,9 @@ class Board extends Component {
     // }
 
 
-    if(id && Mount){
+    if((id || tid) && Mount){
       this.setState({
-        objectId: id,
+        objectId: id ? id : this.state.objectId,
         toTask: tid ? true : false,
         taskId: tid ? tid : "",
       });
