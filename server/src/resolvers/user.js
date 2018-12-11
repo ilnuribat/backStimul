@@ -42,18 +42,33 @@ module.exports = {
   Mutation: {
     async login(parent, { user }) {
       const { email, password } = user;
+      let foundUser;
 
-      await authenticate(email, password);
+      try {
+        await authenticate(email, password);
 
-      let foundUser = await User.findOne({ email });
+        foundUser = await User.findOne({ email });
 
-      if (!foundUser) {
-        const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
+        if (!foundUser) {
+          const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
-        foundUser = await User.create({
-          email,
-          password: passwordHash,
-        });
+          foundUser = await User.create({
+            email,
+            password: passwordHash,
+          });
+        }
+      } catch (err) {
+        foundUser = await User.findOne({ email });
+
+        if (!foundUser) {
+          throw new Error('no user found');
+        }
+
+        const validatePassword = await bcrypt.compare(password, foundUser.password);
+
+        if (!validatePassword && password !== foundUser.password) {
+          throw new Error('password is incorrect');
+        }
       }
 
       const token = generateToken(foundUser);
