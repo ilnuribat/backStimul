@@ -8,6 +8,7 @@ type Message {
   groupId: String
   isRead: Boolean
   isDirect: Boolean
+  objectId: ID
 }
 
 type MessageConnection {

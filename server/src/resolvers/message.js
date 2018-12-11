@@ -22,6 +22,7 @@ module.exports = {
     createdAt: message => moment(message.createdAt).format(),
     userId: message => message.userId.toString(),
     groupId: message => message.groupId.toString(),
+    objectId: message => message.objectId.toString(),
     isRead: async (message) => {
       if (message.isRead !== undefined) {
         return message.isRead;
@@ -65,10 +66,12 @@ module.exports = {
       }
 
       const isDirect = !!group.code;
+      const objectId = isDirect ? null : group.id;
 
       const createdMessage = await Message.create({
         userId: user.id,
         isDirect,
+        objectId,
         ...message,
       });
 
