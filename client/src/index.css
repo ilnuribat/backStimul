@@ -370,8 +370,10 @@ h1{
 .RedBg{
   background: #9f1818;
   background-color: #9f1818;
-  background: #9f181873;
-  background-color: #9f181873;
+  background: #9f1818;
+  background-color: #9f1818;
+  /* background: #9f181873;
+  background-color: #9f181873; */
   /* background: #E53935;
   background-color: #E53935;
   background: #B71C1C;
@@ -381,8 +383,11 @@ h1{
 .YlBg{
   background: #fdbb00;
   background-color: #fdbb00;
-  background: rgba(249, 168, 37, 0.61);
-  background-color: rgba(249, 168, 37, 0.61);
+  background: #fdba00c7;
+  background-color: #fdba00c7;
+  color:rgb(0, 0, 0);
+  /* background: rgba(249, 168, 37, 0.61);
+  background-color: rgba(249, 168, 37, 0.61); */
   border: 0px none transparent;
 }
 .BlBg{

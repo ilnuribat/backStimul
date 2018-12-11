@@ -80,6 +80,11 @@
   /* text-overflow: ellipsis; */
   /* height: 12px; */
 }
+.Task .endDate .endDateHL{
+  padding:3px 5px;
+  display: inline-block;
+  border-radius: 3px;
+}
 .Task .endDate{
   opacity: 0.7;
   font-size: 11px;
@@ -125,18 +130,21 @@
 }
 
 .Task.Sel{
-  width:95%;
+  /* width:95%; */
   /* background: #396aa3;
   border: solid 1px #396aa3;
   color:#fff; */
-  border:0px none transparent;
-  box-shadow: 0 0 8px 2px #0084ff;
+  /* border:0px none transparent; */
+  /* box-shadow: 0 0 8px 2px #0084ff; */
 }
 
 .Task.Sel{
    /* background: #4949493a; */
    /* border:1px solid #346296; */
    /* box-shadow: 0 0 8px 0px #00f7ff; */
+}
+.Task.Sel{
+
 }
 .Task.Child{
    background: #304d6d;

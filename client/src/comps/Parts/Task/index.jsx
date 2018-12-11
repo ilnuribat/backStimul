@@ -58,7 +58,7 @@ class Task extends Component {
     }
 
     return(
-      <div className={`Task${sel}${oth}${highlight}`} >
+      <div className={`Task${sel}${oth}`} >
         <div style={{"display":"none"}}>
           {
             id
@@ -71,9 +71,11 @@ class Task extends Component {
         </div>
         {
           endDate ? (
-            <div className="endDate">
-              <span className="Pad">{statusShit}</span> 
-              { moment(endDate).format('D MMMM, h:mm')}
+            <div className={`endDate`}>
+              <span className={`endDateHL ${highlight}`}>
+                  <span className="Pad">{statusShit}</span>
+                  {moment(endDate).format('D MMMM, h:mm')}
+              </span>
             </div>
           ): null
         }
