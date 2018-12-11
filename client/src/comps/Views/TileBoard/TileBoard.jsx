@@ -13,6 +13,7 @@ import { setPlaceName, getPlaceName, getChat, setChat } from '../../../GraphQL/C
 import { qauf, _url } from '../../../constants';
 import { deleteObject } from '../../../GraphQL/Qur/Mutation';
 import { ButtonTo, ButtonRow } from '../../Parts/Rows/Rows';
+import Svg from '../../Parts/SVG';
 
 let ref;
 
@@ -140,21 +141,31 @@ class TileBoard extends Component {
                 }
                 if (loading) return <Loading />;
 
-                if(data){
+                if (data && data.rootObject){
                   return(
                     <Fragment>
                       <div className="TileBoardTop">
                         {
-                          data.rootObject && data.rootObject.parentId || rootid ? (
+                          data.rootObject.parentId || rootid ? (
                             <ButtonTo click={this.query} id={data.rootObject.parentId || parentid}  type="AddressObject" icon="back">Назад</ButtonTo>
                           ) : null
                         }
                         <div className="TileBoardTopCenter">
+                          <span className="crumbs">
+                          {data.rootObject && data.rootObject.crumbs && data.rootObject.crumbs.map(
+                            (e, i, arr)=>{
+                              let parent = arr[i - 1];
+                                return(
+                                  <span className="crumbWrap" onClick={() => { this.query({ id: e.id, type: "AddressObject", name: e.name, parentId: parent ? parent.id : '' })}}><span className="crumb" key={e.id}>{e.name}</span><Svg view="InlBl" svg="toright" size="28" /></span>  
+                                )
+                              }
+                          ) }
                           {
                             data.rootObject && data.rootObject.name ? (
-                              <h1>{data.rootObject.name }</h1>
-                            ) : (<h1>Россия</h1>)
+                                <span>{data.rootObject.name}</span>
+                              ) : (<span>Россия</span>)
                           }
+                          </span>
                           <TileMaker>
                             <ButtonRow icon="plus" iconright="" click={this.state.SOMECLICKFUNCTION}>Создать Объект</ButtonRow>
                           </TileMaker>

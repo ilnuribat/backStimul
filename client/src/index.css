@@ -182,6 +182,7 @@ svg{
 @import './newcss/search.css';
 @import './newcss/privates.css';
 @import './newcss/treeview.css';
+@import './newcss/crumbs.css';
 
 .Button {
     width: 140px;
@@ -264,7 +265,7 @@ button{
 {
   opacity: 0.5;
 }
-Mar5{
+.Mar5{
   margin:5 auto;
 }
 .NoBg{
