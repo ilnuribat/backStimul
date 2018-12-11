@@ -68,7 +68,7 @@ module.exports = {
       }
 
       const isDirect = !!group.code;
-      const objectId = isDirect ? null : group.id;
+      const objectId = isDirect ? null : group.objectId;
 
       const createdMessage = await Message.create({
         userId: user.id,
