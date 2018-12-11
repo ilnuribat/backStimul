@@ -64,7 +64,7 @@ async function setObjectId() {
       groupId: g._id,
     }, {
       $set: {
-        objectId: g._id,
+        objectId: g.objectId,
       },
     });
   }));
