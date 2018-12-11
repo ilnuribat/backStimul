@@ -45,7 +45,7 @@ export default class MessagesList extends Component {
 
   handleScroll(event) {
 
-    if (event.target.scrollTop == 0){
+    if (event.target.scrollTop == 0 && this.props.data.messages.edges[0]){
       const a = document.getElementById("messageList");
       const oldHeight = a.scrollHeight
 
