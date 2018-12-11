@@ -13,6 +13,7 @@ const { logger } = require('./logger');
 const typeDefs = require('./src/schema');
 const resolvers = require('./src/resolvers');
 const { download } = require('./src/services/files');
+const { ERROR_CODES } = require('./src/services/constants');
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -37,7 +38,7 @@ const apolloServer = new ApolloServer({
     } catch (err) {
       logger.debug('invalid jwt');
 
-      throw new Error('invalid token');
+      throw new Error(ERROR_CODES.INVALID_TOKEN);
     }
 
     const { id } = jwtBody;
@@ -102,7 +103,7 @@ async function subscriptionConnectHandler(connectionParams) {
   const user = await User.findById(res.id);
 
   if (!user) {
-    throw new Error('no user found');
+    throw new Error(ERROR_CODES.NO_USER_FOUND);
   }
 
   return { user };
