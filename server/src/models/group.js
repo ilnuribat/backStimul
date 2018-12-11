@@ -56,11 +56,16 @@ schema.static('getGroupedLevel', async function (level = 0, parentId = null) {
       name: {
         $first: '$chain.name',
       },
+      type: {
+        $first: '$chain.type',
+      },
     },
   }, {
     $project: {
       id: '$_id',
-      name: 1,
+      name: {
+        $concat: ['$type', '. ', '$name'],
+      },
     },
   }]);
 
