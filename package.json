@@ -28,6 +28,7 @@
     "eslint-plugin-import": "2.14.0"
   },
   "dependencies": {
+    "activedirectory": "^0.7.2",
     "apollo-server": "2.2.5",
     "apollo-server-express": "2.2.5",
     "apollo-upload-server": "7.1.0",

@@ -14,6 +14,8 @@ const {
   PG_FIAS = 'postgresql://guov:guov@185.168.187.103/fias',
 } = process.env;
 
+const BCRYPT_ROUNDS = process.env.NODE_ENV === 'production' ? 12 : 1;
+
 module.exports = {
   HTTP_PORT,
   JWT_SECRET,
@@ -26,4 +28,5 @@ module.exports = {
   DADATA_API,
   DADATA_SECRET,
   PG_FIAS,
+  BCRYPT_ROUNDS,
 };
