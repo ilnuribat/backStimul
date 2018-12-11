@@ -3,7 +3,7 @@ import 'animate.css';
 import { Query, graphql, compose  } from "react-apollo";
 import PropTypes from 'prop-types';
 import ChatView from '../ChatView/ChatView';
-import { getChat, setChat, setPlaceName, getPlaceName, gBar } from '../../../GraphQL/Cache';
+import { getChat, setChat, setPlaceName, getPlaceName } from '../../../GraphQL/Cache';
 import { PRIV_QUERY, TASK_MESSAGES } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar';
@@ -63,7 +63,7 @@ class Private extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { location, gBar } = this.props
+    const { location } = this.props
     const { chatId } = this.state
 
     // console.warn("didupdate", chatId, prevProps, prevState)
@@ -204,7 +204,6 @@ Private.propTypes = {
 
 
 export default compose(
-  graphql(gBar, { name: 'gBar' }),
   graphql(getChat, { name: 'getchat' }),
   graphql(setChat, { name: 'setChat' }),
   graphql(setPlaceName, { name: 'setPlaceName' }),

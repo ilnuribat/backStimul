@@ -275,8 +275,8 @@ class Board extends Component {
     }
   }
 
-  componentDidUpdate() {
-    console.warn("REMOUNT!!")
+  componentDidUpdate(prevProps, prevState) {
+    // console.warn("REMOUNT!!")
     const { location } = this.props;
     const { objectId, taskId } = this.state;
     let id = "";
@@ -284,15 +284,22 @@ class Board extends Component {
     let Mount = false;
 
     if(location.state && location.state.objectId && location.state.objectId !== objectId){
-      console.warn("REMOUNT ID!!")
+      // console.warn("REMOUNT OBJECT ID!!")
       Mount = true;
       id = location.state.objectId
       // localStorage.setItem('objectId', id)
     }
-    if(location.state && location.state.id && location.state.id !== taskId){
+    // if(location.state && location.state.id && location.state.id !== taskId){
+    //   Mount = true;
+    //   tid = location.state.id
+    //   // localStorage.setItem('taskId', tid)
+    // }
+
+    if (location && location.state && prevProps.location && prevProps.location.state
+      && prevProps.location.state.id && taskId !== location.state.id && taskId === prevState.taskId){
+        // console.warn("REMOUNT TASK ID!!")
       Mount = true;
       tid = location.state.id
-      // localStorage.setItem('taskId', tid)
     }
 
     // if(!location.state || !location.state.objectId){
@@ -662,23 +669,23 @@ class Board extends Component {
                           }
 
                           <div className="inner">
-                          <div className="TreeViewName TopLevel">
-                            {ObjectData.name}
-                          </div>
-                          <div className="border"></div>
-                          {
-                            console.log(status)
-                          }
-                          {
-                            tasks.map((a, i, earr) => {
-                              return(
-                                <ChildsMap open={this.toTask} obj={a} statuses={status ? status : null}/>
-                              )
-                            })
-                          }
-                          {
+                            <div className="TreeViewName TopLevel">
+                              {ObjectData.name}
+                            </div>
+                            <div className="border"></div>
+                            {
+                              console.log(status)
+                            }
+                            {
+                              tasks.map((a, i, earr) => {
+                                return(
+                                  <ChildsMap open={this.toTask} obj={a} statuses={status ? status : null}/>
+                                )
+                              })
+                            }
+                            {
                             // ObjectData.tasks ? <pre>{JSON.stringify(ObjectData.tasks, 0, 4)}</pre> : null
-                          }
+                            }
                           </div>
                         </ContentInner>
                       ) : (
