@@ -417,6 +417,7 @@ query rootObject($id: ID){
     }
 }
 `;
+
 export const glossaryStatus = () => `
   {
     glossary{
@@ -427,8 +428,6 @@ export const glossaryStatus = () => `
     }
 }
 `;
-
-
 
 export const messRead = gql `{
   id
