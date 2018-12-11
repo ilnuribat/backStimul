@@ -153,7 +153,7 @@ export class Search extends Component {
     let Msg = `messages{
       id
       text
-      isDirect
+      objectId
       groupId
       from{
         username
@@ -280,7 +280,7 @@ export class Search extends Component {
                       to={{
                         pathname: "/board",
                         state: {
-                          taskId: e.id,
+                          id: e.id,
                           objectId: e.objectId
                         }
                       }}
@@ -379,10 +379,10 @@ export class Search extends Component {
                     <Link
                       key={e.id}
                       to={{
-                        pathname: e.isDirect ? "/chat" : "/board",
+                        pathname: !e.objectId ? "/chat" : "/board",
                         state: {
                           id: e.groupId,
-                          objectId: e.objectId || ""
+                          objectId: e.objectId || "",
                         }
                       }}
                     >
@@ -394,11 +394,13 @@ export class Search extends Component {
                           name={e.from.username}
                           key={e.from.id}
                         >
-                          {e.isDirect ? (
+                          {!e.objectId ? (
                             <div className="small cgr">
                               Личный чат
                             </div>
-                          ) : null}
+                          ) : <div className="small cgr">
+                            Чат задачи {e.objectId} {e.groupId}
+                          </div> }
                         </UserRow>
                       ) : (
                         ""

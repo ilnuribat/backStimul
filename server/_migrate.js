@@ -48,4 +48,29 @@ async function updateLastCursor() {
   process.exit(0);
 }
 
-updateLastCursor();
+async function setObjectId() {
+  await connectDB();
+  const groups = await models.Group.find({
+    // code: {
+    //   $ne: null,
+    // },
+    // _id: '5c0508b1467da12e5fb19e06',
+    type: 'TASK',
+  }).lean();
+
+  console.log(groups);
+  const res = await Promise.all(groups.map((g) => {
+    return models.Message.updateMany({
+      groupId: g._id,
+    }, {
+      $set: {
+        objectId: g.objectId,
+      },
+    });
+  }));
+
+  console.log(res);
+}
+
+// updateLastCursor();
+setObjectId();

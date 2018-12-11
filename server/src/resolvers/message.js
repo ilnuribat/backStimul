@@ -3,7 +3,9 @@ const moment = require('moment');
 const {
   Message, User, Group, UserGroup,
 } = require('../models');
-const { MESSAGE_READ, pubsub, MESSAGE_ADDED } = require('../services/constants');
+const {
+  MESSAGE_READ, pubsub, MESSAGE_ADDED, ERROR_CODES,
+} = require('../services/constants');
 
 
 module.exports = {
@@ -22,6 +24,7 @@ module.exports = {
     createdAt: message => moment(message.createdAt).format(),
     userId: message => message.userId.toString(),
     groupId: message => message.groupId.toString(),
+    objectId: message => message.objectId && message.objectId.toString(),
     isRead: async (message) => {
       if (message.isRead !== undefined) {
         return message.isRead;
@@ -65,10 +68,12 @@ module.exports = {
       }
 
       const isDirect = !!group.code;
+      const objectId = isDirect ? null : group.objectId;
 
       const createdMessage = await Message.create({
         userId: user.id,
         isDirect,
+        objectId,
         ...message,
       });
 
@@ -95,7 +100,7 @@ module.exports = {
     },
     async messageRead(parent, { id }, { user }) {
       if (!user) {
-        throw new Error('not authenticated');
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
       const message = await Message.findById(id);
 

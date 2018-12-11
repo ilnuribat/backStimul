@@ -1,5 +1,6 @@
 const { TASK_STATUSES } = require('../services/constants');
 const { Group } = require('../models');
+const { ERROR_CODES } = require('../services/constants');
 
 module.exports = {
   Glossary: {
@@ -9,7 +10,7 @@ module.exports = {
 
 
       if (!foundGroup) {
-        throw new Error('not found any resource with such id');
+        throw new Error(ERROR_CODES.NOT_FOUND);
       }
 
       if (foundGroup.code) {
@@ -18,7 +19,7 @@ module.exports = {
       if (foundGroup.type === 'TASK') {
         return 'Task';
       }
-      if (foundGroup.type === 'TASK') {
+      if (foundGroup.type === 'OBJECT') {
         return 'Object';
       }
 

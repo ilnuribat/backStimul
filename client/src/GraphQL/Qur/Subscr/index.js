@@ -38,7 +38,7 @@ export const ALL_MESSAGE_CREATED = gql`
           userId
           groupId
           isRead
-          isDirect
+          objectId
       }
   }
 `;

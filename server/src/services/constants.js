@@ -29,6 +29,14 @@ const TASK_STATUSES = [{
   name: 'Завершенное',
 }];
 
+const ERROR_CODES = {
+  NOT_AUTHENTICATED: 'NOT_AUTHENTICATED',
+  INVALID_TOKEN: 'INVALID_TOKEN',
+  NO_USER_FOUND: 'NO_USER_FOUND',
+  NOT_FOUND: 'NOT_FOUND',
+  FORBIDDEN: 'FORBIDDEN',
+};
+
 module.exports = {
   pubsub,
   MESSAGE_ADDED,
@@ -40,4 +48,5 @@ module.exports = {
   TASK_STATUSES,
   KICKED,
   INVITED,
+  ERROR_CODES,
 };

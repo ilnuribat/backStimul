@@ -10,6 +10,7 @@ const schema = new Schema({
   },
   createdAt_: Date,
   isDirect: Boolean,
+  objectId: Schema.Types.ObjectId,
 });
 
 module.exports = schema;

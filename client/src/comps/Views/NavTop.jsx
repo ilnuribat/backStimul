@@ -100,7 +100,7 @@ class NavTop extends Component {
                 mutation: chatListCacheUpdate,
                 variables:{
                   value: data.data.messageAdded,
-                  queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
+                  queryName: !data.data.messageAdded.objectId ? "directs" : "tasks",
                   counter: true,
                 }
               })
@@ -114,7 +114,7 @@ class NavTop extends Component {
                     mutation: chatListCacheUpdate,
                     variables:{
                       value: data.data.messageAdded,
-                      queryName: data.data.messageAdded.isDirect ? "directs" : "tasks",
+                      queryName: !data.data.messageAdded.objectId ? "directs" : "tasks",
                     }
                   }).then(() => client.query({ query: getCUser }).then(result => console.warn(result)))
                 })
@@ -132,11 +132,11 @@ class NavTop extends Component {
             mutation: messagesCacheUpdate,
             variables: {
               lastMessage: data.data.messageAdded,
-              queryName: data.data.messageAdded.isDirect ? "direct" : "task",
+              queryName: !data.data.messageAdded.objectId ? "direct" : "task",
             }
           })
           //Пишем lastmessage в кеш таска
-          if (!data.data.messageAdded.isDirect)
+          if (data.data.messageAdded.objectId)
             client.query({ query: TASK_INFO_SMALL, variables: {id: data.data.messageAdded.groupId} })
               .then(result =>
                 client.mutate({

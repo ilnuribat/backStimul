@@ -2,6 +2,7 @@ const { Group, Message, User } = require('../models');
 const { getDirectChats } = require('../services/chat');
 const groupService = require('../services/group');
 const { directMessage } = require('../services/chat');
+const { ERROR_CODES } = require('../services/constants');
 
 
 module.exports = {
@@ -26,17 +27,23 @@ module.exports = {
   Query: {
     directs: async (parent, args, { user }) => {
       if (!user) {
-        throw new Error('not authorized');
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
 
       return getDirectChats(user);
     },
-    direct: async (parent, { id }) => Group.findOne({
-      _id: id,
-      code: {
-        $exists: true,
-      },
-    }),
+    direct: async (parent, { id }, { user }) => {
+      if (!user) {
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
+      }
+
+      return Group.findOne({
+        _id: id,
+        code: {
+          $exists: true,
+        },
+      });
+    },
   },
   Mutation: {
     directMessage,

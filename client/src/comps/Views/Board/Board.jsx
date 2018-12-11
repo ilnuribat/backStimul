@@ -52,7 +52,7 @@ class ChildsMap extends Component {
 
       console.log(st);
       console.log(statuses);
-      
+
       let stName = statuses.find(e => { if (e.id == st) return e.name });
 
       console.log(stName.name)
@@ -94,7 +94,7 @@ class ChildsMap extends Component {
           // highlight = ''
         }
       }
-      
+
       return (
         <div className={`TreeTask${childs}`}>
           {
@@ -102,7 +102,7 @@ class ChildsMap extends Component {
           }
           <div className="TreeName" onClick={() => { open && typeof open === 'function' ? open(obj.id,obj.name) : null }}>
             <span className="name">{ obj.name ? obj.name : "Без названия"}</span>
-            {obj.endDate ? <span className={`endDate${highlight}`}>{moment(obj.endDate).format('D MMMM, h:mm')}</span> : null } 
+            {obj.endDate ? <span className={`endDate${highlight}`}>{moment(obj.endDate).format('D MMMM, h:mm')}</span> : null }
             <span className={`status ${obj.status ? "sts" + obj.status : "sts0"}`}>{obj.status ? stName : "Новая"}</span>
           </div>
           {obj.assignedTo && obj.assignedTo.id && obj.assignedTo.username ? <div className="holder">
@@ -177,6 +177,7 @@ class Board extends Component {
   }
 
   componentWillMount(){
+
     const { location } = this.props;
     let id = "";
     let tid = "";
@@ -275,6 +276,7 @@ class Board extends Component {
   }
 
   componentDidUpdate() {
+    console.warn("REMOUNT!!")
     const { location } = this.props;
     const { objectId, taskId } = this.state;
     let id = "";
@@ -616,7 +618,7 @@ class Board extends Component {
                                 <ChatView id={taskId} priv={false} data={data.task} name={data.task.name} />
                               )
                             }
-                            
+
                             else{
                             // if (a && !data || !data.task)
                             // this.setState({
@@ -627,8 +629,8 @@ class Board extends Component {
 
                               return < div className="errorMessage" > Выберите или создайте задачу </div>
                               // })
-                              
-                            } 
+
+                            }
                           }}
                         </Query>
                       </InnerBar> : null }
