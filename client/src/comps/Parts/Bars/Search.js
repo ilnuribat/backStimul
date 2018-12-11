@@ -383,6 +383,7 @@ export class Search extends Component {
                         state: {
                           id: e.groupId,
                           objectId: e.objectId || "",
+                          privateChat: !e.objectId ? true : false,
                         }
                       }}
                     >

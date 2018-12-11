@@ -3,7 +3,7 @@ import 'animate.css';
 import { Query, graphql, compose  } from "react-apollo";
 import PropTypes from 'prop-types';
 import ChatView from '../ChatView/ChatView';
-import { getChat, setChat, setPlaceName, getPlaceName } from '../../../GraphQL/Cache';
+import { getChat, setChat, setPlaceName, getPlaceName, gBar } from '../../../GraphQL/Cache';
 import { PRIV_QUERY, TASK_MESSAGES } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
 // import Bar from '../../Lays/Bar';
@@ -20,7 +20,6 @@ class Private extends Component {
     this.state = {
       chatId: '',
       privateChat: true,
-      chatLocation: false,
     }
 
     this.openChat = this.openChat.bind(this)
@@ -64,12 +63,47 @@ class Private extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { location } = this.props
+    const { location, gBar } = this.props
     const { chatId } = this.state
 
+    // console.warn("didupdate", chatId, prevProps, prevState)
+    // console.warn("LOCATION",prevProps.location.state.id, location.state.id)
+    // console.warn("CHATIS",prevState.chatId, chatId)
+    // console.warn("getBar", gBar.barShow, prevProps.gBar.barShow)
+
     if (location && location.state && prevProps.location && prevProps.location.state
-      && prevProps.location.state.id && chatId !== location.state.id && chatId === prevState.chatId)
-      this.setState ({ chatId: location.state.id, privateChat: location.state.privateChat == 1 || !localStorage.getItem('privateChat') ? true : false })
+        && prevProps.location.state.id && chatId !== location.state.id && chatId === prevState.chatId){
+      this.setState ({ chatId: location.state.id, privateChat: location.state.privateChat || !localStorage.getItem('privateChat') ? true : false})
+    }
+
+    // if (!!chatId && location.state.id === prevProps.location.state.id && chatId !== location.state.id && chatId !== prevProps.location.state.id && chatId !== prevState.chatId) {
+    //   console.log("------------");
+
+    //   this.setState ({ chatId: chatId, privateChat: !localStorage.getItem('privateChat') ? true : false })
+
+    // }else if(location.state.id !== chatId){
+    //   console.log("------------2");
+    //   this.setState ({ chatId: location.state.id, privateChat: !localStorage.getItem('privateChat') ? true : false })
+    // }
+    // // else if (location && location.state && prevProps.location && prevProps.location.state
+    // //   && prevProps.location.state.id && chatId !== location.state.id && chatId === prevState.chatId){
+    // //   this.setState ({ chatId: location.state.id, privateChat: !localStorage.getItem('privateChat') ? true : false })
+    // // }
+    // else{
+    //   console.log("------------3");
+    //   return 0;
+    // }
+
+    // // if (location && location.state && prevProps.location && prevProps.location.state
+    // //   && prevProps.location.state.id && prevProps.location.state.id !== location.state.id) {
+    // //   this.setState ({ chatId: location.state.id, privateChat: !localStorage.getItem('privateChat') ? true : false })
+
+    // // }
+    // else
+    // }
+    // else{
+    //   return 0;
+    // }
   }
 
   componentWillUnmount(){
@@ -84,16 +118,14 @@ class Private extends Component {
       localStorage.setItem('privateChat', priv ? 1 : 0)
       this.setState({
         chatId: id,
-        privateChat: priv === true ? true : false,
-        chatLocation: true,
+        privateChat: priv === true ? true : false
       })
     }
     if(!id || id === this.state.chatId){
       localStorage.setItem('chatId', '')
       localStorage.setItem('privateChat', 1)
       this.setState({
-        chatId: "",
-        chatLocation: true,
+        chatId: ""
       })
     }
   }
@@ -103,6 +135,18 @@ class Private extends Component {
     let CHATQUERY;
 
     privateChat ? CHATQUERY = PRIV_QUERY : CHATQUERY = TASK_MESSAGES
+
+    console.warn("AAAAAAAAAA")
+    console.warn("AAAAAAAAAA", chatId, privateChat)
+
+//     qauf(`{
+//       glossary {
+//         abstractResource (id: "${chatId}")
+//       }
+//     }
+// `, _url, localStorage.getItem('auth-token')).then(a=>{
+//       a.data.glossary.abstractResource === "Direct" ? CHATQUERY = PRIV_QUERY : CHATQUERY = TASK_MESSAGES
+//     })
 
     return <Fragment>
       <Content view="OvH Row OvH Pad10">
@@ -160,6 +204,7 @@ Private.propTypes = {
 
 
 export default compose(
+  graphql(gBar, { name: 'gBar' }),
   graphql(getChat, { name: 'getchat' }),
   graphql(setChat, { name: 'setChat' }),
   graphql(setPlaceName, { name: 'setPlaceName' }),

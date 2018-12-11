@@ -11,7 +11,7 @@ export default class Content extends Component {
     let {children, view} = this.props;
 
     return (
-      <div className={`Content${view?" "+view:""}`}>
+      <div className={`Content ${view}`}>
         {children}
       </div>
     )
