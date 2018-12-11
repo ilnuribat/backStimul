@@ -370,17 +370,19 @@ h1{
 .RedBg{
   background: #9f1818;
   background-color: #9f1818;
-  background: #E53935;
+  background: #9f181873;
+  background-color: #9f181873;
+  /* background: #E53935;
   background-color: #E53935;
   background: #B71C1C;
-  background-color: #B71C1C;
+  background-color: #B71C1C; */
   border: 0px none transparent;
 }
 .YlBg{
   background: #fdbb00;
   background-color: #fdbb00;
-  background: #F9A825;
-  background-color: #F9A825;
+  background: rgba(249, 168, 37, 0.61);
+  background-color: rgba(249, 168, 37, 0.61);
   border: 0px none transparent;
 }
 .BlBg{

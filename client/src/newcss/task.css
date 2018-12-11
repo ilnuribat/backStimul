@@ -124,9 +124,12 @@
 }
 
 .Task.Sel{
-  background: #396aa3;
+  width:95%;
+  /* background: #396aa3;
   border: solid 1px #396aa3;
-  color:#fff;
+  color:#fff; */
+  border:0px none transparent;
+  box-shadow: 0 0 8px 2px #0084ff;
 }
 
 .Task.Sel{
