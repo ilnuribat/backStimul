@@ -1,8 +1,8 @@
 const ActiveDirectory = require('activedirectory');
-const { ACTIVE_DIRECTORY_PASSWORD } = require('../../config');
+const { ACTIVE_DIRECTORY_PASSWORD, ACTIVE_DIRECTORY_HOST } = require('../../config');
 
 const config = {
-  url: 'ldap://pdcg.guss.ru',
+  url: ACTIVE_DIRECTORY_HOST,
   baseDN: 'DC=guss,DC=ru',
   username: 'CN=LDAP USER,OU=SpecialUsers,OU=GUOVUsers,DC=guss,DC=ru',
   password: ACTIVE_DIRECTORY_PASSWORD,

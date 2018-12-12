@@ -13,6 +13,7 @@ const {
   DADATA_SECRET = '23244c4269211592e162cdb28f459b82716f50d8',
   PG_FIAS = 'postgresql://guov:guov@185.168.187.103/fias',
   ACTIVE_DIRECTORY_PASSWORD = '',
+  ACTIVE_DIRECTORY_HOST = 'ldap://pdcg.guss.ru',
 } = process.env;
 
 const BCRYPT_ROUNDS = process.env.NODE_ENV === 'production' ? 12 : 1;
@@ -31,4 +32,5 @@ module.exports = {
   PG_FIAS,
   BCRYPT_ROUNDS,
   ACTIVE_DIRECTORY_PASSWORD,
+  ACTIVE_DIRECTORY_HOST,
 };
