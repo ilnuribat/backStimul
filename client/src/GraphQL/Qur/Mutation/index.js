@@ -33,7 +33,7 @@ export const groupMut = (gid, params) => `
   }
 `;
 
-export const crTask = (...params) => { return (`
+export const crTask = (params) => { return (`
   mutation{
         createTask(task: ${params}){
           id
