@@ -44,7 +44,13 @@ module.exports = {
   },
   Query: {
     messages: (parent, { groupId }) => Message.find({ groupId }),
-    message: (parent, { id }) => Message.findById(id),
+    message: (parent, { id }, { user }) => {
+      if (!user) {
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
+      }
+
+      return Message.findById(id);
+    },
   },
   Mutation: {
     async createMessage(parent, { message }, { user }) {
