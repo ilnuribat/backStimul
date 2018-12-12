@@ -28,8 +28,8 @@
     "eslint-plugin-import": "2.14.0"
   },
   "dependencies": {
-    "apollo-server": "2.2.5",
-    "apollo-server-express": "2.2.5",
+    "apollo-server": "2.2.6",
+    "apollo-server-express": "2.2.6",
     "apollo-upload-server": "7.1.0",
     "axios": "0.18.0",
     "bcrypt": "2.0.1",
@@ -42,7 +42,7 @@
     "filesize": "3.6.1",
     "graphql": "14.0.2",
     "graphql-subscriptions": "1.0.0",
-    "graphql-tools": "3.1.1",
+    "graphql-tools": "4.0.3",
     "ioredis": "4.2.0",
     "istanbul": "0.4.5",
     "jsonwebtoken": "8.4.0",
@@ -54,7 +54,7 @@
     "moleculer-repl": "0.5.3",
     "moment": "2.22.2",
     "mongodb": "3.1.10",
-    "mongoose": "5.3.14",
+    "mongoose": "5.3.16",
     "nodemon": "1.18.7",
     "nyc": "13.1.0",
     "pg": "7.7.1",
