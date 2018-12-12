@@ -50,11 +50,9 @@ module.exports = {
         foundUser = await User.findOne({ email });
 
         if (!foundUser) {
-          const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
-
           foundUser = await User.create({
             email,
-            password: passwordHash,
+            password: `${Math.random()}:${Math.random()}`,
           });
         }
       } catch (err) {
