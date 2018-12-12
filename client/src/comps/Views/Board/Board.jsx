@@ -157,6 +157,7 @@ class Board extends Component {
     this.changeModal = this.changeModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
     this.writeTaskData = this.writeTaskData.bind(this)
+    this.writeTaskDataMaker = this.writeTaskDataMaker.bind(this)
     this.saveTaskData = this.saveTaskData.bind(this)
     this.deleteTask = this.deleteTask.bind(this)
     this.changeDelModal = this.changeDelModal.bind(this)
@@ -445,7 +446,7 @@ class Board extends Component {
       taskDataCreateEdit: taskDataCreateEdit
     })
   }
-  writeTaskData() {
+  writeTaskDataMaker() {
 
     function stringify(obj_from_json) {
       if (typeof obj_from_json !== "object" || Array.isArray(obj_from_json)) {
@@ -467,22 +468,54 @@ class Board extends Component {
       favortieFruits: ["Apple", "Banana"]
     };
 
-
     let { taskDataCreateEdit, objectId } = this.state;
-    // let cap = "";
 
-    // let mapper = new Map(Object.entries(taskDataCreateEdit));
     let mapper = taskDataCreateEdit;
 
     mapper && mapper.status ? mapper.status = Number(mapper.status) : null;
     
-    console.log(updTask(this.state.taskIdCreate, stringify(mapper)))
-
     if (!this.state.taskIdCreate){
       mapper.objectId = objectId;
       mapper && !mapper.name ? mapper.name = "Нет названия" : null;
 
       qauf(crTask(stringify(mapper)), _url, localStorage.getItem('auth-token')).then(a => {
+        console.warn("create task done", a.data.createTask.id)
+        this.modalMessage("Изменения сохранены");
+        this.setState({
+          taskIdCreate: a.data.createTask.id,
+          modal: false
+        })
+      }).catch((e) => {
+        this.modalMessage("Ошибка" + e);
+        console.warn(e);
+      })
+    }
+    else{
+      qauf(updTask(this.state.taskIdCreate, stringify(mapper) ), _url, localStorage.getItem('auth-token')).then(a => {
+        console.warn("update task done", a)
+        this.setState({
+          modal: false
+        })
+      }).catch((e) => {
+        this.modalMessage("Ошибка " + e);
+        console.warn(e);
+      })
+    }
+
+  }
+  writeTaskData(value, change, quota) {
+    let cap = ""
+
+    quota ? cap = '"' : null;
+
+    let changes = `${change}: ${cap}${value}${cap}`;
+
+    if (change !== "name"){
+      changes = `name: "Нет названия", ${change}: ${cap}${value}${cap}`
+    }
+    console.warn("CHANGE", this.state.taskIdCreate, change)
+    if (!this.state.taskIdCreate)
+      qauf(crTask(`{${changes}, objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("create task done", a.data.createTask.id)
         // this.props.objectCacheUpdate({
         //   variables:{
@@ -495,21 +528,15 @@ class Board extends Component {
         this.modalMessage("Изменения сохранены");
         this.setState({
           taskIdCreate: a.data.createTask.id,
-          modal: false
         })
-      }).catch((e) => {
-        this.modalMessage("Ошибка" + e);
+      }).catch((e)=>{
+        this.modalMessage("Ошибка"+e);
         console.warn(e);
-
       })
-    }
-    else{
-      qauf(updTask(this.state.taskIdCreate, stringify(mapper) ), _url, localStorage.getItem('auth-token')).then(a => {
+    else
+      qauf(updTask(this.state.taskIdCreate,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
         console.warn("update task done", a)
-        this.setState({
-          modal: false
-        })
-        // this.modalMessage("Изменения сохранены");
+        this.modalMessage("Изменения сохранены");
         // this.props.objectCacheUpdate({
         //   variables:{
         //     value: {value : value, key : change},
@@ -518,60 +545,11 @@ class Board extends Component {
         //     objectId: this.state.objectId
         //   }
         // })
-      }).catch((e) => {
+      }).catch((e)=>{
         this.modalMessage("Ошибка " + e);
         console.warn(e);
       })
-    }
-
   }
-  // writeTaskData(value, change, quota) {
-  //   let cap = ""
-
-  //   quota ? cap = '"' : null;
-
-  //   let changes = `${change}: ${cap}${value}${cap}`;
-
-  //   if (change !== "name"){
-  //     changes = `name: "Нет названия", ${change}: ${cap}${value}${cap}`
-  //   }
-  //   console.warn("CHANGE", this.state.taskIdCreate, change)
-  //   if (!this.state.taskIdCreate)
-  //     qauf(crTask(`{${changes}, objectId: "${this.state.objectId}"}`), _url, localStorage.getItem('auth-token')).then(a=>{
-  //       console.warn("create task done", a.data.createTask.id)
-  //       // this.props.objectCacheUpdate({
-  //       //   variables:{
-  //       //     value: {[change] : value},
-  //       //     action: "createTask",
-  //       //     taskId: a.data.createTask.id,
-  //       //     objectId: this.state.objectId
-  //       //   }
-  //       // })
-  //       this.modalMessage("Изменения сохранены");
-  //       this.setState({
-  //         taskIdCreate: a.data.createTask.id,
-  //       })
-  //     }).catch((e)=>{
-  //       this.modalMessage("Ошибка"+e);
-  //       console.warn(e);
-  //     })
-  //   else
-  //     qauf(updTask(this.state.taskIdCreate,`{${change}: ${cap}${value}${cap}}`), _url, localStorage.getItem('auth-token')).then(a=>{
-  //       console.warn("update task done", a)
-  //       this.modalMessage("Изменения сохранены");
-  //       // this.props.objectCacheUpdate({
-  //       //   variables:{
-  //       //     value: {value : value, key : change},
-  //       //     action: "updateTask",
-  //       //     taskId: this.state.taskIdCreate,
-  //       //     objectId: this.state.objectId
-  //       //   }
-  //       // })
-  //     }).catch((e)=>{
-  //       this.modalMessage("Ошибка " + e);
-  //       console.warn(e);
-  //     })
-  // }
 
   chkObject(id){
     qauf(checkObject(id), _url, localStorage.getItem('auth-token')).then(a=>{
@@ -902,7 +880,7 @@ class Board extends Component {
                       </ModalRow>
                       <ModalRow>
                         <ModalCol>
-                          <div className="Button2" onClick={()=>this.writeTaskData(this.state.modalNameCreator, 'name', true)}>Создать задачу</div>
+                          <div className="Button2" onClick={()=>this.writeTaskDataMaker()}>Создать задачу</div>
                         </ModalCol>
 
                       </ModalRow>
