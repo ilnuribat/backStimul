@@ -2,7 +2,7 @@ const moment = require('moment');
 const { withFilter } = require('apollo-server');
 const { Group, UserGroup } = require('../models');
 const {
-  pubsub, TASK_UPDATED, USER_TASK_UPDATED,
+  pubsub, TASK_UPDATED, USER_TASK_UPDATED, ERROR_CODES,
 } = require('../services/constants');
 const taskService = require('../services/task');
 const groupService = require('../services/group');
@@ -26,7 +26,11 @@ module.exports = {
     objectId: ({ objectId }) => objectId.toString(),
   },
   Query: {
-    task(parent, { id }) {
+    task(parent, { id }, { user }) {
+      if (!user) {
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
+      }
+
       return Group.findOne({ code: null, _id: id });
     },
   },
