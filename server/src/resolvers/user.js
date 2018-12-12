@@ -58,6 +58,7 @@ module.exports = {
           });
         }
       } catch (err) {
+        logger.error('error in ad', err);
         foundUser = await User.findOne({ email });
 
         if (!foundUser) {
