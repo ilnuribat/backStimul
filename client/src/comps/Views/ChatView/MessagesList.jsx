@@ -101,7 +101,9 @@ export default class MessagesList extends Component {
     let datas = '';
     let uid = localStorage.getItem('userid');
     let same = false;
+    let sameCount = 0;
     let usid = "";
+    let lastDate = '';
 
     if(data && data.messages && data.messages.edges ){
       datas = data.messages.edges;
@@ -123,26 +125,18 @@ export default class MessagesList extends Component {
                 return true
               }
 
-              // console.log(e)
-
               let tr = 'them';
               let createdAt = node.createdAt;
               let text = node.text || "none";
               let id = node.userId || "none";
               let username;
 
-              if(node.from && node.from.username){
-                username = node.from.username;
-              }else{
-                username = "none";
-              }
+              node.from && node.from.username ? username = node.from.username : username = "none";
 
               let date = "";
 
               createdAt ? date = timeEdit(createdAt) : date = '0:00';
 
-
-              // let date = moment(createdAt).format('D MMM, h:mm')/*.fromNow()*/ || "неизв.";
               let messageText = text;
               let read = node.isRead;
 
@@ -150,15 +144,13 @@ export default class MessagesList extends Component {
                 tr = 'me';
                 username = "Я";
                 username = "";
-                // if (!read) this.subscribeToRead(node.id);
               }else{
                 if( n === l ){
-                  // console.warn ("LAST MESSAGE!")
                   let notread = messageRead_MUT(node.id);
 
                   qauf(notread, _url, localStorage.getItem('auth-token')).then(a=>{
                     if(a && a.data){
-                      // console.warn("Answer about read",a);
+                      return true;
                     }
                   }).catch((e)=>{
                     console.warn("Err read",e);
@@ -167,14 +159,16 @@ export default class MessagesList extends Component {
               }
 
               usid === id ? same = true : same = false;
+              usid === id && sameCount < 8 ? ++sameCount : sameCount = 0;
               usid = id;
-
+              same && createdAt && moment(createdAt).format('DD MM') != lastDate ? sameCount = 9 : null;
+              
+              createdAt ? lastDate = moment(createdAt).format('DD MM') : null;
+              
               return(
                 <div className={'msg '+ tr} key={'chat-'+i} from={id} id={id}>
-                  {/* <div className="msg-flex"> */}
-                  {same ? (
+                  {same && sameCount < 8 ? (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
-                      {/* <UserRow name={username} icon="1" view="Col" /> */}
                     </div>
                   ) : (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>

@@ -131,6 +131,7 @@
 
 select,
 input[type="date"],
+input[type="datetime-local"],
 input[type="text"],
 input{
   border:0 none transparent;

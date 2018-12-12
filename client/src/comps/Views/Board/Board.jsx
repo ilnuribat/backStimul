@@ -500,9 +500,6 @@ class Board extends Component {
 
   MaptoTree(array) {
 
-    let _ARR = [...array],
-      _Edited = [];
-
     let tree = (data, root) => {
       var r;
 
@@ -561,7 +558,6 @@ class Board extends Component {
               {
                 data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
               }
-              // console.warn("DATA IS", data.object.tasks)
 
               let arr = _.sortBy(data.object.tasks, 'status');
               let cols = [[],[],[],[],[],[],[]];
@@ -592,8 +588,6 @@ class Board extends Component {
               }
 
               tasks = tasks.filter(t => !t.parentId);
-
-              console.warn(tasks);
 
               return(
                 <Fragment>
@@ -628,16 +622,9 @@ class Board extends Component {
                             }
 
                             else{
-                            // if (a && !data || !data.task)
-                            // this.setState({
-                            //   toTask: false,
-                            //   taskId: ''
-                            // }, ()=>{
                               localStorage.setItem('taskId', '');
 
                               return < div className="errorMessage" > Выберите или создайте задачу </div>
-                              // })
-
                             }
                           }}
                         </Query>
@@ -664,27 +651,17 @@ class Board extends Component {
 
                       {treeView ? (
                         <ContentInner view="Board-Content-Tree">
-                          {
-                            console.log("ObjectData.tasks", ObjectData.tasks)
-                          }
-
                           <div className="inner">
                             <div className="TreeViewName TopLevel">
                               {ObjectData.name}
                             </div>
                             <div className="border"></div>
                             {
-                              console.log(status)
-                            }
-                            {
                               tasks.map((a, i, earr) => {
                                 return(
                                   <ChildsMap open={this.toTask} obj={a} statuses={status ? status : null}/>
                                 )
                               })
-                            }
-                            {
-                            // ObjectData.tasks ? <pre>{JSON.stringify(ObjectData.tasks, 0, 4)}</pre> : null
                             }
                           </div>
                         </ContentInner>
@@ -781,8 +758,6 @@ class Board extends Component {
                                   Название
                           </InputWrapper>
                         </ModalCol>
-                        {/* <ModalCol>
-                              </ModalCol> */}
                       </ModalRow>
                       <ModalRow>
                         <ModalCol>
@@ -793,18 +768,6 @@ class Board extends Component {
                           <FakeSelect array={status} onselect={(e)=>{this.writeTaskData(e, "status", false)}}>
                           </FakeSelect>
 
-                          {/* <label htmlFor="selectStatus" className="LabelSelect">
-                                  <select name="selectStatus" onChange={(e)=>{this.writeTaskData(e, "status", false)}} >
-                                    {/* <option value="0">Выбрать статус</option> */}
-                          {
-                            // status.map((e)=>(
-                            //   <option key={'status'+ e.id} value={e && e.id ? e.id : "no"}>
-                            //     {e.name}
-                            //   </option>
-                            // ))
-                          }
-                          {/* </select> */}
-                          {/* </label> */}
                         </ModalCol>
                         <ModalCol>
                         </ModalCol>
@@ -853,8 +816,6 @@ class Board extends Component {
               )
 
             }else{
-              // console.log("Data and error",data, error)
-
               return(<div className="errMess">
                 Объект не найден
               </div>)
@@ -867,8 +828,6 @@ class Board extends Component {
     }
   }
 }
-
-
 
 Board.propTypes = {
   setInfo: PropTypes.func.isRequired,
