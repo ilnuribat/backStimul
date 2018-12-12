@@ -44,7 +44,7 @@
 	background: transparent;
 	margin-bottom: 10px;
 	font: 16px Arial, Helvetica, sans-serif;
-	height: 45px;
+	/* height: 45px; */
 }
  textarea{
 	resize:none;

@@ -95,7 +95,6 @@ class App extends Component {
         user: true,
       })
     }
-
   }
 
   render() {

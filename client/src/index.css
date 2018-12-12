@@ -412,17 +412,30 @@ h1{
 
 ::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f125; 
+  background:transparent;
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(6, 37, 71, 0.795);
-  border-radius: 3px;
+  background: rgba(6, 37, 71, 0.89);
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(14, 52, 110, 0.699); 
+  background: rgb(212, 100, 8); 
+}
+label.LabelInputDate{
+  width: 100% !important;
+}
+input[type="list"],
+input[type="date"]
+{
+  background: #3D4147;
+  width:100%;
+  border-radius: 5px;
 }
