@@ -32,19 +32,47 @@
   background: #35373b;
   
 }
+
 .FakeSelect .FakeOptionsContainer.Out{
   position: fixed;
   /* bottom:-100%; */
-  top:auto;
-  width: 300px;
+  top:10px;
+  left: 0;
+  right: 0;
+  /* bottom: 0; */
+  margin:0 auto 0;
+  width: auto;
   height: auto;
-  max-height: 200px;
+  max-width: 340px;
+  max-height: 90%;
   z-index:9;
-  background: #35373b;
-  padding: 10px;
-  overflow: auto;
-  border-radius: 5px;
+  background: #316bc2;
+  padding: 10px 5px;
+  overflow: hidden;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
+
+.FakeSelect .FakeOptionsContainer .ContainerOuter
+{
+ width: 100%;
+ max-width: 300px;
+ height: 100%;
+ max-height: 100%;
+ overflow: hidden;
+ padding: 5px;
+ background: #316bc2;
+}
+.FakeSelect .FakeOptionsContainer .ContainerInner
+{
+ width: 100%;
+ height: 100%;
+ overflow: auto;
+}
+
 .FakeSelect .FakeOption{
   cursor: pointer;
   padding: 5px 5px;
@@ -52,6 +80,7 @@
   background: #3d4147;
   width:100%;
   height: auto;
+  min-height: 36px;
   margin:2px 0;
   border-radius: 3px;
   display: flex;
@@ -60,7 +89,8 @@
   align-items: center;
 }
 .FakeSelect .FakeOptionsContainer .FakeOption:hover{
-  background: #316bc2;
+  background: #295ca8;
+  background: #1b3968;
 }
 
 .FakeSelect .FakeOption .FakeIcon{

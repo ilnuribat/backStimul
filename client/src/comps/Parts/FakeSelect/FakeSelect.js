@@ -25,13 +25,16 @@ export class FakeSelect extends Component {
         id: "",
         name: "",
         icon: "",
-      }
+      },
+      array: [],
     }
 
     this.openSelect = this.openSelect.bind(this)
     this.select = this.select.bind(this)
     this.runAfter = this.runAfter.bind(this)
     this.cancAfter = this.cancAfter.bind(this)
+    this.findElements = this.findElements.bind(this)
+    this.containerRef = React.createRef();
   }
   
   static propTypes = {
@@ -84,11 +87,55 @@ export class FakeSelect extends Component {
       }
     }
   }
+  
+  findElements(el){
+    const { array } = this.state;
+
+    if (el && el.target && el.target.value && array){
+      console.log(el.target.value);
+      console.log(array);
+
+      var res = array.filter((e) => {
+        if(e.name){
+          return e.name.includes(el.target.value);
+        }
+        if (e.username){
+          return e.username.includes(el.target.value);
+        }
+        if (e.text){
+          return e.text.includes(el.target.value);
+        }
+        
+      });
+
+      if (el.target.value && res) {
+        this.setState({
+          array: res,
+        })
+      } else {
+        this.setState({
+          array: this.props.array,
+        })
+      }
+    } else {
+      this.setState({
+        array: this.props.array,
+      })
+    }
+
+  }
 
   componentWillUpdate(){
   }
 
   componentDidMount(){
+    const { array } = this.props;
+
+    if (array){
+      this.setState({
+        array: array
+      })
+    }
   }
 
   componentWillReceiveProps(){
@@ -109,8 +156,11 @@ export class FakeSelect extends Component {
 
   render() {
 
-    const {selected, open} = this.state;
-    const {array, view, defaultid, inside} = this.props;
+    const { selected, open, array} = this.state;
+    const { view, defaultid, inside, filter } = this.props;
+
+    let filt = false;
+    
     
     if(defaultid && !selected || defaultid && !selected.id ){
       this.setDefault(array, defaultid);
@@ -123,16 +173,26 @@ export class FakeSelect extends Component {
     ];
 
     return (
-      <div className={!view ? "FakeSelect" : "FakeSelect "+view} onClick={this.openSelect}>
+      <div className={!view ? "FakeSelect" : "FakeSelect "+view} >
         
         
-        <div className="FakeSelected">
+        <div className="FakeSelected" onClick={this.openSelect}>
           {selected ? (<FakeRow icon={selected.icon} id={selected.id}>{selected.name}</FakeRow>) : null }
         </div>
         {!open ? (<Svg svg="expose" />):(<Svg svg="inpose" />)}
         {open ? (
 
           <div className={"FakeOptionsContainer animated fadeIn" + " Out" } onMouseLeave={this.openSelect}>
+            <div className="ContainerOuter">
+
+            {
+                filter || this.props.array && this.props.array.length > 5 ? (
+              <label htmlFor="lister">
+                <input type="text" id="lister" name="lister" onChange={e=>{ this.findElements(e) }}></input>
+              </label> ): null
+            }
+
+              <div className="ContainerInner" ref={this.containerRef}>
             {
               arr && typeof arr === 'object' && arr.map((e,i)=>{
                 if(!e || !e.id) return true;
@@ -146,6 +206,8 @@ export class FakeSelect extends Component {
                 )
               })
             }
+            </div>
+            </div>
           </div>
         ) : null}
 
