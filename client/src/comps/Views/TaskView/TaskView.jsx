@@ -23,13 +23,17 @@ import Loading from '../../Loading';
 moment.locale('ru')
 
 const baseStyle = {
-  width: 500,
-  height: 200,
+  width: "100%",
+  height: 100,
   borderWidth: 2,
   borderColor: '#666',
   borderStyle: 'dashed',
   borderRadius: 5,
   textAlign: "center",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
 };
 
 const activeStyle = {
@@ -544,12 +548,16 @@ class TaskView extends Component {
                               style={styles}
                             >
                               <input {...getInputProps()} />
-                              <div>
+                              <div style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "center",}}>
 
                                 {isDragAccept ? 'Переместите сюда файлы...' : 'Переместите сюда файлы или нажмите для добавления...'}
-                                <Svg svg="tocloud" inline={0} />
+                                <Svg svg="tocloud" view="Mar5" inline={0} size="32" />
                               </div>
-                              {isDragReject && <div>Unsupported file type...</div>}
+                              {isDragReject && <div>Нельзя добавить такой тип документа ...</div>}
                             </div>
                           )
                         }}
