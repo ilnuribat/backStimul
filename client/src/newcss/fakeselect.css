@@ -44,7 +44,7 @@
   width: auto;
   height: auto;
   max-width: 340px;
-  max-height: auto;
+  max-height: 90%;
   z-index:9;
   background: #316bc2;
   padding: 10px 5px;
