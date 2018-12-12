@@ -22,6 +22,29 @@ import Loading from '../../Loading';
 
 moment.locale('ru')
 
+const baseStyle = {
+  width: 500,
+  height: 200,
+  borderWidth: 2,
+  borderColor: '#666',
+  borderStyle: 'dashed',
+  borderRadius: 5,
+  textAlign: "center",
+};
+
+const activeStyle = {
+  borderStyle: 'solid',
+  borderColor: '#6c6',
+  backgroundColor: '#2b2e25',
+};
+
+const rejectStyle = {
+  borderStyle: 'solid',
+  borderColor: '#c66',
+  backgroundColor: '#eee'
+};
+
+
 class TaskView extends Component {
   constructor(props) {
     super(props)
@@ -320,83 +343,83 @@ class TaskView extends Component {
       return(
         <Content view="OvH">
           {/* <InnerBar> */}
-            <TextRow name="Информация" view="BigName">
-              <TextRow name="" view="Pad510 MT10">
-                {
-                  data.name
-                }
-              </TextRow>
-              <TextRow name="" view="cgr Pad510 s">
-                {
-                  dataValue ? moment(dataValue).format('D MMMM, h:mm') : null
-                }
-              </TextRow>
-              <TextRow name="" view="cgr Pad510 s">
-                {
-                  this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Новая"
-                }
-              </TextRow>
-
-
-              <TextRow name="" view="cgr Pad510 s">
-                {data && data.assignedTo && data.assignedTo.id && data.assignedTo.username ? (
-                  <UserRow size="24" id={data.assignedTo.id} name={data.assignedTo.username ? data.assignedTo.username : "Нет имени"} icon="1" />
-                ): "Ответственный не назначен"}
-              </TextRow>
+          <TextRow name="Информация" view="BigName">
+            <TextRow name="" view="Pad510 MT10">
+              {
+                data.name
+              }
             </TextRow>
-            <div className="tab-roll">
-              <div className="header"><h4>Пользователи</h4></div>
-              <div className="content">
-                <div className="content-scroll">
+            <TextRow name="" view="cgr Pad510 s">
+              {
+                dataValue ? moment(dataValue).format('D MMMM, h:mm') : null
+              }
+            </TextRow>
+            <TextRow name="" view="cgr Pad510 s">
+              {
+                this.state.status.find(x => x.id == taskStatus) ? this.state.status.find(x => x.id == taskStatus).name : "Новая"
+              }
+            </TextRow>
 
-                  {data.users && data.users.map(
-                    (e,i)=>{
-                      return(
-                        <div className="username" role="presentation" key={'usr-'+i} >
-                          {localStorage.getItem('userid') !== e.id ?
-                            <UserRow id={e.id} name={e.username} icon="1" ondelete={(id)=>this.userAdd(id, false)} />
-                            : null }
-                          <div className="hoverTrigger">
-                            <div className="hover">
-                              <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
-                              <div className="btn v2" onClick={()=>this.userAdd(e.id)}>Удалить {e.username}</div>
-                            </div>
+
+            <TextRow name="" view="cgr Pad510 s">
+              {data && data.assignedTo && data.assignedTo.id && data.assignedTo.username ? (
+                <UserRow size="24" id={data.assignedTo.id} name={data.assignedTo.username ? data.assignedTo.username : "Нет имени"} icon="1" />
+              ): "Ответственный не назначен"}
+            </TextRow>
+          </TextRow>
+          <div className="tab-roll">
+            <div className="header"><h4>Пользователи</h4></div>
+            <div className="content">
+              <div className="content-scroll">
+
+                {data.users && data.users.map(
+                  (e,i)=>{
+                    return(
+                      <div className="username" role="presentation" key={'usr-'+i} >
+                        {localStorage.getItem('userid') !== e.id ?
+                          <UserRow id={e.id} name={e.username} icon="1" ondelete={(id)=>this.userAdd(id, false)} />
+                          : null }
+                        <div className="hoverTrigger">
+                          <div className="hover">
+                            <div className="btn v2" onClick={()=>this.userSelect(e.username, e.id)}>Написать {e.username}</div>
+                            <div className="btn v2" onClick={()=>this.userAdd(e.id)}>Удалить {e.username}</div>
                           </div>
                         </div>
-                      )
-                    }
-                  )
+                      </div>
+                    )
                   }
-                </div>
-
-                <div className="FakeLinkSvg"><Svg svg="expose" size="32" /></div>
+                )
+                }
               </div>
-            </div>
-            <div className="tab-roll">
-              <div className="header"><h4>Документы</h4></div>
-              <div className="content">
-                <div className="content-scroll">
-                  {data.files && data.files.length > 0 ? data.files.map(
-                    (e)=>{
-                      return(
-                        <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
-                      )
-                    }
-                  ) : (
-                    <div>
-                      {/* <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
-                                  <FileRow name="Фото подвала.jpg" id="id1237" icon="img" /> */}
-                      <div className="FakeLink">Файлов нет</div>
-                    </div>
-                  )
-                  }
-                </div>
-              </div>
-            </div>
 
+              <div className="FakeLinkSvg"><Svg svg="expose" size="32" /></div>
+            </div>
+          </div>
+          <div className="tab-roll">
+            <div className="header"><h4>Документы</h4></div>
             <div className="content">
-              <div className="Btn v1" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
+              <div className="content-scroll">
+                {data.files && data.files.length > 0 ? data.files.map(
+                  (e)=>{
+                    return(
+                      <FileRow key={e.id} name={e.name} id={e.id} type={e.mimeType} icon="doc" ondelete={(id)=>{this.deleteFile(id)}} click={this.downloadFile} />
+                    )
+                  }
+                ) : (
+                  <div>
+                    {/* <FileRow name="Смета_проекта.doc" id="id1235" icon="doc" />
+                                  <FileRow name="Фото подвала.jpg" id="id1237" icon="img" /> */}
+                    <div className="FakeLink">Файлов нет</div>
+                  </div>
+                )
+                }
+              </div>
             </div>
+          </div>
+
+          <div className="content">
+            <div className="Btn v1" onClick={()=>{this.setState({modal: !modal});this.getTaskLists()}}>Редактировать</div>
+          </div>
 
           {/* </InnerBar> */}
           {modal ? (
@@ -509,8 +532,29 @@ class TaskView extends Component {
                   }}>
                     {upload => (
                       <Dropzone className="files-drop" onDrop={([file]) => {upload({ variables: { id: taskId, file } })}}>
-                        <Svg svg="tocloud" inline={0} />Переместите сюда файлы или нажмите для добавления.
+                        {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject, acceptedFiles, rejectedFiles }) => {
+                          let styles = {...baseStyle}
+
+                          styles = isDragActive ? {...styles, ...activeStyle} : styles
+                          styles = isDragReject ? {...styles, ...rejectStyle} : styles
+
+                          return (
+                            <div
+                              {...getRootProps()}
+                              style={styles}
+                            >
+                              <input {...getInputProps()} />
+                              <div>
+
+                                {isDragAccept ? 'Переместите сюда файлы...' : 'Переместите сюда файлы или нажмите для добавления...'}
+                                <Svg svg="tocloud" inline={0} />
+                              </div>
+                              {isDragReject && <div>Unsupported file type...</div>}
+                            </div>
+                          )
+                        }}
                       </Dropzone>
+                      // <Svg svg="tocloud" inline={0} />Переместите сюда файлы или нажмите для добавления.
                     )}
                   </Mutation>
                   {/* </div> */}

@@ -32,6 +32,7 @@ module.exports = {
           "error",
           2
       ],
+      // "quotes": ["error", "double"],
       "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
       "react/no-array-index-key": [0],
       "linebreak-style":0,
@@ -44,5 +45,6 @@ module.exports = {
         { blankLine: "always", prev: ["const", "let", "var"], next: "*"},
         { blankLine: "any", prev: ["const", "let", "var"], next: ["const", "let", "var"]}
       ],
+      "no-unused-expressions": ["off", {"allowShortCircuit": true, "allowTernary": true}],
   }
 };
