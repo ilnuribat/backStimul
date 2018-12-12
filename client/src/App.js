@@ -114,7 +114,7 @@ class App extends Component {
             </Nav>
             <Root>
               { this.props.gBar && this.props.gBar.barShow ? (
-                <Bar view="animated fadeInLeft" type={this.props.gBar.barType } >
+                  <Bar view="animated fadeInLeft faster" type={this.props.gBar.barType } >
                   <BarInner >
 
                   </BarInner>
