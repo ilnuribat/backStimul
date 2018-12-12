@@ -144,6 +144,7 @@ class Board extends Component {
       modalMessage: "",
       modalNameCreator: "",
       treeView: false,
+      taskDataCreateEdit: {},
     };
 
     this.daTa = this.daTa.bind(this)
@@ -156,6 +157,8 @@ class Board extends Component {
     this.changeModal = this.changeModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
     this.writeTaskData = this.writeTaskData.bind(this)
+    this.writeTaskDataMaker = this.writeTaskDataMaker.bind(this)
+    this.saveTaskData = this.saveTaskData.bind(this)
     this.deleteTask = this.deleteTask.bind(this)
     this.changeDelModal = this.changeDelModal.bind(this)
     this.modalMessage = this.modalMessage.bind(this)
@@ -429,10 +432,80 @@ class Board extends Component {
     }
   }
 
+  saveTaskData(value, change, quota) {
+    let { taskDataCreateEdit } = this.state;
+    let cap = '';
+    quota ? cap = '"' : null;
+
+    taskDataCreateEdit[`${change}`] = value;
+
+    console.log(taskDataCreateEdit)
+
+    this.setState({
+      taskDataCreateEdit: taskDataCreateEdit
+    })
+  }
+  writeTaskDataMaker() {
+
+    function stringify(obj_from_json) {
+      if (typeof obj_from_json !== "object" || Array.isArray(obj_from_json)) {
+        return JSON.stringify(obj_from_json);
+      }
+      let props = Object
+        .keys(obj_from_json)
+        .map(key => `${key}:${stringify(obj_from_json[key])}`)
+        .join(",");
+      return `{${props}}`;
+    }
+
+    var obj = {
+      name: "John Smith",
+      job: {
+        name: "Accountant",
+        salary: 1000
+      },
+      favortieFruits: ["Apple", "Banana"]
+    };
+
+    let { taskDataCreateEdit, objectId } = this.state;
+
+    let mapper = taskDataCreateEdit;
+
+    mapper && mapper.status ? mapper.status = Number(mapper.status) : null;
+    
+    if (!this.state.taskIdCreate){
+      mapper.objectId = objectId;
+      mapper && !mapper.name ? mapper.name = "Нет названия" : null;
+
+      qauf(crTask(stringify(mapper)), _url, localStorage.getItem('auth-token')).then(a => {
+        console.warn("create task done", a.data.createTask.id)
+        this.modalMessage("Изменения сохранены");
+        this.setState({
+          taskIdCreate: a.data.createTask.id,
+          modal: false
+        })
+      }).catch((e) => {
+        this.modalMessage("Ошибка" + e);
+        console.warn(e);
+      })
+    }
+    else{
+      qauf(updTask(this.state.taskIdCreate, stringify(mapper) ), _url, localStorage.getItem('auth-token')).then(a => {
+        console.warn("update task done", a)
+        this.setState({
+          modal: false
+        })
+      }).catch((e) => {
+        this.modalMessage("Ошибка " + e);
+        console.warn(e);
+      })
+    }
+
+  }
   writeTaskData(value, change, quota) {
     let cap = ""
 
-    if (quota) cap = '"';
+    quota ? cap = '"' : null;
 
     let changes = `${change}: ${cap}${value}${cap}`;
 
@@ -754,7 +827,7 @@ class Board extends Component {
                     <Modal close={this.closeModal} message={this.state.modalMessage?this.state.modalMessage:""}>
                       <ModalRow>
                         <ModalCol>
-                          <InputWrapper placeholder="Введите название задачи" change={(name)=>{ this.setState({ modalNameCreator: name })}}>
+                          <InputWrapper placeholder="Введите название задачи" change={(name) => { this.saveTaskData(name, "name", true) }}>
                                   Название
                           </InputWrapper>
                         </ModalCol>
@@ -765,7 +838,7 @@ class Board extends Component {
                                   Статус
                           </ModalBlockName>
 
-                          <FakeSelect array={status} onselect={(e)=>{this.writeTaskData(e, "status", false)}}>
+                          <FakeSelect array={status} onselect={(e) => { this.saveTaskData(e, "status", false)}}>
                           </FakeSelect>
 
                         </ModalCol>
@@ -779,7 +852,7 @@ class Board extends Component {
                                 Срок истечения
                           </div>
                           <label htmlFor="dateout" className="LabelInputDate">
-                            <input type="date" name="dateout" placeholder="Дата Завершения" onChange={(e)=>{this.writeTaskData(e.target.value, "endDate", true)}} />
+                            <input type="date" name="dateout" placeholder="Дата Завершения" onChange={(e) => { this.saveTaskData(e.target.value, "endDate", true)}} />
                           </label>
                         </ModalCol>
 
@@ -788,7 +861,7 @@ class Board extends Component {
                                 Добавить родительскую задачу
                           </ModalBlockName>
 
-                          <FakeSelect array={data.object.tasks} onselect={(e)=>{this.writeTaskData(e, "parentId", true)}}>
+                          <FakeSelect array={data.object.tasks} onselect={(e) => { this.saveTaskData(e, "parentId", true)}}>
                           </FakeSelect>
                           {/* <label htmlFor="parentSelect" className="LabelSelect"> */}
                           {/* <select name="parentSelect" onChange={(e)=>{this.writeTaskData(e.target.value, "parentId", true)}}>
@@ -806,7 +879,7 @@ class Board extends Component {
                       </ModalRow>
                       <ModalRow>
                         <ModalCol>
-                          <div className="Button2" onClick={()=>this.writeTaskData(this.state.modalNameCreator, 'name', true)}>Создать задачу</div>
+                          <div className="Button2" onClick={()=>this.writeTaskDataMaker()}>Создать задачу</div>
                         </ModalCol>
 
                       </ModalRow>

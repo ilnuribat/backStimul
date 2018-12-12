@@ -119,7 +119,7 @@
   flex-direction: column;
   margin:0 5px 0;
   width: 100%;
-  background: #0000000a;
+  /* background: #0000000a; */
   padding: 10px 5px;
   border-radius:3px;
 }
