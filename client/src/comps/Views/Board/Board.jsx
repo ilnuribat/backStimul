@@ -439,7 +439,6 @@ class Board extends Component {
 
     taskDataCreateEdit[`${change}`] = value;
 
-
     console.log(taskDataCreateEdit)
 
     this.setState({
