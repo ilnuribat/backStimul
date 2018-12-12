@@ -12,6 +12,7 @@ const {
   DADATA_API = 'a9a4c39341d2f4072db135bd25b751336b1abb83',
   DADATA_SECRET = '23244c4269211592e162cdb28f459b82716f50d8',
   PG_FIAS = 'postgresql://guov:guov@185.168.187.103/fias',
+  ACTIVE_DIRECTORY_PASSWORD = '',
 } = process.env;
 
 const BCRYPT_ROUNDS = process.env.NODE_ENV === 'production' ? 12 : 1;
@@ -29,4 +30,5 @@ module.exports = {
   DADATA_SECRET,
   PG_FIAS,
   BCRYPT_ROUNDS,
+  ACTIVE_DIRECTORY_PASSWORD,
 };
