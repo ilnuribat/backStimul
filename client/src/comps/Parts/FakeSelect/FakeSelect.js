@@ -133,6 +133,8 @@ export class FakeSelect extends Component {
         {open ? (
 
           <div className={"FakeOptionsContainer animated fadeIn" + " Out" } onMouseLeave={this.openSelect}>
+            <div className="ContainerOuter">
+            <div className="ContainerInner">
             {
               arr && typeof arr === 'object' && arr.map((e,i)=>{
                 if(!e || !e.id) return true;
@@ -146,6 +148,8 @@ export class FakeSelect extends Component {
                 )
               })
             }
+            </div>
+            </div>
           </div>
         ) : null}
 
