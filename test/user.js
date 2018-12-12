@@ -1,4 +1,5 @@
 const { assert } = require('chai');
+const { ERROR_CODES } = require('../server/src/services/constants');
 
 const query = `
   {
@@ -35,6 +36,6 @@ describe('user', () => {
 
     assert.isUndefined(data);
     assert.isArray(errors);
-    assert.include(errors[0].message, 'invalid token');
+    assert.include(errors[0].message, ERROR_CODES.INVALID_TOKEN);
   });
 });
