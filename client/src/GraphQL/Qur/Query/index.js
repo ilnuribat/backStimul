@@ -409,6 +409,12 @@ query rootObject($id: ID){
       objects{
         id
         name
+        #tasks{
+          #id
+          #status
+          #endDate
+          #__typename
+        #}
         address {
           value
         }
