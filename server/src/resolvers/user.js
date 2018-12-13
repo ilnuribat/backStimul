@@ -41,7 +41,8 @@ module.exports = {
 
   Mutation: {
     async login(parent, { user }) {
-      const { email, password } = user;
+      const { password } = user;
+      const email = user.email.toLowerCase();
       let foundUser;
 
       try {
