@@ -623,19 +623,23 @@ class Board extends Component {
               );
             }
 
-            if(data && data.object){
+          if(data && data.object){
               ObjectData = data.object;
               let selectedChilds = false;
-              let ObjTasks = {};
-              ObjTasks = Object.assign({}, data.object.tasks);
+              let ObjTasks = [];
+              ObjTasks = data.object.tasks.slice();
 
               if (this.state.curParentId && this.state.showChilds)
               {
-                ObjTasks = Object.assign({}, data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))) 
+                ObjTasks = ObjTasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId));
               }
 
               let arr = _.sortBy(ObjTasks, 'status');
               let cols = [[],[],[],[],[],[],[]];
+
+              console.log(ObjTasks);
+              
+
               const taskData = ObjTasks.filter((task) => (task.id === this.state.taskId))[0]
 
               arr = _.sortBy(ObjTasks, 'unreadCount');
