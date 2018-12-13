@@ -626,17 +626,19 @@ class Board extends Component {
             if(data && data.object){
               ObjectData = data.object;
               let selectedChilds = false;
+              let ObjTasks = {};
+              ObjTasks = Object.assign({}, data.object.tasks);
 
               if (this.state.curParentId && this.state.showChilds)
               {
-                data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
+                ObjTasks = Object.assign({}, data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))) 
               }
 
-              let arr = _.sortBy(data.object.tasks, 'status');
+              let arr = _.sortBy(ObjTasks, 'status');
               let cols = [[],[],[],[],[],[],[]];
-              const taskData = data.object.tasks.filter((task) => (task.id === this.state.taskId))[0]
+              const taskData = ObjTasks.filter((task) => (task.id === this.state.taskId))[0]
 
-              arr = _.sortBy(data.object.tasks, 'unreadCount');
+              arr = _.sortBy(ObjTasks, 'unreadCount');
               _.forEach(arr, (result)=>{
                 if(!result.status){
                   cols[1].push(result);
@@ -646,7 +648,8 @@ class Board extends Component {
                 }
               });
 
-              let tasks = data.object.tasks.map(a => ({...a}));
+              let newTasks = {};
+              let tasks = ObjTasks.map(a => ({...a}));
 
               for (let i = 0; i < tasks.length; i ++) {
                 tasks[i].childs = [];
@@ -661,6 +664,8 @@ class Board extends Component {
               }
 
               tasks = tasks.filter(t => !t.parentId);
+
+              newTasks = Object.assign({}, tasks);
 
               return(
                 <Fragment>
@@ -721,6 +726,7 @@ class Board extends Component {
 
                       </div>
 
+                      
 
                       {treeView ? (
                         <ContentInner view="Board-Content-Tree">
