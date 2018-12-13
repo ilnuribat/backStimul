@@ -61,10 +61,14 @@ class TileBoard extends Component {
     localStorage.setItem('rootId', "")
     localStorage.setItem('placeParent', "")
     localStorage.setItem('parentId', "")
-    this.setState({
-      rootid: "",
-      parentid: "",
-    });
+
+    if(this.state.rootid){
+      this.setState({
+        rootid: "",
+        parentid: "",
+      });
+    }
+
   }
 
   query(args){
@@ -134,10 +138,25 @@ class TileBoard extends Component {
               ({data, loading, refetch, error})=>{
                 ref = refetch
                 if (error){
-                  this.cleanStorage();
-                  console.log(error);
+                  rootid ? this.cleanStorage() : true;
+                  console.log("ERROR",error.message);
+                  let message = 'Неизвестная ошибка';
 
-                  return <Redirect to={{pathname: '/', state: { rootid: "" } }} />
+                  switch (error.message) {
+                    case "Network error: Failed to fetch":
+                        message = "Не удается подключиться"
+                      break;
+                  
+                    default:
+                      break;
+                  }
+
+                  return(
+                    <div className="errorMessage">
+                      {message}
+                    </div>
+                  );
+                  // return <Redirect to={{ pathname: '/error', state: { error: error } }} />
                 }
                 if (loading) return <Loading />;
 
