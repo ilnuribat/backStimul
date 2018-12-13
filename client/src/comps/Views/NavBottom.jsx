@@ -159,8 +159,8 @@ class NavBottom extends Component {
               background: #fafbfb;
               border-bottom: 1px solid #e6ecee;
             }
-            .ChatForm input, .ChatForm textarea{
-              color:#222;
+            .Task.Sel .Name,.ChatForm input, .ChatForm textarea, .Task .TaskChat .ChatName{
+              color:${ColorParent};
             }
 
           `}</style>) : null}
