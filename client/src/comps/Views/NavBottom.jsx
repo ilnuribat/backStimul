@@ -162,6 +162,10 @@ class NavBottom extends Component {
             .Task.Sel .Name,.ChatForm input, .ChatForm textarea, .Task .TaskChat .ChatName{
               color:${ColorParent};
             }
+            .Task.Child{
+              background:#39608c4f;
+              background-color:#39608c4f;
+            }
 
           `}</style>) : null}
       </div>
