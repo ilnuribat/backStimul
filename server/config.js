@@ -11,7 +11,7 @@ const {
   MOLECULER_TRANSPORTER = 'redis://localhost',
   DADATA_API = 'a9a4c39341d2f4072db135bd25b751336b1abb83',
   DADATA_SECRET = '23244c4269211592e162cdb28f459b82716f50d8',
-  PG_FIAS = 'postgresql://guov:guov@185.168.187.103/fias',
+  PG_FIAS = 'postgresql://guov:guov@185.168.187.103:5432/fias',
   ACTIVE_DIRECTORY_PASSWORD = '',
   ACTIVE_DIRECTORY_HOST = 'ldap://pdcg.guss.ru',
 } = process.env;

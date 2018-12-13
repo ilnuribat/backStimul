@@ -1,9 +1,9 @@
 const models = require('./src/models');
-const connectDB = require('./connectDB');
+const { connect } = require('./connectDB');
 
 /* eslint-disable */
 async function cleanUserGroups() {
-  await connectDB();
+  await connect();
   const cursor = await models.UserGroup.findOne().cursor();
   let userGroup = await cursor.next();
 
@@ -22,7 +22,7 @@ async function cleanUserGroups() {
 }
 
 async function updateLastCursor() {
-  await connectDB();
+  await connect();
   const cursor = await models.UserGroup.findOne().cursor();
   let userGroup = await cursor.next();
 
@@ -49,7 +49,7 @@ async function updateLastCursor() {
 }
 
 async function setObjectId() {
-  await connectDB();
+  await connect();
   const groups = await models.Group.find({
     // code: {
     //   $ne: null,
