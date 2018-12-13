@@ -445,6 +445,7 @@ export default {
             }
           }
         `;
+
         try {
           previousState = cache.readQuery({ query, variables: {"id": objectId}});
         } catch (error) {
@@ -454,13 +455,22 @@ export default {
         }
         // console.warn("prevstate is", previousState)
 
-        Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { lastMessage : { from: value.from, text: value.text , __typename: "Message"} });
+          let newObj = Object.assign({}, previousState.object.tasks);
+
+        try {
+          Object.assign(newObj.filter(tasks => tasks.id === taskId)[0], { lastMessage: { from: value.from, text: value.text, __typename: "Message" } });
+        } catch (error) {
+          console.log(error)
+
+        }
+
+        
 
         // console.warn("prevstate is",  previousState.object.tasks)
 
         data = {
           object: {
-            tasks:  previousState.object.tasks,
+            tasks: newObj,
             __typename: "Object"
           }
         };
