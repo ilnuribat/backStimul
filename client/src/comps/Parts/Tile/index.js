@@ -84,8 +84,10 @@ class Tile extends Component {
             let dN = moment().format("D");
             let hN = moment().format("HH");
 
-
-            if ((ym === ymN && Number(d) < Number(dN)) || (Number(yN) > Number(y)) || (Number(mN) > Number(m) && Number(y) <= Number(yN) )) {
+            if (e.status == 5 || e.status == "5") {
+              console.log("NONE", y, m, d)
+            }
+            else if ((ym === ymN && Number(d) < Number(dN)) || (Number(yN) > Number(y)) || (Number(mN) > Number(m) && Number(y) <= Number(yN) )) {
               counters.fail = ++counters.fail
             }
             else if ((ym === ymN && Number(d) > Number(dN) && Number(d) - Number(dN) <= 3)) {
@@ -108,13 +110,13 @@ class Tile extends Component {
           <div className="name" onClick={()=>click({id:id,type:type,name:name, parentId:parentId})}>{name}</div>
           
           {
-            descr ? <div className="descr">{descr}</div> : null
+            descr ? <div className="descr">{type}</div> : null
           }
           {
-            fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">Задач: {fulltile.tasks.length}</div>
+            type === "Object" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">Задач: {fulltile.tasks.length}</div>
           }
 
-          {
+          {type === "Object" &&
             <div className="TileHighliter">
               <span>{counters.all}</span>
               <span className={counters.prefail && 'orgf'}>{counters.prefail}</span>
@@ -122,7 +124,7 @@ class Tile extends Component {
             </div>
           }
           {
-            fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">
+            type === "Object" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">
               <span>Новых <span>{counters.new}</span></span>
               <span>В работе <span>{counters.inwork}</span></span>
               <span>Завершены <span>{counters.end}</span></span>

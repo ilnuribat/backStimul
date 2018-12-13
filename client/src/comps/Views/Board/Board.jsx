@@ -83,16 +83,27 @@ class ChildsMap extends Component {
         let dN = moment().format("DD");
         let hN = moment().format("HH");
 
-
-        if ((ym === ymN && d < dN) || (yN > y) || (mN > m && y <= yN) && obj.status != '5') {
-          highlight = " redd"
-          // statusShit = 'истекла:'
+        if (obj.status == 5 || obj.status == "5" ){
+          console.log("NONE", y, m, d)
         }
-        else if ((ym === ymN && d > dN && d - dN <= 3) && obj.status != '5') {
+        else if ((ym === ymN && Number(d) < Number(dN)) || (Number(yN) > Number(y)) || (Number(mN) > Number(m) && Number(y) <= Number(yN))) {
+          highlight = " redd"
+        }
+        else if ((ym === ymN && Number(d) > Number(dN) && Number(d) - Number(dN) <= 3)) {
           highlight = " yeld"
         } else {
-          // highlight = ''
+          console.log("NONE", y, m, d)
         }
+
+        // if ((ym === ymN && d < dN) || (yN > y) || (mN > m && y <= yN) && obj.status != '5') {
+        //   highlight = " redd"
+        //   // statusShit = 'истекла:'
+        // }
+        // else if ((ym === ymN && d > dN && d - dN <= 3) && obj.status != '5') {
+        //   highlight = " yeld"
+        // } else {
+        //   // highlight = ''
+        // }
       }
 
       return (
