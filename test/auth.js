@@ -6,7 +6,7 @@ const { subscriptionConnectHandler } = require('../server');
 const { generateToken } = require('../server/src/services/user');
 const { ERROR_CODES } = require('../server/src/services/constants');
 
-describe('login', () => {
+describe.only('login', () => {
   it('correct credentials', async function () {
     const { data, errors } = await this.request({
       query: `
@@ -22,7 +22,9 @@ describe('login', () => {
       `,
     });
 
+    console.log(errors);
     assert.isUndefined(errors, 'empty errors');
+
     const { login } = data;
 
     assert.isObject(login);
