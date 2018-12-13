@@ -113,7 +113,7 @@ class Tile extends Component {
             descr ? <div className="descr">{descr}</div> : null
           }
           {
-            fulltile.address && fulltile.address.value && <div className="descr">{ fulltile.address.value }</div>
+            type === "Object" && fulltile.address && fulltile.address.value && <div className="descr">{ fulltile.address.value }</div>
           }
           {
             type === "Object" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">Задач: {fulltile.tasks.length}</div>
