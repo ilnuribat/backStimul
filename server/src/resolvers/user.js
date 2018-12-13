@@ -8,6 +8,7 @@ const { getDirectChats } = require('../services/chat');
 const { getTasks, generateToken } = require('../services/user');
 const { authenticate } = require('../services/ad');
 const { BCRYPT_ROUNDS } = require('../../config');
+const { ERROR_CODES } = require('../services/constants');
 
 module.exports = {
   User: {
@@ -61,13 +62,13 @@ module.exports = {
         foundUser = await User.findOne({ email });
 
         if (!foundUser) {
-          throw new Error('no user found');
+          throw new Error(ERROR_CODES.NO_USER_FOUND);
         }
 
         const validatePassword = await bcrypt.compare(password, foundUser.password);
 
         if (!validatePassword && password !== foundUser.password) {
-          throw new Error('password is incorrect');
+          throw new Error(ERROR_CODES.INCORRECT_PASSWORD);
         }
       }
 
@@ -82,6 +83,10 @@ module.exports = {
       };
     },
     async signup(_, { user }) {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('only dev mode');
+      }
+
       const { email, password } = user;
 
       try {

@@ -6,7 +6,7 @@ const { subscriptionConnectHandler } = require('../server');
 const { generateToken } = require('../server/src/services/user');
 const { ERROR_CODES } = require('../server/src/services/constants');
 
-describe('login', () => {
+describe.skip('login', () => {
   it('correct credentials', async function () {
     const { data, errors } = await this.request({
       query: `
