@@ -101,9 +101,15 @@ class Task extends Component {
           {/* <div className="TaskUserPhoto"> */}
           <UserRow icon="1" box="1"/>
           {/* </div> */}
-          <div className="Childs" onClick={()=>childs(id)}>
-            {!selectedChilds ? <Svg svg="childs"></Svg> : <div className="" onClick={()=>childs('')}>Скрыть подзадачи</div>}
-          </div>
+
+          {childs ? (
+            <div className="Childs" onClick={() => childs(id)}>
+              {!selectedChilds ? <Svg svg="childs" size="34" /> : <div className="" onClick={() => childs('')}>Скрыть подзадачи</div>}
+            </div>
+          ) : null
+
+          }
+
         </div>
         <div className="Delete" onClick={()=>deleteTask(id)}>
           <Svg svg="cancel" size="12"></Svg>

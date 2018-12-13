@@ -165,7 +165,7 @@
 /* box-shadow: 0 0 8px 0px #00f7ff; */
 
 }
-.Task .Bottom > div.Childs .Svg svg{
+.Task .Bottom > div.Childs .Svg{
   border:1px solid #346296;
 }
 .Task.Sel .Bottom .Svg svg{

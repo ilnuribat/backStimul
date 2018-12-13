@@ -761,12 +761,19 @@ class Board extends Component {
                                   {e.id == 1 ? <ButtonRow icon="plus" view="MiniBox" iconright="1" click={this.changeModal}></ButtonRow> : null}
                                   {
                                     cols[e.id].map((task) => {
+                                      let haveChilds = [];
+                                      haveChilds = ObjTasks.filter((othrtask) => (othrtask.parentId === task.id));
+                                      
+
+                                      console.log(haveChilds);
+                                      
+
                                       if (this.state.curParentId === task.id) {
                                         selectedChilds = showChilds;
                                       } else { selectedChilds = false; }
 
                                       return (
-                                        <Task showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal} />
+                                        <Task showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={haveChilds && haveChilds.length > 0 ? this.childs : null} deleteTask={this.changeDelModal} />
                                       )
                                     })
                                   }
