@@ -27,6 +27,7 @@ import 'animate.css';
 import { BarInner } from './comps/Parts/Bars/BarInner';
 import { DocsView } from './comps/Views/DocsView/DocsView';
 import NavBottom from './comps/Views/NavBottom';
+import Error from './comps/Error';
 // import Ldap from './comps/Ldap';
 
 
@@ -129,6 +130,7 @@ class App extends Component {
                   // })
                 }
                 {/* <Route exact path="/ldap" component={Ldap} /> */}
+                <Route exact path="/error" component={Error} />
                 <Route exact path="/task" component={TaskView} />
                 <Route exact path="/docs" component={DocsView} />
                 <Route exact path="/board" component={Board} />

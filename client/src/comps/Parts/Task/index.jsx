@@ -19,7 +19,7 @@ class Task extends Component {
 
   render() {
 
-    const {children, name, id, endDate, lastMessage, click, childs, selected, selectedChilds, deleteTask, showother, status} = this.props;
+    const { children, name, id, endDate, lastMessage, click, childs, selected, selectedChilds, deleteTask, showother, status, childscol, fulltask} = this.props;
     let sel = "";
     let oth = "";
     let statusShit = 'истекает:';
@@ -101,9 +101,29 @@ class Task extends Component {
           {/* <div className="TaskUserPhoto"> */}
           <UserRow icon="1" box="1"/>
           {/* </div> */}
-          <div className="Childs" onClick={()=>childs(id)}>
-            {!selectedChilds ? <Svg svg="childs"></Svg> : <div className="" onClick={()=>childs('')}>Скрыть подзадачи</div>}
-          </div>
+
+          {childs ? (
+            <div className="Childs" onClick={() => childs(id)}>
+              {!selectedChilds ? <Svg svg="childs" size="34" /> : <div className="" onClick={() => childs('')}>Скрыть подзадачи</div>}
+            </div>
+          ) : null
+          }
+          {childs ? (
+            <div className="childsCount">
+              <span className="small">{childscol ? childscol.length : null} задач</span>
+            </div>
+          ) : null
+          }
+
+          {console.log("fulltask.files",fulltask)}
+          {fulltask.files && fulltask.files.length > 0 ? (
+            <div className="childsCount">
+              <Svg svg="scr" size="22"></Svg>
+              <span className="small">{fulltask.files.length} вложен{fulltask.files.length > 1 && fulltask.files.length < 5 && "ия"}{fulltask.files.length == 1 && "ие"}{fulltask.files.length > 5 && "ий"}</span>
+            </div>
+          ) : null 
+          }
+
         </div>
         <div className="Delete" onClick={()=>deleteTask(id)}>
           <Svg svg="cancel" size="12"></Svg>

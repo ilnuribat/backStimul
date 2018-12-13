@@ -55,11 +55,12 @@
   height:60px;
   margin:10px auto;
   text-align: center;
-  background: #5492af;
+  /* background: #5492af; */
   width: 90%;
   height: 40px;
   border-radius: 5px;
-  background-color: #3d4147;
+  /* background-color: #3d4147; */
+  border:2px solid #3e75b2;
   display: flex;
   align-items: center;
   justify-content: center;

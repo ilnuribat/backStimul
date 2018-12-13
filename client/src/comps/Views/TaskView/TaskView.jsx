@@ -345,7 +345,7 @@ class TaskView extends Component {
       if (data.endDate) dataValue = data.endDate.replace(/T.*$/gi, "")
 
       return(
-        <Content view="OvH">
+        <Content view="OvY">
           {/* <InnerBar> */}
           <TextRow name="Информация" view="BigName">
             <TextRow name="" view="Pad510 MT10">

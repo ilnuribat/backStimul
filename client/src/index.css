@@ -77,6 +77,8 @@ a{
 }
 
 .Panel {
+    transition: all 0.3s ease-in-out;
+    position: relative;
     display: flex;
     flex:1;
     flex-direction: column;
@@ -89,6 +91,28 @@ a{
     max-height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
+}
+
+.MenuB{
+  opacity: 0.4;
+  border-radius: 3px;
+  position: fixed;
+  content: "=";
+  top:10px;
+  right:10px;
+  background: #3e75b2;
+  background: #0288D1;
+  background: rgba(2, 137, 209, 0.26);
+  display: flex;
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.MenuB:hover{
+  opacity: 1;
+  background: rgba(2, 137, 209, 0.562);
 }
 
 .Content {
@@ -207,7 +231,7 @@ svg{
   width: 50px;
   height: 50px;
   overflow: hidden;
-  margin: 0 auto;
+  margin: 50% auto 50%;
   align-self: center;
   justify-self: center;
 }
@@ -438,4 +462,15 @@ input[type="date"]
   background: #3D4147;
   width:100%;
   border-radius: 5px;
+}
+
+.Closed {
+    cursor: pointer;
+    width: 0px;
+    height:0px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    overflow: hidden;
+    min-width: 0px;
+    max-width: 0px;
 }

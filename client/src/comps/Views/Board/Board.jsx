@@ -615,28 +615,46 @@ class Board extends Component {
               );
             }
             if (error){
-              setInfo({variables:{id:"id",message:error.message, type:"error"}})
-              console.warn('Error', error.message)
 
-              return(
-                "error"
+              console.log("ERROR", error.message);
+              let message = 'Неизвестная ошибка';
+
+              switch (error.message) {
+                case "Network error: Failed to fetch":
+                  message = "Не удается подключиться"
+                  break;
+
+                default:
+                  break;
+              }
+
+              return (
+                <div className="errorMessage">
+                  {message}
+                </div>
               );
             }
 
-            if(data && data.object){
+          if(data && data.object){
               ObjectData = data.object;
               let selectedChilds = false;
+              let ObjTasks = [];
+              ObjTasks = data.object.tasks.slice();
 
               if (this.state.curParentId && this.state.showChilds)
               {
-                data.object.tasks = data.object.tasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId))
+                ObjTasks = ObjTasks.filter((task) => (task.parentId === this.state.curParentId || task.id === this.state.curParentId));
               }
 
-              let arr = _.sortBy(data.object.tasks, 'status');
+              let arr = _.sortBy(ObjTasks, 'status');
               let cols = [[],[],[],[],[],[],[]];
-              const taskData = data.object.tasks.filter((task) => (task.id === this.state.taskId))[0]
 
-              arr = _.sortBy(data.object.tasks, 'unreadCount');
+              console.log(ObjTasks);
+              
+
+              const taskData = ObjTasks.filter((task) => (task.id === this.state.taskId))[0]
+
+              arr = _.sortBy(ObjTasks, 'unreadCount');
               _.forEach(arr, (result)=>{
                 if(!result.status){
                   cols[1].push(result);
@@ -646,7 +664,8 @@ class Board extends Component {
                 }
               });
 
-              let tasks = data.object.tasks.map(a => ({...a}));
+              let newTasks = {};
+              let tasks = ObjTasks.map(a => ({...a}));
 
               for (let i = 0; i < tasks.length; i ++) {
                 tasks[i].childs = [];
@@ -661,6 +680,8 @@ class Board extends Component {
               }
 
               tasks = tasks.filter(t => !t.parentId);
+
+              newTasks = Object.assign({}, tasks);
 
               return(
                 <Fragment>
@@ -681,9 +702,21 @@ class Board extends Component {
                             }
                             if (error){
 
+                              console.log("ERROR", error.message);
+                              let message = 'Неизвестная ошибка';
+
+                              switch (error.message) {
+                                case "Network error: Failed to fetch":
+                                  message = "Не удается подключиться"
+                                  break;
+
+                                default:
+                                  break;
+                              }
+
                               return (
-                                <div className="errMess">
-                                  {error.message}
+                                <div className="errorMessage">
+                                  {message}
                                 </div>
                               );
                             }
@@ -721,6 +754,7 @@ class Board extends Component {
 
                       </div>
 
+                      
 
                       {treeView ? (
                         <ContentInner view="Board-Content-Tree">
@@ -751,12 +785,19 @@ class Board extends Component {
                                   {e.id == 1 ? <ButtonRow icon="plus" view="MiniBox" iconright="1" click={this.changeModal}></ButtonRow> : null}
                                   {
                                     cols[e.id].map((task) => {
+                                      let haveChilds = [];
+                                      haveChilds = ObjTasks.filter((othrtask) => (othrtask.parentId === task.id));
+                                      
+
+                                      console.log(haveChilds);
+                                      
+
                                       if (this.state.curParentId === task.id) {
                                         selectedChilds = showChilds;
                                       } else { selectedChilds = false; }
 
                                       return (
-                                        <Task showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childs={this.childs} deleteTask={this.changeDelModal} />
+                                        <Task fulltask={task} showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childscol={haveChilds && haveChilds.length > 0 ? haveChilds : null} childs={haveChilds && haveChilds.length > 0 ? this.childs : null} deleteTask={this.changeDelModal} />
                                       )
                                     })
                                   }

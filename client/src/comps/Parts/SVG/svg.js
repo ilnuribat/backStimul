@@ -312,13 +312,65 @@ export const SvgNotRead = () => (
 export const SvgMinus = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z" /><path d="M0 0h24v24H0z" fill="none" /></svg>
 );
+export const SvgLoad = () => (
+  <svg x="0px" y="0px" viewBox="0 0 100 100" enableBackground="new 0 0 100 100">
+    <path fill="#FFF" d="M31.6,3.5C5.9,13.6-6.6,42.7,3.5,68.4c10.1,25.7,39.2,38.3,64.9,28.1l-3.1-7.9c-21.3,8.4-45.4-2-53.8-23.3c-8.4-21.3,2-45.4,23.3-53.8L31.6,3.5z">
+      <animateTransform
+        attributeName="transform"
+        attributeType="XML"
+        type="rotate"
+        dur="2s"
+        from="0 50 50"
+        to="360 50 50"
+        repeatCount="indefinite"
+      />
+    </path>
+    <path fill="#FFF" d="M42.3,39.6c5.7-4.3,13.9-3.1,18.1,2.7c4.3,5.7,3.1,13.9-2.7,18.1l4.1,5.5c8.8-6.5,10.6-19,4.1-27.7c-6.5-8.8-19-10.6-27.7-4.1L42.3,39.6z">
+      <animateTransform
+        attributeName="transform"
+        attributeType="XML"
+        type="rotate"
+        dur="1s"
+        from="0 50 50"
+        to="-360 50 50"
+        repeatCount="indefinite"
+      />
+    </path>
+    <path fill="#FFF" d="M82,35.7C74.1,18,53.4,10.1,35.7,18S10.1,46.6,18,64.3l7.6-3.4c-6-13.5,0-29.3,13.5-35.3s29.3,0,35.3,13.5L82,35.7z">
+      <animateTransform
+        attributeName="transform"
+        attributeType="XML"
+        type="rotate"
+        dur="2s"
+        from="0 50 50"
+        to="360 50 50"
+        repeatCount="indefinite"
+      />
+    </path>
+  </svg>
+  );
 
-
+export const SvgMenu = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z" /><path d="M3 15h8v-2H3v2zm0 4h8v-2H3v2zm0-8h8V9H3v2zm0-6v2h8V5H3zm10 0h8v14h-8V5z" /></svg>
+);
+export const SvgScr = () => (
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 1000 1000">
+  <g><path d="M388.6,196.2v568.4c0,0-8.3,119.3,113.2,119.3c109.5,0,109.5-119.3,109.5-119.3V166.8c0,0,0-156.8-155.9-156.8c-155.9,0-155.9,156.8-155.9,156.8v597.8c0,0,0,225.4,200.5,225.4c200.5,0,200.5-225.4,200.5-225.4V166.8c0-24.5-44.5-24.5-44.5,0v597.8c0,0,16.2,180.9-155.9,180.9c-155.9,0-155.9-180.9-155.9-180.9V166.8c0,0,0-112.3,111.4-112.3c111.4,0,111.4,112.3,111.4,112.3v597.8c0,0,0,70.3-65,70.3c-65,0-68.6-70.3-68.6-70.3V196.2C433.2,171.7,388.6,171.7,388.6,196.2z" /><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></g>
+</svg>
+);
 
 
 
 
 const svgs = [
+  {
+    name:'scr',
+    body: () => (<SvgScr/>),
+  },
+  {
+    name:'menu',
+    body: () => (<SvgMenu/>),
+  },
   {
     name:'minus',
     body: () => (<SvgMinus/>),
@@ -478,6 +530,10 @@ const svgs = [
   {
     name:'toright',
     body:()=>{return(<SvgToRight/>)},
+  },
+  {
+    name:'loading',
+    body:()=>{return(<SvgLoad/>)},
   },
 ];
 
