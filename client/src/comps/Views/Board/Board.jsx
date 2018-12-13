@@ -615,11 +615,23 @@ class Board extends Component {
               );
             }
             if (error){
-              setInfo({variables:{id:"id",message:error.message, type:"error"}})
-              console.warn('Error', error.message)
 
-              return(
-                "error"
+              console.log("ERROR", error.message);
+              let message = 'Неизвестная ошибка';
+
+              switch (error.message) {
+                case "Network error: Failed to fetch":
+                  message = "Не удается подключиться"
+                  break;
+
+                default:
+                  break;
+              }
+
+              return (
+                <div className="errorMessage">
+                  {message}
+                </div>
               );
             }
 
@@ -690,9 +702,21 @@ class Board extends Component {
                             }
                             if (error){
 
+                              console.log("ERROR", error.message);
+                              let message = 'Неизвестная ошибка';
+
+                              switch (error.message) {
+                                case "Network error: Failed to fetch":
+                                  message = "Не удается подключиться"
+                                  break;
+
+                                default:
+                                  break;
+                              }
+
                               return (
-                                <div className="errMess">
-                                  {error.message}
+                                <div className="errorMessage">
+                                  {message}
                                 </div>
                               );
                             }
