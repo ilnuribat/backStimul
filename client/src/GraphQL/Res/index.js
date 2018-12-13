@@ -455,10 +455,10 @@ export default {
         }
         // console.warn("prevstate is", previousState)
 
-          let newObj = Object.assign({}, previousState.object.tasks);
+          // let newObj = Object.assign({}, previousState.object.tasks);
 
         try {
-          Object.assign(newObj.filter(tasks => tasks.id === taskId)[0], { lastMessage: { from: value.from, text: value.text, __typename: "Message" } });
+          Object.assign(previousState.object.tasks.filter(tasks => tasks.id === taskId)[0], { lastMessage: { from: value.from, text: value.text, __typename: "Message" } });
         } catch (error) {
           console.log(error)
 
@@ -470,7 +470,7 @@ export default {
 
         data = {
           object: {
-            tasks: newObj,
+            tasks: previousState.object.tasks,
             __typename: "Object"
           }
         };
