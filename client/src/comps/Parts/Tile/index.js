@@ -116,7 +116,7 @@ class Tile extends Component {
             type === "Object" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">Задач: {fulltile.tasks.length}</div>
           }
 
-          {type === "Object" &&
+          {type === "Object" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 && 
             <div className="TileHighliter">
               <span>{counters.all}</span>
               <span className={counters.prefail && 'orgf'}>{counters.prefail}</span>
@@ -125,9 +125,9 @@ class Tile extends Component {
           }
           {
             type === "Object" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">
-              <span>Новых <span>{counters.new}</span></span>
-              <span>В работе <span>{counters.inwork}</span></span>
-              <span>Завершены <span>{counters.end}</span></span>
+              {counters.new > 0 && <span>Новых <span>{counters.new}</span></span> }
+              {counters.inwork > 0 && <span>В работе <span>{counters.inwork}</span></span> }
+              {counters.inwork > 0 && <span>Завершены <span>{counters.end}</span></span> }
             </div>
           }
           
