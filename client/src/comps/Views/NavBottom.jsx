@@ -52,7 +52,7 @@ class NavBottom extends Component {
   }
 
   render() {
-    let ColorParent, ColorSecond,BakgrColorPrimary,BakgrColorSecondary,BakgrColorMaster,BakgrColorSlave;
+    let ColorParent, ColorSecond, BakgrColorPrimary, BakgrColorSecondary, BakgrColorMaster, BakgrColorSlave, BakgrColorBlue;
 
     if(this.state.theme === 'white'){
       ColorParent = "#222";
@@ -61,16 +61,18 @@ class NavBottom extends Component {
       BakgrColorSecondary = "#3e74b27c";
       BakgrColorMaster = "#ffffff";
       BakgrColorSlave = "#eaedee";
+      BakgrColorBlue = "#3e75b2";
     }
 
-    if(this.state.theme === 'gold'){
-      ColorParent = "#222";
-      ColorSecond = "#666";
-      BakgrColorPrimary = "#d9ddb9";
-      BakgrColorSecondary = "#3e74b27c";
-      BakgrColorMaster = "#bba927";
-      BakgrColorSlave = "#d9ddb9";
-    }
+    // if(this.state.theme === 'gold'){
+    //   ColorParent = "#222";
+    //   ColorSecond = "#666";
+    //   BakgrColorPrimary = "#d9ddb9";
+    //   BakgrColorSecondary = "#3e74b27c";
+    //   BakgrColorMaster = "#bba927";
+    //   BakgrColorSlave = "#d9ddb9";
+    //   BakgrColorBlue = "#3e75b2";
+    // }
 
 
 
@@ -165,6 +167,9 @@ class NavBottom extends Component {
             .Task.Child{
               background:#39608c4f;
               background-color:#39608c4f;
+            }
+            .TreePlus svg, .TreeMinus svg{
+              fill:;
             }
 
           `}</style>) : null}
