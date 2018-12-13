@@ -139,6 +139,7 @@ class TileBoard extends Component {
                 ref = refetch
                 if (error){
                   rootid ? this.cleanStorage() : true;
+
                   console.log("ERROR",error.message);
                   let message = 'Неизвестная ошибка';
 
