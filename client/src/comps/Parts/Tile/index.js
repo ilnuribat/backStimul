@@ -110,7 +110,7 @@ class Tile extends Component {
           <div className="name" onClick={()=>click({id:id,type:type,name:name, parentId:parentId})}>{name}</div>
           
           {
-            descr ? <div className="descr">{type}</div> : null
+            descr ? <div className="descr">{descr}</div> : null
           }
           {
             type === "Object" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">Задач: {fulltile.tasks.length}</div>
