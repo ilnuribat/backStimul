@@ -52,7 +52,7 @@ class NavBottom extends Component {
   }
 
   render() {
-    let ColorParent, ColorSecond, BakgrColorPrimary, BakgrColorSecondary, BakgrColorMaster, BakgrColorSlave, BakgrColorBlue;
+    let ColorParent, ColorSecond, BakgrColorPrimary, BakgrColorSecondary, BakgrColorMaster, BakgrColorSlave, BakgrColorBlue, LightBlue;
 
     if(this.state.theme === 'white'){
       ColorParent = "#222";
@@ -62,6 +62,7 @@ class NavBottom extends Component {
       BakgrColorMaster = "#ffffff";
       BakgrColorSlave = "#eaedee";
       BakgrColorBlue = "#3e75b2";
+      LightBlue = "#39608c4f";
     }
 
     // if(this.state.theme === 'gold'){
@@ -165,6 +166,10 @@ class NavBottom extends Component {
               color:${ColorParent};
             }
             .Task.Child{
+              background:#39608c4f;
+              background-color:#39608c4f;
+            }
+            .Tile.Object{
               background:#39608c4f;
               background-color:#39608c4f;
             }

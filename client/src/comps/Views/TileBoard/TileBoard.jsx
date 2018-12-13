@@ -176,7 +176,7 @@ class TileBoard extends Component {
                             (e, i, arr)=>{
                               let parent = arr[i - 1];
                                 return(
-                                  <span className="crumbWrap" onClick={() => { this.query({ id: e.id, type: "AddressObject", name: e.name, parentId: parent ? parent.id : '' })}}><span className="crumb" key={e.id}>{e.name}</span><Svg view="InlBl" svg="toright" size="28" /></span>  
+                                  <span className="crumbWrap" key={"crumb" + e.id} onClick={() => { this.query({ id: e.id, type: "AddressObject", name: e.name, parentId: parent ? parent.id : '' })}}><span className="crumb" key={e.id}>{e.name}</span><Svg view="InlBl" svg="toright" size="28" /></span>  
                                 )
                               }
                           ) }
@@ -202,8 +202,11 @@ class TileBoard extends Component {
                         }
                         {
                           data.rootObject && data.rootObject.objects && data.rootObject.objects.map((e)=>{
+
+                            console.log(e)
+
                             return(
-                              <Tile key={'tile'+e.id} id={e.id} name={e.name} type={e.__typename||'object'} click={this.query} refetch={this.refetch1} remove={this.remove} addr={e.address.value} parentId={data.rootObject.id} updateObject={this.updateObject} />
+                              <Tile fulltile={e} key={'tile'+e.id} id={e.id} name={e.name} type={e.__typename||'object'} click={this.query} refetch={this.refetch1} remove={this.remove} addr={e.address.value} parentId={data.rootObject.id} updateObject={this.updateObject} />
                             )
                           })
                         }
