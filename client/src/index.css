@@ -94,6 +94,7 @@ a{
 }
 
 .MenuB{
+  opacity: 0.4;
   border-radius: 3px;
   position: fixed;
   content: "=";
@@ -110,6 +111,7 @@ a{
   cursor: pointer;
 }
 .MenuB:hover{
+  opacity: 1;
   background: rgba(2, 137, 209, 0.562);
 }
 
