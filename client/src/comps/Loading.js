@@ -43,7 +43,9 @@ import Svg from './Parts/SVG';
 
 const Loading = () => {
   return (
-    <Svg svg="loading" size="32" />
+    <div className="Loading">
+      <Svg svg="loading" size="32" />
+    </div>
   )
 }
 
