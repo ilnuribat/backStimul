@@ -223,8 +223,19 @@
   position: relative;
 }
 .Task .Delete{
+  display: none;
   position: absolute;
   right: 5px;
   top: 2px;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+.Task:hover .Delete{
+  display: block;
+}
+.Task .Childs{
+  display: none;
+}
+.Task:hover .Childs{
+  display: block;
 }
