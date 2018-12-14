@@ -52,7 +52,7 @@ class NavBottom extends Component {
   }
 
   render() {
-    let ColorParent, ColorSecond, BakgrColorPrimary, BakgrColorSecondary, BakgrColorMaster, BakgrColorSlave, BakgrColorBlue;
+    let ColorParent, ColorSecond, BakgrColorPrimary, BakgrColorSecondary, BakgrColorMaster, BakgrColorSlave, BakgrColorBlue, LightBlue, bglight;
 
     if(this.state.theme === 'white'){
       ColorParent = "#222";
@@ -62,6 +62,8 @@ class NavBottom extends Component {
       BakgrColorMaster = "#ffffff";
       BakgrColorSlave = "#eaedee";
       BakgrColorBlue = "#3e75b2";
+      LightBlue = "#39608c4f";
+      bglight = "#eee !important";
     }
 
     // if(this.state.theme === 'gold'){
@@ -168,9 +170,29 @@ class NavBottom extends Component {
               background:#39608c4f;
               background-color:#39608c4f;
             }
+            .Tile.Object{
+              background:#39608c4f;
+              background-color:#39608c4f;
+            }
             .TreePlus svg, .TreeMinus svg{
               fill:;
             }
+            .ModalWrap > div > .inner{
+              background:${BakgrColorMaster};
+            }
+            .ModalBlockName{
+            }
+            .ModalWrap input,
+            .ModalWrap label,
+            .ModalWrap .InputWrapper,
+            .FakeSelect,
+            .FakeOption
+            {
+              background:${bglight};
+              background-color:${bglight};
+              color:${ColorParent};
+            }
+          
 
           `}</style>) : null}
       </div>

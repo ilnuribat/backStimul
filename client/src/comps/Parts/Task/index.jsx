@@ -45,16 +45,29 @@ class Task extends Component {
       let dN = moment().format("DD");
       let hN = moment().format("HH");
 
-
-      if((ym === ymN && d < dN ) || (yN > y ) || ( mN > m && y <= yN ) && status != '5'){
+      if (status == 5 || status == "5") {
+        console.log("NONE", y, m, d)
+      }
+      else if ((ym === ymN && Number(d) < Number(dN)) || (Number(yN) > Number(y)) || (Number(mN) > Number(m) && Number(y) <= Number(yN))) {
         highlight = " RedBg"
         statusShit = 'истекла:'
       }
-      else if((ym === ymN && d > dN && d - dN <= 3 ) && status != '5'){
+      else if ((ym === ymN && Number(d) > Number(dN) && Number(d) - Number(dN) <= 3)) {
         highlight = " YlBg"
-      }else{
+      } else {
         highlight = 'gr'
+        console.log("NONE", y, m, d)
       }
+
+      // if((ym === ymN && d < dN ) || (yN > y ) || ( mN > m && y <= yN ) && status != '5'){
+      //   highlight = " RedBg"
+      //   statusShit = 'истекла:'
+      // }
+      // else if((ym === ymN && d > dN && d - dN <= 3 ) && status != '5'){
+      //   highlight = " YlBg"
+      // }else{
+      //   highlight = 'gr'
+      // }
     }
 
     return(

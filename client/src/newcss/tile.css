@@ -32,8 +32,16 @@
   color: #3e75b2;
 }
 .Tile .descr{
+  margin: 5px 0 0 0;
   display: block;
   font-size: 1em;
+  text-align: center;
+  color: #3e75b2;
+}
+.Tile .descr > span{
+  display: inline-block;
+  font-size: 12px;
+  margin:0 5px 0 0;
   text-align: center;
   color: #3e75b2;
 }
@@ -74,4 +82,67 @@
 }
 .Tile.Object{
   background: #314764;
+}
+
+.Tile .TileHighliter{
+  display: flex;
+  margin:10px auto;
+  width:80px;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+}
+.Tile .TileHighliter > span{
+  display: inline-block;
+  background: #4646462c;
+  font-size: 12px;
+  width:20px;
+  height:20px;
+  border-radius: 999em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.3);
+}
+.Tile .TileHighliter > span:hover::before{
+  display: block;
+  position: absolute;
+  right:-40px;
+  top:-20px;
+  padding: 2px 5px;
+  content:"Всего";
+  width:auto;
+  border-radius:3px;
+  box-shadow: 2px 2px 8px 0 rgba(0, 0, 0, 0.3);
+  background: #3e75b2;
+  transition: all 0.5s ease-in-out;
+  text-align: center;
+  z-index: 9;
+}
+.Tile .TileHighliter > span.bluf{
+  background: #1432b6;
+  color: #ffffff;
+}
+.Tile .TileHighliter > span.redf{
+  background: #b61414;
+  color: #ffffff;
+}
+.Tile .TileHighliter > span.orgf{
+  background: #b65d14;
+  color: #ffffff;
+}
+.Tile .TileHighliter > span.bluf:hover::before{
+content:"Новые";
+}
+.Tile .TileHighliter > span.redf:hover::before{
+content:"Просрочены";
+background: #b61414;
+}
+.Tile .TileHighliter > span.orgf:hover::before{
+content:"Истекают";
+background: #b65d14;
 }
