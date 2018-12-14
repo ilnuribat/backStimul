@@ -52,7 +52,7 @@ class NavBottom extends Component {
   }
 
   render() {
-    let ColorParent, ColorSecond, BakgrColorPrimary, BakgrColorSecondary, BakgrColorMaster, BakgrColorSlave, BakgrColorBlue, LightBlue, bglight;
+    let ColorParent, ColorSecond, BakgrColorPrimary, BakgrColorSecondary, BakgrColorMaster, BakgrColorSlave, BakgrColorBlue, LightBlue, bglight, bglight2, bglighttr;
 
     if(this.state.theme === 'white'){
       ColorParent = "#222";
@@ -63,7 +63,11 @@ class NavBottom extends Component {
       BakgrColorSlave = "#eaedee";
       BakgrColorBlue = "#3e75b2";
       LightBlue = "#39608c4f";
-      bglight = "#eee !important";
+      LightBlue = "#b3d7ffd4";
+      bglight = "#eee";
+      bglight2 = "rgb(216, 225, 228)";
+      bglighttr = '#eeeeeeee';
+      bglighttr = '#eeeeeeee';
     }
 
     // if(this.state.theme === 'gold'){
@@ -83,7 +87,7 @@ class NavBottom extends Component {
       <div className = "NavBottom" >
         <div className={"ColorButton " + this.state.theme } onClick={this.changeTheme}></div>
 
-        {this.state.theme ? (<style type="text/css">{`
+        {this.state.theme == "white" ? (<style type="text/css">{`
             body,h1,h2,h3,h4,h5,p,div,span,
             .TileBoardTopCenter,.TileBoardTop .TileBoardTopName h1,
             .TileBoardTop .TileBoardTopCenter h1,
@@ -186,13 +190,51 @@ class NavBottom extends Component {
             .ModalWrap label,
             .ModalWrap .InputWrapper,
             .FakeSelect,
-            .FakeOption
+            .FakeSelect .FakeOption,
+            .FakeSelect .FakeOptionsContainer .FakeOption
+            
             {
-              background:${bglight};
-              background-color:${bglight};
+              background:${bglight2};
+              background-color:${bglight2};
               color:${ColorParent};
             }
-          
+            ::-webkit-input-placeholder {
+              color: ${ColorParent};
+            }
+            :-ms-input-placeholder {
+              color: ${ColorParent};
+            }
+            ::-moz-placeholder {
+              color: ${ColorParent};
+              opacity: 1;
+            }
+            ::placeholder {
+              color: ${ColorParent};
+              opacity: 1;
+            }
+            :placeholder {
+              color: ${ColorParent};
+              opacity: 1;
+            }
+            :-moz-placeholder {
+              color: ${ColorParent};
+              opacity: 1;
+            }
+            .FakeSelect .FakeOptionsContainer .FakeOption:hover,
+            .FakeSelect .FakeOptionsContainer.Out .FakeOption:hover
+            {
+              background: ${LightBlue};
+              background-color: ${LightBlue};
+              color: #fff;
+            }
+            .FakeSelect .FakeOptionsContainer.Out{
+              background: ${bglighttr};
+              background-color: ${bglighttr};
+            }
+            .FakeSelect .FakeOptionsContainer .ContainerOuter{
+              background: ${bglighttr};
+              background-color: ${bglighttr};
+            }
 
           `}</style>) : null}
       </div>

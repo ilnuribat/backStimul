@@ -188,7 +188,7 @@ export class FakeSelect extends Component {
             {
                 filter || this.props.array && this.props.array.length > 5 ? (
               <label htmlFor="lister">
-                <input type="text" id="lister" name="lister" onChange={e=>{ this.findElements(e) }}></input>
+                <input type="text" id="lister" name="lister" placeholder="Поиск" onChange={e=>{ this.findElements(e) }}></input>
               </label> ): null
             }
 
