@@ -167,6 +167,12 @@
 .Task.Child{
    background: #304d6d;
 }
+.Task.Child .ChatMessage{
+   color: #454b52;
+}
+.Task.Sel.Child{
+   background: transparent;
+}
 
 .Task.Sel .Bottom svg{
   fill: #346296;
@@ -179,6 +185,15 @@
 /* border:1px solid #346296; */
 /* box-shadow: 0 0 8px 0px #00f7ff; */
 
+}
+.ChildsHide,
+.Childs.Hide
+{
+  border: 2px solid #0084ff;
+  border-radius: 3px;
+  font-size:12px;
+  text-align: center;
+  padding: 2px 5px;
 }
 
 .childsCount{
