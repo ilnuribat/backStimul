@@ -64,6 +64,7 @@
  max-height: 100%;
  overflow: hidden;
  padding: 5px;
+ background: rgb(216, 225, 228);
  background: #2e2e2eb6;
 }
 .FakeSelect .FakeOptionsContainer .ContainerInner

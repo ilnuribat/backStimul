@@ -157,13 +157,17 @@ export class FakeSelect extends Component {
   render() {
 
     const { selected, open, array} = this.state;
-    const { view, defaultid, inside, filter } = this.props;
+    const { view, defaultid, inside, filter, out } = this.props;
 
     let filt = false;
-    
+    let classappend = '';
     
     if(defaultid && !selected || defaultid && !selected.id ){
       this.setDefault(array, defaultid);
+    }
+
+    if (out){
+      classappend = classappend + " Out";
     }
 
     const arr = array || [
@@ -182,7 +186,7 @@ export class FakeSelect extends Component {
         {!open ? (<Svg svg="expose" />):(<Svg svg="inpose" />)}
         {open ? (
 
-          <div className={"FakeOptionsContainer animated fadeIn" + " Out" } onMouseLeave={this.openSelect}>
+          <div className={"FakeOptionsContainer animated fadeIn" + classappend } onMouseLeave={this.openSelect}>
             <div className="ContainerOuter">
 
             {
