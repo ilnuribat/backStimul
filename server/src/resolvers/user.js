@@ -13,8 +13,6 @@ const { ERROR_CODES } = require('../services/constants');
 
 /** ***** */
 
-
-
 const config = {
   url: 'ldap://pdcg.guss.ru',
   baseDN: 'DC=guss,DC=ru',
@@ -39,7 +37,30 @@ const config = {
 };
 
 const ad = new ActiveDirectory(config);
+const adsifyUser = (user) => {
+  return new Promise((resolve, reject) => {
+    ad.findUser({ scope: 'sub' }, user.email, (err, userAd) => {
+      if (err) {
+        console.log(JSON.stringify(err));
+        resolve(user);
+      }
+      if (!userAd) {
+        resolve(user);
+      }
 
+      let usr = user;
+
+      if (user._doc){
+        usr = user._doc
+      }
+
+        let append = Object.assign({}, usr, userAd);
+        resolve(append);
+
+
+    });
+  });
+};
 /** ***** */
 
 module.exports = {
@@ -60,37 +81,26 @@ module.exports = {
     username: user => user.email,
   },
   Query: {
-    user(parent, args, { user }) {
+    user: async (parent, args, { user }) => {
       if (!user) {
         throw new Error('Пользователь не авторизован');
       }
-
       if (user.email) {
-        ad.findUser({ scope: 'sub' }, user.email, (err, userAd) => {
-          if (err) {
-            console.log('-----------------------ERROR: ' + JSON.stringify(err));
-            return;
-          }
-          if (!userAd) {
-            console.log('-----------------------User: ' + user + ' not found.');
-            return user;
-          }
-          
-            let append = Object.assign({}, user._doc, userAd);
+        let adUser = await adsifyUser(user);
 
-            // console.log('-----------------------USER user-----------------------', user)
-            console.log('-----------------------USER append-----------------------', append)
-
-            // console.log('+++++++++++++++++++++++++++++userAd', userAd);
-            return append;
-          
-        });
-      } else {
-        return user;
+        return (adUser);
       }
+
+      return user;
     },
-    users() {
-      return User.find();
+    users: async () => {
+      let allUsers = User.find({});
+      return await allUsers.then((users)=>{
+        return users.map(async (user)=>{
+          let adUser = await adsifyUser(user);
+          return adUser
+        })
+      })
     },
   },
 

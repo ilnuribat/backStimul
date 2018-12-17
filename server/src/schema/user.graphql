@@ -8,6 +8,16 @@ type User {
   id: ID! # unique id for the user
   email: String! # we will also require a unique email per user
   username: String
+  cn: String
+  mail: String
+  company: String
+  department: String
+  description: String
+  displayName: String
+  name: String
+  sn: String
+  title: String
+  primaryGroupId: String
   messages: [Message]
   groups: [Group]
   directs: [Direct]
