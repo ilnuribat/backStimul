@@ -7,6 +7,7 @@ import {
   Popup,
   TileLayer
 } from "react-leaflet";
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Query, compose, graphql } from "react-apollo";
 import { divIcon } from "leaflet";
 // import PropTypes from 'prop-types';
@@ -159,7 +160,7 @@ class LeafletMap extends Component {
                 const center = [centerLat, centerLon];
 
                 return (
-                  <Map center={center} zoom={currentZoom} style={styleLeaf}  >
+                  <Map center={center} zoom={currentZoom} style={styleLeaf} maxZoom="18" >
                     <LayersControl position="topright" >
                       <BaseLayer  checked name="Landscape">
                         <TileLayer
@@ -232,7 +233,9 @@ class LeafletMap extends Component {
                         data.objects ? (
                           <Overlay checked name="Задачи новые" >
                             <LayerGroup >
+                            <MarkerClusterGroup>
                               <Panel type="1" name="Задача новая" data={data.objects} click={this.handleTabChange} />
+                            </MarkerClusterGroup>
                             </LayerGroup>
                           </Overlay>) : null }
                       {/* {
