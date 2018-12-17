@@ -11,6 +11,10 @@ const { ADDRESS_LEVELS } = require('../services/constants');
 const knex = Knex({
   client: 'pg',
   connection: PG_FIAS,
+  pool: {
+    min: 1,
+    max: 10,
+  },
 });
 
 async function getParentChain(fiasId) {

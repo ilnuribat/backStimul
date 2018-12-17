@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 const { execute, subscribe } = require('graphql');
 const { makeExecutableSchema } = require('graphql-tools');
-const connectToMongo = require('./connectDB');
+const { connect } = require('./connectDB');
 const { HTTP_PORT, JWT_SECRET } = require('./config');
 const { User } = require('./src/models');
 const { logger } = require('./logger');
@@ -112,7 +112,7 @@ async function subscriptionConnectHandler(connectionParams) {
 subscriptionServer.onConnect = subscriptionConnectHandler;
 
 async function start() {
-  await connectToMongo();
+  await connect();
 
   return new Promise((resolve/* , reject */) => {
     /* istanbul ignore if  */

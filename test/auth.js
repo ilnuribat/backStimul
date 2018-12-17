@@ -4,8 +4,9 @@ const { Types: { ObjectId } } = require('mongoose');
 const { User } = require('../server/src/models');
 const { subscriptionConnectHandler } = require('../server');
 const { generateToken } = require('../server/src/services/user');
+const { ERROR_CODES } = require('../server/src/services/constants');
 
-describe('login', () => {
+describe.skip('login', () => {
   it('correct credentials', async function () {
     const { data, errors } = await this.request({
       query: `
@@ -138,7 +139,7 @@ describe('subscription onConnect', () => {
 
       throw new Error();
     } catch (err) {
-      assert.include(err.message, 'no user found');
+      assert.include(err.message, ERROR_CODES.NO_USER_FOUND);
     }
   });
 });

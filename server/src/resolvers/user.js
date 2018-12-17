@@ -6,6 +6,9 @@ const {
 const { logger } = require('../../logger');
 const { getDirectChats } = require('../services/chat');
 const { getTasks, generateToken } = require('../services/user');
+const { authenticate } = require('../services/ad');
+const { BCRYPT_ROUNDS } = require('../../config');
+const { ERROR_CODES } = require('../services/constants');
 
 module.exports = {
   User: {
@@ -39,17 +42,34 @@ module.exports = {
 
   Mutation: {
     async login(parent, { user }) {
-      const { email, password } = user;
-      const foundUser = await User.findOne({ email });
+      const { password } = user;
+      const email = user.email.toLowerCase();
+      let foundUser;
 
-      if (!foundUser) {
-        throw new Error('Пользователь не найден');
-      }
+      try {
+        await authenticate(email, password);
 
-      const validatePassword = await bcrypt.compare(password, foundUser.password);
+        foundUser = await User.findOne({ email });
 
-      if (!validatePassword && password !== foundUser.password) {
-        throw new Error('Неверный пароль');
+        if (!foundUser) {
+          foundUser = await User.create({
+            email,
+            password: `${Math.random()}:${Math.random()}`,
+          });
+        }
+      } catch (err) {
+        logger.error('error in ad', err);
+        foundUser = await User.findOne({ email });
+
+        if (!foundUser) {
+          throw new Error(ERROR_CODES.NO_USER_FOUND);
+        }
+
+        const validatePassword = await bcrypt.compare(password, foundUser.password);
+
+        if (!validatePassword && password !== foundUser.password) {
+          throw new Error(ERROR_CODES.INCORRECT_PASSWORD);
+        }
       }
 
       const token = generateToken(foundUser);
@@ -63,11 +83,14 @@ module.exports = {
       };
     },
     async signup(_, { user }) {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('only dev mode');
+      }
+
       const { email, password } = user;
 
       try {
-        const rounds = process.env.NODE_ENV === 'production' ? 12 : 1;
-        const hashPassword = await bcrypt.hash(password, rounds);
+        const hashPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
         const newUser = await User.create({ email, password: hashPassword });
         const token = generateToken(newUser);
 
@@ -76,6 +99,9 @@ module.exports = {
           userId: newUser.id,
           id: newUser.id,
           username: newUser.email,
+          mail: newUser.email,
+          fullname: newUser.name,
+          department: newUser.name,
           jwt: token,
         };
       } catch (err) {
