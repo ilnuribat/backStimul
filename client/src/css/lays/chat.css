@@ -1,0 +1,199 @@
+.user-private-chat, .user-private{
+  border-radius:5px;
+  margin:10px 10px;
+  padding:10px;
+  cursor: pointer;
+}
+.user-private-chat:before{
+  content:"Чат с ";
+  display: inline;  
+}
+
+.Chat{
+  background: transparent;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  /* max-width: 370px; */
+  height: 100%;
+  border-radius: 6px;
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
+  background-color: #363941;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 5px 0px 5px;
+}
+.ChatTop{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height:55px;
+  width: 100%;
+
+}
+.ChatTop .UserRow{
+  width: 100%;
+  text-align: center;
+}
+.ChatMessages{
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
+  border-radius: 6px;
+  display: block;
+  padding:5px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+  border-radius: 0px;
+  /* flex-direction: column; */
+  /* justify-content: stretch; */
+  /* align-items: flex-start; */
+}
+.ChatForm{
+  padding: 10px;
+  width: 100%;
+  height: 70px;
+  /* box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03); */
+  /* background-color: #3d4147; */
+  /* border-radius: 6px; */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.ChatForm .textarea-wrapper *{
+  margin: 0px;
+}
+.ChatForm .textarea-wrapper
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width:100%;
+  border-radius: 3px;
+}
+.ChatForm .textarea-wrapper svg
+{
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+.ChatForm .textarea-wrapper .Smiles
+{
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+.ChatForm input,
+.ChatForm textarea
+{
+  width:100%;
+  height: auto;
+  border-radius: 3px;
+}
+.ChatSend
+{
+  display: block;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999em;
+  overflow: hidden;
+
+  margin:0;
+  padding:0;
+  width:50px;
+  height:50px;
+}
+.ChatSend svg
+{
+  border-radius: 999em;
+  overflow: hidden;
+  width:25px;
+  height:25px;
+  padding: 8px;
+}
+
+.msg{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin:0 0 10px;
+}
+
+.msg.me{
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.msg-flex{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.msg-user{
+  width: auto;
+  padding:2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  
+}
+.msg-user .Col{
+  width: auto;
+  padding:2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.msg.me{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row-reverse;
+}
+.msg.me .msg-user{
+  width: 0px;
+  overflow: hidden;
+  padding:2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.msgs .Svg{
+  width:12px;
+  height:12px;
+}
+.msgs{
+  padding: 10px;
+  width:auto;
+  max-width: 80%;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.f-row{
+  margin:10px auto 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  align-items: center;
+}
+.f-row svg{
+  width:12px;
+  height: 12px;
+}
+.msg-date{
+  font-size: 10px;
+}

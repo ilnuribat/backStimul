@@ -1,16 +1,15 @@
-.Board-Top{
+.Board-Top-New{
 display: flex;
 flex-direction: row;
 height: auto;
 min-height: auto;
 width: 100%;
 min-width: 100%;
-background: #2a2c31;
 justify-content: center;
 align-content: center;
 }
 
-.Board-Top h1{
+.Board-Top-New h1{
   padding:0 0 0;
   font-size: 1vw;
   font-weight: 300;
@@ -18,7 +17,6 @@ align-content: center;
   font-stretch: normal;
   line-height: normal;
   letter-spacing: -1.1px;
-  color: #ffffff;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -26,18 +24,17 @@ align-content: center;
 }
 
 
-.Board-Top .BoardTopCenter{
+.Board-Top-New .BoardTopCenter{
   display: flex;
   width:100%;
   flex-direction: row;
   padding:0 0 0;
-  color: #ffffff;
   align-self: center;
   text-align: center;
   justify-content: center;
   align-items: center;
 }
-.Board-Top .BoardTopCenter > *{
+.Board-Top-New .BoardTopCenter > *{
   margin:0;
   margin:0 10px 0;
 }
@@ -53,27 +50,8 @@ align-content: center;
   align-content: center;
 }
 .toBack svg{
-  /* width: 64px; */
-  height: 32px;
+  height: 28px;
 }
-/* .Board{
-  display: flex;
-  flex-direction: column;
-  height:100%;
-  width:auto;
-  overflow: hidden;
-}
-.Board-Content{
-  display: flex;
-  flex-direction: row;
-  overflow-y:hidden;
-  overflow-x:hidden;
-  align-items: flex-start;
-  justify-content: flex-start;
-  height:100%;
-  max-height: 100%;
-} */
-
 .Board{
   transition: all 0.3s ease-in-out;
   display: flex;
@@ -111,42 +89,36 @@ align-content: center;
   min-height: auto;
 }
 
-.toBack{
-  padding: 10px;
-}
-.toBack a{
 
-}
-.toBack .toBackLink{
-  color:#3e75b2;
+.Board-Top-Tabbed{
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  text-decoration: none;
-}
-.toBack .toBackLink svg{
-  height: 26px;
-  width: 26px;
-}
-.EtapsWrap{
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-}
-.Etaps{
-  display: flex;
+  width: 100%;
   flex-direction: column;
-  width: 256px;
-  height: auto;
-  padding: 5px;
-  border-radius: 3px;
-  background: #ffffff;
-  margin:0 0 0 0;
-  min-height: 200px;
-  box-shadow: 2px 2px 20px -4px rgba(0, 0, 0, 0.3);
+  justify-content: flex-start;
+  align-items: center;
 }
-.Board-Content-Tree{
-  padding: 10px 10px 20px;
+.BoardTabs{
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 10px;
+}
+
+.Tabs-Button{
+  transition: all 0.3s ease-in-out;
+  margin: 0 5px 0;
+  display: block;
+  padding: 2px 5px;
+  width:100px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 3px;
+  box-shadow: 2px 2px 20px -4px rgba(0, 0, 0, 0.3)
+}
+.Tabs-Button.sel,
+.Tabs-Button:hover
+{
+  width: 120px;
 }

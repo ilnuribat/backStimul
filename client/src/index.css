@@ -189,27 +189,59 @@ svg{
 }
 
 
-@import './newcss/nav.css';
-@import './newcss/bar.css';
-@import './newcss/board.css';
-@import './newcss/root.css';
-@import './newcss/task.css';
-@import './newcss/containers.css';
-@import './newcss/button.css';
-@import './newcss/input.css';
-@import './newcss/tile.css';
-@import './newcss/tileboard.css';
-@import './newcss/chat.css';
 
-@import './newcss/messages.css';
-@import './newcss/map.css';
-@import './newcss/svg.css';
-@import './newcss/rows.css';
-@import './newcss/fakeselect.css';
-@import './newcss/search.css';
-@import './newcss/privates.css';
-@import './newcss/treeview.css';
-@import './newcss/crumbs.css';
+
+
+@import './css/lays/nav.css';
+@import './css/lays/board.css';
+@import './css/lays/root.css';
+@import './css/lays/task.css';
+@import './css/lays/containers.css';
+@import './css/lays/button.css';
+@import './css/lays/input.css';
+@import './css/lays/tile.css';
+@import './css/lays/tileboard.css';
+@import './css/lays/chat.css';
+
+@import './css/lays/messages.css';
+@import './css/lays/map.css';
+@import './css/lays/svg.css';
+@import './css/lays/rows.css';
+@import './css/lays/fakeselect.css';
+@import './css/lays/search.css';
+@import './css/lays/privates.css';
+@import './css/lays/treeview.css';
+@import './css/lays/crumbs.css';
+@import './css/lays/boardtabbed.css';
+
+
+
+/** COLORS **/
+@import './css/colors/nav.css';
+@import './css/colors/bar.css';
+@import './css/colors/board.css';
+@import './css/colors/root.css';
+@import './css/colors/task.css';
+@import './css/colors/containers.css';
+@import './css/colors/button.css';
+@import './css/colors/input.css';
+@import './css/colors/tile.css';
+@import './css/colors/tileboard.css';
+@import './css/colors/chat.css';
+
+@import './css/colors/messages.css';
+@import './css/colors/map.css';
+@import './css/colors/svg.css';
+@import './css/colors/rows.css';
+@import './css/colors/fakeselect.css';
+@import './css/colors/search.css';
+@import './css/colors/privates.css';
+@import './css/colors/treeview.css';
+@import './css/colors/crumbs.css';
+@import './css/colors/boardtabbed.css';
+/** COLORS **/
+
+
 
 .Button {
     width: 140px;

@@ -1,0 +1,11 @@
+.crumbs, .crumbWrap, .crumb{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.crumbs{
+  font-size:1.5vw;
+  cursor:pointer;
+}

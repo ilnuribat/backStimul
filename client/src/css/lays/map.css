@@ -1,0 +1,9 @@
+.mapModal ul li{
+  padding: 5px;
+}
+.mapModal .button{
+  padding:5px 10px;
+  display: inline-block;
+  margin:10px auto;
+  border-radius: 5px;
+}
