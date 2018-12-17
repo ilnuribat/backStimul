@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+// import React, { Component } from "react";
 import { withLeaflet, MapControl } from "react-leaflet";
 import L from "leaflet";
 
@@ -11,10 +11,10 @@ class MapInfo extends MapControl {
       )}</span>&nbsp;<span>Lng: ${ev.latlng.lng.toFixed(4)}</span></h2>`;
       // console.log(this.panelDiv.innerHTML);
     });
-    props.leaflet.map.addEventListener("click", ev => {
-      console.log(this.panelDiv.innerHTML);
-      new L.marker(ev.latlng).addTo(this.props.leaflet.map);
-    });
+    // props.leaflet.map.addEventListener("click", ev => {
+    //   console.log(this.panelDiv.innerHTML);
+    //   new L.marker(ev.latlng).addTo(this.props.leaflet.map);
+    // });
   }
 
   createLeafletElement(opts) {
