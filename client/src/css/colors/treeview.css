@@ -1,0 +1,141 @@
+ul.TreeUl, ul.TreeUl ul{
+  border: 1px solid salmon;
+  padding: 0 0 0 5px;
+}
+.TreeUl li{
+  margin:5px;
+}
+.Board-Content-Tree{
+  
+}
+.TreeViewName{
+  font-size: 25px;
+}
+.Board-Content-Tree{
+  padding: 0 0 0 10px;
+}
+.TreeTask{
+  position: relative;
+  padding: 0 0 0 0;
+  margin: 30px 0 0 60px;
+}
+.TreeTask::before{
+  position: absolute;
+  content: " ";
+  display: block;
+  width: 50px;
+  height: 2px;
+  left:-60px;
+  top:10px;
+  margin: 0 0 0 0;
+  background: #202225;
+}
+
+.Board-Content-Tree .inner{
+  height: auto;
+  width: 100%;
+  position: relative;
+}
+.Board-Content-Tree .inner .border{
+  position: absolute;
+  display: block;
+  width: 2px;
+  height: 90%;
+  left:0px;
+  top:30px;
+  margin: 0 0 0 0;
+  background: #202225;
+}
+
+.TreeTask.Parent .border{
+  position: absolute;
+  display: block;
+  width: 2px;
+  height: calc( 100% - 45% );
+  left:10px;
+  top:auto;
+  margin: 0 0 0 0;
+  background: #202225;
+}
+
+.TreeName{
+  font-size: 20px;
+}
+.TreeName .endDate{
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 5px;
+  background-color: #3d4147;
+  background-color: #5f5f5f6c;
+  border-radius: 3px;
+}
+.TreeName .status{
+  font-size: 12px;
+  padding: 5px;
+  color: #808fa3;
+  /* background-color: #3d4147; */
+  border-radius: 5px;
+}
+.TreeName .endDate.blu{
+  background-color: #3e75b2;
+}
+.TreeName .endDate.grd{
+  background-color: #d2903c;
+}
+.TreeName .endDate.yeld{
+  background-color: #d2903c;
+}
+.TreeName .endDate.redd{
+  background-color: #c45c5c;
+}
+.TreeName .status::before{
+  content: " ";
+  display:inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 100px;
+  margin-right:5px;
+  background-color: #3e75b2;
+}
+
+.TreeName .status.sts1::before,
+.TreeName .status.sts0::before
+{
+  background-color: #3e75b2;
+}
+.TreeName .status.red::before,
+.TreeName .status.sts4::before
+{
+  background-color: #c45c89;
+}
+.TreeName .status.green::before,
+.TreeName .status.sts3::before
+{
+  background-color: #459e64;
+}
+.TreeName .status.wht::before,
+.TreeName .status.sts5::before
+{
+  background-color: #fff;
+}
+
+.TreeName span{
+  margin: 0 10px 0 0;
+}
+.TreeChilds{
+  padding: 0 0 0 10px;
+}
+.TreePlus, .TreeMinus{
+  display: block;
+  position: absolute;
+  width:20px;
+  height:20px;
+  border:2px solid #202225;
+  left:-40px;
+  top:1px;
+  cursor: pointer;
+  background: #808fa3;
+}
+.TreePlus svg, .TreeMinus svg{
+fill:#FFF;
+}

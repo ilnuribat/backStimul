@@ -20,6 +20,7 @@ import { getObjects } from '../../../GraphQL/Qur/Query/index';
 import Loading from '../../Loading';
 import Content from '../../Lays/Content';
 import { getPlaceName, setPlaceName } from "../../../GraphQL/Cache";
+import MapInfo from "./MapInfo";
 
 const { BaseLayer, Overlay } = LayersControl;
 
@@ -285,6 +286,7 @@ class LeafletMap extends Component {
                         // provider="BingMap"
                         // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
                       />
+                      <MapInfo />
                     </LayersControl>
 
                   </Map>

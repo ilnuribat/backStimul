@@ -117,7 +117,7 @@ class Task extends Component {
 
           {childs ? (
             <div className="Childs" onClick={() => childs(id)}>
-              {!selectedChilds ? <Svg svg="childs" size="34" /> : <div className="" onClick={() => childs('')}>Скрыть подзадачи</div>}
+              {!selectedChilds ? <Svg svg="childs" size="34" /> : <div className="ChildsHide" onClick={() => childs('')}>Скрыть подзадачи</div>}
             </div>
           ) : null
           }

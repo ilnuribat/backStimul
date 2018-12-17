@@ -1,0 +1,124 @@
+.left-nav {
+  display: flex;
+  flex-direction: column;
+  width: 109px;
+  background-color: #202225;
+}
+.left-nav svg{
+  fill: #3e75b2;
+}
+
+.Nav .nav{
+  display: block;
+  width: 100%;
+  height: 40px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+.Nav .nav svg{
+  fill: #3e75b2;
+  width:24px;
+  height: 24px;
+}
+.NavLinks{
+  display:flex;
+  flex:2 1 auto;
+  flex-direction: column;
+  width: 100%;
+}
+.NavTop{
+  position: relative;
+  padding: 10px 0 0 0;
+  display:flex;
+  flex:1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  overflow: hidden;
+  /* justify-items: center; */
+}
+.NavTop .LogoNav{
+  display: block;
+  /* border: 1px solid rgb(77, 77, 77); */
+  /* width: 58px; */
+  /* height:58px; */
+  /* overflow: hidden; */
+  /* border-radius: 999em; */
+  color:#fff;
+}
+.LogoNav{
+  position: relative;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  /* overflow: hidden; */
+}
+.LogoNav a{
+  z-index: 1;
+  position: relative;
+  display:flex;
+  width:100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  object-fit: contain;
+  color:rgba(170, 170, 170, 0.575);
+  text-decoration: none;
+  justify-self: center;
+  justify-content: center;
+  align-self: center;
+  align-items: center;
+}
+.LogoNav a .UserRow{
+  justify-self: center;
+  justify-content: center;
+  align-self: center;
+  align-items: center;
+}
+.LogoNav a .UserRow > *{
+  margin:0 auto;
+}
+.LogoNav img{
+  display:block;
+  width:100%;
+  height: 100%;
+  align-self: center;
+  justify-self: center;
+}
+
+.nav.selected:before{
+  content: " ";
+  position: absolute;
+  top:-8px;
+  left:0px;
+  border-radius: 0 5px 5px 0;
+  display: block;
+  width:10px;
+  background: #3e75b2;
+  height: 100%;
+}
+
+.NavBottom{
+  height: auto;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.ColorButton{
+  display: block;
+  border:2px solid rgb(107, 104, 104);
+  width:20px;
+  height:20px;
+  border-radius: 999em;
+  background: #fff;
+  cursor: pointer;
+}
+.ColorButton.white{
+  background: #f5e505;
+}
+.ColorButton.gold{
+  background: #202225;
+}

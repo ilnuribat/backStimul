@@ -1,4 +1,4 @@
-.Board-Top{
+.Board-Top-New{
 display: flex;
 flex-direction: row;
 height: auto;
@@ -10,7 +10,7 @@ justify-content: center;
 align-content: center;
 }
 
-.Board-Top h1{
+.Board-Top-New h1{
   padding:0 0 0;
   font-size: 1vw;
   font-weight: 300;
@@ -26,7 +26,7 @@ align-content: center;
 }
 
 
-.Board-Top .BoardTopCenter{
+.Board-Top-New .BoardTopCenter{
   display: flex;
   width:100%;
   flex-direction: row;
@@ -37,7 +37,7 @@ align-content: center;
   justify-content: center;
   align-items: center;
 }
-.Board-Top .BoardTopCenter > *{
+.Board-Top-New .BoardTopCenter > *{
   margin:0;
   margin:0 10px 0;
 }
@@ -53,8 +53,7 @@ align-content: center;
   align-content: center;
 }
 .toBack svg{
-  /* width: 64px; */
-  height: 32px;
+  height: 28px;
 }
 /* .Board{
   display: flex;
@@ -111,42 +110,39 @@ align-content: center;
   min-height: auto;
 }
 
-.toBack{
-  padding: 10px;
-}
-.toBack a{
 
-}
-.toBack .toBackLink{
-  color:#3e75b2;
+.Board-Top-Tabbed{
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  text-decoration: none;
-}
-.toBack .toBackLink svg{
-  height: 26px;
-  width: 26px;
-}
-.EtapsWrap{
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-}
-.Etaps{
-  display: flex;
+  width: 100%;
   flex-direction: column;
-  width: 256px;
-  height: auto;
-  padding: 5px;
-  border-radius: 3px;
-  background: #ffffff;
-  margin:0 0 0 0;
-  min-height: 200px;
-  box-shadow: 2px 2px 20px -4px rgba(0, 0, 0, 0.3);
+  justify-content: flex-start;
+  align-items: center;
 }
-.Board-Content-Tree{
-  padding: 10px 10px 20px;
+.BoardTabs{
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 10px;
+}
+
+.Tabs-Button{
+  transition: all 0.3s ease-in-out;
+  margin: 0 5px 0;
+  display: block;
+  padding: 2px 5px;
+  background: #3e74b23f;
+  width:100px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 3px;
+  box-shadow: 2px 2px 20px -4px rgba(0, 0, 0, 0.3)
+}
+.Tabs-Button.sel,
+.Tabs-Button:hover
+{
+  background: #3e74b2a8;
+  width: 120px;
+  color: aliceblue;
 }

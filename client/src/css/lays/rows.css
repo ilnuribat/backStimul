@@ -15,7 +15,6 @@
   width: 32px;
   object-fit: contain;
   border-radius: 2px;
-  background-color: #3d4147d7;
   margin:0 20px 0 0;
   overflow: hidden;
   display: flex;
@@ -27,7 +26,6 @@
   margin:auto auto;
   height: 24px;
   width: 24px;
-  fill:#3e74b27c;
   display:flex;
   align-self: center;
   justify-self: center;
@@ -36,7 +34,6 @@
 
 }
 .FileIcon .Svg{
-  background: #373a3fe5;
   border-radius: 3px;
   display:flex;
   align-self: center;
@@ -45,7 +42,6 @@
 .FileName{
   font-size: 12px;
   width: 100%;
-  /* color:#fff; */
 }
 
 
@@ -72,7 +68,6 @@
   min-width: 32px;
   max-width: 32px;
   border-radius: 999em;
-  background-color: #30333865;
   margin:0 0 0;
   overflow: hidden;
   display: flex;
@@ -84,7 +79,6 @@
 .UserRow .UserIcon svg{
   height: 100%;
   width:  100%;
-  fill:#3e74b27c;
 }
 .UserRow .UserIcon.Boxed{
   border-radius: 5px;
@@ -136,12 +130,10 @@
 
 .UserNameText{
   font-size: 10px;
-  color: #ffffff;
   text-transform: capitalize;
 }
 .MessageSimpleText{
   font-size: 10px;
-  color: #808fa3;
 }
 .PadTop5{
   padding: 5px 0 0;
@@ -155,17 +147,12 @@
   /* width: 140px; */
   height: 28px;
   border-radius: 2px;
-  border: solid 1px rgba(62, 117, 178, 0.7);
-  background-color: #3e75b2;
   cursor:pointer;
   text-align: center;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   box-shadow: 2px 2px 20px -2px rgba(0, 0, 0, 0.3);
-}
-.ButtonRow:hover{
-  background-color: #275285;
 }
 .ButtonRow .ButtonIcon{
   /* flex:1 1 auto; */
@@ -192,14 +179,12 @@
 {
   height: 100%;
   width:  100%;
-  fill:#ffffff;
 }
 .ButtonRow .ButtonName{
   /* flex:2; */
   margin:0 5px 0;
   font-size: 12px;
   /* width: 100%; */
-  color:#fff;
 }
 
 
@@ -233,14 +218,12 @@
 .ButtonTo .ButtonIcon svg{
   height: 100%;
   width:  100%;
-  fill:#3e75b2;
 }
 .ButtonTo .ButtonName{
   /* flex:2; */
   margin:0 5px 0;
   font-size: 14px;
   /* width: 100%; */
-  color:#3e75b2;
 }
 
 
@@ -248,17 +231,14 @@
 
 /* .RowBg{
   width:100%;
-  background: #0000000f;
   padding: 2px;
   margin:2px;
 } */
 .RowBg{
   position: relative;
   width: 100%;
-  /* background: #0000000f; */
   padding: 2px;
   margin: 2px;
-  border-bottom: 1px solid #00000017;
 }
 .UserRow.Col>*{
 margin:0 auto 5px;
@@ -305,29 +285,24 @@ margin:0 auto 5px;
   width: 100%;
   padding:10px;
   font-size: 12px;
-  color: #a3b6c5;
   text-align: center;
   text-decoration: underline;
   border-radius: 5px;
-  border: 1px dashed #a3b6c570;
   cursor: pointer;
 }
 .FakeLinkSvg{
   width: 100%;
   padding:0px;
   font-size: 12px;
-  /* color: #a3b6c5; */
   text-align: center;
   /* text-decoration: underline; */
   border-radius: 5px;
-  background: #6d6d6d25;
   cursor: pointer;
 }
 .FakeLinkSvg .Svg{
   margin:0 auto;
 }
 .FakeLinkSvg .Svg svg{
-  fill: #3e75b2;
 }
 .UserRow.Col{
   justify-content: center;
