@@ -21,6 +21,7 @@ import Loading from '../../Loading';
 import Content from '../../Lays/Content';
 import { getPlaceName, setPlaceName } from "../../../GraphQL/Cache";
 import MapInfo from "./MapInfo";
+import TileMaker from '../../Parts/TileMaker/';
 
 const { BaseLayer, Overlay } = LayersControl;
 
@@ -50,18 +51,15 @@ class LeafletMap extends Component {
       redirect: false,
       offsetWidth: 1024,
       offsetHeight: 768,
-      objectId: ""
+      objectId: "",
+      edit: false
     };
   }
 
-
-
   componentDidMount () {
-
     // console.warn("COORD", document.body.clientWidth,document.body.offsetHeight)
     const {getPlaceName} = this.props;
     let { setPlaceName } = this.props;
-
     let place = 'Map';
 
     if(getPlaceName && getPlaceName.placename != place){
@@ -82,7 +80,7 @@ class LeafletMap extends Component {
     return(
       <Popup>
         <div>
-          <p>I am a custom popUp</p>
+         <p>I am a custom popUp</p>
           <p>latitude and longitude from search component: {SearchInfo.latLng.toString().replace(',',' , ')}</p>
           <p>Info from search component: {SearchInfo.info}</p>
         </div>
@@ -98,6 +96,7 @@ class LeafletMap extends Component {
     }
 
     render() {
+      let { edit } = this.state;
       return (
         <Content >
           <Query query={getObjects}>
@@ -286,9 +285,10 @@ class LeafletMap extends Component {
                         // provider="BingMap"
                         // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
                       />
-                      <MapInfo />
+                      <MapInfo edit={edit} setEdit={()=>{this.setState({edit: !edit})}} />
                     </LayersControl>
-
+                    { edit ? <TileMaker edit={true} setEdit={()=>{this.setState({edit: !edit})}} />
+                    : null}
                   </Map>
                 );
               }else{
