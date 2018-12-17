@@ -99,9 +99,6 @@ module.exports = {
           userId: newUser.id,
           id: newUser.id,
           username: newUser.email,
-          mail: newUser.email,
-          fullname: newUser.name,
-          department: newUser.name,
           jwt: token,
         };
       } catch (err) {
