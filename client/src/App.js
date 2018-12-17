@@ -11,7 +11,7 @@ import Root from './comps/Root';
 import Nav from './comps/Lays/Nav';
 import Map from './comps/Views/Map';
 // import Profile from './comps/Views/Profile';
-import Board from './comps/Views/Board';
+import Board from './comps/Views/BoardTabbed';
 import TaskView from './comps/Views/TaskView';
 import TileBoard from './comps/Views/TileBoard';
 import Private from './comps/Views/Private';

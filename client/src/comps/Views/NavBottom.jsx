@@ -96,6 +96,7 @@ class NavBottom extends Component {
             .Column .Name,
             .Task-Name,
             .Board-Top h1,
+            .Board-Top-New  h1,
             .SearchBody .BlockHeader
             {color:${ColorParent};}
             .grey p, .cgr p,
@@ -107,7 +108,10 @@ class NavBottom extends Component {
             }
             .Root{background: ${BakgrColorPrimary};background-color: ${BakgrColorPrimary};}
             .Tile{background: ${BakgrColorMaster};background-color: ${BakgrColorMaster};}
-            .Nav, .Panel, .Column,.Board-Top,.Task
+            .Nav, .Panel, .Column,
+            .Board-Top,
+            .Board-Top-New,
+            .Task
             ,.Bar
             ,.InnerBar
             ,.ChatMessages
@@ -117,7 +121,9 @@ class NavBottom extends Component {
               color:${ColorParent};
             }
             .ChatForm,
-            .Board-Top{
+            .Board-Top,
+            .Board-Top-New 
+            {
               background: transparent;
               background-color: transparent;
             }
@@ -220,6 +226,7 @@ class NavBottom extends Component {
               color: ${ColorParent};
               opacity: 1;
             }
+
             .FakeSelect .FakeOptionsContainer .FakeOption:hover,
             .FakeSelect .FakeOptionsContainer.Out .FakeOption:hover
             {
@@ -227,6 +234,8 @@ class NavBottom extends Component {
               background-color: ${LightBlue};
               color: #fff;
             }
+                        .InputWrapper,
+            .InputWrapper input,
             .FakeSelect .FakeOptionsContainer.Out{
               background: ${bglighttr};
               background-color: ${bglighttr};
@@ -234,6 +243,10 @@ class NavBottom extends Component {
             .FakeSelect .FakeOptionsContainer .ContainerOuter{
               background: ${bglighttr};
               background-color: ${bglighttr};
+            }
+            .InputWrapper,
+            .InputWrapper input{
+              color: ${ColorParent};
             }
 
           `}</style>) : null}

@@ -1,0 +1,31 @@
+.column{
+  width: 303px;
+  border-radius: 6px;
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
+}
+.columns-wrapper{
+  box-sizing: border-box;
+  margin:0 0 0 106px;
+  padding: 10px;
+}
+.column:nth-child(1){
+}
+.column:nth-child(2){
+}
+.column:nth-child(3){
+}
+.column:nth-child(4){
+}
+.column-name{
+  background: transparent;
+  text-align: left;
+}
+.column-name:after{
+  margin: 10px 0 10px 0;
+  content:" ";
+  display: block;
+  height: 4px;
+  width:100px;
+  border-radius: 11px;
+  text-align: left;
+}
