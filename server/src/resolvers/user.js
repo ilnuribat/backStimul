@@ -27,7 +27,7 @@ module.exports = {
   Query: {
     user(parent, args, { user }) {
       if (!user) {
-        throw new Error('not authenticated');
+        throw new Error('Пользователь не авторизован');
       }
 
       return user;
@@ -43,13 +43,13 @@ module.exports = {
       const foundUser = await User.findOne({ email });
 
       if (!foundUser) {
-        throw new Error('no user found with such email');
+        throw new Error('Пользователь не найден');
       }
 
       const validatePassword = await bcrypt.compare(password, foundUser.password);
 
       if (!validatePassword && password !== foundUser.password) {
-        throw new Error('password is incorrect');
+        throw new Error('Неверный пароль');
       }
 
       const token = generateToken(foundUser);
@@ -81,7 +81,7 @@ module.exports = {
       } catch (err) {
         if (err.errmsg.indexOf('duplicate key error')) {
           logger.error('user with such email exists', { email });
-          throw new Error('user with such email exists');
+          throw new Error('Пользователь уже существует');
         }
 
         throw err;
