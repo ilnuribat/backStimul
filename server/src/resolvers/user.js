@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const ActiveDirectory = require('activedirectory');
 const {
   User,
   Message,
@@ -9,6 +10,37 @@ const { getTasks, generateToken } = require('../services/user');
 const { authenticate } = require('../services/ad');
 const { BCRYPT_ROUNDS } = require('../../config');
 const { ERROR_CODES } = require('../services/constants');
+
+/** ***** */
+
+
+
+const config = {
+  url: 'ldap://pdcg.guss.ru',
+  baseDN: 'DC=guss,DC=ru',
+  username: 'LDAP USER',
+  password: '2wKzTrzIs7mCHb',
+  attributes: {
+    user: [
+      'cn',
+      'mail',
+      'giveName',
+      'department',
+      'badPasswordTime',
+      'badPwdCount',
+      'company',
+      'description',
+      'displayName',
+      'name',
+      'sn',
+      'title',
+      'primaryGroupID'],
+  },
+};
+
+const ad = new ActiveDirectory(config);
+
+/** ***** */
 
 module.exports = {
   User: {
@@ -33,7 +65,29 @@ module.exports = {
         throw new Error('Пользователь не авторизован');
       }
 
-      return user;
+      if (user.email) {
+        ad.findUser({ scope: 'sub' }, user.email, (err, userAd) => {
+          if (err) {
+            console.log('-----------------------ERROR: ' + JSON.stringify(err));
+            return;
+          }
+          if (!userAd) {
+            console.log('-----------------------User: ' + user + ' not found.');
+            return user;
+          }
+          
+            let append = Object.assign({}, user._doc, userAd);
+
+            // console.log('-----------------------USER user-----------------------', user)
+            console.log('-----------------------USER append-----------------------', append)
+
+            // console.log('+++++++++++++++++++++++++++++userAd', userAd);
+            return append;
+          
+        });
+      } else {
+        return user;
+      }
     },
     users() {
       return User.find();
