@@ -62,7 +62,7 @@ module.exports = {
         foundUser = await User.findOne({ email });
 
         if (!foundUser) {
-          throw new Error(ERROR_CODES.NO_USER_FOUND);
+          throw new Error('Пользователь не найден');
         }
 
         const validatePassword = await bcrypt.compare(password, foundUser.password);
