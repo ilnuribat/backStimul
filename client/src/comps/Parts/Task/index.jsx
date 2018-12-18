@@ -38,7 +38,7 @@ class Task extends Component {
       let m = moment(endDate).format("MM");
       let d = moment(endDate).format("DD");
       let h = moment(endDate).format("HH");
-      
+
       let ymN = moment().format("YYYY MM");
       let yN = moment().format("YYYY");
       let mN = moment().format("MM");
@@ -46,7 +46,7 @@ class Task extends Component {
       let hN = moment().format("HH");
 
       if (status == 5 || status == "5") {
-        console.log("NONE", y, m, d)
+
       }
       else if ((ym === ymN && Number(d) < Number(dN)) || (Number(yN) > Number(y)) || (Number(mN) > Number(m) && Number(y) <= Number(yN))) {
         highlight = " RedBg"
@@ -56,7 +56,7 @@ class Task extends Component {
         highlight = " YlBg"
       } else {
         highlight = 'gr'
-        console.log("NONE", y, m, d)
+
       }
 
       // if((ym === ymN && d < dN ) || (yN > y ) || ( mN > m && y <= yN ) && status != '5'){
@@ -103,7 +103,7 @@ class Task extends Component {
               </div>
               <div className="ChatMessage">
                 "{
-                  lastMessage.text ? lastMessage.text.length > 50 ? lastMessage.text.substring(0, 50) + "..." : lastMessage.text : "noname"  
+                  lastMessage.text ? lastMessage.text.length > 50 ? lastMessage.text.substring(0, 50) + "..." : lastMessage.text : "noname"
                 }"
               </div>
 
@@ -128,19 +128,19 @@ class Task extends Component {
           ) : null
           }
 
-          {console.log("fulltask.files",fulltask)}
+          {/* {console.log("fulltask.files",fulltask)} */}
           {fulltask.files && fulltask.files.length > 0 ? (
             <div className="childsCount">
               <Svg svg="scr" size="22"></Svg>
               <span className="small">{fulltask.files.length} вложен{fulltask.files.length > 1 && fulltask.files.length < 5 && "ия"}{fulltask.files.length == 1 && "ие"}{fulltask.files.length > 5 && "ий"}</span>
             </div>
-          ) : null 
+          ) : null
           }
 
         </div>
         <div className="Delete" onClick={()=>deleteTask(id)}>
           <Svg svg="cancel" size="12"></Svg>
-            
+
         </div>
         {/* <div className="linked" onClick={()=>click(id, name)}>
               открыть
