@@ -73,6 +73,7 @@ class TileBoard extends Component {
 
   query(args){
     let {id, type, name, parentId} = args;
+
     if(id && type === 'AddressObject'){
       localStorage.setItem('rootId', id)
       localStorage.setItem('parentId', parentId)
@@ -124,6 +125,7 @@ class TileBoard extends Component {
 
     if(object && objectId){
       console.log(objectId)
+
       return <Redirect to={{
         pathname: '/board',
         state: { objectId: this.state.objectId }
@@ -138,18 +140,19 @@ class TileBoard extends Component {
               ({data, loading, refetch, error})=>{
                 ref = refetch
                 if (error){
-                  rootid ? this.cleanStorage() : true;
+                  if (rootid) this.cleanStorage();
 
-                  console.log("ERROR",error.message);
+                  console.warn("ERROR",error.message);
+
                   let message = 'Неизвестная ошибка';
 
                   switch (error.message) {
-                    case "Network error: Failed to fetch":
-                        message = "Не удается подключиться"
-                      break;
-                  
-                    default:
-                      break;
+                  case "Network error: Failed to fetch":
+                    message = "Не удается подключиться"
+                    break;
+
+                  default:
+                    break;
                   }
 
                   return(
@@ -172,24 +175,25 @@ class TileBoard extends Component {
                         }
                         <div className="TileBoardTopCenter">
                           <span className="crumbs">
-                          {data.rootObject && data.rootObject.crumbs && data.rootObject.crumbs.map(
-                            (e, i, arr)=>{
-                              let parent = arr[i - 1];
+                            {data.rootObject && data.rootObject.crumbs && data.rootObject.crumbs.map(
+                              (e, i, arr)=>{
+                                let parent = arr[i - 1];
+
                                 return(
-                                  <span className="crumbWrap" key={"crumb" + e.id} onClick={() => { this.query({ id: e.id, type: "AddressObject", name: e.name, parentId: parent ? parent.id : '' })}}><span className="crumb" key={e.id}>{e.name}</span><Svg view="InlBl" svg="toright" size="28" /></span>  
+                                  <span className="crumbWrap" key={"crumb" + e.id} onClick={() => { this.query({ id: e.id, type: "AddressObject", name: e.name, parentId: parent ? parent.id : '' })}}><span className="crumb" key={e.id}>{e.name}</span><Svg view="InlBl" svg="toright" size="28" /></span>
                                 )
                               }
-                          ) }
-                          {
-                            data.rootObject && data.rootObject.name ? (
+                            ) }
+                            {
+                              data.rootObject && data.rootObject.name ? (
                                 <span>{data.rootObject.name}</span>
                               ) : (<span>Россия</span>)
-                          }
+                            }
                           </span>
                           <TileMaker>
                             <ButtonRow icon="plus" iconright="" click={this.state.SOMECLICKFUNCTION}>Создать Объект</ButtonRow>
                           </TileMaker>
-                          
+
                         </div>
                       </div>
                       <div className="TileBoardContent">
@@ -202,8 +206,6 @@ class TileBoard extends Component {
                         }
                         {
                           data.rootObject && data.rootObject.objects && data.rootObject.objects.map((e)=>{
-
-                            console.log(e)
 
                             return(
                               <Tile fulltile={e} key={'tile'+e.id} id={e.id} name={e.name} type={e.__typename||'object'} click={this.query} refetch={this.refetch1} remove={this.remove} addr={e.address.value} parentId={data.rootObject.id} updateObject={this.updateObject} />
@@ -221,7 +223,7 @@ class TileBoard extends Component {
               }
             }
           </Query>
-          
+
         </div>
       </Content>
     )

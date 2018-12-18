@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import Svg from '../../Parts/SVG';
 
 /** Right Panel SideBar Container */
@@ -7,12 +7,12 @@ import Svg from '../../Parts/SVG';
 export default class Panel extends Component {
   constructor(props) {
     super(props)
-  
+
     this.state = {
-       open: true,
+      open: true,
     }
   }
-  
+
 
   static propTypes = {
   }
@@ -22,10 +22,11 @@ export default class Panel extends Component {
     let {open} = this.state;
     let {children} = this.props;
     let view = "";
+
     open ? view = "" : view = " Closed"
 
     return (
-      <div className={"Panel" + view} onClick={() => { view === " Closed" ? this.setState({ open: !open }) : null }}>
+      <div className={"Panel" + view} onClick={() => { view === " Closed" && this.setState({ open: !open }) }}>
         <div className="MenuB" onClick={()=>this.setState({open: !open})}> <Svg svg="menu" size="24" /> </div>
         {children}
       </div>

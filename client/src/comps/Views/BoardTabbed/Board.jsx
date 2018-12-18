@@ -107,7 +107,7 @@ class ChildsMap extends Component {
           {
             childs ? !showTree ? <div className="TreePlus" onClick={() => { this.setState({ showTree: true }) }}><Svg svg="plus" /></div> : <div className="TreeMinus" onClick={() => { this.setState({ showTree: false }) }}><Svg svg="minus" /></div> : null
           }
-          <div className="TreeName" onClick={() => { open && typeof open === 'function' ? open(obj.id,obj.name) : null }}>
+          <div className="TreeName" onClick={() => { open && typeof open === 'function' && open(obj.id,obj.name) }}>
             <span className="name">{ obj.name ? obj.name : "Без названия"}</span>
             {obj.endDate ? <span className={`endDate${highlight}`}>{moment(obj.endDate).format('D MMMM, h:mm')}</span> : null }
             <span className={`status ${obj.status ? "sts" + obj.status : "sts0"}`}>{obj.status ? stName : "Новая"}</span>
@@ -387,11 +387,10 @@ class Board extends Component {
   saveTaskData(value, change, quota) {
     let { taskDataCreateEdit } = this.state;
     let cap = '';
-    quota ? cap = '"' : null;
+
+    quota ? cap = '"' :  cap = '';
 
     taskDataCreateEdit[`${change}`] = value;
-
-    console.log(taskDataCreateEdit)
 
     this.setState({
       taskDataCreateEdit: taskDataCreateEdit
@@ -423,11 +422,11 @@ class Board extends Component {
 
     let mapper = taskDataCreateEdit;
 
-    mapper && mapper.status ? mapper.status = Number(mapper.status) : null;
+    if (mapper && mapper.status) mapper.status = Number(mapper.status);
 
     if (!this.state.taskIdCreate){
       mapper.objectId = objectId;
-      mapper && !mapper.name ? mapper.name = "Нет названия" : null;
+      if (mapper && !mapper.name) mapper.name = "Нет названия";
 
       qauf(crTask(stringify(mapper)), _url, localStorage.getItem('auth-token')).then(a => {
         console.warn("create task done", a.data.createTask.id)
@@ -457,7 +456,7 @@ class Board extends Component {
   writeTaskData(value, change, quota) {
     let cap = ""
 
-    quota ? cap = '"' : null;
+    if (quota) cap = '"';
 
     let changes = `${change}: ${cap}${value}${cap}`;
 
