@@ -6,15 +6,23 @@ const {
 const {
   MESSAGE_READ, pubsub, MESSAGE_ADDED, ERROR_CODES,
 } = require('../services/constants');
+const { adsifyUser } = require('./../../adsifyuser');
 
 
 module.exports = {
   Message: {
     id: message => message._id.toString(),
-    from(parent) {
+    from: async (parent) => {
       const { userId } = parent;
+      let user = await User.findById(userId);
+      if (user.email) {
+        let adUser = await adsifyUser(user);
 
-      return User.findById(userId);
+        console.log(adUser);
+        
+        return(adUser);
+      }
+      return user;
     },
     to(parent) {
       const { groupId } = parent;

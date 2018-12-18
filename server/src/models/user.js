@@ -12,7 +12,8 @@ const user = new Schema({
   displayName: String,
   sn: String,
   title: String,
-  primaryGroupId: String
+  primaryGroupId: String,
+  initials: String
 }, {
   timestamps: {
     createdAt: 'createdAt',

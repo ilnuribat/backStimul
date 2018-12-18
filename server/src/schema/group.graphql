@@ -5,7 +5,7 @@ type Group {
   messages(messageConnection: ConnectionInput): MessageConnection
   unreadCount: Int
   status: Int
-  assignedTo: UserTaskRole
+  assignedTo: User
   lastMessage: Message
   endDate: String
   address: Address

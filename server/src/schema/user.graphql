@@ -22,6 +22,7 @@ type User {
   groups: [Group]
   directs: [Direct]
   tasks: [Task]
+  initials: String
 }
 
 type AuthToken {

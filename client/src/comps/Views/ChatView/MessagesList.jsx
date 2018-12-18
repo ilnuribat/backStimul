@@ -125,13 +125,16 @@ export default class MessagesList extends Component {
                 return true
               }
 
+              console.log(node.from);
+              
+
               let tr = 'them';
               let createdAt = node.createdAt;
               let text = node.text || "none";
               let id = node.userId || "none";
               let username;
 
-              node.from && node.from.username ? username = node.from.username : username = "none";
+              node.from && node.from.initials ? username = node.from.initials : username = node.from.username;
 
               let date = "";
 

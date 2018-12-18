@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const ActiveDirectory = require('activedirectory');
 const {
   User,
   Message,
@@ -10,58 +9,7 @@ const { getTasks, generateToken } = require('../services/user');
 const { authenticate } = require('../services/ad');
 const { BCRYPT_ROUNDS } = require('../../config');
 const { ERROR_CODES } = require('../services/constants');
-
-/** ***** */
-
-const config = {
-  url: 'ldap://pdcg.guss.ru',
-  baseDN: 'DC=guss,DC=ru',
-  username: 'LDAP USER',
-  password: '2wKzTrzIs7mCHb',
-  attributes: {
-    user: [
-      'cn',
-      'mail',
-      'giveName',
-      'department',
-      'badPasswordTime',
-      'badPwdCount',
-      'company',
-      'description',
-      'displayName',
-      'name',
-      'sn',
-      'title',
-      'primaryGroupID'],
-  },
-};
-
-const ad = new ActiveDirectory(config);
-const adsifyUser = (user) => {
-  return new Promise((resolve, reject) => {
-    ad.findUser({ scope: 'sub' }, user.email, (err, userAd) => {
-      if (err) {
-        console.log(JSON.stringify(err));
-        resolve(user);
-      }
-      if (!userAd) {
-        resolve(user);
-      }
-
-      let usr = user;
-
-      if (user._doc){
-        usr = user._doc
-      }
-
-        let append = Object.assign({}, usr, userAd);
-        resolve(append);
-
-
-    });
-  });
-};
-/** ***** */
+const { adsifyUser } = require('./../../adsifyuser');
 
 module.exports = {
   User: {
