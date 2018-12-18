@@ -28,10 +28,9 @@ const ad = new ActiveDirectory(config);
 
 const adsifyUser = user => new Promise((resolve, reject) => {
   ad.findUser({ scope: 'sub' }, user.email, (err, userAd) => {
-
-    user.name = "aaaa" + JSON.stringify(err)
-    resolve(user)
-    return (user)
+    // user.name = "aaaa" + JSON.stringify(err)
+    // resolve(user)
+    // return (user)
     if (err) {
       // console.log(JSON.stringify(err));
       resolve(user);
