@@ -18,7 +18,8 @@ body,
  input[type="button"], 
  input[type="submit"],
  select,
- textarea
+ textarea,
+ .Button2
 {
   color: #ffffff;
 }
