@@ -98,6 +98,7 @@
   color:#fff;
   display: flex;
   flex-direction: column;
+  /* font-size: 100%; */
   /* justify-content: flex-start; */
   /* text-align: center; */
   /* align-items: center; */

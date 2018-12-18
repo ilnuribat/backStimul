@@ -189,9 +189,6 @@ svg{
 }
 
 
-
-
-
 @import './css/lays/nav.css';
 @import './css/lays/board.css';
 @import './css/lays/root.css';
@@ -202,7 +199,6 @@ svg{
 @import './css/lays/tile.css';
 @import './css/lays/tileboard.css';
 @import './css/lays/chat.css';
-
 @import './css/lays/messages.css';
 @import './css/lays/map.css';
 @import './css/lays/svg.css';
@@ -215,33 +211,9 @@ svg{
 @import './css/lays/boardtabbed.css';
 
 
-
 /** COLORS **/
-@import './css/colors/nav.css';
-@import './css/colors/bar.css';
-@import './css/colors/board.css';
-@import './css/colors/root.css';
-@import './css/colors/task.css';
-@import './css/colors/containers.css';
-@import './css/colors/button.css';
-@import './css/colors/input.css';
-@import './css/colors/tile.css';
-@import './css/colors/tileboard.css';
-@import './css/colors/chat.css';
-
-@import './css/colors/messages.css';
-@import './css/colors/map.css';
-@import './css/colors/svg.css';
-@import './css/colors/rows.css';
-@import './css/colors/fakeselect.css';
-@import './css/colors/search.css';
-@import './css/colors/privates.css';
-@import './css/colors/treeview.css';
-@import './css/colors/crumbs.css';
-@import './css/colors/boardtabbed.css';
+@import './css/colors/allcolors.css';
 /** COLORS **/
-
-
 
 .Button {
     width: 140px;

@@ -5,7 +5,7 @@ import { graphql, compose  } from "react-apollo";
 import { quf, AUTH_TOKEN } from '../../constants';
 import { LoginQuery } from '../../GraphQL/Qur/Query';
 import { meGet, meSet } from '../../GraphQL/Cache';
-import '../../newcss/login.css'
+import '../../css/lays/login.css'
 import Content from '../Lays/Content/index';
 import logoImg from '../Img/Logo';
 import { UserRow } from '../Parts/Rows/Rows';

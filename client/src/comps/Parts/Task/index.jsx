@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import '../../../newcss/column.css'
+import '../../../css/lays/column.css'
 /** Column view */
 import { Svg } from "../SVG/index";
 import { UserRow } from '../Rows/Rows';

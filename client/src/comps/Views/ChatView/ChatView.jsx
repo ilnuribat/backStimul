@@ -6,7 +6,7 @@ import AddNew from './AddNew';
 import MessagesList from './MessagesList';
 import { ADD_MUT } from "../../../GraphQL/Qur/Mutation";
 import { MESSAGE_READ } from "../../../GraphQL/Qur/Subscr";
-import '../../../newcss/taskview.css'
+import '../../../css/lays/taskview.css'
 import { UserRow } from "../../Parts/Rows/Rows";
 
 let subsMsgs = []

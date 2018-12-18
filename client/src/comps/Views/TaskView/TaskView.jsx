@@ -11,7 +11,7 @@ import { uploadFile, removeFile, updTask } from '../../../GraphQL/Qur/Mutation';
 import { selectUser, objectCacheUpdate } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, getObjectTasksSmall } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
-import '../../../newcss/taskview.css'
+import '../../../css/lays/taskview.css'
 import { UserRow, FileRow, ResponsibleRow, TextRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import InnerBar from '../../Lays/InnerBar/InnerBar';
