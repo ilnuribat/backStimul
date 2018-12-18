@@ -207,8 +207,6 @@ class TileBoard extends Component {
                         {
                           data.rootObject && data.rootObject.objects && data.rootObject.objects.map((e)=>{
 
-                            console.log(e)
-
                             return(
                               <Tile fulltile={e} key={'tile'+e.id} id={e.id} name={e.name} type={e.__typename||'object'} click={this.query} refetch={this.refetch1} remove={this.remove} addr={e.address.value} parentId={data.rootObject.id} updateObject={this.updateObject} />
                             )
