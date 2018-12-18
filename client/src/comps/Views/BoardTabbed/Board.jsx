@@ -19,8 +19,8 @@ import { qauf, _url } from '../../../constants';
 import { setChat, setInfo, rootId, objectCacheUpdate } from '../../../GraphQL/Cache';
 import { getObjectTasks, glossaryStatus, TASKS_QUERY, checkObject, TASK_INFO, TASK_MESSAGES } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
-import '../../../newcss/boardview.css';
-import '../../../newcss/task.css';
+import '../../../css/lays/boardview.css';
+import '../../../css/lays/task.css';
 import { Svg } from '../../Parts/SVG/index';
 import { ButtonRow, TextRow, FileRow, UserRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
@@ -424,7 +424,7 @@ class Board extends Component {
     let mapper = taskDataCreateEdit;
 
     mapper && mapper.status ? mapper.status = Number(mapper.status) : null;
-    
+
     if (!this.state.taskIdCreate){
       mapper.objectId = objectId;
       mapper && !mapper.name ? mapper.name = "Нет названия" : null;
@@ -594,9 +594,6 @@ class Board extends Component {
               let arr = _.sortBy(ObjTasks, 'status');
               let cols = [[],[],[],[],[],[],[]];
 
-              console.log(ObjTasks);
-              
-
               const taskData = ObjTasks.filter((task) => (task.id === this.state.taskId))[0]
 
               arr = _.sortBy(ObjTasks, 'unreadCount');
@@ -758,7 +755,7 @@ class Board extends Component {
                           </div>
                         </ContentInner>
                       ) }
-                      
+
                       {!treeView && !poEtapy && (
                         <ContentInner view="Board-Content">
                           {
@@ -774,10 +771,6 @@ class Board extends Component {
                                     cols[e.id].map((task) => {
                                       let haveChilds = [];
                                       haveChilds = ObjTasks.filter((othrtask) => (othrtask.parentId === task.id));
-                                      
-
-                                      console.log(haveChilds);
-                                      
 
                                       if (this.state.curParentId === task.id) {
                                         selectedChilds = showChilds;
@@ -879,7 +872,7 @@ class Board extends Component {
                           <div className="ModalBlockName">
                                 Срок истечения
                           </div>
-                          <label htmlFor="dateout" className="LabelInputDate">
+                          <label htmlFor="dateout" className="LabelInputText LabelInputDate">
                             <input type="date" name="dateout" placeholder="Дата Завершения" onChange={(e) => { this.saveTaskData(e.target.value, "endDate", true)}} />
                           </label>
                         </ModalCol>

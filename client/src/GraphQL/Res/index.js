@@ -655,6 +655,9 @@ export default {
               assignedTo {
                 id
                 username
+                name
+                mail
+                initials
                 __typename
               }
               __typename
@@ -680,6 +683,9 @@ export default {
               users {
                 id
                 username
+                name
+                mail
+                initials
                 __typename
               }
               __typename

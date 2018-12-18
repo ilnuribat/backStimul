@@ -365,7 +365,7 @@ export class Search extends Component {
                         view="Boxed"
                         id={e.id}
                         icon="1"
-                        name={e.username}
+                        name={e.initials || e.username}
                         key={e.id}
                       />
                     </Link>

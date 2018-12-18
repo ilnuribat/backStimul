@@ -1,4 +1,3 @@
-// import React, { Component } from "react";
 import { withLeaflet, MapControl } from "react-leaflet";
 import L from "leaflet";
 
@@ -9,12 +8,14 @@ class MapInfo extends MapControl {
       this.panelDiv.innerHTML = `<h2><span>Lat: ${ev.latlng.lat.toFixed(
         4
       )}</span>&nbsp;<span>Lng: ${ev.latlng.lng.toFixed(4)}</span></h2>`;
-      // console.log(this.panelDiv.innerHTML);
     });
-    // props.leaflet.map.addEventListener("click", ev => {
-    //   console.log(this.panelDiv.innerHTML);
-    //   new L.marker(ev.latlng).addTo(this.props.leaflet.map);
-    // });
+    props.leaflet.map.addEventListener("click", ev => {
+      if ( !this.props.edit ) {
+        console.log(this.panelDiv.innerHTML);
+        this.props.setEdit()
+      }
+      // new L.marker(ev.latlng).addTo(this.props.leaflet.map);
+    });
   }
 
   createLeafletElement(opts) {

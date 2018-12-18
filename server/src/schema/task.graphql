@@ -5,7 +5,7 @@ type Task {
   messages(messageConnection: ConnectionInput): MessageConnection
   unreadCount: Int
   status: Int
-  assignedTo: UserTaskRole
+  assignedTo: User
   lastMessage: Message
   endDate: String
   parentId: ID
@@ -44,11 +44,14 @@ type UserTaskRole {
   id: ID
   username: String
   email: String
+  # name: String
+  # mail: String
+  # initials: String
 }
 
 type UserTaskAction {
   action: UserTaskActionEnum
-  user: UserTaskRole
+  user: User
   task: Task
 }
 

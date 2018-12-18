@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Content from '../../Lays/Content/index';
-import '../../../newcss/login.css'
+import '../../../css/lays/login.css'
 
 
 class Profile extends Component {

@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
-import { graphql, compose } from "react-apollo";
+import { graphql, compose, Query } from "react-apollo";
 // import NavTopInner from './NavTopInner';
 // import Logo from './Logo.jpg'
 import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED, TASK_UPDATED, USER_TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
 import { cGetCountPrivates, cSetCountPrivates, chatListCacheUpdate, messagesCacheUpdate, objectCacheUpdate, getChat, getCUser } from '../../GraphQL/Cache';
-import { getUnreadCount, TASK_INFO_SMALL } from '../../GraphQL/Qur/Query';
+import { getUnreadCount, TASK_INFO_SMALL, getUserInfo } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 import client from '../../client';
 
@@ -202,13 +202,36 @@ class NavTop extends Component {
         img = logoImg;
       }
 
+
+
       return (
         <div className = "NavTop" >
           <div className = "LogoNav" >
-            {cGetCountPrivates && cGetCountPrivates.unr ? (<div className="TopCounter">+{cGetCountPrivates.unr}</div>) : null }
-            <Link to="/login" >
-              <UserRow size="38" icon={logoImg || img} view="Col" name={ name || localStorage.getItem('username') }></UserRow>
-            </Link>
+            {cGetCountPrivates && cGetCountPrivates.unr ? (<div className="TopCounter">+{cGetCountPrivates.unr}</div>) : null}
+            <Query query={getUserInfo}>
+              {
+                ({data, loading, error})=>{
+                  let userinfo = { name: localStorage.getItem('username'), icon: logoImg};
+                  if(error){
+                    console.warn('Error', error.message)
+                    return true;
+                  }
+
+                  if (data && data.userInfo && data.userInfo.initials){
+                    userinfo.name = data.userInfo.initials
+                    if (!!data.userInfo.icon){
+                      userinfo.icon = data.userInfo.icon
+                    }
+                  }
+                  return(
+                    <Link to="/login" >
+                      <UserRow size="38" icon={userinfo.icon || logoImg} view="Col" name={userinfo.name}></UserRow>
+                    </Link>
+                  )
+                }
+              }
+            </Query>
+
           </div> { /* <NavTopInner/> */ }  { children }
         </div>
       )

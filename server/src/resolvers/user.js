@@ -9,17 +9,21 @@ const { getTasks, generateToken } = require('../services/user');
 const { authenticate } = require('../services/ad');
 const { BCRYPT_ROUNDS } = require('../../config');
 const { ERROR_CODES } = require('../services/constants');
+const { adsifyUser } = require('./../../adsifyuser');
 
 module.exports = {
   User: {
     async messages({ id }) {
+      console.log("-----------------------------------------------------")
+      console.log(id)
+      console.log("-----------------------------------------------------")
       return Message.find({ userId: id });
     },
     async groups(parent) {
-      return getTasks(parent.id);
+      return getTasks(parent._id);
     },
     async tasks(parent) {
-      return getTasks(parent.id);
+      return getTasks(parent._id);
     },
     async directs(parent, args, { user }) {
       return getDirectChats(user);
@@ -28,15 +32,37 @@ module.exports = {
     username: user => user.email,
   },
   Query: {
-    user(parent, args, { user }) {
+    user: async (parent, args, { user }) => {
       if (!user) {
-        throw new Error('not authenticated');
+        throw new Error('Пользователь не авторизован');
+      }
+      if (user.email) {
+        const adUser = await adsifyUser(user);
+
+        return (adUser);
       }
 
       return user;
     },
-    users() {
-      return User.find();
+    userInfo: async (parent, args, { user }) => {
+      if (!user) {
+        throw new Error('Пользователь не авторизован');
+      }
+      if (user.email) {
+        const adUser = await adsifyUser(user);
+
+        return (adUser);
+      }
+
+      return user;
+    },
+    users: async () => {
+      const allUsers = User.find({});
+
+      return await allUsers.then((users) => users.map(async (user)=>{
+          let adUser = await adsifyUser(user);
+          return adUser
+        }));
     },
   },
 
@@ -62,7 +88,7 @@ module.exports = {
         foundUser = await User.findOne({ email });
 
         if (!foundUser) {
-          throw new Error(ERROR_CODES.NO_USER_FOUND);
+          throw new Error('Пользователь не найден');
         }
 
         const validatePassword = await bcrypt.compare(password, foundUser.password);
@@ -104,7 +130,7 @@ module.exports = {
       } catch (err) {
         if (err.errmsg.indexOf('duplicate key error')) {
           logger.error('user with such email exists', { email });
-          throw new Error('user with such email exists');
+          throw new Error('Пользователь уже существует');
         }
 
         throw err;

@@ -1,0 +1,780 @@
+/***---FONTS COLOR---****/
+body,
+.UserRow .UserName,
+.RowBlock,
+.UserNameText,
+.authRow .authRowContent,
+.authBottom .button
+, input[type="text"],
+ input[type="date"],
+ input[type="datetime"],
+ input[type="email"],
+ input[type="number"],
+ input[type="search"],
+ input[type="time"],
+ input[type="url"],
+ input[type="list"],
+ input[type="password"],
+ input[type="button"], 
+ input[type="submit"],
+ select,
+ textarea,
+ .Button2
+{
+  color: #ffffff;
+}
+
+
+.authRow .authRowName{
+  color: #a3b6c5;
+}
+
+
+/***---------------------END FONTS COLOR---------------------****/
+
+/***---BACKGOUNDS COLOR---****/
+.auth,
+.Profile.auth
+{
+  background: #3d4147;
+}
+.authBottom .button{
+  background-color: #c45c5c;
+}
+/***---------------------END BACKGOUNDS COLOR---------------------****/
+ input[type="text"],
+ input[type="date"],
+ input[type="datetime"],
+ input[type="email"],
+ input[type="number"],
+ input[type="search"],
+ input[type="time"],
+ input[type="url"],
+ input[type="list"],
+ input[type="password"],
+ textarea,
+ select 
+{
+	/* border-bottom: 1px solid #ddd; */
+	background: transparent;
+}
+
+ input[type="button"], 
+ input[type="submit"]{
+	/* -moz-box-shadow: inset 0px 1px 0px 0px #45D6D6; */
+	/* -webkit-box-shadow: inset 0px 1px 0px 0px #45D6D6; */
+	/* box-shadow: inset 0px 1px 0px 0px #45D6D6; */
+	/* background-color: #2CBBBB; */
+	/* border: 1px solid #27A0A0; */
+	color: #FFFFFF;
+  border: none;
+	/* border-bottom: 1px solid #ddd; */
+	background: transparent;
+}
+
+datalist option{
+  background: #061930c9;
+}
+
+input[type="button"],
+input[type="submit"],
+button,
+.button
+{
+	border: 1px solid #ddd;
+  border: none;
+	/* border-bottom: 1px solid #ddd; */
+	background: transparent;
+  color: #fff;
+}
+button.mini{
+  border: none;
+  color:#3e75b2;
+}
+
+/********SUBMIT**********/
+
+::-webkit-input-placeholder { /* Chrome */
+  color: rgb(233, 233, 233);
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: rgb(233, 233, 233);
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: rgb(233, 233, 233);
+  opacity: 1;
+}
+:-moz-placeholder { /* Firefox 4 - 18 */
+  color: rgb(233, 233, 233);
+  opacity: 1;
+}
+/***---END-INPUTS---****/
+/***---MAP---****/
+.mapModal ul li{
+  border-bottom: 1px solid #1868aa15;
+}
+.mapModal .button{
+  background: #1868aa;
+}
+/***---END-MAP---****/
+.errorMessage{
+  background: rgba(143, 0, 0, 0.795);
+}
+.FakeSelect{
+  background: #3d4147;
+}
+.FakeSelect .FakeSelected{
+  border:1px salmon;
+}
+.FakeSelect .FakeOptionsContainer{
+  background: #35373b;
+}
+.FakeSelect .FakeOptionsContainer.Out{
+  background: #2e2e2eb6;
+}
+.FakeSelect .FakeOptionsContainer .ContainerOuter
+{
+ background: rgb(216, 225, 228);
+ background: #2e2e2eb6;
+}
+.FakeOption{
+  background: #3d4147;
+}
+.FakeSelect .FakeOptionsContainer .FakeOption .FakeIcon{
+  background: #232529;
+}
+.FakeSelect > .Svg svg{
+  fill: #316bc2;
+}
+.FakeSelect .FakeOptionsContainer .FakeOption:hover{
+  background: #295ca8;
+  background: #1b3968;
+  background-color: #1b3968;
+  color: aliceblue;
+}
+.container{
+  border: 1px salmon;
+  background: #fff;
+}
+.Column{
+  background: #3d4147;
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.16);
+}
+.Column-Name,
+.Column .Name{
+  color:#ffffff;
+}
+
+.Column .BottomLine{
+  background: #ffffff;
+}
+.Column:nth-child(1) .BottomLine{
+  background: #3e75b2;
+}
+.Column:nth-child(2) .BottomLine{
+  background: #459e64;
+}
+.Column:nth-child(3) .BottomLine{
+  background: #c45c89;
+}
+.Column:nth-child(4) .BottomLine{
+  background: #dedede;
+}
+
+.left-nav {
+  background-color: #202225;
+}
+.left-nav svg{
+  fill: #3e75b2;
+}
+.Nav .nav svg{
+  fill: #3e75b2;
+}
+.NavTop .LogoNav{
+  /* border: 1px solid rgb(77, 77, 77); */
+  color:#fff;
+}
+.LogoNav a{
+  color:rgba(170, 170, 170, 0.575);
+}
+.nav.selected:before{
+  background: #3e75b2;
+}
+
+.ColorButton{
+  border:2px solid rgb(107, 104, 104);
+  background: #fff;
+}
+.ColorButton.white{
+  background: #f5e505;
+}
+.ColorButton.gold{
+  background: #202225;
+}
+.Chats .Row{
+  background: #363941;
+  border:0 none transparent;
+  border-bottom: 1px solid #2c2e33;
+}
+.Chats .Row.SEL{
+  background: transparent;
+}
+.searchTag{
+  background: #3d4147;
+  color: #ffffff;
+}
+.searchTag:hover{
+  background: #3e74b293;
+}
+.searchTag.sel,
+input[type="checkbox"]:checked + label.searchTag{
+  background: #3e75b2;
+}
+
+.SearchBody .BlockHeader{
+  color: #ffffff;
+}
+.SearchBody .BlockHeader:after{
+  background: #3d4147;  
+}
+
+.SearchBody .BlockContent{
+  /* background: #7979791e; */
+}
+
+.SearchBody .BlockContent .SearchTask{
+  background: #3156803d;
+}
+.SearchBody .BlockContent .SearchTask .SearchName{
+  color: #ffffff;
+}
+.SearchBody .BlockContent .SearchTask .SearchStatus{
+  background: #3d4147;
+  color: #ffffff;
+}
+
+.SearchBody .BlockContent .SearchTask .SearchEndDate{
+  background: #3d4147;
+  color: #ffffff;
+}
+.SearchBody .BlockContent .SearchObjects .SearchStatus{
+  background: #3d4147;
+  color: #ffffff;
+}
+.SearchBody .BlockContent > .UserRow{
+  /* background: #3e74b236; */
+}
+.SearchBody .BlockContent .SearchMessage{
+  background: #3156803d;
+}
+.SearchBody .BlockContent .SearchObjects{
+  background: #3156803d;
+}
+.SearchBody .BlockContent .SearchMessage:hover,
+.SearchBody .BlockContent .SearchTask:hover,
+.SearchBody .BlockContent .SearchObjects:hover{
+  background: #1170af5e;
+}
+
+
+.SvgDel
+{
+  fill:rgb(138, 11, 11);
+  color:rgb(138, 11, 11);
+}
+.SvgDeps
+{
+  fill:#346296;
+  color:#346296;
+}
+
+.task{
+  border: 1px solid #6e8497;
+  /* background-color: #3d4147; */
+  background: transparent;
+  background-color: transparent;
+}
+.column .task:nth-child(odd), .column .task:nth-child(even){
+  background: transparent;
+  background-color: transparent;
+}
+.pWrapper:nth-child(odd),.pWrapper:nth-child(even) {
+  background: transparent;
+}
+.column .taskHead {
+  background: transparent;
+}
+.Task{
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
+  border: solid 1px #6e8497;
+  background-color: #3d4147;
+}
+.Task .Name{
+  color: #ffffff;
+}
+.Task .TaskChat .ChatName{
+  color: #a7a7a7;
+}
+.Task .TaskChat .ChatMessage{
+  color: #a3b6c5;
+  /* color: #f4f8f9; */
+}
+.Task .endDate .endDateHL{
+  color: #fff;
+}
+.Task .endDate .endDateHL span{
+  color: #fff;
+}
+.Task .endDate .endDateHL.gr{
+  background: #5f5f5f;
+  background-color: #5f5f5f;
+  background: #5f5f5f6c;
+  background-color: #5f5f5f6c;
+  color: #fff;
+}
+.Task .endDate{
+  color: #a3b6c5;
+  color: #f4f8f9;
+}
+.Task .Bottom > div{
+  /* border:1px solid #346296; */
+}
+
+.Task .Bottom{
+  /* fill: #346296; */
+}
+
+.Task.Sel{
+  /* background: #396aa3;
+  border: solid 1px #396aa3;
+  color:#fff; */
+  border:0px none transparent;
+  box-shadow: 0 0 8px 2px #0084ff;
+}
+
+.Task.Sel{
+   /* background: #4949493a; */
+   /* border:1px solid #346296; */
+   /* box-shadow: 0 0 8px 0px #00f7ff; */
+}
+.Task.Child{
+   background: #304d6d;
+}
+.Task.Child .ChatMessage{
+   color: #454b52;
+}
+.Task.Sel.Child{
+   background: transparent;
+}
+
+.Task.Sel .Bottom svg{
+  fill: #346296;
+}
+.Task .Bottom > div.Childs{
+/* border:1px solid #346296; */
+/* box-shadow: 0 0 8px 0px #00f7ff; */
+
+}
+.ChildsHide,
+.Childs.Hide
+{
+  border: 2px solid #0084ff;
+}
+
+.childsCount span{
+  color: #a1a1a1;
+}
+
+.Task .Bottom > div.Childs .Svg{
+  border:1px solid #346296;
+}
+.Task.Sel .Bottom .Svg svg{
+/* border:1px solid #346296; */
+/* box-shadow: 0 0 8px 0px #00f7ff; */
+  /* background: #3e75b2 */
+  fill: #123155;
+}
+
+.errMess{
+  background: #58042e;
+  color:#fff;
+}
+.modal{
+  background: #222e;
+}
+.modal-wrapper svg{
+fill:#ffffff;
+}
+.padded{
+  background: #48608b;
+}
+.TaskViewTop .TaskViewTopName{
+  color:#fff;
+}
+.TaskViewTop .TaskViewTopName h1{
+  color:#fff;
+}
+
+.Tile, .TileMaker,.Tiled{
+  background-color: #3d4147;
+}
+
+.Tile .name{
+  color: #ffffff;
+}
+.Tile .id{
+  color: #3e75b2;
+}
+.Tile .descr{
+  color: #3e75b2;
+}
+.Tile .descr > span{
+  color: #3e75b2;
+}
+.TileMaker svg, .Tiled svg{
+  fill: #3e75b2;
+}
+.Tile svg{
+  border:1px solid #3e75b2;
+  fill: #3e75b2;
+}
+.Tile .Rem svg{
+  border:1px solid #b23e51;
+  fill: #b23e51;
+}
+.Tile.Object{
+  background: #314764;
+}
+.Tile .TileHighliter > span{
+  background: #4646462c;
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.3);
+}
+.Tile .TileHighliter > span:hover::before{
+  box-shadow: 2px 2px 8px 0 rgba(0, 0, 0, 0.3);
+  background: #3e75b2;
+}
+.Tile .TileHighliter > span.bluf{
+  background: #1432b6;
+  color: #ffffff;
+}
+.Tile .TileHighliter > span.redf{
+  background: #b61414;
+  color: #ffffff;
+}
+.Tile .TileHighliter > span.orgf{
+  background: #b65d14;
+  color: #ffffff;
+}
+.Tile .TileHighliter > span.bluf:hover::before{
+  background: #3e75b2;
+}
+.Tile .TileHighliter > span.redf:hover::before{
+background: #b61414;
+}
+.Tile .TileHighliter > span.orgf:hover::before{
+background: #b65d14;
+}
+
+.TileBoardTop .TileBoardTopName,
+.TileBoardTop .TileBoardTopCenter{
+  color:#fff;
+}
+.TileBoardTop .TileBoardTopName h1,
+.TileBoardTop .TileBoardTopCenter h1{
+  color:#fff;
+}
+.TileBoardTop .TileBoardTopCenter{
+  color: #ffffff;
+}
+
+ul.TreeUl, ul.TreeUl ul{
+  border: 1px solid salmon;
+}
+.TreeTask::before{
+  background: #202225;
+}
+.Board-Content-Tree .inner .border{
+  background: #202225;
+}
+.TreeTask.Parent .border{
+  background: #202225;
+}
+.TreeName .endDate{
+  background-color: #3d4147;
+  background-color: #5f5f5f6c;
+}
+.TreeName .status{
+  color: #808fa3;
+  /* background-color: #3d4147; */
+}
+.TreeName .endDate.blu{
+  background-color: #3e75b2;
+}
+.TreeName .endDate.grd{
+  background-color: #d2903c;
+}
+.TreeName .endDate.yeld{
+  background-color: #d2903c;
+}
+.TreeName .endDate.redd{
+  background-color: #c45c5c;
+}
+.TreeName .status::before{
+  background-color: #3e75b2;
+}
+
+.TreeName .status.sts1::before,
+.TreeName .status.sts0::before
+{
+  background-color: #3e75b2;
+}
+.TreeName .status.red::before,
+.TreeName .status.sts4::before
+{
+  background-color: #c45c89;
+}
+.TreeName .status.green::before,
+.TreeName .status.sts3::before
+{
+  background-color: #459e64;
+}
+.TreeName .status.wht::before,
+.TreeName .status.sts5::before
+{
+  background-color: #fff;
+}
+.TreePlus, .TreeMinus{
+  border:2px solid #202225;
+  background: #808fa3;
+}
+.TreePlus svg, .TreeMinus svg{
+fill:#FFF;
+}
+
+
+.user-private-chat, .user-private{
+  border:1px solid rgb(86, 135, 168);
+  color:#fff;
+}
+.user-private-chat:hover, .user-private:hover{
+  background: rgba(86, 135, 168, 0.329);
+}
+.Bar{
+  color:#fff;
+}
+
+.Chat{
+  background: transparent;
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
+  background-color: #363941;
+}
+.ChatMessages{
+  box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03);
+  background-color: #3d4147;
+}
+.ChatForm{
+  /* box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.03); */
+  /* background-color: #3d4147; */
+  background-color: #363941;
+}
+.ChatForm .textarea-wrapper
+{
+  background-color: #2f3136;
+}
+.ChatForm .textarea-wrapper svg
+{
+  fill:#3e75b2;
+}
+.ChatForm .textarea-wrapper .Smiles
+{
+  color:#3e75b2;
+}
+.ChatForm input,
+.ChatForm textarea
+{
+  background-color: transparent;
+  color: #fff;
+}
+.ChatSend svg
+{
+  background-color: #3e75b2;
+  fill:#fff;
+}
+.msgs{
+  background: #2f3136;
+}
+.msg-date{
+  color:#c0c0c0c4;
+}
+
+.Bar svg{
+  fill:#3e75b2;
+}
+
+.column{
+  background-color: #3d4147;
+}
+.columns-wrapper{
+  background-color: #2a2c31;
+}
+.column:nth-child(1){
+  background-color: #3d4147;
+}
+.column:nth-child(2){
+  background-color: #3d4147;
+}
+.column:nth-child(3){
+  background-color: #3d4147;
+}
+.column:nth-child(4){
+  background-color: #3d4147;
+}
+.column-name{
+  background: transparent;
+}
+.column-name:after{
+  background: #335dc5;
+}
+
+
+.Board-Top-New{
+background: #2a2c31;
+}
+
+.Board-Top-New h1{
+  color: #ffffff;
+}
+
+
+.Board-Top-New .BoardTopCenter{
+  color: #ffffff;
+}
+
+.Tabs-Button{
+  background: #3e74b23f;
+  box-shadow: 2px 2px 20px -4px rgba(0, 0, 0, 0.3)
+}
+.Tabs-Button.sel,
+.Tabs-Button:hover
+{
+  background: #3e74b2a8;
+  color: aliceblue;
+}
+
+.Board-Top{
+background: #2a2c31;
+}
+
+.Board-Top h1{
+  color: #ffffff;
+}
+
+.Board-Top .BoardTopCenter{
+  color: #ffffff;
+}
+
+.toBack .toBackLink{
+  color:#3e75b2;
+}
+.Etaps{
+  background: #ffffff;
+  box-shadow: 2px 2px 20px -4px rgba(0, 0, 0, 0.3);
+}
+
+.button, button{
+  background: #5492af;
+  border: solid 1px rgba(62, 117, 178, 0.7);
+  background-color: #3e75b2;
+}
+
+.Button2{
+  background: #5492af;
+  background-color: #3e75b2;
+}
+.Button3{
+  background: transparent;
+  border:1px solid #ffffff;
+  background-color: transparent;
+}
+
+.Panel .Btn,
+.InnerBar .Btn{
+  /* background: #5492af; */
+  /* background-color: #3d4147; */
+  border:2px solid #3e75b2;
+}
+
+/******************FileRow**************/
+.FileIcon{
+  background-color: #3d4147d7;
+}
+.FileIcon svg{
+  fill:#3e74b27c;
+}
+.FileIcon .Svg{
+  background: #373a3fe5;
+}
+.UserRow .UserIcon{
+  background-color: #30333865;
+}
+.UserRow .UserIcon svg{
+  fill:#3e74b27c;
+}
+
+.MessageSimpleText{
+  color: #808fa3;
+}
+
+.ButtonRow{
+  border: solid 1px rgba(62, 117, 178, 0.7);
+  background-color: #3e75b2;
+  box-shadow: 2px 2px 20px -2px rgba(0, 0, 0, 0.3);
+}
+.ButtonRow:hover{
+  background-color: #275285;
+}
+.ButtonRow .ButtonIcon svg
+{
+  fill:#ffffff;
+}
+.ButtonRow .ButtonName{
+  color:#fff;
+}
+
+.ButtonTo .ButtonIcon svg{
+  fill:#3e75b2;
+}
+.ButtonTo .ButtonName{
+  color:#3e75b2;
+}
+
+.RowBg{
+  border-bottom: 1px solid #00000017;
+}
+.grey, .cgr{
+  color: #a3b6c5;
+}
+
+.FakeLink{
+  color: #a3b6c5;
+  border: 1px dashed #a3b6c570;
+}
+.FakeLinkSvg{
+  background: #6d6d6d25;
+}
+.FakeLinkSvg .Svg svg{
+  fill: #3e75b2;
+}
+
+.Master{
+  color: #fff;
+  background: #202225;
+}
+.Second{
+  color: #fff;
+  background: #3d4147;
+}
+.Acсent{
+  color: #fff;
+  background: #3d4147;
+}

@@ -146,7 +146,7 @@ input{
  label.LabelInputDate,
  label.LabelInputList
  {
-  width: auto;
+  width: 100%;
   min-width: 50%;
   max-width: 100%;
   height: 40px;
@@ -159,6 +159,7 @@ input{
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  margin:2px auto;
 }
 .EditForm label input,
  label.LabelInputText input,

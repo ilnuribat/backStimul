@@ -131,7 +131,7 @@ export default class MessagesList extends Component {
               let id = node.userId || "none";
               let username;
 
-              node.from && node.from.username ? username = node.from.username : username = "none";
+              node.from && node.from.initials ? username = node.from.initials : username = node.from.username;
 
               let date = "";
 
@@ -162,9 +162,9 @@ export default class MessagesList extends Component {
               usid === id && sameCount < 8 ? ++sameCount : sameCount = 0;
               usid = id;
               same && createdAt && moment(createdAt).format('DD MM') != lastDate ? sameCount = 9 : null;
-              
+
               createdAt ? lastDate = moment(createdAt).format('DD MM') : null;
-              
+
               return(
                 <div className={'msg '+ tr} key={'chat-'+i} from={id} id={id}>
                   {same && sameCount < 8 ? (

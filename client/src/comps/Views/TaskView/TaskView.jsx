@@ -11,7 +11,7 @@ import { uploadFile, removeFile, updTask } from '../../../GraphQL/Qur/Mutation';
 import { selectUser, objectCacheUpdate } from '../../../GraphQL/Cache';
 import { allUsers, glossaryStatus, getObjectTasksSmall } from '../../../GraphQL/Qur/Query';
 import Content from '../../Lays/Content';
-import '../../../newcss/taskview.css'
+import '../../../css/lays/taskview.css'
 import { UserRow, FileRow, ResponsibleRow, TextRow } from '../../Parts/Rows/Rows';
 import Modal, {InputWrapper, ModalRow, ModalCol, ModalBlockName} from '../../Lays/Modal/Modal';
 import InnerBar from '../../Lays/InnerBar/InnerBar';
@@ -366,8 +366,8 @@ class TaskView extends Component {
 
 
             <TextRow name="" view="cgr Pad510 s">
-              {data && data.assignedTo && data.assignedTo.id && data.assignedTo.username ? (
-                <UserRow size="24" id={data.assignedTo.id} name={data.assignedTo.username ? data.assignedTo.username : "Нет имени"} icon="1" />
+              {data && data.assignedTo && data.assignedTo.id ? (
+                <UserRow size="24" id={data.assignedTo.id} name={data.assignedTo.initials || data.assignedTo.username} icon="1" />
               ): "Ответственный не назначен"}
             </TextRow>
           </TextRow>
@@ -381,7 +381,7 @@ class TaskView extends Component {
                     return(
                       <div className="username" role="presentation" key={'usr-'+i} >
                         {localStorage.getItem('userid') !== e.id ?
-                          <UserRow id={e.id} name={e.username} icon="1" ondelete={(id)=>this.userAdd(id, false)} />
+                          <UserRow id={e.id} name={e.initials || e.username} icon="1" ondelete={(id)=>this.userAdd(id, false)} />
                           : null }
                         <div className="hoverTrigger">
                           <div className="hover">

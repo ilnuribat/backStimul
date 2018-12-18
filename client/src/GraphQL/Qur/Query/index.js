@@ -44,11 +44,17 @@ query{
     users{
       id
       username
+      name
+      mail
+      initials
     }
     endDate
     assignedTo{
       id
       username
+      name
+      mail
+      initials
     }
     status
   }
@@ -92,6 +98,9 @@ export const getTaskById = (id) => {
                 assignedTo{
                   id
                   username
+                  name
+                  mail
+                  initials
                 }
                 endDate
                 status
@@ -118,8 +127,11 @@ export const cGetChats = gql `
 export const allUsers = () => `
     {
       users{
-        id
-        username
+      id
+      username
+      name
+      mail
+      initials
         __typename
       }
     }
@@ -128,8 +140,11 @@ export const allUsers = () => `
 export const USERS_QUERY = gql `
     query{
       users{
-        id
-        username
+      id
+      username
+      name
+      mail
+      initials
       }
     }
 `;
@@ -157,6 +172,9 @@ export const PRIVS_QUERY = gql `
           from{
             id
             username
+            name
+            mail
+            initials
           }
           text
           isRead
@@ -172,15 +190,22 @@ export const CHATS_QUERY = gql `
         directs{
           id
           name
+          # initials
           unreadCount
           users {
             id
             username
+            name
+            mail
+            initials
           }
           lastMessage{
           from{
             id
             username
+            name
+            mail
+            initials
           }
           text
           isRead
@@ -194,11 +219,17 @@ export const CHATS_QUERY = gql `
           users {
             id
             username
+            name
+            mail
+            initials
           }
           lastMessage{
           from{
             id
             username
+            name
+            mail
+            initials
           }
           text
           isRead
@@ -218,17 +249,26 @@ export const TASKS_QUERY = gql `
         users{
           id
           username
+          name
+          mail
+          initials
         }
         unreadCount
         status
         assignedTo{
           id
           username
+          name
+          mail
+          initials
         }
         lastMessage{
           from{
             id
             username
+            name
+            mail
+            initials
           }
           text
         }
@@ -252,13 +292,15 @@ export const PRIV_QUERY = gql`
               edges {
                   cursor
                   node {
-
                       isRead
                       id
                       userId
                       from {
                       id
                       username
+                      name
+                      mail
+                      initials
                       }
                       createdAt
                       text
@@ -287,14 +329,20 @@ export const TASK_MESSAGES = gql`
              users {
                id
                username
+               name
+               mail
+               initials
              }
              parentId
              objectId
              status
              endDate
              assignedTo {
-               id
-               username
+              id
+              username
+              name
+              mail
+              initials
              }
              files {
                id
@@ -313,6 +361,9 @@ export const TASK_MESSAGES = gql`
                    from {
                      id
                      username
+                     name
+                     mail
+                     initials
                    }
                    createdAt
                    text
@@ -332,16 +383,22 @@ export const TASK_INFO = gql `
           id
           name
           users{
-              id
-              username
+      id
+      username
+      name
+      mail
+      initials
           }
           parentId
           objectId
           status
           endDate
           assignedTo{
-            id
-            username
+              id
+              username
+              name
+              mail
+              initials
           }
           files {
             id
@@ -383,8 +440,11 @@ export const GRU_QUERY = gql `
   query group($id: ID!){
       group(id: $id ){
           users{
-              id
-              username
+      id
+      username
+      name
+      mail
+      initials
           }
       }
   }
@@ -446,8 +506,11 @@ query group($id: ID!){
       status
       endDate
       assignedTo{
-        id
-        username
+              id
+              username
+              name
+              mail
+              initials
       }
     }
   }
@@ -464,6 +527,17 @@ export const getUnreadCount2 = gql `{
         unreadCount
       }
     }
+}`;
+export const getUserInfo = gql `
+query{
+  userInfo{
+    id
+    name
+    mail
+    email
+    username
+    initials
+  }
 }`;
 
 
@@ -490,19 +564,28 @@ export const getObjectTasks2 = (id) => `
         id
         name
         users{
-          id
-          username
+      id
+      username
+      name
+      mail
+      initials
         }
         unreadCount
         status
         assignedTo{
-          id
-          username
+              id
+              username
+              name
+              mail
+              initials
         }
         lastMessage{
           from{
             id
             username
+            name
+            mail
+            initials
           }
           text
         }
@@ -551,12 +634,18 @@ export const getObjectTasks = gql `
         status
         unreadCount
         assignedTo{
-          id
-          username
+              id
+              username
+              name
+              mail
+              initials
         }
         users{
-          id
-          username
+      id
+      username
+      name
+      mail
+      initials
         }
         files {
           id
@@ -569,6 +658,9 @@ export const getObjectTasks = gql `
           from{
             id
             username
+            name
+            mail
+            initials
           }
           text
         }

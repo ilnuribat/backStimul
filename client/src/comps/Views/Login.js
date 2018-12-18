@@ -5,7 +5,7 @@ import { graphql, compose  } from "react-apollo";
 import { quf, AUTH_TOKEN } from '../../constants';
 import { LoginQuery } from '../../GraphQL/Qur/Query';
 import { meGet, meSet } from '../../GraphQL/Cache';
-import '../../newcss/login.css'
+import '../../css/lays/login.css'
 import Content from '../Lays/Content/index';
 import logoImg from '../Img/Logo';
 import { UserRow } from '../Parts/Rows/Rows';
@@ -106,15 +106,15 @@ class Login extends Component {
     // console.warn("MeName",meGet.mename)
 
     return (
-      <Content>
+      <Content view="Master">
         <div className="LoginPage">
           {!authToken ? (
             <div className="auth">
               <div className="logo">
                 <img src={logoImg} alt="АО ГУОВ" />
               </div>
-              <div><input type="text" placeholder="Email" onChange={(e) => { this.setState({ loginerror: "", email: e.target.value }) }} /></div>
-              <div><input type="password" placeholder="Пароль" onKeyDown={this.onKeyDown} onChange={(e) => { this.setState({ loginerror: "", password: e.target.value }) }} /></div>
+              <label className="LabelInputText"><input type="text" placeholder="Email" onChange={(e) => { this.setState({ loginerror: "", email: e.target.value }) }} /></label>
+              <label className="LabelInputText"><input type="password" placeholder="Пароль" onKeyDown={this.onKeyDown} onChange={(e) => { this.setState({ loginerror: "", password: e.target.value }) }} /></label>
               <div><div className="button" role="presentation" onClick={() => { this._confirm() }}>Войти</div></div>
               {
                 loginerror ? (<div className="errorMessage">{loginerror}</div>) : ('')
