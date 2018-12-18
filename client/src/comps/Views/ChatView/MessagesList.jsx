@@ -161,9 +161,9 @@ export default class MessagesList extends Component {
               usid === id ? same = true : same = false;
               usid === id && sameCount < 8 ? ++sameCount : sameCount = 0;
               usid = id;
-              same && createdAt && moment(createdAt).format('DD MM') != lastDate ? sameCount = 9 : null;
+              if (same && createdAt && moment(createdAt).format('DD MM') != lastDate ) sameCount = 9;
 
-              createdAt ? lastDate = moment(createdAt).format('DD MM') : null;
+              if (createdAt) lastDate = moment(createdAt).format('DD MM');
 
               return(
                 <div className={'msg '+ tr} key={'chat-'+i} from={id} id={id}>

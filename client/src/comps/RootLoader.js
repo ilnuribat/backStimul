@@ -29,7 +29,7 @@ class RootLoader extends Component {
         <Redirect to={`/${placeType}`}/>
       )
     default:
-      location && location.state && location.state.rootId ? rootState = location.state.rootId : null
+      if (location && location.state && location.state.rootId) rootState = location.state.rootId
 
       return (
         <Redirect to={{

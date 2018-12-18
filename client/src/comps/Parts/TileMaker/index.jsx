@@ -154,11 +154,11 @@ class TileMaker extends Component {
         mutation = changeObject
         variables = {id: `"${_id}"`, name: `"${input}"`, address: `"${address}"` }
       }
-      
-      
-      
+
+
+
       return (
-        <Modal close={(e)=>{this.open();edit ? this.props.setEdit() : null}}>
+        <Modal close={(e)=>{this.open();edit && this.props.setEdit()}}>
           <div className="animated bounceIn" style={{"width":"90%","margin":"0 auto"}}>
             <Mutation mutation={mutation} variables={variables}>
               {(MakeTile, { data }) => (
@@ -185,7 +185,7 @@ class TileMaker extends Component {
                           address.value = "";
 
                           console.log("data", a, a.data, a.data.createObject)
-                          a && a.data && a.data.createObject && a.data.createObject.id ? 
+                          a && a.data && a.data.createObject && a.data.createObject.id ?
                             this.setState({
                               create: !create,
                               toBoard: true,
