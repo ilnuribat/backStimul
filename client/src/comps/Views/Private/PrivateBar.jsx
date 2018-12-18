@@ -192,7 +192,7 @@ class PrivateBar extends React.Component {
 
                                         <div className="RowChildren PadTop5">
                                           <div className="col">
-                                            {e.lastMessage.from && e.lastMessage.from.username  ? <div className="UserNameText">{e.lastMessage.from.username}</div> : null}
+                                            {e.lastMessage.from && e.lastMessage.from.username ? <div className="UserNameText">{e.lastMessage.from.initials || e.lastMessage.from.username}</div> : null}
                                             <div className="MessageSimpleText">"{e.lastMessage.text}"</div>
                                           </div>
                                           <div className="col">
@@ -243,7 +243,7 @@ class PrivateBar extends React.Component {
 
                                         <div className="RowChildren PadTop5">
                                           <div className="col">
-                                            {e.lastMessage.from && e.lastMessage.from.username  ? <div className="UserNameText">{e.lastMessage.from.username}</div> : null}
+                                            {e.lastMessage.from && e.lastMessage.from.username ? <div className="UserNameText">{e.lastMessage.from.initials || e.lastMessage.from.username}</div> : null}
                                             <div className="MessageSimpleText">"{e.lastMessage.text}"</div>
                                           </div>
                                           <div className="col">

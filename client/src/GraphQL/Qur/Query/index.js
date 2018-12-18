@@ -190,10 +190,14 @@ export const CHATS_QUERY = gql `
         directs{
           id
           name
+          # initials
           unreadCount
           users {
             id
             username
+            name
+            mail
+            initials
           }
           lastMessage{
           from{
@@ -215,6 +219,9 @@ export const CHATS_QUERY = gql `
           users {
             id
             username
+            name
+            mail
+            initials
           }
           lastMessage{
           from{
@@ -285,7 +292,6 @@ export const PRIV_QUERY = gql`
               edges {
                   cursor
                   node {
-
                       isRead
                       id
                       userId
@@ -294,6 +300,7 @@ export const PRIV_QUERY = gql`
                       username
                       name
                       mail
+                      initials
                       }
                       createdAt
                       text
@@ -523,7 +530,7 @@ export const getUnreadCount2 = gql `{
 }`;
 export const getUserInfo = gql `
 query{
-  user{
+  userInfo{
     id
     name
     mail

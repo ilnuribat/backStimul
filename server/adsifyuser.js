@@ -29,7 +29,7 @@ const adsifyUser = (user) => {
   return new Promise((resolve, reject) => {
     ad.findUser({ scope: 'sub' }, user.email, (err, userAd) => {
       if (err) {
-        console.log(JSON.stringify(err));
+        // console.log(JSON.stringify(err));
         resolve(user);
       }
       if (!userAd) {
@@ -49,10 +49,7 @@ const adsifyUser = (user) => {
 
         initials = `${F} ${I}.${O}.`;
       }
-      
-      console.log("----------------------------------initials----------------------------------");
-      console.log('-----initi',initials);
-      
+
       let append = Object.assign({}, { initials: initials }, usr, user, userAd);
       resolve(append);
 

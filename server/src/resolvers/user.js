@@ -14,13 +14,16 @@ const { adsifyUser } = require('./../../adsifyuser');
 module.exports = {
   User: {
     async messages({ id }) {
+      console.log("-----------------------------------------------------")
+      console.log(id)
+      console.log("-----------------------------------------------------")
       return Message.find({ userId: id });
     },
     async groups(parent) {
-      return getTasks(parent.id);
+      return getTasks(parent._id);
     },
     async tasks(parent) {
-      return getTasks(parent.id);
+      return getTasks(parent._id);
     },
     async directs(parent, args, { user }) {
       return getDirectChats(user);
@@ -34,7 +37,19 @@ module.exports = {
         throw new Error('Пользователь не авторизован');
       }
       if (user.email) {
-        let adUser = await adsifyUser(user);
+        const adUser = await adsifyUser(user);
+
+        return (adUser);
+      }
+
+      return user;
+    },
+    userInfo: async (parent, args, { user }) => {
+      if (!user) {
+        throw new Error('Пользователь не авторизован');
+      }
+      if (user.email) {
+        const adUser = await adsifyUser(user);
 
         return (adUser);
       }
@@ -42,13 +57,12 @@ module.exports = {
       return user;
     },
     users: async () => {
-      let allUsers = User.find({});
-      return await allUsers.then((users)=>{
-        return users.map(async (user)=>{
+      const allUsers = User.find({});
+
+      return await allUsers.then((users) => users.map(async (user)=>{
           let adUser = await adsifyUser(user);
           return adUser
-        })
-      })
+        }));
     },
   },
 

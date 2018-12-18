@@ -125,9 +125,6 @@ export default class MessagesList extends Component {
                 return true
               }
 
-              console.log(node.from);
-              
-
               let tr = 'them';
               let createdAt = node.createdAt;
               let text = node.text || "none";
@@ -165,9 +162,9 @@ export default class MessagesList extends Component {
               usid === id && sameCount < 8 ? ++sameCount : sameCount = 0;
               usid = id;
               same && createdAt && moment(createdAt).format('DD MM') != lastDate ? sameCount = 9 : null;
-              
+
               createdAt ? lastDate = moment(createdAt).format('DD MM') : null;
-              
+
               return(
                 <div className={'msg '+ tr} key={'chat-'+i} from={id} id={id}>
                   {same && sameCount < 8 ? (
