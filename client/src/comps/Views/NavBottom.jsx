@@ -52,7 +52,7 @@ class NavBottom extends Component {
   }
 
   render() {
-    let ColorParent, ColorSecond, BgFirst, BgSecond, BgThird, Master, Accent, BakgrColorPrimary, BakgrColorSecondary, BakgrColorMaster, BakgrColorSlave, BakgrColorBlue, LightBlue, bglight, bglight2, bglighttr;
+    let ColorParent, ColorSecond, BgFirst, tr, BgSecond, BgThird, Master, Accent, BakgrColorPrimary, BakgrColorSecondary, BakgrColorMaster, BakgrColorSlave, BakgrColorBlue, LightBlue, bglight, bglight2, bglighttr;
 
     if(this.state.theme === 'white'){
       ColorParent = "#222";
@@ -73,6 +73,7 @@ class NavBottom extends Component {
       bglight2 = "rgb(216, 225, 228)";
       bglighttr = '#eeeeeeee';
       bglighttr = '#eeeeeeee';
+      tr = 'transparent';
     }
 
     // if(this.state.theme === 'gold'){
@@ -149,8 +150,8 @@ class NavBottom extends Component {
             label.LabelInputList input
             ,.ChatForm .textarea-wrapper
             {
-              background: ${BakgrColorPrimary};
-              background-color: ${BakgrColorPrimary};
+              background: transparent;
+              background-color: transparent;
               color:${ColorParent};
             }
             .Task{border-color:rgba(0,0,0,0.1);}
@@ -270,6 +271,7 @@ class NavBottom extends Component {
             input[type="password"], input[type="button"], 
             input[type="submit"], select, textarea{
               color: ${ColorParent};
+              background:transparent;
             }
 
           `}</style>) : null}

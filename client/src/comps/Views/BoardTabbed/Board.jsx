@@ -879,7 +879,7 @@ class Board extends Component {
                           <div className="ModalBlockName">
                                 Срок истечения
                           </div>
-                          <label htmlFor="dateout" className="LabelInputDate">
+                          <label htmlFor="dateout" className="LabelInputText LabelInputDate">
                             <input type="date" name="dateout" placeholder="Дата Завершения" onChange={(e) => { this.saveTaskData(e.target.value, "endDate", true)}} />
                           </label>
                         </ModalCol>
