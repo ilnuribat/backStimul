@@ -98,7 +98,7 @@ class Task extends Component {
             <div className="TaskChat">
               <div className="ChatName">
                 {
-                  lastMessage.from.username
+                  lastMessage.from.initials || lastMessage.from.username
                 }
               </div>
               <div className="ChatMessage">

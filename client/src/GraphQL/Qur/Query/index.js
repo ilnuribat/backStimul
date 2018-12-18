@@ -521,6 +521,17 @@ export const getUnreadCount2 = gql `{
       }
     }
 }`;
+export const getUserInfo = gql `
+query{
+  user{
+    id
+    name
+    mail
+    email
+    username
+    initials
+  }
+}`;
 
 
 export const getUnreadCount = () => `
