@@ -2,7 +2,7 @@ const ActiveDirectory = require('activedirectory');
 /** ***** */
 
 const config = {
-  url: 'ldap://pdcg.guss.ru',
+  url: 'ldap://10.0.20.105',
   baseDN: 'DC=guss,DC=ru',
   username: 'LDAP USER',
   password: '2wKzTrzIs7mCHb',
