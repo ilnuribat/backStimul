@@ -7,6 +7,7 @@ width: 100%;
 min-width: 100%;
 justify-content: center;
 align-content: center;
+margin: 0;
 }
 
 .Board-Top-New h1{
@@ -96,6 +97,7 @@ align-content: center;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  margin-bottom:10px;
 }
 .BoardTabs{
   display: flex;
@@ -103,22 +105,33 @@ align-content: center;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin: 0 auto 10px;
+  margin: 0 auto 0;
+  height: 30px;
+  min-height: 30px;
 }
 
 .Tabs-Button{
   transition: all 0.3s ease-in-out;
+  position: relative;
   margin: 0 5px 0;
   display: block;
   padding: 2px 5px;
+  height: 30px;
   width:100px;
   text-align: center;
   cursor: pointer;
   border-radius: 3px;
-  box-shadow: 2px 2px 20px -4px rgba(0, 0, 0, 0.3)
+}
+
+.Tabs-Button::before{
+  position: absolute;
+  top:0px;
+  left: 0px;
+  right: 0px;
+  content: ' ';
+  width: 80px;
 }
 .Tabs-Button.sel,
 .Tabs-Button:hover
 {
-  width: 120px;
 }

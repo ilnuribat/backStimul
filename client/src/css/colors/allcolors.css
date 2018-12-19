@@ -639,6 +639,7 @@ fill:#FFF;
 
 .Board-Top-New{
 background: #2a2c31;
+background: rgba(0, 0, 0, 0.123);
 }
 
 .Board-Top-New h1{
@@ -651,14 +652,30 @@ background: #2a2c31;
 }
 
 .Tabs-Button{
-  background: #3e74b23f;
-  box-shadow: 2px 2px 20px -4px rgba(0, 0, 0, 0.3)
+  /* background: #3e74b23f; */
+  background: transparent;
+
+}
+
+.Tabs-Button::before,
+.Tabs-Button:before
+{
+  background: transparent;
+  border-left: 10px dotted transparent;
+  border-right: 10px solid transparent;
+  border-top: 30px solid rgba(0, 0, 0, 0.123);
 }
 .Tabs-Button.sel,
 .Tabs-Button:hover
 {
-  background: #3e74b2a8;
-  color: aliceblue;
+  /* background: #3e74b2a8; */
+  /* color: aliceblue; */
+  
+}
+.Tabs-Button:hover::before,
+.Tabs-Button.sel::before,
+{
+  border-top: 30px solid rgba(77, 77, 77, 0.384);
 }
 
 .Board-Top{
