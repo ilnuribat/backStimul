@@ -47,6 +47,7 @@ query{
       name
       mail
       initials
+      icon
     }
     endDate
     assignedTo{
@@ -55,6 +56,7 @@ query{
       name
       mail
       initials
+      icon
     }
     status
   }
@@ -101,6 +103,7 @@ export const getTaskById = (id) => {
                   name
                   mail
                   initials
+                  icon
                 }
                 endDate
                 status
@@ -132,6 +135,7 @@ export const allUsers = () => `
       name
       mail
       initials
+      icon
         __typename
       }
     }
@@ -145,6 +149,7 @@ export const USERS_QUERY = gql `
       name
       mail
       initials
+      icon
       }
     }
 `;
@@ -175,6 +180,7 @@ export const PRIVS_QUERY = gql `
             name
             mail
             initials
+            icon
           }
           text
           isRead
@@ -190,6 +196,7 @@ export const CHATS_QUERY = gql `
         name
         initials
         mail
+        icon
         directs{
           id
           name
@@ -201,6 +208,7 @@ export const CHATS_QUERY = gql `
             name
             mail
             initials
+            icon
           }
           lastMessage{
           from{
@@ -209,6 +217,7 @@ export const CHATS_QUERY = gql `
             name
             mail
             initials
+            icon
           }
           text
           isRead
@@ -225,6 +234,7 @@ export const CHATS_QUERY = gql `
             name
             mail
             initials
+            icon
           }
           lastMessage{
           from{
@@ -233,6 +243,7 @@ export const CHATS_QUERY = gql `
             name
             mail
             initials
+            icon
           }
           text
           isRead
@@ -251,6 +262,7 @@ export const USER_QUERY = gql `
         email
         username
         initials
+        icon
       }
     }
 `;
@@ -267,6 +279,7 @@ export const TASKS_QUERY = gql `
           name
           mail
           initials
+          icon
         }
         unreadCount
         status
@@ -276,6 +289,7 @@ export const TASKS_QUERY = gql `
           name
           mail
           initials
+          icon
         }
         lastMessage{
           from{
@@ -284,6 +298,7 @@ export const TASKS_QUERY = gql `
             name
             mail
             initials
+            icon
           }
           text
         }
@@ -311,11 +326,12 @@ export const PRIV_QUERY = gql`
                       id
                       userId
                       from {
-                      id
-                      username
-                      name
-                      mail
-                      initials
+                        id
+                        username
+                        name
+                        mail
+                        initials
+                        icon
                       }
                       createdAt
                       text
@@ -347,6 +363,7 @@ export const TASK_MESSAGES = gql`
                name
                mail
                initials
+               icon
              }
              parentId
              objectId
@@ -358,6 +375,7 @@ export const TASK_MESSAGES = gql`
               name
               mail
               initials
+              icon
              }
              files {
                id
@@ -379,6 +397,7 @@ export const TASK_MESSAGES = gql`
                      name
                      mail
                      initials
+                     icon
                    }
                    createdAt
                    text
@@ -398,11 +417,12 @@ export const TASK_INFO = gql `
           id
           name
           users{
-      id
-      username
-      name
-      mail
-      initials
+            id
+            username
+            name
+            mail
+            initials
+            icon
           }
           parentId
           objectId
@@ -414,6 +434,7 @@ export const TASK_INFO = gql `
               name
               mail
               initials
+              icon
           }
           files {
             id
@@ -455,11 +476,12 @@ export const GRU_QUERY = gql `
   query group($id: ID!){
       group(id: $id ){
           users{
-      id
-      username
-      name
-      mail
-      initials
+            id
+            username
+            name
+            mail
+            initials
+            icon
           }
       }
   }
@@ -526,6 +548,7 @@ query group($id: ID!){
               name
               mail
               initials
+              icon
       }
     }
   }
@@ -552,6 +575,7 @@ query{
     email
     username
     initials
+    icon
   }
 }`;
 
@@ -584,6 +608,7 @@ export const getObjectTasks2 = (id) => `
       name
       mail
       initials
+      icon
         }
         unreadCount
         status
@@ -593,6 +618,7 @@ export const getObjectTasks2 = (id) => `
               name
               mail
               initials
+              icon
         }
         lastMessage{
           from{
@@ -601,6 +627,7 @@ export const getObjectTasks2 = (id) => `
             name
             mail
             initials
+            icon
           }
           text
         }
@@ -654,13 +681,15 @@ export const getObjectTasks = gql `
               name
               mail
               initials
+              icon
         }
         users{
-      id
-      username
-      name
-      mail
-      initials
+          id
+          username
+          name
+          mail
+          initials
+          icon
         }
         files {
           id
@@ -676,6 +705,7 @@ export const getObjectTasks = gql `
             name
             mail
             initials
+            icon
           }
           text
         }
