@@ -212,17 +212,21 @@ class NavTop extends Component {
               {
                 ({data, loading, error})=>{
                   let userinfo = { name: localStorage.getItem('username'), icon: logoImg};
+
                   if(error){
                     console.warn('Error', error.message)
+
                     return true;
                   }
-                  
-                  if (data && data.user && data.user.initials){
-                    userinfo.name = data.user.initials
-                    if (!!data.user.icon){
-                      userinfo.icon = data.user.icon
+                  // if (data && data.userInfo ) console.warn("AAA", data.userInfo.name)
+
+                  if (data && data.userInfo && data.userInfo.initials){
+                    userinfo.name = data.userInfo.initials
+                    if (data.userInfo.icon){
+                      userinfo.icon = data.userInfo.icon
                     }
                   }
+
                   return(
                     <Link to="/login" >
                       <UserRow size="38" icon={userinfo.icon || logoImg} view="Col" name={userinfo.name}></UserRow>

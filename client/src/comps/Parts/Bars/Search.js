@@ -219,7 +219,7 @@ export class Search extends Component {
     let vars = {};
 
     vars.query = value;
-    chTsk && statuses || chAll ? vars.statuses = [...statuses]: null
+    if (chTsk && statuses || chAll) vars.statuses = [...statuses]
 
     return <div className="Search">
       <div className="SearchTop">
@@ -262,11 +262,11 @@ export class Search extends Component {
             if (data && data.search) {
               let Search = {};
 
-              data.search.messages && data.search.messages.length > 0 ? (Search.messages = data.search.messages) : null;
-              data.search.tasks && data.search.tasks.length > 0 ? (Search.tasks = data.search.tasks) : null;
-              data.search.objects && data.search.objects.length > 0 ? (Search.objects = data.search.objects) : null;
-              data.search.users && data.search.users.length > 0 ? (Search.users = data.search.users) : null;
-              data.search.files && data.search.files.length > 0 ? (Search.files = data.search.files) : null;
+              if (data.search.messages && data.search.messages.length > 0) Search.messages = data.search.messages;
+              if (data.search.tasks && data.search.tasks.length > 0) Search.tasks = data.search.tasks;
+              if (data.search.objects && data.search.objects.length > 0) Search.objects = data.search.objects;
+              if (data.search.users && data.search.users.length > 0) Search.users = data.search.users;
+              if (data.search.files && data.search.files.length > 0) Search.files = data.search.files;
 
               // Search ? (
               return <div id="SeacrhInner">

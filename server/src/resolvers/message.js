@@ -18,8 +18,8 @@ module.exports = {
       if (user.email) {
         let adUser = await adsifyUser(user);
 
-        console.log(adUser);
-        
+        // console.log(adUser);
+
         return(adUser);
       }
       return user;

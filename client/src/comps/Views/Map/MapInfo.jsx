@@ -1,8 +1,5 @@
-// import React from "react";
 import { withLeaflet, MapControl } from "react-leaflet";
 import L from "leaflet";
-
-
 
 class MapInfo extends MapControl {
   constructor(props, context) {

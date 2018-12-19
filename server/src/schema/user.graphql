@@ -35,6 +35,7 @@ type AuthToken {
 
 type Query {
   user(email: String, id: String): User
+  userInfo(email: String, id: String): User
   users: [User]
 }
 

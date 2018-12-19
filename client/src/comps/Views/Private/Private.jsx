@@ -136,18 +136,6 @@ class Private extends Component {
 
     privateChat ? CHATQUERY = PRIV_QUERY : CHATQUERY = TASK_MESSAGES
 
-    console.warn("AAAAAAAAAA")
-    console.warn("AAAAAAAAAA", chatId, privateChat)
-
-//     qauf(`{
-//       glossary {
-//         abstractResource (id: "${chatId}")
-//       }
-//     }
-// `, _url, localStorage.getItem('auth-token')).then(a=>{
-//       a.data.glossary.abstractResource === "Direct" ? CHATQUERY = PRIV_QUERY : CHATQUERY = TASK_MESSAGES
-//     })
-
     return <Fragment>
       <Content view="OvH Row OvH Pad10">
         <InnerBar>
@@ -166,7 +154,6 @@ class Private extends Component {
 
 
             if (data && (data.task || data.direct)) {
-              // console.warn("AAAAAAAA", data.direct, data.direct.name, privateChat, typeof privateChat)
               let allData = data.direct || data.task;
 
               return (
