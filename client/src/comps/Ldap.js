@@ -26,23 +26,7 @@ export class Ldap extends Component {
     };
 
     client.search('OU=GUOVUsers,DC=guss,DC=ru', opts, function (err, res) {
-      if (err) {
-        console.log(err)
-      }
-      console.log(res)
 
-      // res.on('searchEntry', function (entry) {
-      //   console.log('entry: ' + JSON.stringify(entry.object));
-      // });
-      // res.on('searchReference', function (referral) {
-      //   console.log('referral: ' + referral.uris.join());
-      // });
-      // res.on('error', function (err) {
-      //   console.error('error: ' + err.message);
-      // });
-      // res.on('end', function (result) {
-      //   console.log('status: ' + result.status);
-      // });
     });
 
 

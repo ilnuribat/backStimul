@@ -14,6 +14,7 @@ type User {
   department: String
   description: String
   displayName: String
+  icon: String
   name: String
   sn: String
   title: String

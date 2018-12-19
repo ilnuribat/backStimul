@@ -246,6 +246,7 @@ export const USER_QUERY = gql `
     query{
       user{
         name
+        icon
         mail
         email
         username

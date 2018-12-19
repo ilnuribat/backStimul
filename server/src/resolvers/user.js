@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const {
   User,
   Message,
+  Avatars,
 } = require('../models');
 const { logger } = require('../../logger');
 const { getDirectChats } = require('../services/chat');
@@ -35,6 +36,11 @@ module.exports = {
       }
       if (user.email) {
         const adUser = await getUserInfoFromAD(user);
+
+        let nn = await Avatars.findOne({ name: adUser.name });
+        if (nn && nn._doc && nn._doc.content){
+          adUser.icon = nn._doc.content;
+        }
 
         return (adUser);
       }
