@@ -230,7 +230,7 @@ class NavTop extends Component {
 
                   return(
                     <Link to="/login" >
-                      <UserRow size="38" icon={data && data.user && data.user.icon || logoImg} view="Col" name={data && data.user && data.user.initials || data && data.user && data.user.username || 'none'}></UserRow>
+                      <UserRow size="38" icon={ data.user.icon || logoImg} view="Col" name={ data.user.initials ||  data.user.username || 'none'}></UserRow>
                     </Link>
                   )
                   }else{
