@@ -14,9 +14,6 @@ const { adsifyUser } = require('./../../adsifyuser');
 module.exports = {
   User: {
     async messages({ id }) {
-      console.log("-----------------------------------------------------")
-      console.log(id)
-      console.log("-----------------------------------------------------")
       return Message.find({ userId: id });
     },
     async groups(parent) {
@@ -57,12 +54,9 @@ module.exports = {
       return user;
     },
     users: async () => {
-      const allUsers = User.find({});
+      const allUsers = await User.find({});
 
-      return await allUsers.then((users) => users.map(async (user)=>{
-          let adUser = await adsifyUser(user);
-          return adUser
-        }));
+      return Promise.all(allUsers.map(user => adsifyUser(user)));
     },
   },
 
@@ -125,9 +119,6 @@ module.exports = {
           userId: newUser.id,
           id: newUser.id,
           username: newUser.email,
-          mail: newUser.email,
-          fullname: newUser.name,
-          department: newUser.name,
           jwt: token,
         };
       } catch (err) {

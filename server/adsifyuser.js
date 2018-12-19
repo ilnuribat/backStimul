@@ -1,11 +1,11 @@
 const ActiveDirectory = require('activedirectory');
-/** ***** */
+const { ACTIVE_DIRECTORY_PASSWORD, ACTIVE_DIRECTORY_HOST } = require('./config');
 
 const config = {
-  url: 'ldap://10.0.20.105',
+  url: ACTIVE_DIRECTORY_HOST,
   baseDN: 'DC=guss,DC=ru',
   username: 'LDAP USER',
-  password: '2wKzTrzIs7mCHb',
+  password: ACTIVE_DIRECTORY_PASSWORD,
   attributes: {
     user: [
       'cn',

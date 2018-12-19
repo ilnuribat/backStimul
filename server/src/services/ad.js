@@ -23,10 +23,6 @@ async function authenticate(login, password) {
       return reject(new Error('test mode'));
     }
 
-    if (password == '123'){
-      return resolve(true);
-    }
-
     return ad.authenticate(`${login}@guss.ru`, password, (err, data) => {
       if (err) {
         return reject(err);
