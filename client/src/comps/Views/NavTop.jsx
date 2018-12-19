@@ -9,9 +9,10 @@ import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED, TASK_UPDATED, USER_TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
 import { cGetCountPrivates, cSetCountPrivates, chatListCacheUpdate, messagesCacheUpdate, objectCacheUpdate, getChat, getCUser } from '../../GraphQL/Cache';
-import { getUnreadCount, TASK_INFO_SMALL, getUserInfo } from '../../GraphQL/Qur/Query';
+import { getUnreadCount, TASK_INFO_SMALL, USER_QUERY } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 import client from '../../client';
+import Loading from '../Loading';
 
 
 class NavTop extends Component {
@@ -208,30 +209,38 @@ class NavTop extends Component {
         <div className = "NavTop" >
           <div className = "LogoNav" >
             {cGetCountPrivates && cGetCountPrivates.unr ? (<div className="TopCounter">+{cGetCountPrivates.unr}</div>) : null}
-            <Query query={getUserInfo}>
+            <Query query={USER_QUERY}>
               {
                 ({data, loading, error})=>{
                   let userinfo = { name: localStorage.getItem('username'), icon: logoImg};
 
+                  if (loading){
+                    return <Loading></Loading>
+                  }
                   if(error){
                     console.warn('Error', error.message)
-
-                    return true;
+                    return <Loading></Loading>
                   }
                   // if (data && data.userInfo ) console.warn("AAA", data.userInfo.name)
 
-                  if (data && data.userInfo && data.userInfo.initials){
-                    userinfo.name = data.userInfo.initials
-                    if (data.userInfo.icon){
-                      userinfo.icon = data.userInfo.icon
-                    }
-                  }
+                  if (data && data.user){
+                    userinfo.name = data.user.initials
+                    userinfo.icon = data.user.icon || logoImg
+                    
 
                   return(
                     <Link to="/login" >
-                      <UserRow size="38" icon={userinfo.icon || logoImg} view="Col" name={userinfo.name}></UserRow>
+                      <UserRow size="38" icon={ data.user.icon || logoImg} view="Col" name={ data.user.initials ||  data.user.username || 'none'}></UserRow>
                     </Link>
                   )
+                  }else{
+                    return (
+                      <Link to="/login" >
+                        <UserRow size="38" icon={logoImg} view="Col" name={userinfo.name}></UserRow>
+                      </Link>
+                    )
+                  }
+
                 }
               }
             </Query>

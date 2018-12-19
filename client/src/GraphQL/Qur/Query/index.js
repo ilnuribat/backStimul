@@ -187,6 +187,9 @@ export const PRIVS_QUERY = gql `
 export const CHATS_QUERY = gql `
     query{
       user{
+        name
+        initials
+        mail
         directs{
           id
           name
@@ -236,6 +239,17 @@ export const CHATS_QUERY = gql `
           createdAt
         }
         }
+      }
+    }
+`;
+export const USER_QUERY = gql `
+    query{
+      user{
+        name
+        mail
+        email
+        username
+        initials
       }
     }
 `;

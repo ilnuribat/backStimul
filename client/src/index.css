@@ -260,8 +260,8 @@ button{
   align-items: flex-start;
 }
 .Col{
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
 }
 .OvH{
   overflow: hidden;
