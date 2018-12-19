@@ -6,10 +6,10 @@ const {
 const { logger } = require('../../logger');
 const { getDirectChats } = require('../services/chat');
 const { getTasks, generateToken } = require('../services/user');
-const { authenticate } = require('../services/ad');
+const { authenticate, getUserInfoFromAD } = require('../services/ad');
 const { BCRYPT_ROUNDS } = require('../../config');
 const { ERROR_CODES } = require('../services/constants');
-const { adsifyUser } = require('./../../adsifyuser');
+// const { getUserInfoFromAD } = require('./../../getUserInfoFromAD');
 
 module.exports = {
   User: {
@@ -34,7 +34,7 @@ module.exports = {
         throw new Error('Пользователь не авторизован');
       }
       if (user.email) {
-        const adUser = await adsifyUser(user);
+        const adUser = await getUserInfoFromAD(user);
 
         return (adUser);
       }
@@ -46,7 +46,7 @@ module.exports = {
         throw new Error('Пользователь не авторизован');
       }
       if (user.email) {
-        const adUser = await adsifyUser(user);
+        const adUser = await getUserInfoFromAD(user);
 
         return (adUser);
       }
@@ -56,7 +56,7 @@ module.exports = {
     users: async () => {
       const allUsers = await User.find({});
 
-      return Promise.all(allUsers.map(user => adsifyUser(user)));
+      return Promise.all(allUsers.map(user => getUserInfoFromAD(user)));
     },
   },
 
@@ -78,6 +78,10 @@ module.exports = {
           });
         }
       } catch (err) {
+        if (err.message === ERROR_CODES.NO_USER_FOUND) {
+          throw err;
+        }
+
         logger.error('error in ad', err);
         foundUser = await User.findOne({ email });
 

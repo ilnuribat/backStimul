@@ -6,7 +6,7 @@ const {
 const {
   MESSAGE_READ, pubsub, MESSAGE_ADDED, ERROR_CODES,
 } = require('../services/constants');
-const { adsifyUser } = require('./../../adsifyuser');
+const { getUserInfoFromAD } = require('../services/ad');
 
 
 module.exports = {
@@ -17,7 +17,7 @@ module.exports = {
       const user = await User.findById(userId);
 
       if (user.email) {
-        return adsifyUser(user);
+        return getUserInfoFromAD(user);
       }
 
       return user;
