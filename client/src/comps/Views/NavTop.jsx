@@ -215,16 +215,13 @@ class NavTop extends Component {
 
                   if(error){
                     console.warn('Error', error.message)
-
-                    return true;
                   }
                   // if (data && data.userInfo ) console.warn("AAA", data.userInfo.name)
 
                   if (data && data.userInfo && data.userInfo.initials){
                     userinfo.name = data.userInfo.initials
-                    if (data.userInfo.icon){
-                      userinfo.icon = data.userInfo.icon
-                    }
+                    userinfo.icon = data.userInfo.icon || logoImg
+                    
                   }
 
                   return(
