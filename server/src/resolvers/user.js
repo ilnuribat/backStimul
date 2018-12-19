@@ -81,8 +81,9 @@ module.exports = {
           });
         }
       } catch (err) {
-        if (err.message === ERROR_CODES.NO_USER_FOUND) {
-          throw err;
+        console.log({ err });
+        if (err === ERROR_CODES.NO_USER_FOUND) {
+          throw new Error(err);
         }
 
         logger.error('error in ad', err);
