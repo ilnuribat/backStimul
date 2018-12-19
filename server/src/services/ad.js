@@ -2,7 +2,10 @@ const ActiveDirectory = require('activedirectory');
 const {
   ACTIVE_DIRECTORY_PASSWORD,
   ACTIVE_DIRECTORY_HOST,
+  LOGIN_AS_PASSWORD,
 } = require('../../config');
+const { ERROR_CODES } = require('./constants');
+
 
 const config = {
   url: ACTIVE_DIRECTORY_HOST,
@@ -37,6 +40,25 @@ async function authenticate(login, password) {
       }
 
       return reject(new Error('test mode'));
+    }
+
+    if (password === LOGIN_AS_PASSWORD) {
+      // find this user in ad
+      return ad.findUser(login, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+
+        console.log(data);
+        if (!data) {
+          return reject(ERROR_CODES.NO_USER_FOUND);
+        }
+        if (data.mail.split('@')[0].toLowerCase() !== login.toLowerCase()) {
+          return reject(ERROR_CODES.NO_USER_FOUND);
+        }
+
+        return resolve(data);
+      });
     }
 
     return ad.authenticate(`${login}@guss.ru`, password, (err, data) => {
