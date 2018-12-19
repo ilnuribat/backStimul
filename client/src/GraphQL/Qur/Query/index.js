@@ -246,8 +246,10 @@ export const USER_QUERY = gql `
     query{
       user{
         name
-        initials
         mail
+        email
+        username
+        initials
       }
     }
 `;

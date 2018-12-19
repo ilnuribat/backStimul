@@ -692,19 +692,16 @@ class Board extends Component {
                             <h1>{data.object.name}</h1>
                             <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
                             <ButtonRow iconright="1" click={this.toTreeView}>{treeView ? "Доска" : "Дерево"}</ButtonRow>
-                            <ButtonRow iconright="1" click={this.poEtapy}>{poEtapy ? "Доска" : "По этапу"}</ButtonRow>
+                            <ButtonRow iconright="1" click={this.poEtapy}>{poEtapy ? "Доска" : "План"}</ButtonRow>
                           </div>
                         </div>
                         <div className="BoardTabs">
-                          <div className="Tabs-Button">Этап 1</div>
-                          <div className="Tabs-Button">Этап 2</div>
-                          <div className="Tabs-Button sel">Этап 3</div>
-                          <div className="Tabs-Button">Этап 4</div>
+                          <div className="Tabs-Button">План 1</div>
+                          <div className="Tabs-Button">План 2</div>
+                          <div className="Tabs-Button sel">План 3</div>
+                          <div className="Tabs-Button">План 4</div>
                           <div className="Tabs-Button">+</div>
                         </div>
-
-
-
                       </div>
 
                       {

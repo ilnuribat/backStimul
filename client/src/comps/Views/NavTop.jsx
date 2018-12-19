@@ -12,6 +12,7 @@ import { cGetCountPrivates, cSetCountPrivates, chatListCacheUpdate, messagesCach
 import { getUnreadCount, TASK_INFO_SMALL, USER_QUERY } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 import client from '../../client';
+import Loading from '../Loading';
 
 
 class NavTop extends Component {
@@ -213,22 +214,33 @@ class NavTop extends Component {
                 ({data, loading, error})=>{
                   let userinfo = { name: localStorage.getItem('username'), icon: logoImg};
 
+                  if (loading){
+                    return <Loading></Loading>
+                  }
                   if(error){
                     console.warn('Error', error.message)
+                    return <Loading></Loading>
                   }
                   // if (data && data.userInfo ) console.warn("AAA", data.userInfo.name)
 
-                  if (data && data.userInfo && data.userInfo.initials){
-                    userinfo.name = data.userInfo.initials
-                    userinfo.icon = data.userInfo.icon || logoImg
+                  if (data && data.user){
+                    userinfo.name = data.user.initials
+                    userinfo.icon = data.user.icon || logoImg
                     
-                  }
 
                   return(
                     <Link to="/login" >
-                      <UserRow size="38" icon={userinfo.icon || logoImg} view="Col" name={userinfo.name}></UserRow>
+                      <UserRow size="38" icon={data && data.user && data.user.icon || logoImg} view="Col" name={data && data.user && data.user.initials || data && data.user && data.user.username || 'none'}></UserRow>
                     </Link>
                   )
+                  }else{
+                    return (
+                      <Link to="/login" >
+                        <UserRow size="38" icon={logoImg} view="Col" name={userinfo.name}></UserRow>
+                      </Link>
+                    )
+                  }
+
                 }
               }
             </Query>
