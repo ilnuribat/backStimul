@@ -39,7 +39,17 @@ module.exports = {
 
         let nn = await Avatars.findOne({ name: adUser.name });
         if (nn && nn._doc && nn._doc.content){
+
           adUser.icon = nn._doc.content;
+          try {
+            Avatars.findOneAndUpdate({ "name": nn._doc.name }, { "name": nn._doc.name, "content": nn._doc.content, "userId": adUser.id, "email": adUser.mail } )
+            .then(a=>{
+              console.log("updated",a);
+            });
+          }
+          catch (e) {
+            console.log(e);
+          }
         }
 
         return (adUser);
