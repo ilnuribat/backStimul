@@ -9,7 +9,7 @@ import logoImg from '../Img/Logo';
 import { qauf, _url } from '../../constants';
 import { ALL_MESSAGE_CREATED, TASK_UPDATED, USER_TASK_UPDATED } from '../../GraphQL/Qur/Subscr';
 import { cGetCountPrivates, cSetCountPrivates, chatListCacheUpdate, messagesCacheUpdate, objectCacheUpdate, getChat, getCUser } from '../../GraphQL/Cache';
-import { getUnreadCount, TASK_INFO_SMALL, getUserInfo } from '../../GraphQL/Qur/Query';
+import { getUnreadCount, TASK_INFO_SMALL, USER_QUERY } from '../../GraphQL/Qur/Query';
 import { UserRow } from '../Parts/Rows/Rows';
 import client from '../../client';
 
@@ -208,7 +208,7 @@ class NavTop extends Component {
         <div className = "NavTop" >
           <div className = "LogoNav" >
             {cGetCountPrivates && cGetCountPrivates.unr ? (<div className="TopCounter">+{cGetCountPrivates.unr}</div>) : null}
-            <Query query={getUserInfo}>
+            <Query query={USER_QUERY}>
               {
                 ({data, loading, error})=>{
                   let userinfo = { name: localStorage.getItem('username'), icon: logoImg};
