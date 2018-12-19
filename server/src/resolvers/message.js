@@ -14,14 +14,12 @@ module.exports = {
     id: message => message._id.toString(),
     from: async (parent) => {
       const { userId } = parent;
-      let user = await User.findById(userId);
+      const user = await User.findById(userId);
+
       if (user.email) {
-        let adUser = await adsifyUser(user);
-
-        // console.log(adUser);
-
-        return(adUser);
+        return adsifyUser(user);
       }
+
       return user;
     },
     to(parent) {
