@@ -19,7 +19,7 @@ class Task extends Component {
 
   render() {
 
-    const { children, name, id, endDate, lastMessage, click, childs, selected, selectedChilds, deleteTask, showother, status, childscol, fulltask} = this.props;
+    const { children, name, id, endDate, lastMessage, click, childs, selected, selectedChilds, deleteTask, showother, status, childscol, fulltask, manager, owner} = this.props;
     let sel = "";
     let oth = "";
     let statusShit = 'истекает:';
@@ -112,7 +112,7 @@ class Task extends Component {
         }
         <div className="Bottom">
           {/* <div className="TaskUserPhoto"> */}
-          <UserRow icon="1" box="1"/>
+          <UserRow icon={owner && owner.icon || "1"} box="1"/>
           {/* </div> */}
 
           {childs ? (

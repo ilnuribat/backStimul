@@ -113,7 +113,7 @@ class ChildsMap extends Component {
             <span className={`status ${obj.status ? "sts" + obj.status : "sts0"}`}>{obj.status ? stName : "Новая"}</span>
           </div>
           {obj.assignedTo && obj.assignedTo.id && obj.assignedTo.username ? <div className="holder">
-            <UserRow id={obj.assignedTo.id} name={obj.assignedTo.username} icon="1" />
+            <UserRow id={obj.assignedTo.id} name={obj.assignedTo.username} icon={obj.assignedTo.icon || "1"} />
           </div> : null}
           {
             childs && showTree ? <div className="border"> </div> : null

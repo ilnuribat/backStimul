@@ -172,7 +172,7 @@ export default class MessagesList extends Component {
                     </div>
                   ) : (
                     <div className="msg-user" style={{color: colorHash.hex(username)}}>
-                      {id !== uid ? (<UserRow name={username} icon="1" view="Col" />) : null}
+                        {id !== uid ? (<UserRow name={username} icon={node.from.icon||"1"} view="Col" />) : null}
                     </div>
                   )}
                   <blockquote className={"msgs"}>

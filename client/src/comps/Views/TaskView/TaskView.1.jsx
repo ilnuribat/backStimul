@@ -482,7 +482,7 @@ class TaskView extends Component {
 
                       <TextRow name="" view="cgr Pad510 s">
                         {data.task && data.task.assignedTo && data.task.assignedTo.id && data.task.assignedTo.username ? (
-                          <UserRow size="24" id={data.task.assignedTo.id} name={data.task.assignedTo.username ? data.task.assignedTo.username : "Нет имени"} icon="1" />
+                          <UserRow size="24" id={data.task.assignedTo.id} name={data.task.assignedTo.username ? data.task.assignedTo.username : "Нет имени"} icon={data.task.assignedTo.icon || "1"} />
                         ): "Ответственный не назначен"}
                       </TextRow>
 

@@ -42,7 +42,7 @@ class ResponsiblePerson extends React.Component {
 
     return (
       !save ? (
-        <UserRow click = {this.handleClick} size="32" id={userId} name={userName} icon="1" ondelete={(id)=>{console.log(id)}} />
+        <UserRow click = {this.handleClick} size="32" id={userId} name={userName} icon={"1"} ondelete={(id)=>{console.log(id)}} />
       ) : ( <FakeSelect onselect={this.writeTaskResponsiblePerson} defaultid={userId} array={data.users}/>
       )
 

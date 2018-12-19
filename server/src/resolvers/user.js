@@ -52,7 +52,7 @@ module.exports = {
           }
         }
 
-        return (adUser);
+        return(adUser);
       }
 
       return user;

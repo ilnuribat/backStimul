@@ -131,7 +131,6 @@ class Login extends Component {
               </div> */}
                 <UserRow size="160" icon="1" ><h1>{localStorage.getItem('username')}</h1></UserRow>
 
-
                 </div>
                 <div className="authContent">
                   <div className="authColumn">

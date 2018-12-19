@@ -117,7 +117,7 @@ class ChildsMap extends Component {
             <span className={`status ${obj.status ? "sts" + obj.status : "sts0"}`}>{obj.status ? stName : "Новая"}</span>
           </div>
           {obj.assignedTo && obj.assignedTo.id && obj.assignedTo.username ? <div className="holder">
-            <UserRow id={obj.assignedTo.id} name={obj.assignedTo.username} icon="1" />
+            <UserRow id={obj.assignedTo.id} name={obj.assignedTo.username} icon={obj.assignedTo.icon||"1"} />
           </div> : null}
           {
             childs && showTree ? <div className="border"> </div> : null
@@ -808,7 +808,7 @@ class Board extends Component {
                                       } else { selectedChilds = false; }
 
                                       return (
-                                        <Task fulltask={task} showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childscol={haveChilds && haveChilds.length > 0 ? haveChilds : null} childs={haveChilds && haveChilds.length > 0 ? this.childs : null} deleteTask={this.changeDelModal} />
+                                        <Task owner={e.assignedTo} fulltask={task} showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childscol={haveChilds && haveChilds.length > 0 ? haveChilds : null} childs={haveChilds && haveChilds.length > 0 ? this.childs : null} deleteTask={this.changeDelModal} />
                                       )
                                     })
                                   }

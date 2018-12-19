@@ -187,7 +187,7 @@ class PrivateBar extends React.Component {
                                   <div className={"Row" + sel} key={'users-'+i} onClick={()=>this.openPrivate(e.id, false)}>
                                     {/* <div>{e.id}</div> */}
 
-                                    <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name ? e.name.length > 70 ? e.name.substring(0, 70) + "..." : e.name : "noname" } >
+                                    <UserRow key={'users-' + i} size="42" icon={e.icon || "1"} id={e.id} name={e.name ? e.name.length > 70 ? e.name.substring(0, 70) + "..." : e.name : "noname" } >
                                       {e.lastMessage && e.lastMessage.text ? (
 
                                         <div className="RowChildren PadTop5">
@@ -238,7 +238,7 @@ class PrivateBar extends React.Component {
                                   <div className={"Row" + sel} key={'users-'+i} onClick={()=>this.openPrivate(e.id, true)}>
                                     {/* <div>{e.id}</div> */}
 
-                                    <UserRow key={'users-'+i} size="42" icon="1" id={e.id} name={e.name ? e.name.length > 70 ? e.name.substring(0, 70) + "..." : e.name : "noname" } >
+                                    <UserRow key={'users-' + i} size="42" icon={e.icon || "1"} id={e.id} name={e.name ? e.name.length > 70 ? e.name.substring(0, 70) + "..." : e.name : "noname" } >
                                       {e.lastMessage && e.lastMessage.text ? (
 
                                         <div className="RowChildren PadTop5">
