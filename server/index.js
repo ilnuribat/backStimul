@@ -103,7 +103,7 @@ async function subscriptionConnectHandler(connectionParams) {
   const user = await User.findById(res.id);
 
   if (!user) {
-    throw new Error("Пользователь не найден");
+    throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
   }
 
   return { user };
