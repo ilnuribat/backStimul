@@ -29,10 +29,9 @@ module.exports = {
     id: user => user._id.toString(),
     username: user => user.email,
     icon: async (user) => {
-      
-      let nn = await Avatars.findOne({ name: user.name });
-      if (nn && nn._doc && nn._doc.content) {
+      const nn = await Avatars.findOne({ name: user.name });
 
+      if (nn && nn._doc && nn._doc.content) {
         return nn._doc.content;
       }
     },
@@ -45,22 +44,23 @@ module.exports = {
       if (user.email) {
         const adUser = await getUserInfoFromAD(user);
 
-        let nn = await Avatars.findOne({ name: adUser.name });
-        if (nn && nn._doc && nn._doc.content){
+        const nn = await Avatars.findOne({ name: adUser.name });
 
+        if (nn && nn._doc && nn._doc.content) {
           adUser.icon = nn._doc.content;
           try {
-            Avatars.findOneAndUpdate({ "name": nn._doc.name }, { "name": nn._doc.name, "content": nn._doc.content, "userId": adUser.id, "email": adUser.mail } )
-            .then(a=>{
-              console.log("updated",a);
-            });
-          }
-          catch (e) {
+            Avatars.findOneAndUpdate({ name: nn._doc.name }, {
+              name: nn._doc.name, content: nn._doc.content, userId: adUser.id, email: adUser.mail,
+            })
+              .then((a) => {
+                console.log('updated', a);
+              });
+          } catch (e) {
             console.log(e);
           }
         }
 
-        return(adUser);
+        return adUser;
       }
 
       return user;
