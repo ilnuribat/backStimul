@@ -108,6 +108,8 @@ async function subscriptionConnectHandler(connectionParams) {
     throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
   }
 
+  user.id = user._id;
+
   return { user };
 }
 
