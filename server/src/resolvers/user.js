@@ -28,6 +28,14 @@ module.exports = {
     },
     id: user => user._id.toString(),
     username: user => user.email,
+    icon: async (user) => {
+      
+      let nn = await Avatars.findOne({ name: user.name });
+      if (nn && nn._doc && nn._doc.content) {
+
+        return nn._doc.content;
+      }
+    },
   },
   Query: {
     user: async (parent, args, { user }) => {
