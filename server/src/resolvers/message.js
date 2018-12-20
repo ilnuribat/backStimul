@@ -14,7 +14,7 @@ module.exports = {
     id: message => message._id.toString(),
     from: async (parent) => {
       const { userId } = parent;
-      const user = await User.findById(userId);
+      const user = await User.findById(userId).lean();
 
       if (user.email) {
         return getUserInfoFromAD(user);
@@ -65,7 +65,7 @@ module.exports = {
       }
 
       const userGroup = await UserGroup.findOne({
-        userId: user.id,
+        userId: user._id,
         groupId: message.groupId,
       });
 
@@ -90,7 +90,7 @@ module.exports = {
       });
 
       await UserGroup.updateOne({
-        userId: user.id,
+        userId: user._id,
         groupId: message.groupId,
       }, {
         $set: {

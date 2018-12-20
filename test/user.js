@@ -28,7 +28,7 @@ describe('user', () => {
 
     assert.isNull(data.user);
     assert.isArray(errors);
-    assert.equal(errors[0].message, 'not authenticated');
+    assert.equal(errors[0].message, ERROR_CODES.NOT_AUTHENTICATED);
   });
 
   it('try to get info with wrong token', async function () {

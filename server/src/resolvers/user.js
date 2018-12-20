@@ -9,7 +9,6 @@ const { getTasks, generateToken } = require('../services/user');
 const { authenticate, getUserInfoFromAD } = require('../services/ad');
 const { BCRYPT_ROUNDS } = require('../../config');
 const { ERROR_CODES } = require('../services/constants');
-// const { getUserInfoFromAD } = require('./../../getUserInfoFromAD');
 
 module.exports = {
   User: {
@@ -25,12 +24,9 @@ module.exports = {
     async directs(parent, args, { user }) {
       return getDirectChats(user);
     },
-    id: user => user._id.toString(),
+    id: user => user.id || user._id.toString(),
     username: user => user.email,
     icon: async (user) => {
-      // const avatar = await Avatars.findOne({ name: user.name }).lean();
-
-      // return avatar && avatar.content;
       if (user && user.name) {
         const name = user.name.replace(/\s/gi, '%20');
 
@@ -43,7 +39,7 @@ module.exports = {
   Query: {
     user: async (parent, args, { user }) => {
       if (!user) {
-        throw new Error('Пользователь не авторизован');
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
 
       const adUser = await getUserInfoFromAD(user);
@@ -52,15 +48,12 @@ module.exports = {
     },
     userInfo: async (parent, args, { user }) => {
       if (!user) {
-        throw new Error('Пользователь не авторизован');
-      }
-      if (user.email) {
-        const adUser = await getUserInfoFromAD(user);
-
-        return (adUser);
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
 
-      return user;
+      const adUser = await getUserInfoFromAD(user);
+
+      return adUser;
     },
     users: async () => {
       const allUsers = await User.find({});
@@ -87,8 +80,9 @@ module.exports = {
           });
         }
       } catch (err) {
-        if (err.message === ERROR_CODES.NO_USER_FOUND) {
-          throw err;
+        logger.error({ err });
+        if (err === ERROR_CODES.NO_USER_FOUND) {
+          throw new Error(err);
         }
 
         logger.error('error in ad', err);

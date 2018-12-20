@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const http = require('http');
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
@@ -42,7 +43,9 @@ const apolloServer = new ApolloServer({
     }
 
     const { id } = jwtBody;
-    const user = await User.findById(id);
+    const user = await User.findById(id).lean();
+
+    user.id = user._id.toString();
 
 
     return {
@@ -100,11 +103,13 @@ async function subscriptionConnectHandler(connectionParams) {
   }
 
   const res = jwt.verify(body, JWT_SECRET);
-  const user = await User.findById(res.id);
+  const user = await User.findById(res.id).lean();
 
   if (!user) {
     throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
   }
+
+  user.id = user._id;
 
   return { user };
 }
@@ -114,15 +119,11 @@ subscriptionServer.onConnect = subscriptionConnectHandler;
 async function start() {
   await connect();
 
-  return new Promise((resolve/* , reject */) => {
-    /* istanbul ignore if  */
-    if (process.env.NODE_ENV !== 'test') {
-      server.listen({ port: HTTP_PORT }, () => {
-        logger.info('server started at', { port: HTTP_PORT });
-        resolve();
-      });
-    }
-  });
+  server.listenAsync = promisify(server.listen);
+
+  await server.listenAsync(HTTP_PORT);
+
+  logger.info('server started at', { port: HTTP_PORT });
 }
 
 start();
