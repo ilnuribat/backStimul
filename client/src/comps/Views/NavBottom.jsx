@@ -112,6 +112,10 @@ class NavBottom extends Component {
             {
               color:${ColorSecond};
             }
+            .Master{
+              color:${ColorSecond};
+              background: ${bglighttr};
+            }
             .Root{background: ${BakgrColorPrimary};background-color: ${BakgrColorPrimary};}
             .Tile{background: ${BakgrColorMaster};background-color: ${BakgrColorMaster};}
             .Nav, .Panel, .Column,
