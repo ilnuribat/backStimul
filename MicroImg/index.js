@@ -32,6 +32,7 @@ app.get('/img/:id', function (req, res) {
         }
         if(r){
           console.log('data', r.email);
+          console.log('data', r.name);
           const content = r.content.replace('data:image/jpeg;base64,', '')
           const img = Buffer.from(content, 'base64');
           res.writeHead(200, {
