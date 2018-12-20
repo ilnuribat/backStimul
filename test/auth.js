@@ -139,7 +139,7 @@ describe('subscription onConnect', () => {
 
       throw new Error();
     } catch (err) {
-      assert.include(err.message, ERROR_CODES.NO_USER_FOUND);
+      assert.include(err.message, ERROR_CODES.NOT_AUTHENTICATED);
     }
   });
 });
