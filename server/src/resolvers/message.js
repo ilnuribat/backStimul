@@ -65,7 +65,7 @@ module.exports = {
       }
 
       const userGroup = await UserGroup.findOne({
-        userId: user.id,
+        userId: user._id,
         groupId: message.groupId,
       });
 
@@ -90,7 +90,7 @@ module.exports = {
       });
 
       await UserGroup.updateOne({
-        userId: user.id,
+        userId: user._id,
         groupId: message.groupId,
       }, {
         $set: {

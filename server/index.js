@@ -44,6 +44,8 @@ const apolloServer = new ApolloServer({
     const { id } = jwtBody;
     const user = await User.findById(id).lean();
 
+    user.id = user._id.toString();
+
 
     return {
       user,

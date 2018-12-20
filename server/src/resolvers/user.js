@@ -25,7 +25,7 @@ module.exports = {
     async directs(parent, args, { user }) {
       return getDirectChats(user);
     },
-    id: user => user._id.toString(),
+    id: user => user.id || user._id.toString(),
     username: user => user.email,
     icon: async (user) => {
       const avatar = await Avatar.findOne({ name: user.name }).lean();

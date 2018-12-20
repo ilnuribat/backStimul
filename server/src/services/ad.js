@@ -82,7 +82,8 @@ async function getUserInfoFromAD(user) {
       }
 
       if (!userAd) {
-        reject(new Error(ERROR_CODES.NO_USER_FOUND));
+        // reject(new Error(ERROR_CODES.NO_USER_FOUND));
+        return resolve(user);
       }
 
       let initials = '';
