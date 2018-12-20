@@ -49,7 +49,6 @@ async function authenticate(login, password) {
           return reject(err);
         }
 
-        console.log(data);
         if (!data) {
           return reject(ERROR_CODES.NO_USER_FOUND);
         }
@@ -78,47 +77,26 @@ async function getUserInfoFromAD(user) {
       // resolve(user)
       // return (user)
       if (err) {
-        console.log('--------------------------------------------------------');
-        console.log('--------------------------------------------------------');
-        console.log('--------------------------------------------------------');
-        console.log('--------------------------------------------------------');
-        console.log('--------------------------------------------------------');
-        console.log(JSON.stringify(err))
-        resolve(user);
-      }
-
-
-      if (user.email === 'tolstobrov.ay'){
-        console.log('--------------------------------------------------------');
-        console.log('--------------------------------------------------------');
-        console.log('--------------------------------------------------------');
-        console.log('--------------------------------------------------------');
-        console.log('--------------------------------------------------------');
-        console.log(JSON.stringify(userAd))
+        return reject(err);
       }
 
       if (!userAd) {
         resolve(user);
       }
-  
-      let usr = user;
-  
-      if (user._doc) {
-        usr = user._doc;
-      }
+
       let initials = '';
-  
+
       if (userAd && userAd.name) {
         const F = userAd.name.replace(/ +(?= )/g, '').split(' ')[0];
         const I = userAd.name.replace(/ +(?= )/g, '').split(' ')[1].split('')[0];
         const O = userAd.name.replace(/ +(?= )/g, '').split(' ')[2].split('')[0];
-  
+
         initials = `${F} ${I}.${O}.`;
       }
-  
-      const append = Object.assign({}, { initials }, usr, user, userAd);
-  
-      resolve(append);
+
+      const append = Object.assign({}, { initials }, user, userAd);
+
+      return resolve(append);
     });
   });
 }
