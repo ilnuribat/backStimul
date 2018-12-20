@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const {
   User,
   Message,
-  Avatars,
 } = require('../models');
 const { logger } = require('../../logger');
 const { getDirectChats } = require('../services/chat');
@@ -32,15 +31,13 @@ module.exports = {
       // const avatar = await Avatars.findOne({ name: user.name }).lean();
 
       // return avatar && avatar.content;
-      if (user && user.name){
-        let name = user.name.replace(/\s/gi, '%20');
+      if (user && user.name) {
+        const name = user.name.replace(/\s/gi, '%20');
 
-        return (`http://185.168.187.103:8000/img/${name}`);
+        return `http://185.168.187.103:8000/img/${name}`;
       }
- 
-      else{
-        return('');
-      }
+
+      return '';
     },
   },
   Query: {
