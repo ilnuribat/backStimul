@@ -263,6 +263,13 @@ export const USER_QUERY = gql `
         username
         initials
         icon
+        cn
+        sn
+        title
+        company
+        department
+        description
+
       }
     }
 `;

@@ -63,6 +63,24 @@
   height: auto;
   height:200px;
 }
+.Profile.auth .authTop .UserRow{
+  width:100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  height:100%;
+}
+.Profile.auth .authTop .UserName{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:center;
+}
+.Profile.auth .authTop .UserName h1{
+  font-size: 120%;
+}
+
 .Profile.auth .authContent{
   width:100%;
   display: flex;

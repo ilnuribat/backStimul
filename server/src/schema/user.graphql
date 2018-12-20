@@ -9,6 +9,7 @@ type User {
   email: String! # we will also require a unique email per user
   username: String
   cn: String
+  sn: String
   mail: String
   company: String
   department: String
