@@ -36,7 +36,7 @@ module.exports = {
   Query: {
     user: async (parent, args, { user }) => {
       if (!user) {
-        throw new Error('Пользователь не авторизован');
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
 
       const adUser = await getUserInfoFromAD(user);
@@ -45,7 +45,7 @@ module.exports = {
     },
     userInfo: async (parent, args, { user }) => {
       if (!user) {
-        throw new Error('Пользователь не авторизован');
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
 
       const adUser = await getUserInfoFromAD(user);

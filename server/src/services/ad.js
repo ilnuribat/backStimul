@@ -71,6 +71,10 @@ async function authenticate(login, password) {
 }
 
 async function getUserInfoFromAD(user) {
+  if (process.env.NODE_ENV === 'test') {
+    return user;
+  }
+
   return new Promise((resolve, reject) => {
     ad.findUser({ scope: 'sub' }, user.email, (err, userAd) => {
       if (err) {
