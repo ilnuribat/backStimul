@@ -59,7 +59,6 @@ class LeafletMap extends Component {
     };
 
     this.setEdit = this.setEdit.bind(this)
-
   }
 
   componentDidMount () {
@@ -81,9 +80,9 @@ class LeafletMap extends Component {
     });
   }
 
-  setEdit (latlng, zoom) {
+  setEdit (latlng) {
     new Promise((resolve, reject) => {
-      L.Control.Geocoder.nominatim().reverse(latlng, 13, results => resolve(results[0].name))})
+      L.Control.Geocoder.nominatim().reverse(latlng, this.map ? this.map.leafletElement.getZoom() : 13 , results => resolve(results[0].name))})
       .then(
         result =>
           this.setState({
@@ -178,7 +177,7 @@ class LeafletMap extends Component {
               const center = [centerLat, centerLon];
 
               return (
-                <Map center={center} zoom={currentZoom} style={styleLeaf} maxZoom="18" >
+                <Map  ref={(ref) => { this.map = ref }} center={center} zoom={currentZoom} style={styleLeaf} maxZoom="18" >
                   <LayersControl position="topright" >
                     <BaseLayer  checked name="Landscape">
                       <TileLayer
