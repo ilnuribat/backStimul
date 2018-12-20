@@ -7,15 +7,7 @@ const url = 'mongodb://guov:guov@172.31.250.103:27017/guov?authSource=admin';
 const dbName = 'guov';
 
 app.get('/', function (req, res) {
-  MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
-    const adminDb = client.db(dbName).admin();
-    adminDb.listDatabases(function (err, dbs) {
-      test.equal(null, err);
-      test.ok(dbs.databases.length > 0);
-      res.send(JSON.stringify(dbs))
-      client.close();
-    });
-  });
+  res.send('MicroImg');
 });
 
 app.get('/img/:id', function (req, res) {
