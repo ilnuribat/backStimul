@@ -10,7 +10,8 @@ import {
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Query, compose, graphql } from "react-apollo";
 import { divIcon } from "leaflet";
-// import PropTypes from 'prop-types';
+import { L } from 'leaflet-control-geocoder'
+import PropTypes from 'prop-types';
 import {Redirect} from "react-router-dom";
 import { ReactLeafletSearch } from 'react-leaflet-search'
 
@@ -22,7 +23,7 @@ import Loading from '../../Loading';
 import Content from '../../Lays/Content';
 import { getPlaceName, setPlaceName } from "../../../GraphQL/Cache";
 import MapInfo from "./MapInfo";
-import TileMaker from '../../Parts/TileMaker/';
+import TileMaker from '../../Parts/TileMaker';
 
 const { BaseLayer, Overlay } = LayersControl;
 
@@ -53,13 +54,17 @@ class LeafletMap extends Component {
       offsetWidth: 1024,
       offsetHeight: 768,
       objectId: "",
-      edit: false
+      edit: false,
+      address: ""
     };
+
+    this.setEdit = this.setEdit.bind(this)
+
   }
 
   componentDidMount () {
     // console.warn("COORD", document.body.clientWidth,document.body.offsetHeight)
-    const {getPlaceName} = this.props;
+    const { getPlaceName } = this.props;
     let { setPlaceName } = this.props;
     let place = 'Map';
 
@@ -76,12 +81,24 @@ class LeafletMap extends Component {
     });
   }
 
+  setEdit (latlng, zoom) {
+    new Promise((resolve, reject) => {
+      L.Control.Geocoder.nominatim().reverse(latlng, 13, results => resolve(results[0].name))})
+      .then(
+        result =>
+          this.setState({
+            edit: !this.state.edit,
+            address: result
+          }),
+        error => console.warn("Rejected: " + error)
+      );
+  }
 
   customPopup(SearchInfo) {
     return(
       <Popup>
         <div>
-         <p>I am a custom popUp</p>
+          <p>I am a custom popUp</p>
           <p>latitude and longitude from search component: {SearchInfo.latLng.toString().replace(',',' , ')}</p>
           <p>Info from search component: {SearchInfo.info}</p>
         </div>
@@ -89,156 +106,157 @@ class LeafletMap extends Component {
     );
   }
 
-    handleTabChange = (index, name) => {
-      // console.warn("clicked!", index, name);
-      localStorage.setItem('ObjectId',index);
-      localStorage.setItem('ObjectName',name);
-      this.setState({redirect: true, objectId: index} );
-    }
+  handleTabChange = (index, name) => {
+    // console.warn("clicked!", index, name);
+    localStorage.setItem('ObjectId',index);
+    localStorage.setItem('ObjectName',name);
+    this.setState({redirect: true, objectId: index} );
+  }
 
-    render() {
-      let { edit } = this.state;
-      return (
-        <Content >
-          <Query query={getObjects}>
-            {({ loading, data }) => {
-              if (loading){
-                return (
-                  <div style={{ paddingTop: 20 }}>
-                    <Loading />
-                  </div>
-                );
-              }
+  render() {
+    let { edit, address } = this.state;
 
-              if(data && data.objects){
+    return (
+      <Content >
+        <Query query={getObjects}>
+          {({ loading, data }) => {
+            if (loading){
+              return (
+                <div style={{ paddingTop: 20 }}>
+                  <Loading />
+                </div>
+              );
+            }
 
-                let centerLon = 37.43
-                let centerLat = 55.797
-                let currentZoom = 10
-                let minLat = 100.00
-                let maxLat = 0.00
-                let minLon = 100.00
-                let maxLon = 0.00
+            if(data && data.objects){
 
-                data.objects.map((post) => {
-                  if(!post.address || !post.address.coordinates || !post.address.coordinates[0] || !post.address.coordinates[1]){
+              let centerLon = 37.43
+              let centerLat = 55.797
+              let currentZoom = 10
+              let minLat = 100.00
+              let maxLat = 0.00
+              let minLon = 100.00
+              let maxLon = 0.00
 
-                    return true
-                  }
+              data.objects.map((post) => {
+                if(!post.address || !post.address.coordinates || !post.address.coordinates[0] || !post.address.coordinates[1]){
 
-                  if (minLat > parseFloat(post.address.coordinates[0])) minLat = parseFloat(post.address.coordinates[0])
-                  if (maxLat < parseFloat(post.address.coordinates[0])) maxLat = parseFloat(post.address.coordinates[0])
-                  if (minLon > parseFloat(post.address.coordinates[1])) minLon = parseFloat(post.address.coordinates[1])
-                  if (maxLon < parseFloat(post.address.coordinates[1])) maxLon = parseFloat(post.address.coordinates[1])
-
-                  return null
-                })
-
-                centerLon = (minLon + maxLon)/2
-                centerLat = (minLat + maxLat)/2
-
-                const WORLD_DIM = { height: 256, width: 256 };
-                const ZOOM_MAX = 21;
-
-                const latFraction = (latRad(maxLat) - latRad(minLat)) / Math.PI;
-
-                const lngDiff = maxLon - minLon
-                const lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-
-                const latZoom = zoom(this.state.offsetHeight, WORLD_DIM.height, latFraction);
-                const lngZoom = zoom(this.state.offsetWidth, WORLD_DIM.width, lngFraction);
-
-                currentZoom = Math.min(latZoom, lngZoom, ZOOM_MAX);
-
-                if (this.state.redirect) {
-                  return <Redirect to={{
-                    pathname: '/board',
-                    state: { objectId: this.state.objectId }
-                  }} />
+                  return true
                 }
 
-                const center = [centerLat, centerLon];
+                if (minLat > parseFloat(post.address.coordinates[0])) minLat = parseFloat(post.address.coordinates[0])
+                if (maxLat < parseFloat(post.address.coordinates[0])) maxLat = parseFloat(post.address.coordinates[0])
+                if (minLon > parseFloat(post.address.coordinates[1])) minLon = parseFloat(post.address.coordinates[1])
+                if (maxLon < parseFloat(post.address.coordinates[1])) maxLon = parseFloat(post.address.coordinates[1])
 
-                return (
-                  <Map center={center} zoom={currentZoom} style={styleLeaf} maxZoom="18" >
-                    <LayersControl position="topright" >
-                      <BaseLayer  checked name="Landscape">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                        />
-                      </BaseLayer>
+                return null
+              })
 
-                      <BaseLayer  name="Черно-белая карта">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="OpenCycleMap">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Цветная карта OSM " >
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Outdoors">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Neighbourhood">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Toner">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="http://tile.stamen.com/toner/{z}/{x}/{y}.png"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Terrain">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Watercolor">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Spinal Map">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
-                        />
-                      </BaseLayer>
-                      <BaseLayer  name="Full Dark">
-                        <TileLayer
-                          attribution="GUOV"
-                          url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
-                        />
-                      </BaseLayer>
-                      {
-                        data.objects ? (
-                          <Overlay checked name="Задачи новые" >
-                            <LayerGroup >
+              centerLon = (minLon + maxLon)/2
+              centerLat = (minLat + maxLat)/2
+
+              const WORLD_DIM = { height: 256, width: 256 };
+              const ZOOM_MAX = 21;
+
+              const latFraction = (latRad(maxLat) - latRad(minLat)) / Math.PI;
+
+              const lngDiff = maxLon - minLon
+              const lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+              const latZoom = zoom(this.state.offsetHeight, WORLD_DIM.height, latFraction);
+              const lngZoom = zoom(this.state.offsetWidth, WORLD_DIM.width, lngFraction);
+
+              currentZoom = Math.min(latZoom, lngZoom, ZOOM_MAX);
+
+              if (this.state.redirect) {
+                return <Redirect to={{
+                  pathname: '/board',
+                  state: { objectId: this.state.objectId }
+                }} />
+              }
+
+              const center = [centerLat, centerLon];
+
+              return (
+                <Map center={center} zoom={currentZoom} style={styleLeaf} maxZoom="18" >
+                  <LayersControl position="topright" >
+                    <BaseLayer  checked name="Landscape">
+                      <TileLayer
+                        attribution="GUOV"
+                        url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                      />
+                    </BaseLayer>
+
+                    <BaseLayer  name="Черно-белая карта">
+                      <TileLayer
+                        attribution="GUOV"
+                        url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
+                      />
+                    </BaseLayer>
+                    <BaseLayer  name="OpenCycleMap">
+                      <TileLayer
+                        attribution="GUOV"
+                        url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                      />
+                    </BaseLayer>
+                    <BaseLayer  name="Цветная карта OSM " >
+                      <TileLayer
+                        attribution="GUOV"
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                    </BaseLayer>
+                    <BaseLayer  name="Outdoors">
+                      <TileLayer
+                        attribution="GUOV"
+                        url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                      />
+                    </BaseLayer>
+                    <BaseLayer  name="Neighbourhood">
+                      <TileLayer
+                        attribution="GUOV"
+                        url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                      />
+                    </BaseLayer>
+                    <BaseLayer  name="Toner">
+                      <TileLayer
+                        attribution="GUOV"
+                        url="http://tile.stamen.com/toner/{z}/{x}/{y}.png"
+                      />
+                    </BaseLayer>
+                    <BaseLayer  name="Terrain">
+                      <TileLayer
+                        attribution="GUOV"
+                        url="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
+                      />
+                    </BaseLayer>
+                    <BaseLayer  name="Watercolor">
+                      <TileLayer
+                        attribution="GUOV"
+                        url="http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
+                      />
+                    </BaseLayer>
+                    <BaseLayer  name="Spinal Map">
+                      <TileLayer
+                        attribution="GUOV"
+                        url="https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                      />
+                    </BaseLayer>
+                    <BaseLayer  name="Full Dark">
+                      <TileLayer
+                        attribution="GUOV"
+                        url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+                      />
+                    </BaseLayer>
+                    {
+                      data.objects ? (
+                        <Overlay checked name="Задачи новые" >
+                          <LayerGroup >
                             <MarkerClusterGroup>
                               <Panel type="1" name="Задача новая" data={data.objects} click={this.handleTabChange} />
                             </MarkerClusterGroup>
-                            </LayerGroup>
-                          </Overlay>) : null }
-                      {/* {
+                          </LayerGroup>
+                        </Overlay>) : null }
+                    {/* {
                         data.objects ? (
                           <Overlay checked name="Задачи неназначенные">
                             <LayerGroup >
@@ -266,48 +284,48 @@ class LeafletMap extends Component {
                               <Panel type="5" name="Задача завершенная"  data={data.objects} click={this.handleTabChange} />
                             </LayerGroup>
                           </Overlay>) : null } */}
-                      <ReactLeafletSearch
-                        position="topleft"
+                    <ReactLeafletSearch
+                      position="topleft"
 
-                        showMarker={true}
-                        zoom={15}
-                        showPopup={true}
-                        popUp={this.customPopup}
-                        closeResultsOnClick={true}
-                        openSearchOnLoad={true}
-                        // // these searchbounds would limit results to only Turkey.
-                        // searchBounds = {
-                        //   [
-                        //     [33.100745405144245, 46.48315429687501],
-                        //     [44.55916341529184, 24.510498046875]
-                        //   ]
-                        // }
-                        providerOptions={{region: 'ru'}}
+                      showMarker={true}
+                      zoom={15}
+                      showPopup={true}
+                      popUp={this.customPopup}
+                      closeResultsOnClick={true}
+                      openSearchOnLoad={true}
+                      // // these searchbounds would limit results to only Turkey.
+                      // searchBounds = {
+                      //   [
+                      //     [33.100745405144245, 46.48315429687501],
+                      //     [44.55916341529184, 24.510498046875]
+                      //   ]
+                      // }
+                      providerOptions={{region: 'ru'}}
 
-                        // default provider OpenStreetMap
-                        // provider="BingMap"
-                        // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
-                      />
-                      <MapInfo edit={edit} setEdit={()=>{this.setState({edit: !edit})}} />
-                    </LayersControl>
-                    { edit ? <TileMaker edit={true} setEdit={()=>{this.setState({edit: !edit})}} />
+                      // default provider OpenStreetMap
+                      // provider="BingMap"
+                      // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
+                    />
+                    <MapInfo edit={edit} setEdit={this.setEdit} />
+                  </LayersControl>
+                  { edit ? <TileMaker edit={true} address={address} setEdit={()=>{this.setState({edit: !edit})}} />
                     : null}
-                  </Map>
-                );
-              }else{
-                return(
-                  <div>Нет данных</div>
-                )
-              }
+                </Map>
+              );
+            }else{
+              return(
+                <div>Нет данных</div>
+              )
+            }
 
-            }}
-          </Query>
-        </Content>
-      )
+          }}
+        </Query>
+      </Content>
+    )
 
 
 
-    }
+  }
 }
 
 
@@ -384,6 +402,12 @@ const SwitchIcon = (status)   => {
     className: value,
     iconSize: [50, 50],
   });
+};
+
+
+LeafletMap.propTypes = {
+  getPlaceName:PropTypes.object.isRequired,
+  setPlaceName: PropTypes.func.isRequired,
 };
 
 export default
