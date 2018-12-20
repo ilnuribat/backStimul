@@ -391,7 +391,7 @@ export class Search extends Component {
                         <UserRow
                           view="Boxed"
                           id={e.from.id}
-                          icon={e.assignedTo.icon || "1"}
+                          icon={"1"}
                           name={e.from.username}
                           key={e.from.id}
                         >

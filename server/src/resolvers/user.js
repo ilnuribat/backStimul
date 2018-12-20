@@ -35,7 +35,7 @@ module.exports = {
       if (user && user.name){
         let name = user.name.replace(/\s/gi, '%20');
 
-        return (`http://localhost:8000/img/${name}`);
+        return (`http://185.168.187.103:8000/img/${name}`);
       }
  
       else{
