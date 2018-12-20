@@ -23,7 +23,7 @@ app.get('/img/:id', function (req, res) {
           return false;
         }
 
-        if(r){
+        if (r && r.content){
           console.log('data', r.email);
           console.log('JSON', JSON.stringify(r.name));
           const content = r.content.replace('data:image/jpeg;base64,', '')
