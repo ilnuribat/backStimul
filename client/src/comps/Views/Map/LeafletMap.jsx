@@ -24,6 +24,7 @@ import Content from '../../Lays/Content';
 import { getPlaceName, setPlaceName } from "../../../GraphQL/Cache";
 import MapInfo from "./MapInfo";
 import TileMaker from '../../Parts/TileMaker';
+import Axios from "axios";
 
 const { BaseLayer, Overlay } = LayersControl;
 
@@ -80,31 +81,46 @@ class LeafletMap extends Component {
     });
   }
 
+  daDataReqName (name) {
+    Axios(
+      'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Token a9a4c39341d2f4072db135bd25b751336b1abb83"
+        },
+        data: {
+          "query": name,
+          "count": 5
+        }
+      })
+      .then(response => {
+        this.setState({
+          edit: !this.state.edit,
+          address: response.data.suggestions
+        })
+      })
+  }
+
   setEdit(latlng) {
     new Promise((resolve, reject) => {
       L.Control.Geocoder.nominatim({
         htmlTemplate: ({ address }) => {
-          console.log(address);
           const res = `${address.state} ${address.city || ''} ${address.county || ''} ${address.hamlet || ''} ${address.road || ''} ${address.house_number || ''}`;
 
-          console.log(res);
+          console.warn(address)
 
-          return res;
+          return res.replace(/\s+/g,' ').trim();
         }
       }).reverse(latlng, this.map ? this.map.leafletElement.getZoom() : 13, results => {
-        // запрос на дадату
-        // только потом resolve()
-        resolve(results[0].html);
-
-        console.log(results);
+        if (results) resolve(results[0].html);
       })
     })
       .then(
         result =>
-          this.setState({
-            edit: !this.state.edit,
-            address: result
-          }),
+          this.daDataReqName (result),
         error => console.warn("Rejected: " + error)
       );
   }
@@ -397,20 +413,20 @@ const SwitchIcon = (status) => {
   let value;
 
   switch (status) {
-    case 1:
-      value = "pinRed";
-      break;
-    case 2:
-      value = "pinYellow";
-      break;
-    case 3:
-      value = "pinPurp";
-      break;
-    case 4:
-      value = "pinBlue";
-      break;
-    default:
-      value = "pinGreen";
+  case 1:
+    value = "pinRed";
+    break;
+  case 2:
+    value = "pinYellow";
+    break;
+  case 3:
+    value = "pinPurp";
+    break;
+  case 4:
+    value = "pinBlue";
+    break;
+  default:
+    value = "pinGreen";
   }
 
   return divIcon({
@@ -426,7 +442,7 @@ LeafletMap.propTypes = {
 };
 
 export default
-  compose(
-    graphql(getPlaceName, { name: 'getPlaceName' }),
-    graphql(setPlaceName, { name: 'setPlaceName' }),
-  )(LeafletMap);
+compose(
+  graphql(getPlaceName, { name: 'getPlaceName' }),
+  graphql(setPlaceName, { name: 'setPlaceName' }),
+)(LeafletMap);
