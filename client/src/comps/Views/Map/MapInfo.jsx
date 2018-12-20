@@ -11,8 +11,8 @@ class MapInfo extends MapControl {
     });
     props.leaflet.map.addEventListener("click", ev => {
       if ( !this.props.edit ) {
-        console.log(this.panelDiv.innerHTML);
-        this.props.setEdit()
+        console.warn(this.panelDiv.innerHTML);
+        this.props.setEdit(ev.latlng)
       }
       // new L.marker(ev.latlng).addTo(this.props.leaflet.map);
     });
@@ -22,14 +22,17 @@ class MapInfo extends MapControl {
     const MapInfo = L.Control.extend({
       onAdd: map => {
         this.panelDiv = L.DomUtil.create("div", "info");
+
         return this.panelDiv;
       }
     });
+
     return new MapInfo({ position: "bottomleft" });
   }
 
   componentDidMount() {
     const { map } = this.props.leaflet;
+
     this.leafletElement.addTo(map);
   }
 }
