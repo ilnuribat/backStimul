@@ -5,7 +5,7 @@ const user = require('./user');
 const userGroup = require('./userGroup');
 const message = require('./message');
 const files = require('./files');
-const avatars = require('./avatars');
+const avatar = require('./avatar');
 
 module.exports = {
   Group: mongoose.model('groups', group),
@@ -13,7 +13,7 @@ module.exports = {
   UserGroup: mongoose.model('userGroups', userGroup),
   Message: mongoose.model('messages', message),
   Files: mongoose.model('files', files),
-  Avatars: mongoose.model('avatars', avatars),
+  Avatar: mongoose.model('avatars', avatar),
   Schemas: {
     Group: group,
     User: user,
