@@ -102,7 +102,7 @@ async function subscriptionConnectHandler(connectionParams) {
   }
 
   const res = jwt.verify(body, JWT_SECRET);
-  const user = await User.findById(res.id);
+  const user = await User.findById(res.id).lean();
 
   if (!user) {
     throw new Error(ERROR_CODES.NOT_AUTHENTICATED);

@@ -14,7 +14,7 @@ module.exports = {
     id: message => message._id.toString(),
     from: async (parent) => {
       const { userId } = parent;
-      const user = await User.findById(userId);
+      const user = await User.findById(userId).lean();
 
       if (user.email) {
         return getUserInfoFromAD(user);
