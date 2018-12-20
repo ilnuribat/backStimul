@@ -11,7 +11,7 @@ class MapInfo extends MapControl {
     });
     props.leaflet.map.addEventListener("click", ev => {
       if ( !this.props.edit ) {
-        console.warn(this.panelDiv.innerHTML);
+        // console.warn(this.panelDiv.innerHTML);
         this.props.setEdit(ev.latlng)
       }
       // new L.marker(ev.latlng).addTo(this.props.leaflet.map);

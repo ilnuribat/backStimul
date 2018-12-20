@@ -97,10 +97,11 @@ class LeafletMap extends Component {
         }
       })
       .then(response => {
-        this.setState({
-          edit: !this.state.edit,
-          address: response.data.suggestions
-        })
+        if (response.data.suggestions.length > 0)
+          this.setState({
+            edit: !this.state.edit,
+            address: response.data.suggestions
+          })
       })
   }
 
@@ -110,12 +111,11 @@ class LeafletMap extends Component {
         htmlTemplate: ({ address }) => {
           const res = `${address.state} ${address.city || ''} ${address.county || ''} ${address.hamlet || ''} ${address.road || ''} ${address.house_number || ''}`;
 
-          console.warn(address)
-
           return res.replace(/\s+/g,' ').trim();
         }
       }).reverse(latlng, this.map ? this.map.leafletElement.getZoom() : 13, results => {
-        if (results) resolve(results[0].html);
+        if (results) resolve(results[0].html)
+        else reject("AAA")
       })
     })
       .then(
