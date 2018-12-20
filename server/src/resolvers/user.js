@@ -29,11 +29,9 @@ module.exports = {
     id: user => user._id.toString(),
     username: user => user.email,
     icon: async (user) => {
-      const nn = await Avatars.findOne({ name: user.name });
+      const avatar = await Avatars.findOne({ name: user.name }).lean();
 
-      if (nn && nn._doc && nn._doc.content) {
-        return nn._doc.content;
-      }
+      return avatar && avatar.content;
     },
   },
   Query: {
@@ -41,29 +39,10 @@ module.exports = {
       if (!user) {
         throw new Error('Пользователь не авторизован');
       }
-      if (user.email) {
-        const adUser = await getUserInfoFromAD(user);
 
-        const nn = await Avatars.findOne({ name: adUser.name });
+      const adUser = await getUserInfoFromAD(user);
 
-        if (nn && nn._doc && nn._doc.content) {
-          adUser.icon = nn._doc.content;
-          try {
-            Avatars.findOneAndUpdate({ name: nn._doc.name }, {
-              name: nn._doc.name, content: nn._doc.content, userId: adUser.id, email: adUser.mail,
-            })
-              .then((a) => {
-                console.log('updated', a);
-              });
-          } catch (e) {
-            console.log(e);
-          }
-        }
-
-        return adUser;
-      }
-
-      return user;
+      return adUser;
     },
     userInfo: async (parent, args, { user }) => {
       if (!user) {
