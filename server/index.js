@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const http = require('http');
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
@@ -118,15 +119,11 @@ subscriptionServer.onConnect = subscriptionConnectHandler;
 async function start() {
   await connect();
 
-  return new Promise((resolve/* , reject */) => {
-    /* istanbul ignore if  */
-    if (process.env.NODE_ENV !== 'test') {
-      server.listen({ port: HTTP_PORT }, () => {
-        logger.info('server started at', { port: HTTP_PORT });
-        resolve();
-      });
-    }
-  });
+  server.listenAsync = promisify(server.listen);
+
+  await server.listenAsync(HTTP_PORT);
+
+  logger.info('server started at', { port: HTTP_PORT });
 }
 
 start();
