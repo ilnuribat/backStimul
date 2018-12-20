@@ -29,9 +29,18 @@ module.exports = {
     id: user => user._id.toString(),
     username: user => user.email,
     icon: async (user) => {
-      const avatar = await Avatars.findOne({ name: user.name }).lean();
+      // const avatar = await Avatars.findOne({ name: user.name }).lean();
 
-      return avatar && avatar.content;
+      // return avatar && avatar.content;
+      if (user && user.name){
+        let name = user.name.replace(/\s/gi, '%20');
+
+        return (`http://localhost:8000/img/${name}`);
+      }
+ 
+      else{
+        return('');
+      }
     },
   },
   Query: {

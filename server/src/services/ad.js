@@ -94,7 +94,7 @@ async function getUserInfoFromAD(user) {
         initials = `${F} ${I}.${O}.`;
       }
 
-      const append = Object.assign({}, { initials }, user, userAd);
+      const append = Object.assign({}, { initials }, user._doc, userAd);
 
       return resolve(append);
     });
