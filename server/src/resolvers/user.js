@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const {
   User,
   Message,
-  Avatars,
+  Avatar,
 } = require('../models');
 const { logger } = require('../../logger');
 const { getDirectChats } = require('../services/chat');
@@ -10,7 +10,6 @@ const { getTasks, generateToken } = require('../services/user');
 const { authenticate, getUserInfoFromAD } = require('../services/ad');
 const { BCRYPT_ROUNDS } = require('../../config');
 const { ERROR_CODES } = require('../services/constants');
-// const { getUserInfoFromAD } = require('./../../getUserInfoFromAD');
 
 module.exports = {
   User: {
@@ -29,7 +28,7 @@ module.exports = {
     id: user => user._id.toString(),
     username: user => user.email,
     icon: async (user) => {
-      const avatar = await Avatars.findOne({ name: user.name }).lean();
+      const avatar = await Avatar.findOne({ name: user.name }).lean();
 
       return avatar && avatar.content;
     },
@@ -48,13 +47,10 @@ module.exports = {
       if (!user) {
         throw new Error('Пользователь не авторизован');
       }
-      if (user.email) {
-        const adUser = await getUserInfoFromAD(user);
 
-        return (adUser);
-      }
+      const adUser = await getUserInfoFromAD(user);
 
-      return user;
+      return adUser;
     },
     users: async () => {
       const allUsers = await User.find({});
@@ -81,7 +77,7 @@ module.exports = {
           });
         }
       } catch (err) {
-        console.log({ err });
+        logger.error({ err });
         if (err === ERROR_CODES.NO_USER_FOUND) {
           throw new Error(err);
         }

@@ -73,15 +73,12 @@ async function authenticate(login, password) {
 async function getUserInfoFromAD(user) {
   return new Promise((resolve, reject) => {
     ad.findUser({ scope: 'sub' }, user.email, (err, userAd) => {
-      // user.name = "aaaa" + JSON.stringify(err)
-      // resolve(user)
-      // return (user)
       if (err) {
         return reject(err);
       }
 
       if (!userAd) {
-        resolve(user);
+        reject(new Error(ERROR_CODES.NO_USER_FOUND));
       }
 
       let initials = '';
