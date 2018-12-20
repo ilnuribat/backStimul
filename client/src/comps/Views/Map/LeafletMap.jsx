@@ -12,11 +12,11 @@ import { Query, compose, graphql } from "react-apollo";
 import { divIcon } from "leaflet";
 import { L } from 'leaflet-control-geocoder'
 import PropTypes from 'prop-types';
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { ReactLeafletSearch } from 'react-leaflet-search'
 
 import b from "./buttons.css";
-import  "./LeafletMap.css";
+import "./LeafletMap.css";
 
 import { getObjects } from '../../../GraphQL/Qur/Query/index';
 import Loading from '../../Loading';
@@ -46,7 +46,7 @@ function zoom(mapPx, worldPx, fraction) {
 }
 
 class LeafletMap extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     // this.myInput = React.createRef()
     this.state = {
@@ -61,15 +61,15 @@ class LeafletMap extends Component {
     this.setEdit = this.setEdit.bind(this)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     // console.warn("COORD", document.body.clientWidth,document.body.offsetHeight)
     const { getPlaceName } = this.props;
     let { setPlaceName } = this.props;
     let place = 'Map';
 
-    if(getPlaceName && getPlaceName.placename != place){
+    if (getPlaceName && getPlaceName.placename != place) {
       setPlaceName({
-        variables:{
+        variables: {
           name: place,
         }
       })
@@ -80,9 +80,25 @@ class LeafletMap extends Component {
     });
   }
 
-  setEdit (latlng) {
+  setEdit(latlng) {
     new Promise((resolve, reject) => {
-      L.Control.Geocoder.nominatim().reverse(latlng, this.map ? this.map.leafletElement.getZoom() : 13 , results => resolve(results[0].name))})
+      L.Control.Geocoder.nominatim({
+        htmlTemplate: ({ address }) => {
+          console.log(address);
+          const res = `${address.state} ${address.city || ''} ${address.county || ''} ${address.hamlet || ''} ${address.road || ''} ${address.house_number || ''}`;
+
+          console.log(res);
+
+          return res;
+        }
+      }).reverse(latlng, this.map ? this.map.leafletElement.getZoom() : 13, results => {
+        // запрос на дадату
+        // только потом resolve()
+        resolve(results[0].html);
+
+        console.log(results);
+      })
+    })
       .then(
         result =>
           this.setState({
@@ -94,11 +110,11 @@ class LeafletMap extends Component {
   }
 
   customPopup(SearchInfo) {
-    return(
+    return (
       <Popup>
         <div>
           <p>I am a custom popUp</p>
-          <p>latitude and longitude from search component: {SearchInfo.latLng.toString().replace(',',' , ')}</p>
+          <p>latitude and longitude from search component: {SearchInfo.latLng.toString().replace(',', ' , ')}</p>
           <p>Info from search component: {SearchInfo.info}</p>
         </div>
       </Popup>
@@ -107,9 +123,9 @@ class LeafletMap extends Component {
 
   handleTabChange = (index, name) => {
     // console.warn("clicked!", index, name);
-    localStorage.setItem('ObjectId',index);
-    localStorage.setItem('ObjectName',name);
-    this.setState({redirect: true, objectId: index} );
+    localStorage.setItem('ObjectId', index);
+    localStorage.setItem('ObjectName', name);
+    this.setState({ redirect: true, objectId: index });
   }
 
   render() {
@@ -119,7 +135,7 @@ class LeafletMap extends Component {
       <Content >
         <Query query={getObjects}>
           {({ loading, data }) => {
-            if (loading){
+            if (loading) {
               return (
                 <div style={{ paddingTop: 20 }}>
                   <Loading />
@@ -127,7 +143,7 @@ class LeafletMap extends Component {
               );
             }
 
-            if(data && data.objects){
+            if (data && data.objects) {
 
               let centerLon = 37.43
               let centerLat = 55.797
@@ -138,7 +154,7 @@ class LeafletMap extends Component {
               let maxLon = 0.00
 
               data.objects.map((post) => {
-                if(!post.address || !post.address.coordinates || !post.address.coordinates[0] || !post.address.coordinates[1]){
+                if (!post.address || !post.address.coordinates || !post.address.coordinates[0] || !post.address.coordinates[1]) {
 
                   return true
                 }
@@ -151,8 +167,8 @@ class LeafletMap extends Component {
                 return null
               })
 
-              centerLon = (minLon + maxLon)/2
-              centerLat = (minLat + maxLat)/2
+              centerLon = (minLon + maxLon) / 2
+              centerLat = (minLat + maxLat) / 2
 
               const WORLD_DIM = { height: 256, width: 256 };
               const ZOOM_MAX = 21;
@@ -177,70 +193,70 @@ class LeafletMap extends Component {
               const center = [centerLat, centerLon];
 
               return (
-                <Map  ref={(ref) => { this.map = ref }} center={center} zoom={currentZoom} style={styleLeaf} maxZoom="18" >
+                <Map ref={(ref) => { this.map = ref }} center={center} zoom={currentZoom} style={styleLeaf} maxZoom="18" >
                   <LayersControl position="topright" >
-                    <BaseLayer  checked name="Landscape">
+                    <BaseLayer checked name="Landscape">
                       <TileLayer
                         attribution="GUOV"
                         url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
                       />
                     </BaseLayer>
 
-                    <BaseLayer  name="Черно-белая карта">
+                    <BaseLayer name="Черно-белая карта">
                       <TileLayer
                         attribution="GUOV"
                         url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
                       />
                     </BaseLayer>
-                    <BaseLayer  name="OpenCycleMap">
+                    <BaseLayer name="OpenCycleMap">
                       <TileLayer
                         attribution="GUOV"
                         url="https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
                       />
                     </BaseLayer>
-                    <BaseLayer  name="Цветная карта OSM " >
+                    <BaseLayer name="Цветная карта OSM " >
                       <TileLayer
                         attribution="GUOV"
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                       />
                     </BaseLayer>
-                    <BaseLayer  name="Outdoors">
+                    <BaseLayer name="Outdoors">
                       <TileLayer
                         attribution="GUOV"
                         url="https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
                       />
                     </BaseLayer>
-                    <BaseLayer  name="Neighbourhood">
+                    <BaseLayer name="Neighbourhood">
                       <TileLayer
                         attribution="GUOV"
                         url="https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
                       />
                     </BaseLayer>
-                    <BaseLayer  name="Toner">
+                    <BaseLayer name="Toner">
                       <TileLayer
                         attribution="GUOV"
                         url="http://tile.stamen.com/toner/{z}/{x}/{y}.png"
                       />
                     </BaseLayer>
-                    <BaseLayer  name="Terrain">
+                    <BaseLayer name="Terrain">
                       <TileLayer
                         attribution="GUOV"
                         url="http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg"
                       />
                     </BaseLayer>
-                    <BaseLayer  name="Watercolor">
+                    <BaseLayer name="Watercolor">
                       <TileLayer
                         attribution="GUOV"
                         url="http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg"
                       />
                     </BaseLayer>
-                    <BaseLayer  name="Spinal Map">
+                    <BaseLayer name="Spinal Map">
                       <TileLayer
                         attribution="GUOV"
                         url="https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
                       />
                     </BaseLayer>
-                    <BaseLayer  name="Full Dark">
+                    <BaseLayer name="Full Dark">
                       <TileLayer
                         attribution="GUOV"
                         url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
@@ -254,7 +270,7 @@ class LeafletMap extends Component {
                               <Panel type="1" name="Задача новая" data={data.objects} click={this.handleTabChange} />
                             </MarkerClusterGroup>
                           </LayerGroup>
-                        </Overlay>) : null }
+                        </Overlay>) : null}
                     {/* {
                         data.objects ? (
                           <Overlay checked name="Задачи неназначенные">
@@ -299,20 +315,20 @@ class LeafletMap extends Component {
                       //     [44.55916341529184, 24.510498046875]
                       //   ]
                       // }
-                      providerOptions={{region: 'ru'}}
+                      providerOptions={{ region: 'ru' }}
 
-                      // default provider OpenStreetMap
-                      // provider="BingMap"
-                      // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
+                    // default provider OpenStreetMap
+                    // provider="BingMap"
+                    // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
                     />
                     <MapInfo edit={edit} setEdit={this.setEdit} />
                   </LayersControl>
-                  { edit ? <TileMaker edit={true} address={address} setEdit={()=>{this.setState({edit: !edit})}} />
+                  {edit ? <TileMaker edit={true} address={address} setEdit={() => { this.setState({ edit: !edit }) }} />
                     : null}
                 </Map>
               );
-            }else{
-              return(
+            } else {
+              return (
                 <div>Нет данных</div>
               )
             }
@@ -334,13 +350,13 @@ class LeafletMap extends Component {
 // });
 
 
-const Panel = ({ data, type, name, click })  => {
+const Panel = ({ data, type, name, click }) => {
   // console.warn(data.user.groups)
 
   return (
     data.map((post) =>
       // post.status == type &&
-      post.address && post.address.coordinates && post.address.coordinates.length >0 && post.address.coordinates[0] && post.address.coordinates[1] ?
+      post.address && post.address.coordinates && post.address.coordinates.length > 0 && post.address.coordinates[0] && post.address.coordinates[1] ?
         <Marker key={post.id} position={post.address.coordinates} icon={SwitchIcon(1)}>
           <Popup >
             <div className="mapModal" >
@@ -365,36 +381,36 @@ const Panel = ({ data, type, name, click })  => {
 
 
 class NavLink extends React.Component {
-    handleClick = () => {
-      this.props.onClick1(this.props.index, this.props.name);
-    }
-    render() {
-      return (
-        <button type="button" onClick={this.handleClick} className={b.btn + " " + this.props.btnColor} style={{ "width":"100%", "height":"39px"}} >{this.props.children}</button>
-      );
-    }
+  handleClick = () => {
+    this.props.onClick1(this.props.index, this.props.name);
+  }
+  render() {
+    return (
+      <button type="button" onClick={this.handleClick} className={b.btn + " " + this.props.btnColor} style={{ "width": "100%", "height": "39px" }} >{this.props.children}</button>
+    );
+  }
 }
 
 
 
-const SwitchIcon = (status)   => {
+const SwitchIcon = (status) => {
   let value;
 
   switch (status) {
-  case 1:
-    value = "pinRed";
-    break;
-  case 2:
-    value = "pinYellow";
-    break;
-  case 3:
-    value = "pinPurp";
-    break;
-  case 4:
-    value = "pinBlue";
-    break;
-  default:
-    value = "pinGreen";
+    case 1:
+      value = "pinRed";
+      break;
+    case 2:
+      value = "pinYellow";
+      break;
+    case 3:
+      value = "pinPurp";
+      break;
+    case 4:
+      value = "pinBlue";
+      break;
+    default:
+      value = "pinGreen";
   }
 
   return divIcon({
@@ -405,12 +421,12 @@ const SwitchIcon = (status)   => {
 
 
 LeafletMap.propTypes = {
-  getPlaceName:PropTypes.object.isRequired,
+  getPlaceName: PropTypes.object.isRequired,
   setPlaceName: PropTypes.func.isRequired,
 };
 
 export default
-compose(
-  graphql(getPlaceName, {name: 'getPlaceName'}),
-  graphql(setPlaceName, {name: 'setPlaceName'}),
-)(LeafletMap);
+  compose(
+    graphql(getPlaceName, { name: 'getPlaceName' }),
+    graphql(setPlaceName, { name: 'setPlaceName' }),
+  )(LeafletMap);
