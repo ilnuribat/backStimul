@@ -5,6 +5,9 @@ const test = require('assert');
 
 const url = 'mongodb://guov:guov@172.31.250.103:27017/guov?authSource=admin';
 const dbName = 'guov';
+const PORT = '8000';
+
+console.log('Script')
 
 app.get('/', function (req, res) {
   res.send('MicroImg');
@@ -45,4 +48,6 @@ app.get('/img/:id', function (req, res) {
   });
 });
 
-app.listen(8000);
+app.listen(PORT, function () {
+  console.log(`Started on port ${PORT}!`);
+});
