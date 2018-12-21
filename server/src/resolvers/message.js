@@ -1,5 +1,6 @@
 const { withFilter } = require('apollo-server');
 const moment = require('moment');
+const { Types: { ObjectId } } = require('mongoose');
 const {
   Message, User, Group, UserGroup,
 } = require('../models');
@@ -122,23 +123,23 @@ module.exports = {
 
       // Вытащить последний чужой курсор.
       const lastAnotherReadCursor = await UserGroup.findOne({
-        groupId: message.groupId,
+        groupId: ObjectId(message.groupId),
         userId: {
-          $ne: user.id,
+          $ne: ObjectId(user.id),
         },
       }).sort({ _id: 1 });
       // вытащить свой курсор
       const myOldCursor = await UserGroup.findOne({
-        groupId: message.groupId,
-        userId: user.id,
+        groupId: ObjectId(message.groupId),
+        userId: ObjectId(user.id),
       });
 
       const userGroup = await UserGroup.updateOne({
-        userId: user.id,
-        groupId: message.groupId,
+        userId: ObjectId(user.id),
+        groupId: ObjectId(message.groupId),
       }, {
         $set: {
-          lastReadCursor: message.id,
+          lastReadCursor: ObjectId(message.id),
         },
       });
 
@@ -158,11 +159,11 @@ module.exports = {
           : message._id;
         const messages = await Message.find({
           _id: {
-            $gt: myOldCursor.lastReadCursor,
-            $lte: endCursor,
+            $gt: ObjectId(myOldCursor.lastReadCursor),
+            $lte: ObjectId(endCursor),
           },
-          groupId: message.groupId,
-          userId: { $ne: user.id },
+          groupId: ObjectId(message.groupId),
+          userId: { $ne: ObjectId(user.id) },
         }).lean();
 
         messages.forEach((m) => {
