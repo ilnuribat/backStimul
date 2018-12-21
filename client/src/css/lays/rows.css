@@ -249,7 +249,15 @@
 .UserRow.Col>*{
 margin:0 auto 5px;
 }
-
+.UserRow.Col .UserName{
+  margin:0;
+  padding:0;
+}
+.UserRow.Col{
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 
 .TextRow{
   display: block;
@@ -310,11 +318,7 @@ margin:0 auto 5px;
 }
 .FakeLinkSvg .Svg svg{
 }
-.UserRow.Col{
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+
 
 .ResponsibleRow{
   width:100%;

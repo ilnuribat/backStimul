@@ -347,7 +347,7 @@ button{
 .TopCounter{
   position: absolute;
   top:-5px;
-  right:-5px;
+  right:0px;
   display: flex;
   text-align: center;
   border-radius: 999em;
@@ -365,7 +365,7 @@ button{
 .TopCounter{
   position: absolute;
   border-radius: 10px;
-  right: -5px;
+  right: 0px;
   top:-5px;
   z-index: 9;
   width:20px;

@@ -47,12 +47,13 @@ export const UserRow = ({ children, id, name, iconright, username, url, userid, 
   return(
     <div className={`UserRow${view?" "+view:""}`}>
       { icon && !iconright ? (<IconBody/>):null}
-      {/* <div className="RowBlock"> */}
-      { username || name ? (<div className="UserName" onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("user", userid||id,url )}}>{username || name}
-        { children ? (children):null}
+      { username || name ? (<div className="UserName" onClick={()=>{click ? click({id:id,url:url,type:type}) : console.log("user", userid||id,url )}}>
+        <div className="Name">{username || name}</div>
+        {children && <div className="Children" >{children}</div>}
       </div>):null}
+
+      {!name && !username && children ? (<div className="UserName" >{children}</div>) : null }
           
-      {/* </div> */}
       { icon && iconright ? (<IconBody/>):null}
       { ondelete && typeof ondelete === 'function' ? (<Svg svg="cancel" view="ondelete" click={()=>ondelete(id)} />) : null}
     </div>
