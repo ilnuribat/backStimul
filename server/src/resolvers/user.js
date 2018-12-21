@@ -9,6 +9,7 @@ const { getTasks, generateToken } = require('../services/user');
 const { authenticate, getUserInfoFromAD } = require('../services/ad');
 const { BCRYPT_ROUNDS } = require('../../config');
 const { ERROR_CODES } = require('../services/constants');
+const { MICRO_IMG_URL } = require('../../config');
 
 module.exports = {
   User: {
@@ -30,7 +31,7 @@ module.exports = {
       if (user && user.name) {
         const name = user.name.replace(/\s/gi, '%20');
 
-        return `http://185.168.187.103:8000/img/${name}`;
+        return `http://${MICRO_IMG_URL}/img/${name}`;
       }
 
       return '';

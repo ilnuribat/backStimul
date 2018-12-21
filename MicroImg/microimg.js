@@ -35,13 +35,32 @@ app.get('/img/:id', function (req, res) {
             'Content-Type': 'image/jpg',
             'Content-Length': img.length
           });
+
           res.end(img);
 
           client.close();
           return false;
         }
         console.log('no data');
-        res.send('');
+        db.collection('avatars').findOne(
+          { name: "defaultpng"},
+          (err, r)=>{
+            if(err){
+              console.log('err', err);
+              res.send('');
+              client.close();
+              return false;
+            }
+            const content = r.content.replace('data:image/png;base64,', '')
+            const img = Buffer.from(content, 'base64');
+            res.writeHead(200, {
+              'Content-Type': 'image/png',
+              'Content-Length': img.length
+            });
+            res.end(img);
+            client.close();
+          }
+        )
         client.close();
         return false;
       })
