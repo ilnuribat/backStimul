@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const MongoClient = require('mongodb').MongoClient;
-const test = require('assert');
 
 const url = 'mongodb://guov:guov@172.31.250.103:27017/guov?authSource=admin';
 const dbName = 'guov';
