@@ -134,8 +134,24 @@ class NavBottom extends Component {
             .Board-Top,
             .Board-Top-New 
             {
+              background: ${Master};
+              background-color: ${Master};
+            }
+            .Tabs-Button .bg
+            {
               background: transparent;
-              background-color: transparent;
+              border-left: 10px dotted transparent;
+              border-right: 10px solid transparent;
+              border-top: 30px solid rgba(255, 255, 255, 0.9);
+            }
+            .Tabs-Button.sel .bg,
+            .Tabs-Button:hover .bg
+            {
+              border-top: 30px solid ${LightBlue};
+            }
+            .Tabs-Button .text
+            {
+              position:relative;
             }
             .searchTag
             {
@@ -208,7 +224,6 @@ class NavBottom extends Component {
             .FakeSelect,
             .FakeSelect .FakeOption,
             .FakeSelect .FakeOptionsContainer .FakeOption
-            
             {
               background:${bglight2};
               background-color:${bglight2};
@@ -236,7 +251,6 @@ class NavBottom extends Component {
               color: ${ColorParent};
               opacity: 1;
             }
-
             .FakeSelect .FakeOptionsContainer .FakeOption:hover,
             .FakeSelect .FakeOptionsContainer.Out .FakeOption:hover
             {
@@ -244,7 +258,7 @@ class NavBottom extends Component {
               background-color: ${LightBlue};
               color: #fff;
             }
-                        .InputWrapper,
+            .InputWrapper,
             .InputWrapper input,
             .FakeSelect .FakeOptionsContainer.Out{
               background: ${bglighttr};

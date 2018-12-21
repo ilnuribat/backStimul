@@ -51,17 +51,18 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  /* flex-wrap: wrap; */
-  /* align-items: center; */
-  /* justify-content:center; */
 }
 
 .Profile.auth .authTop{
   width:100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  overflow: hidden;
+  justify-content: flex-start;
+  align-items: flex-start;
   height: auto;
-  height:200px;
+  max-height: auto;
+  min-height: 140px;
 }
 .Profile.auth .authTop .UserRow{
   width:100%;

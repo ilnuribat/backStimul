@@ -698,40 +698,17 @@ class Board extends Component {
                           </div>
                         </div>
                         <div className="BoardTabs">
-                          <div className="Tabs-Button">План 1</div>
-                          <div className="Tabs-Button">План 2</div>
-                          <div className="Tabs-Button sel">План 3</div>
-                          <div className="Tabs-Button">План 4</div>
-                          <div className="Tabs-Button">+</div>
+                          <div className="Tabs-Button"><span className="bg"></span><span className="text">План 1</span> </div>
+                          <div className="Tabs-Button"><span className="bg"></span><span className="text">План 2</span> </div>
+                          <div className="Tabs-Button sel"><span className="bg"></span><span className="text">План 3</span> </div>
+                          <div className="Tabs-Button"><span className="bg"></span><span className="text">План 4</span> </div>
+                          <div className="Tabs-Button"><span className="bg"></span><span className="text">+</span> </div>
                         </div>
                       </div>
 
                       {
                         poEtapy && <ContentInner view="Board-Content-Tree">
                           <div className="inner EtapsWrap">
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
-                            <Svg svg="toright" />
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
-                            <Svg svg="toright" />
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
-                            <Svg svg="toright" />
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
                           </div>
                         </ContentInner>
                       }

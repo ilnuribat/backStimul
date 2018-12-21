@@ -1,16 +1,51 @@
 const express = require('express');
 const app = express();
 const MongoClient = require('mongodb').MongoClient;
-
+const multer = require('multer')
 const url = 'mongodb://guov:guov@172.31.250.103:27017/guov?authSource=admin';
 const dbName = 'guov';
-const PORT = '8000';
+const PORT = '8501';
+let upload = multer().single('avatar');
+
+
+// var upload = multer({ dest: (file)=>{
+//   MongoClient.connect(url, function (err, db) {
+//     if (err) throw err;
+//     let dbo = db.db("guov");
+
+//     console.log(file);
+//     const base64str = 'data:image/jpeg;base64,' + Buffer.from(file).toString('base64');
+//         console.log(base64str)
+//         const myobj = { name: , content: base64str, userId: null, email: null }
+
+//         dbo.collection("avatars").insertOne(myobj, function (err, res) {
+//           if (err) throw err;
+//           // console.log("1 document inserted");
+//         });
+//       db.close();
+//   });
+// }
+// });
+
+
 
 console.log('Script')
 
 app.get('/', function (req, res) {
   res.send('MicroImg');
 });
+
+app.post('/profile', function (req, res) {
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
+    } else if (err) {
+      // An unknown error occurred when uploading.
+    }
+
+    // Everything went fine.
+  })
+})
 
 app.get('/img/:id', function (req, res) {
   MongoClient.connect(url, function (err, client) {
