@@ -123,15 +123,13 @@ margin: 0;
   border-radius: 3px;
 }
 
-.Tabs-Button::before{
+/* .Tabs-Button::before, */
+.Tabs-Button .bg
+{
   position: absolute;
   top:0px;
   left: 0px;
   right: 0px;
   content: ' ';
   width: 80px;
-}
-.Tabs-Button.sel,
-.Tabs-Button:hover
-{
 }
