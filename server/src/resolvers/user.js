@@ -53,7 +53,7 @@ module.exports = {
       return adUser;
     },
     users: async () => {
-      const allUsers = await User.find({});
+      const allUsers = await User.find({}).lean();
 
       return Promise.all(allUsers.map(user => getUserInfoFromAD(user)));
     },
