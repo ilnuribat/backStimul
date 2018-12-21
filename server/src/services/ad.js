@@ -14,6 +14,7 @@ const config = {
   password: ACTIVE_DIRECTORY_PASSWORD,
   attributes: {
     user: [
+      'dn',
       'cn',
       'mail',
       'giveName',
