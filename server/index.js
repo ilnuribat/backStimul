@@ -125,9 +125,10 @@ async function start() {
 
   server.listenAsync = promisify(server.listen);
 
-  await server.listenAsync(HTTP_PORT);
-
-  logger.info('server started at', { port: HTTP_PORT });
+  if (process.env.NODE_ENV !== 'test') {
+    await server.listenAsync(HTTP_PORT);
+    logger.info('server started at', { port: HTTP_PORT });
+  }
 }
 
 start();
