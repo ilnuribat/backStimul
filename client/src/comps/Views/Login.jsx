@@ -142,6 +142,7 @@ class Login extends Component {
                       localStorage.removeItem('username')
                       localStorage.removeItem('userid')
                       history.push(`/`)
+
                       return <Loading />
                     }
                     // if (data && data.userInfo ) console.warn("AAA", data.userInfo.name)
@@ -149,6 +150,7 @@ class Login extends Component {
                     if (data && data.user) {
 
                       console.warn(data.user)
+
                       return(
                         <div className="Profile auth">
                           <div className="ProfileInner">
@@ -156,7 +158,7 @@ class Login extends Component {
                               {/* <div className="logo">
                       <img src={logoImg} alt="АО ГУОВ" width="20px"/>
                     </div> */}
-                              <UserRow size="160" icon="1" name=" "><h1>{data.user.name}</h1></UserRow>
+                              <UserRow size="120" icon={data.user.icon || "1"} name=" "><h1>{data.user.name}</h1></UserRow>
                             </div>
                             <div className="authContent">
                               <div className="authColumn">
@@ -231,11 +233,11 @@ class Login extends Component {
                           </div>
                         </div>
                       )
-                   }
+                    }
                   }
                 }
               </Query>
-              )}
+            )}
         </div>
       </Content>
     )

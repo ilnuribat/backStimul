@@ -57,7 +57,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  
+
 }
 .UserRow .UserIcon{
   /* flex:1 1 auto; */
@@ -79,6 +79,11 @@
 .UserRow .UserIcon svg{
   height: 100%;
   width:  100%;
+}
+.UserRow .UserIcon img{
+  height: auto;
+  width:  100%;
+  max-width: 100%;
 }
 .UserRow .UserIcon.Boxed{
   border-radius: 5px;
