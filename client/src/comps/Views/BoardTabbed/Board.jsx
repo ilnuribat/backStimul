@@ -709,29 +709,6 @@ class Board extends Component {
                       {
                         poEtapy && <ContentInner view="Board-Content-Tree">
                           <div className="inner EtapsWrap">
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
-                            <Svg svg="toright" />
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
-                            <Svg svg="toright" />
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
-                            <Svg svg="toright" />
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
                           </div>
                         </ContentInner>
                       }
