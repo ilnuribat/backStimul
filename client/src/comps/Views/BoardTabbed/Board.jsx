@@ -406,6 +406,7 @@ class Board extends Component {
         .keys(obj_from_json)
         .map(key => `${key}:${stringify(obj_from_json[key])}`)
         .join(",");
+
       return `{${props}}`;
     }
 
@@ -564,12 +565,12 @@ class Board extends Component {
               let message = 'Неизвестная ошибка';
 
               switch (error.message) {
-                case "Network error: Failed to fetch":
-                  message = "Не удается подключиться"
-                  break;
+              case "Network error: Failed to fetch":
+                message = "Не удается подключиться"
+                break;
 
-                default:
-                  break;
+              default:
+                break;
               }
 
               return (
@@ -579,10 +580,11 @@ class Board extends Component {
               );
             }
 
-          if(data && data.object){
+            if(data && data.object){
               ObjectData = data.object;
               let selectedChilds = false;
               let ObjTasks = [];
+
               ObjTasks = data.object.tasks.slice();
 
               if (this.state.curParentId && this.state.showChilds)
@@ -647,12 +649,12 @@ class Board extends Component {
                               let message = 'Неизвестная ошибка';
 
                               switch (error.message) {
-                                case "Network error: Failed to fetch":
-                                  message = "Не удается подключиться"
-                                  break;
+                              case "Network error: Failed to fetch":
+                                message = "Не удается подключиться"
+                                break;
 
-                                default:
-                                  break;
+                              default:
+                                break;
                               }
 
                               return (
@@ -766,6 +768,7 @@ class Board extends Component {
                                   {
                                     cols[e.id].map((task) => {
                                       let haveChilds = [];
+
                                       haveChilds = ObjTasks.filter((othrtask) => (othrtask.parentId === task.id));
 
                                       if (this.state.curParentId === task.id) {
@@ -773,7 +776,10 @@ class Board extends Component {
                                       } else { selectedChilds = false; }
 
                                       return (
-                                        <Task fulltask={task} showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childscol={haveChilds && haveChilds.length > 0 ? haveChilds : null} childs={haveChilds && haveChilds.length > 0 ? this.childs : null} deleteTask={this.changeDelModal} />
+                                        <Task fulltask={task} showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds}
+                                          selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage}
+                                          click={this.toTask} childscol={haveChilds && haveChilds.length > 0 ? haveChilds : null} owner={task.assignedTo}
+                                          childs={haveChilds && haveChilds.length > 0 ? this.childs : null} deleteTask={this.changeDelModal} />
                                       )
                                     })
                                   }
