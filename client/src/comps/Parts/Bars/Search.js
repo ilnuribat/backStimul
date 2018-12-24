@@ -314,7 +314,7 @@ export class Search extends Component {
                               : "Новая"}
                           </span>
                         </div>
-                        {e.assignedTo ? (
+                        {e && e.assignedTo ? (
                           <UserRow
                             view="Boxed"
                             id={e.assignedTo.id}
@@ -364,7 +364,7 @@ export class Search extends Component {
                       <UserRow
                         view="Boxed"
                         id={e.id}
-                        icon={e.assignedTo.icon || "1"}
+                        icon={e && e.assignedTo && e.assignedTo.icon || "1"}
                         name={e.initials || e.username}
                         key={e.id}
                       />
