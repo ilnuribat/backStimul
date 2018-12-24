@@ -53,9 +53,6 @@ async function authenticate(login, password) {
         if (!data) {
           return reject(ERROR_CODES.NO_USER_FOUND);
         }
-        if (data.mail.split('@')[0].toLowerCase() !== login.toLowerCase()) {
-          return reject(ERROR_CODES.NO_USER_FOUND);
-        }
 
         return resolve(data);
       });
@@ -103,6 +100,10 @@ async function getUserInfoFromAD(user) {
     });
   });
 }
+
+getUserInfoFromAD({ email: 'KhaybullinIF' }).then((data, err) => {
+  console.log({ data, err });
+});
 
 module.exports = {
   authenticate,
