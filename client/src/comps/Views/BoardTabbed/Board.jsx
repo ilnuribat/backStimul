@@ -31,6 +31,7 @@ import ContentInner from '../../Lays/ContentInner/ContentInner';
 import ChatView from '../ChatView/ChatView';
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 import TaskView from '../TaskView/TaskView';
+import BoardSnab from '../../Parts/Board/BoardSnab';
 
 
 
@@ -151,7 +152,8 @@ class Board extends Component {
       modalMessage: "",
       modalNameCreator: "",
       treeView: false,
-      poEtapy: false,
+      inPlans: false,
+      toSnab: false,
       taskDataCreateEdit: {},
     };
 
@@ -172,7 +174,8 @@ class Board extends Component {
     this.modalMessage = this.modalMessage.bind(this)
     this.toTreeView = this.toTreeView.bind(this)
     this.MaptoTree = this.MaptoTree.bind(this)
-    this.poEtapy = this.poEtapy.bind(this)
+    this.inPlans = this.inPlans.bind(this)
+    this.toSnab = this.toSnab.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
@@ -508,10 +511,10 @@ class Board extends Component {
       }
     )
   }
-  poEtapy(){
+  inPlans(){
     this.setState(
       {
-        poEtapy: !this.state.poEtapy,
+        inPlans: !this.state.inPlans,
       }
     )
   }
@@ -539,11 +542,18 @@ class Board extends Component {
     return _A;
 
   }
-
+  toSnab(){
+    this.setState({
+      toSnab: true,
+      treeView: false,
+      inPlans: false,
+      toTask: false,
+    })
+  }
 
 
   render(){
-    const { objectId, status, taskId, toTask, showChilds, treeView, poEtapy } = this.state;
+    const { objectId, status, taskId, toTask, showChilds, treeView, inPlans, toSnab } = this.state;
     const { setInfo } = this.props;
     let ObjectData;
 
@@ -694,26 +704,26 @@ class Board extends Component {
                             <h1>{data.object.name}</h1>
                             <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
                             <ButtonRow iconright="1" click={this.toTreeView}>{treeView ? "Доска" : "Дерево"}</ButtonRow>
-                            <ButtonRow iconright="1" click={this.poEtapy}>{poEtapy ? "Доска" : "План"}</ButtonRow>
+                            <ButtonRow iconright="1" click={this.inPlans}>{inPlans ? "Доска" : "План"}</ButtonRow>
                           </div>
                         </div>
                         <div className="BoardTabs">
-                          <div className="Tabs-Button"><span className="bg"></span><span className="text">План 1</span> </div>
-                          <div className="Tabs-Button"><span className="bg"></span><span className="text">План 2</span> </div>
-                          <div className="Tabs-Button sel"><span className="bg"></span><span className="text">План 3</span> </div>
-                          <div className="Tabs-Button"><span className="bg"></span><span className="text">План 4</span> </div>
+                          <div className="Tabs-Button"><span className="bg"></span><span className="text">Предпроектные работы</span> </div>
+                          <div className="Tabs-Button"><span className="bg"></span><span className="text">Изыскательские работы</span> </div>
+                          <div className="Tabs-Button sel" onClick={this.toSnab}><span className="bg"></span><span className="text">Снабжение</span> </div>
+                          <div className="Tabs-Button"><span className="bg"></span><span className="text">Строительство</span> </div>
                           <div className="Tabs-Button"><span className="bg"></span><span className="text">+</span> </div>
                         </div>
                       </div>
 
                       {
-                        poEtapy && <ContentInner view="Board-Content-Tree">
+                        inPlans && <ContentInner view="Board-Content-Tree">
                           <div className="inner EtapsWrap">
                           </div>
                         </ContentInner>
                       }
 
-                      {treeView && !poEtapy && (
+                      {treeView && !inPlans && (
                         <ContentInner view="Board-Content-Tree">
                           <div className="inner">
                             <div className="TreeViewName TopLevel">
@@ -731,7 +741,15 @@ class Board extends Component {
                         </ContentInner>
                       ) }
 
-                      {!treeView && !poEtapy && (
+                      {!treeView && !inPlans && toSnab && (
+                        <ContentInner view="Board-Content-Tree">
+                          <div className="inner">
+                            <BoardSnab></BoardSnab>
+                          </div>
+                        </ContentInner>
+                      ) }
+
+                      {!treeView && !inPlans && !toSnab && (
                         <ContentInner view="Board-Content">
                           {
                             status && status.map((e,i)=>{

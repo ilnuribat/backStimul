@@ -113,17 +113,27 @@ margin: 0;
 .Tabs-Button{
   transition: all 0.3s ease-in-out;
   position: relative;
-  margin: 0 5px 0;
+  margin: 0 0 0;
   display: block;
   padding: 2px 5px;
   height: 30px;
-  width:100px;
+  width:auto;
   text-align: center;
   cursor: pointer;
   border-radius: 3px;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: flex-start; */
+  /* align-items: flex-start; */
+  /* border:1px solid saddlebrown; */
+  overflow: hidden;
 }
 
-/* .Tabs-Button::before, */
+.Tabs-Button .text{
+  text-align: center;
+  width: auto;
+  padding: 0 10px;
+}
 .Tabs-Button .bg
 {
   position: absolute;
@@ -131,5 +141,5 @@ margin: 0;
   left: 0px;
   right: 0px;
   content: ' ';
-  width: 80px;
+  width: auto;
 }

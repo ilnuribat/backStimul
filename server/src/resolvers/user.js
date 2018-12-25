@@ -28,8 +28,11 @@ module.exports = {
     id: user => user.id || user._id.toString(),
     username: user => user.email,
     icon: async (user) => {
-      if (user && user.name) {
+      if (user && user.name && user.email) {
+
         const name = user.name.replace(/\s/gi, '%20');
+
+        console.log('email', user.email );
 
         return `http://${MICRO_IMG_URL}/img/${name}`;
       }
