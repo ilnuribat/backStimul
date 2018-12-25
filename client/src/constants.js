@@ -58,7 +58,7 @@ export const colors = {
 };
 
 export const quf = (query) => {
-  return fetch(`http://${_url}/`, {
+  return fetch(`${protocol}${_url}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -78,7 +78,11 @@ export const qauf = (query, uri, auth) => {
     url = uri;
   }
 
-  return fetch(`http://${url}/`, {
+  if (!url.startsWith('http')) {
+    url = `${protocol}${url}`;
+  }
+
+  return fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -98,6 +102,8 @@ export const grid = 8;
 export const borderRadius = 2;
 
 export const _url = process.env.REACT_APP_ENDPOINT || '185.168.187.103:8500';
+export const protocol = process.env.REACT_APP_PROTOCOL || 'http://';
+export const wsProtocol = protocol === 'https://' ? 'wss://' : 'ws://';
 // export const _url = 'localhost:8500';
 
 export const AUTH_TOKEN = 'auth-token';
