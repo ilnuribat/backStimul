@@ -9,7 +9,6 @@ const { getTasks, generateToken } = require('../services/user');
 const { authenticate, getUserInfoFromAD } = require('../services/ad');
 const { BCRYPT_ROUNDS } = require('../../config');
 const { ERROR_CODES } = require('../services/constants');
-const { MICRO_IMG_URL } = require('../../config');
 
 module.exports = {
   User: {
@@ -37,7 +36,7 @@ module.exports = {
         return `http://${MICRO_IMG_URL}/img/${name}`;
       }
 
-      return '';
+      return 'http://dev.scis.xyz/images/download';
     },
   },
   Query: {
@@ -62,7 +61,7 @@ module.exports = {
     users: async () => {
       const allUsers = await User.find({}).lean();
 
-      return Promise.all(allUsers.map(user => getUserInfoFromAD(user)));
+      return allUsers;
     },
   },
 

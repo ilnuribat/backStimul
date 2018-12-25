@@ -5,7 +5,7 @@ const {
   LOGIN_AS_PASSWORD,
 } = require('../../config');
 const { ERROR_CODES } = require('./constants');
-
+const { logger } = require('../../logger');
 
 const config = {
   url: ACTIVE_DIRECTORY_HOST,
@@ -51,9 +51,8 @@ async function authenticate(login, password) {
         }
 
         if (!data) {
-          return reject(ERROR_CODES.NO_USER_FOUND);
-        }
-        if (data.mail.split('@')[0].toLowerCase() !== login.toLowerCase()) {
+          logger.error('no data from ad', data);
+
           return reject(ERROR_CODES.NO_USER_FOUND);
         }
 
@@ -83,7 +82,8 @@ async function getUserInfoFromAD(user) {
       }
 
       if (!userAd) {
-        // reject(new Error(ERROR_CODES.NO_USER_FOUND));
+        logger.error('no user found in ad');
+
         return resolve(user);
       }
 
