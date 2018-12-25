@@ -28,15 +28,12 @@ module.exports = {
     username: user => user.email,
     icon: async (user) => {
       if (user && user.name && user.email) {
-
         const name = user.name.replace(/\s/gi, '%20');
 
-        console.log('email', user.email );
-
-        return `http://${MICRO_IMG_URL}/img/${name}`;
+        return `https://dev.scis.xyz/images/${name}`;
       }
 
-      return 'http://dev.scis.xyz/images/download';
+      return 'https://dev.scis.xyz/images/download';
     },
   },
   Query: {
