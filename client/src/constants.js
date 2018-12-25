@@ -58,7 +58,7 @@ export const colors = {
 };
 
 export const quf = (query) => {
-  return fetch(`http://${_url}/`, {
+  return fetch(`${protocol}${_url}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
