@@ -6,10 +6,10 @@ import { withClientState } from 'apollo-link-state';
 import { split, ApolloLink } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 import { createUploadLink } from 'apollo-upload-client';
-import { _url, protocol } from './constants';
+import { _url, protocol, wsProtocol } from './constants';
 import resolvers from './GraphQL/Res';
 
-console.log({ _url, protocol });
+console.warn({ _url, protocol, wsProtocol });
 
 const httpLink = createUploadLink({
   uri: `${protocol}${_url}/`,
@@ -80,7 +80,7 @@ const stateLink = withClientState({
 
 const prelink = ApolloLink.from([stateLink, httpLinkWithAuthToken]);
 const wsLink = new WebSocketLink({
-  uri: `ws://${_url}/graphql`,
+  uri: `${wsProtocol}${_url}/graphql`,
   options: {
     lazy: true,
     reconnect: true,
