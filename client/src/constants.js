@@ -78,7 +78,7 @@ export const qauf = (query, uri, auth) => {
     url = uri;
   }
 
-  return fetch(`http://${url}/`, {
+  return fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -98,6 +98,7 @@ export const grid = 8;
 export const borderRadius = 2;
 
 export const _url = process.env.REACT_APP_ENDPOINT || '185.168.187.103:8500';
+export const host = _url.replace(/http|https/, '').slice(3);
 // export const _url = 'localhost:8500';
 
 export const AUTH_TOKEN = 'auth-token';
