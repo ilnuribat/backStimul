@@ -9,6 +9,8 @@ import { createUploadLink } from 'apollo-upload-client';
 import { _url, protocol } from './constants';
 import resolvers from './GraphQL/Res';
 
+console.log({ _url, protocol });
+
 const httpLink = createUploadLink({
   uri: `${protocol}${_url}/`,
 });
