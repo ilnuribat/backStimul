@@ -37,6 +37,12 @@ type Object {
   parentId: String
 }
 
+type ObjectMutations {
+  create(object: ObjectInput): Object
+  update(object: ObjectInput): Boolean
+  delete: Boolean
+}
+
 type Query {
   rootObject(id: ID): rootObject
   object(id: ID): Object
@@ -47,4 +53,5 @@ type Mutation {
   createObject(object: ObjectInput): Object
   updateObject(id: ID!, object: ObjectInput): Boolean
   deleteObject(id: ID!): Boolean
+  object(id: ID!): ObjectMutations
 }

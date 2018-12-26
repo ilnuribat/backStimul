@@ -1,4 +1,5 @@
 const { Group } = require('../models');
+const addressService = require('./address');
 
 const uuidRegEx = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
@@ -65,9 +66,52 @@ async function deleteObject(parent, { id }) {
   return res.n;
 }
 
+async function createObject(parent, { object }) {
+  Object.assign(object, {
+    type: 'OBJECT',
+  });
+  if (object.address) {
+    // провалидировать адрес, вытащить цепочку родителей
+    const formedAddress = await addressService.formAddress(object.address);
+
+    Object.assign(object, { address: formedAddress });
+  }
+  const res = await Group.create(object);
+
+  return res;
+}
+
+async function updateObject(parent, args) {
+  const { object, id } = args;
+  const objectId = id;
+  const foundObject = await Group.findOne({ _id: objectId, type: 'OBJECT' });
+
+  if (!foundObject) {
+    throw new Error('no object found');
+  }
+
+  if (object.address && object.address !== foundObject.address.value) {
+    const formedAddress = await addressService.formAddress(object.address);
+
+    Object.assign(object, { address: formedAddress });
+  } else {
+    Object.assign(object, { address: foundObject.address });
+  }
+
+  const res = await Group.updateOne({
+    _id: id,
+  }, {
+    $set: object,
+  });
+
+  return res.nModified;
+}
+
 
 module.exports = {
   rootObjectQuery,
   searchObjects,
   deleteObject,
+  createObject,
+  updateObject,
 };

@@ -1,6 +1,6 @@
 const { Group, UserGroup } = require('../models');
 const objectService = require('../services/object');
-const addressService = require('../services/address');
+const { ERROR_CODES } = require('../services/constants');
 
 module.exports = {
   Object: {
@@ -30,6 +30,10 @@ module.exports = {
       return null;
     },
   },
+  ObjectMutations: {
+    create: objectService.createObject,
+    update: objectService.updateObject,
+  },
   Query: {
     rootObject(parent, args, ctx) {
       return objectService.rootObjectQuery(parent, args, ctx);
@@ -42,44 +46,18 @@ module.exports = {
     },
   },
   Mutation: {
-    async createObject(parent, { object }) {
-      Object.assign(object, {
-        type: 'OBJECT',
-      });
-      if (object.address) {
-        // провалидировать адрес, вытащить цепочку родителей
-        const formedAddress = await addressService.formAddress(object.address);
-
-        Object.assign(object, { address: formedAddress });
+    object(parent, { id }, { user }) {
+      if (!user) {
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
-      const res = await Group.create(object);
+      if (id) {
+        return Group.findById(id);
+      }
 
-      return res;
+      return {};
     },
-    async updateObject(parent, { id, object }) {
-      const objectId = id || object.id;
-      const foundObject = await Group.findOne({ _id: objectId, type: 'OBJECT' });
-
-      if (!foundObject) {
-        throw new Error('no object found');
-      }
-
-      if (object.address && object.address !== foundObject.address.value) {
-        const formedAddress = await addressService.formAddress(object.address);
-
-        Object.assign(object, { address: formedAddress });
-      } else {
-        Object.assign(object, { address: foundObject.address });
-      }
-
-      const res = await Group.updateOne({
-        _id: id,
-      }, {
-        $set: object,
-      });
-
-      return res.nModified;
-    },
+    createObject: objectService.createObject,
+    updateObject: objectService.updateObject,
     deleteObject: objectService.deleteObject,
   },
 };
