@@ -112,6 +112,10 @@ class NavBottom extends Component {
             {
               color:${ColorSecond};
             }
+            .Master{
+              color:${ColorSecond};
+              background: ${bglighttr};
+            }
             .Root{background: ${BakgrColorPrimary};background-color: ${BakgrColorPrimary};}
             .Tile{background: ${BakgrColorMaster};background-color: ${BakgrColorMaster};}
             .Nav, .Panel, .Column,
@@ -130,8 +134,25 @@ class NavBottom extends Component {
             .Board-Top,
             .Board-Top-New 
             {
+              background: ${Master};
+              background-color: ${Master};
+            }
+            .Tabs-Button .bg
+            {
               background: transparent;
-              background-color: transparent;
+              border-left: 10px dotted transparent;
+              border-right: 10px solid transparent;
+              border-top: 30px solid rgba(0, 0, 0, 0.1);
+            }
+            .Tabs-Button.active .bg,
+            .Tabs-Button.sel .bg,
+            .Tabs-Button:hover .bg
+            {
+              border-top: 30px solid #ffffff;
+            }
+            .Tabs-Button .text
+            {
+              position:relative;
             }
             .searchTag
             {
@@ -204,7 +225,6 @@ class NavBottom extends Component {
             .FakeSelect,
             .FakeSelect .FakeOption,
             .FakeSelect .FakeOptionsContainer .FakeOption
-            
             {
               background:${bglight2};
               background-color:${bglight2};
@@ -232,7 +252,6 @@ class NavBottom extends Component {
               color: ${ColorParent};
               opacity: 1;
             }
-
             .FakeSelect .FakeOptionsContainer .FakeOption:hover,
             .FakeSelect .FakeOptionsContainer.Out .FakeOption:hover
             {
@@ -240,7 +259,7 @@ class NavBottom extends Component {
               background-color: ${LightBlue};
               color: #fff;
             }
-                        .InputWrapper,
+            .InputWrapper,
             .InputWrapper input,
             .FakeSelect .FakeOptionsContainer.Out{
               background: ${bglighttr};
@@ -272,6 +291,28 @@ class NavBottom extends Component {
             input[type="submit"], select, textarea{
               color: ${ColorParent};
               background:transparent;
+            }
+            .Tabs-Button .text{
+              color:#555;
+            }
+            .Tabs-Button.a .text,
+            .Tabs-Button.active .text,
+            .Tabs-Button:hover .text,
+            .Tabs-Button.sel .text
+            {
+              color:#222;
+              background:#fff;
+            }
+            .Tabs-Button.a .text::before,
+            .Tabs-Button.active .text::before,
+            .Tabs-Button.sel .text::before,
+            .Tabs-Button:hover .text::before,
+            .Tabs-Button:hover .text::after,
+            .Tabs-Button.a .text::after,
+            .Tabs-Button.active .text::after,
+            .Tabs-Button.sel .text::after
+            {
+              border-top-color:#fff;
             }
 
           `}</style>) : null}

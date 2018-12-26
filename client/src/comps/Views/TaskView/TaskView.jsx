@@ -101,6 +101,7 @@ class TaskView extends Component {
     qauf(getObjectTasksSmall(objectId), _url, localStorage.getItem('auth-token')).then(a=>{
       if(a && a.data){
         a.data.object.tasks = a.data.object.tasks.filter((task) => (task.parentId !== taskId && task.id !== taskId ))
+        console.warn("ВОЗМОЖНО УБРАТЬ ЗАПРОС TASKS!!", a.data.object.tasks)
         this.setState({
           allTasks: a.data.object.tasks,
         })
@@ -331,6 +332,8 @@ class TaskView extends Component {
     const { allusers, modal, status, allTasks } = this.state;
     const { taskId, data } = this.props;
 
+    console.warn("users", allusers)
+
 
     // let data = dataObject.filter((task) => (task.id === taskId))[0]
 
@@ -380,6 +383,7 @@ class TaskView extends Component {
                   (e,i)=>{
 
                     console.log("check",e)
+
                     return(
                       <div className="username" role="presentation" key={'usr-'+i} >
                         {localStorage.getItem('userid') !== e.id ?

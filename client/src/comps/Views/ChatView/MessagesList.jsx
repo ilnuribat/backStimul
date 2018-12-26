@@ -46,8 +46,12 @@ export default class MessagesList extends Component {
   handleScroll(event) {
 
     if (event.target.scrollTop == 0 && this.props.data.messages.edges[0]){
-      const a = document.getElementById("messageList");
-      const oldHeight = a.scrollHeight
+      if (document.getElementById("messageList")) {
+        let oldHeight = 0, a
+      
+        a = document.getElementById("messageList");
+        oldHeight = a.scrollHeight;
+
 
       document.getElementById("PaddedComp").style.height = "30px"
       client.query({ query: this.props.priv ? PRIV_QUERY : TASK_MESSAGES,  variables:{ id: this.props.data.id, messageConnection: {last: 30, before: this.props.data.messages.edges[0].cursor } } })
@@ -65,6 +69,7 @@ export default class MessagesList extends Component {
               // setTimeout(()=>{document.getElementById("PaddedComp").style.height = "0"}, 300)
             })
         })
+      }
     }
   }
 

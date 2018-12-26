@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { graphql, compose, Query } from "react-apollo";
+import { Redirect } from 'react-router';
 // import NavTopInner from './NavTopInner';
 // import Logo from './Logo.jpg'
 import logoImg from '../Img/Logo';
@@ -218,8 +219,11 @@ class NavTop extends Component {
                     return <Loading></Loading>
                   }
                   if(error){
-                    console.warn('Error', error.message)
-                    return <Loading></Loading>
+                    console.warn('Error TOP', error.message)
+                    if (error.message.indexOf('code 500') > 0){
+                      return <Redirect to='/login' />
+                    }
+                    return <Loading />
                   }
                   // if (data && data.userInfo ) console.warn("AAA", data.userInfo.name)
 

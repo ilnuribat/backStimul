@@ -51,18 +51,37 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  /* flex-wrap: wrap; */
-  /* align-items: center; */
-  /* justify-content:center; */
 }
 
 .Profile.auth .authTop{
   width:100%;
   display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: auto;
+  max-height: auto;
+  min-height: 140px;
+}
+.Profile.auth .authTop .UserRow{
+  width:100%;
+  max-width: 100%;
+  display: flex;
   flex-direction: row;
   height: auto;
-  height:200px;
+  height:100%;
 }
+.Profile.auth .authTop .UserName{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:center;
+}
+.Profile.auth .authTop .UserName h1{
+  font-size: 120%;
+}
+
 .Profile.auth .authContent{
   width:100%;
   display: flex;

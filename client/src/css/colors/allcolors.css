@@ -657,25 +657,26 @@ background: rgba(0, 0, 0, 0.123);
 
 }
 
-.Tabs-Button::before,
-.Tabs-Button:before
+/* .Tabs-Button::before, */
+/* .Tabs-Button:before */
+.Tabs-Button .bg
 {
   background: transparent;
   border-left: 10px dotted transparent;
   border-right: 10px solid transparent;
-  border-top: 30px solid rgba(0, 0, 0, 0.123);
+  border-top: 30px solid rgba(0, 0, 0, 0.1);
 }
-.Tabs-Button.sel,
-.Tabs-Button:hover
-{
-  /* background: #3e74b2a8; */
-  /* color: aliceblue; */
-  
-}
+
+
+
+
+
+
+
 .Tabs-Button:hover::before,
 .Tabs-Button.sel::before,
 {
-  border-top: 30px solid rgba(77, 77, 77, 0.384);
+  /* border-top: 30px solid rgba(0, 0, 0, 0.1); */
 }
 
 .Board-Top{

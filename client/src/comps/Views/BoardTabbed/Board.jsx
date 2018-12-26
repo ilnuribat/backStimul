@@ -31,6 +31,7 @@ import ContentInner from '../../Lays/ContentInner/ContentInner';
 import ChatView from '../ChatView/ChatView';
 import InnerBar from '../../Lays/InnerBar/InnerBar';
 import TaskView from '../TaskView/TaskView';
+import BoardSnab from '../../Parts/Board/BoardSnab';
 
 
 
@@ -151,7 +152,8 @@ class Board extends Component {
       modalMessage: "",
       modalNameCreator: "",
       treeView: false,
-      poEtapy: false,
+      inPlans: false,
+      toSnab: false,
       taskDataCreateEdit: {},
     };
 
@@ -172,7 +174,8 @@ class Board extends Component {
     this.modalMessage = this.modalMessage.bind(this)
     this.toTreeView = this.toTreeView.bind(this)
     this.MaptoTree = this.MaptoTree.bind(this)
-    this.poEtapy = this.poEtapy.bind(this)
+    this.inPlans = this.inPlans.bind(this)
+    this.toSnab = this.toSnab.bind(this)
   }
 
   daTa(){ return(<DataQuery query={TASKS_QUERY}/>) }
@@ -406,6 +409,7 @@ class Board extends Component {
         .keys(obj_from_json)
         .map(key => `${key}:${stringify(obj_from_json[key])}`)
         .join(",");
+
       return `{${props}}`;
     }
 
@@ -507,10 +511,10 @@ class Board extends Component {
       }
     )
   }
-  poEtapy(){
+  inPlans(){
     this.setState(
       {
-        poEtapy: !this.state.poEtapy,
+        inPlans: !this.state.inPlans,
       }
     )
   }
@@ -538,11 +542,18 @@ class Board extends Component {
     return _A;
 
   }
-
+  toSnab(){
+    this.setState({
+      toSnab: true,
+      treeView: false,
+      inPlans: false,
+      toTask: false,
+    })
+  }
 
 
   render(){
-    const { objectId, status, taskId, toTask, showChilds, treeView, poEtapy } = this.state;
+    const { objectId, status, taskId, toTask, showChilds, treeView, inPlans, toSnab } = this.state;
     const { setInfo } = this.props;
     let ObjectData;
 
@@ -564,12 +575,12 @@ class Board extends Component {
               let message = 'Неизвестная ошибка';
 
               switch (error.message) {
-                case "Network error: Failed to fetch":
-                  message = "Не удается подключиться"
-                  break;
+              case "Network error: Failed to fetch":
+                message = "Не удается подключиться"
+                break;
 
-                default:
-                  break;
+              default:
+                break;
               }
 
               return (
@@ -579,10 +590,11 @@ class Board extends Component {
               );
             }
 
-          if(data && data.object){
+            if(data && data.object){
               ObjectData = data.object;
               let selectedChilds = false;
               let ObjTasks = [];
+
               ObjTasks = data.object.tasks.slice();
 
               if (this.state.curParentId && this.state.showChilds)
@@ -647,12 +659,12 @@ class Board extends Component {
                               let message = 'Неизвестная ошибка';
 
                               switch (error.message) {
-                                case "Network error: Failed to fetch":
-                                  message = "Не удается подключиться"
-                                  break;
+                              case "Network error: Failed to fetch":
+                                message = "Не удается подключиться"
+                                break;
 
-                                default:
-                                  break;
+                              default:
+                                break;
                               }
 
                               return (
@@ -692,49 +704,36 @@ class Board extends Component {
                             <h1>{data.object.name}</h1>
                             <ButtonRow icon="plus" iconright="1" click={this.changeModal}>Создать задачу</ButtonRow>
                             <ButtonRow iconright="1" click={this.toTreeView}>{treeView ? "Доска" : "Дерево"}</ButtonRow>
-                            <ButtonRow iconright="1" click={this.poEtapy}>{poEtapy ? "Доска" : "План"}</ButtonRow>
+                            <ButtonRow iconright="1" click={this.inPlans}>{inPlans ? "Доска" : "План"}</ButtonRow>
                           </div>
                         </div>
                         <div className="BoardTabs">
-                          <div className="Tabs-Button">План 1</div>
-                          <div className="Tabs-Button">План 2</div>
-                          <div className="Tabs-Button sel">План 3</div>
-                          <div className="Tabs-Button">План 4</div>
-                          <div className="Tabs-Button">+</div>
+                          <div className="Tabs-Button">
+                            <span className="text">Предпроектные работы</span>
+                          </div>
+                          <div className="Tabs-Button">
+                            <span className="text">Изыскательские работы</span>
+                          </div>
+                          <div className="Tabs-Button sel" onClick={this.toSnab}>
+                            <span className="text">Снабжение</span>
+                          </div>
+                          <div className="Tabs-Button">
+                            <span className="text">Строительство</span>
+                          </div>
+                          <div className="Tabs-Button">
+                            <span className="text">+</span>
+                          </div>
                         </div>
                       </div>
 
                       {
-                        poEtapy && <ContentInner view="Board-Content-Tree">
+                        inPlans && <ContentInner view="Board-Content-Tree">
                           <div className="inner EtapsWrap">
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
-                            <Svg svg="toright" />
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
-                            <Svg svg="toright" />
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
-                            <Svg svg="toright" />
-                            <div className="Etaps">
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                              <InputWrapper ></InputWrapper>
-                            </div>
                           </div>
                         </ContentInner>
                       }
 
-                      {treeView && !poEtapy && (
+                      {treeView && !inPlans && (
                         <ContentInner view="Board-Content-Tree">
                           <div className="inner">
                             <div className="TreeViewName TopLevel">
@@ -752,7 +751,15 @@ class Board extends Component {
                         </ContentInner>
                       ) }
 
-                      {!treeView && !poEtapy && (
+                      {!treeView && !inPlans && toSnab && (
+                        <ContentInner view="Board-Content-Tree">
+                          <div className="inner">
+                            <BoardSnab></BoardSnab>
+                          </div>
+                        </ContentInner>
+                      ) }
+
+                      {!treeView && !inPlans && !toSnab && (
                         <ContentInner view="Board-Content">
                           {
                             status && status.map((e,i)=>{
@@ -766,6 +773,7 @@ class Board extends Component {
                                   {
                                     cols[e.id].map((task) => {
                                       let haveChilds = [];
+
                                       haveChilds = ObjTasks.filter((othrtask) => (othrtask.parentId === task.id));
 
                                       if (this.state.curParentId === task.id) {
@@ -773,7 +781,10 @@ class Board extends Component {
                                       } else { selectedChilds = false; }
 
                                       return (
-                                        <Task fulltask={task} showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds} selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage} click={this.toTask} childscol={haveChilds && haveChilds.length > 0 ? haveChilds : null} childs={haveChilds && haveChilds.length > 0 ? this.childs : null} deleteTask={this.changeDelModal} />
+                                        <Task fulltask={task} showother={this.state.showChilds} status={e.id} key={task.id} id={task.id} selectedChilds={selectedChilds}
+                                          selected={toTask && taskId === task.id ? toTask : null} name={task.name} endDate={task.endDate} lastMessage={task.lastMessage}
+                                          click={this.toTask} childscol={haveChilds && haveChilds.length > 0 ? haveChilds : null} owner={task.assignedTo}
+                                          childs={haveChilds && haveChilds.length > 0 ? this.childs : null} deleteTask={this.changeDelModal} />
                                       )
                                     })
                                   }

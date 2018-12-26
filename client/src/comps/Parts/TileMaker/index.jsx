@@ -42,11 +42,13 @@ class TileMaker extends Component {
 
 
   componentDidMount(){
-    let {edit} = this.props;
+    let {edit, address} = this.props;
 
-    if(edit){
-      this.setState({edit: true,create: true,})
-    }
+    if (address && address[0]) this.setState({
+      value: address[0].value,
+      addressList: address
+    })
+    if(edit) this.setState({edit: true,create: true})
   }
 
   newAddress(e){

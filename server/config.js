@@ -15,6 +15,7 @@ const {
   ACTIVE_DIRECTORY_PASSWORD = '',
   ACTIVE_DIRECTORY_HOST = 'ldap://pdcg.guss.ru',
   LOGIN_AS_PASSWORD = '123',
+  MICRO_IMG_URL = '185.168.187.103:8501',
 } = process.env;
 
 const BCRYPT_ROUNDS = process.env.NODE_ENV === 'production' ? 12 : 1;
@@ -35,4 +36,5 @@ module.exports = {
   ACTIVE_DIRECTORY_PASSWORD,
   ACTIVE_DIRECTORY_HOST,
   LOGIN_AS_PASSWORD,
+  MICRO_IMG_URL,
 };

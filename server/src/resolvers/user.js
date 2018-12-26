@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const {
   User,
   Message,
-  Avatar,
 } = require('../models');
 const { logger } = require('../../logger');
 const { getDirectChats } = require('../services/chat');
@@ -28,9 +27,13 @@ module.exports = {
     id: user => user.id || user._id.toString(),
     username: user => user.email,
     icon: async (user) => {
-      const avatar = await Avatar.findOne({ name: user.name }).lean();
+      if (user && user.name && user.email) {
+        const name = user.name.replace(/\s/gi, '%20');
 
-      return avatar && avatar.content;
+        return `https://dev.scis.xyz/images/${name}`;
+      }
+
+      return 'https://dev.scis.xyz/images/download';
     },
   },
   Query: {
@@ -55,7 +58,7 @@ module.exports = {
     users: async () => {
       const allUsers = await User.find({}).lean();
 
-      return Promise.all(allUsers.map(user => getUserInfoFromAD(user)));
+      return allUsers;
     },
   },
 
