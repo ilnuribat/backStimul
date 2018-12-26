@@ -7,6 +7,7 @@ module.exports = {
     id: parent => parent.id || parent._id.toString(),
     objects(parent) {
       return Group.find({
+        type: 'OBJECT',
         areaId: parent.id,
       });
     },

@@ -22,6 +22,7 @@ async function rootObjectQuery(parent, { id: addressId }) {
 
   if (addressId) {
     areas = await Group.find({
+      type: 'OBJECT',
       'address.fiasId': addressId,
     });
   }

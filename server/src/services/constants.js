@@ -9,7 +9,7 @@ const USER_TASK_UPDATED = 'USER_TASK_UPDATED';
 const KICKED = 'KICKED';
 const INVITED = 'INVITED';
 
-const GROUP_TYPES = ['DIRECT', 'TASK', 'OBJECT'];
+const GROUP_TYPES = ['DIRECT', 'TASK', 'OBJECT', 'AREA'];
 const ADDRESS_LEVELS = ['region', 'area', 'city', 'settlement', 'street', 'house'];
 
 const TASK_STATUSES = [{
