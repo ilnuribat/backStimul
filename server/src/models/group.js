@@ -1,6 +1,9 @@
 const { Schema } = require('mongoose');
 const { GROUP_TYPES } = require('../services/constants');
 
+const { ObjectId } = Schema.Types;
+
+
 const parentChainItem = new Schema({
   fiasId: String,
   type: String,
@@ -23,15 +26,16 @@ const schema = new Schema({
   code: String,
   lastMessageAt: Date,
   status: Number,
-  assignedTo: Schema.Types.ObjectId,
+  assignedTo: ObjectId,
   endDate: Date,
   address: addressSchema,
-  objectId: Schema.Types.ObjectId,
+  objectId: ObjectId,
+  constructionId: ObjectId,
   type: {
     type: String,
     enum: GROUP_TYPES,
   },
-  parentId: Schema.Types.ObjectId,
+  parentId: ObjectId,
 });
 
 
