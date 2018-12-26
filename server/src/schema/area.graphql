@@ -1,0 +1,52 @@
+type Area {
+  id: ID!
+  name: String
+  address: Address
+  objects: [Object]
+}
+
+input AreaInput {
+  name: String
+  address: String
+}
+
+type AddressObject {
+  id: ID
+  name: String
+}
+
+type Crumbs {
+  id: ID
+  name: String
+}
+
+type rootObject {
+  id: ID
+  name: String
+  parentId: ID
+  addresses: [AddressObject]
+  areas: [Area]
+  crumbs: [Crumbs]
+}
+
+type Address {
+	geoLat: String @deprecated
+	geoLon: String @deprecated
+	value: String
+  coordinates: [String]
+}
+
+type AreaMutation {
+  create(area: AreaInput): Area
+  update(area: AreaInput): Boolean
+  delete: Boolean
+}
+
+type Query {
+  rootObject(id: ID): rootObject
+  area(id: ID!): Area
+}
+
+type Mutation {
+  area(id: ID): AreaMutation
+}

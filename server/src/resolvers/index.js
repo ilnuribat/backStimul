@@ -8,6 +8,7 @@ const files = require('./files');
 const object = require('./object');
 const task = require('./task');
 const search = require('./search');
+const area = require('./area');
 
 module.exports = mergeResolvers([
   user,
@@ -19,4 +20,5 @@ module.exports = mergeResolvers([
   object,
   task,
   search,
+  area,
 ]);

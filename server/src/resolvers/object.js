@@ -35,9 +35,6 @@ module.exports = {
     update: objectService.updateObject,
   },
   Query: {
-    rootObject(parent, args, ctx) {
-      return objectService.rootObjectQuery(parent, args, ctx);
-    },
     async object(parent, { id }) {
       return Group.findById(id);
     },

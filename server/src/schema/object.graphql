@@ -1,40 +1,12 @@
-type AddressObject {
-  id: ID
+type Object {
+  id: ID!
   name: String
-}
-
-type Crumbs {
-  id: ID
-  name: String
-}
-
-type rootObject {
-  id: ID
-  name: String
-  parentId: ID
-  addresses: [AddressObject]
-  objects: [Object]
-  crumbs: [Crumbs]
-}
-
-type Address {
-	geoLat: String @deprecated
-	geoLon: String @deprecated
-	value: String
-  coordinates: [String]
+  tasks: [Task]
+  parentId: String
 }
 
 input ObjectInput {
   name: String
-  address: String
-}
-
-type Object {
-  id: ID!
-  name: String
-  address: Address
-  tasks: [Task]
-  parentId: String
 }
 
 type ObjectMutations {
@@ -44,14 +16,14 @@ type ObjectMutations {
 }
 
 type Query {
-  rootObject(id: ID): rootObject
   object(id: ID): Object
   objects: [Object]
 }
 
 type Mutation {
-  createObject(object: ObjectInput): Object
-  updateObject(id: ID!, object: ObjectInput): Boolean
-  deleteObject(id: ID!): Boolean
+  createObject(object: ObjectInput): Object @deprecated
+  updateObject(id: ID!, object: ObjectInput): Boolean @deprecated
+  deleteObject(id: ID!): Boolean @deprecated
+
   object(id: ID!): ObjectMutations
 }

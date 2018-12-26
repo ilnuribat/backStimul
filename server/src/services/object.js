@@ -18,10 +18,10 @@ async function rootObjectQuery(parent, { id: addressId }) {
 
   const addresses = await Group.getGroupedLevel(rootObject.level + 1, rootObject.id);
 
-  let objects;
+  let areas;
 
   if (addressId) {
-    objects = await Group.find({
+    areas = await Group.find({
       'address.fiasId': addressId,
     });
   }
@@ -31,7 +31,7 @@ async function rootObjectQuery(parent, { id: addressId }) {
   return {
     ...rootObject,
     addresses,
-    objects,
+    areas,
     crumbs,
   };
 }
