@@ -142,12 +142,13 @@ class NavBottom extends Component {
               background: transparent;
               border-left: 10px dotted transparent;
               border-right: 10px solid transparent;
-              border-top: 30px solid rgba(255, 255, 255, 0.9);
+              border-top: 30px solid rgba(0, 0, 0, 0.1);
             }
+            .Tabs-Button.active .bg,
             .Tabs-Button.sel .bg,
             .Tabs-Button:hover .bg
             {
-              border-top: 30px solid ${LightBlue};
+              border-top: 30px solid #ffffff;
             }
             .Tabs-Button .text
             {
@@ -290,6 +291,28 @@ class NavBottom extends Component {
             input[type="submit"], select, textarea{
               color: ${ColorParent};
               background:transparent;
+            }
+            .Tabs-Button .text{
+              color:#555;
+            }
+            .Tabs-Button.a .text,
+            .Tabs-Button.active .text,
+            .Tabs-Button:hover .text,
+            .Tabs-Button.sel .text
+            {
+              color:#222;
+              background:#fff;
+            }
+            .Tabs-Button.a .text::before,
+            .Tabs-Button.active .text::before,
+            .Tabs-Button.sel .text::before,
+            .Tabs-Button:hover .text::before,
+            .Tabs-Button:hover .text::after,
+            .Tabs-Button.a .text::after,
+            .Tabs-Button.active .text::after,
+            .Tabs-Button.sel .text::after
+            {
+              border-top-color:#fff;
             }
 
           `}</style>) : null}

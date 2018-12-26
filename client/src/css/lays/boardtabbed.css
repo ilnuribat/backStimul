@@ -106,8 +106,8 @@ margin: 0;
   justify-content: center;
   align-items: center;
   margin: 0 auto 0;
-  height: 30px;
-  min-height: 30px;
+  height: 40px;
+  min-height: 40px;
 }
 
 .Tabs-Button{
@@ -115,25 +115,60 @@ margin: 0;
   position: relative;
   margin: 0 0 0;
   display: block;
-  padding: 2px 5px;
-  height: 30px;
+  padding: 0 20px;
+  height: auto;
   width:auto;
   text-align: center;
   cursor: pointer;
-  border-radius: 3px;
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-content: flex-start; */
-  /* align-items: flex-start; */
+  /* border-radius: 3px; */
+  /* display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start; */
   /* border:1px solid saddlebrown; */
-  overflow: hidden;
+  /* overflow: hidden; */
+  box-sizing: border-box;
 }
 
 .Tabs-Button .text{
   text-align: center;
   width: auto;
-  padding: 0 10px;
+  padding: 10px 0;
+  margin: 0;
+  z-index: 9;
+  background: rgba(0,0,0,0.1);
+  position: relative;
+  color:#fff5;
 }
+.Tabs-Button .text::after,
+.Tabs-Button .text::before
+{
+  position: absolute;
+  top:0;
+  bottom: 0;
+  width:0;
+  height:100%;
+  overflow:hidden;
+  content: "";
+  border-bottom:0px solid transparent;
+}
+
+.Tabs-Button .text::before
+{
+  left: -20px;
+  border-top:40px solid rgba(0,0,0,0.1);
+  border-right:0px solid transparent;
+  border-left:20px solid transparent;
+}
+.Tabs-Button .text::after
+{
+  right:-20px;
+  border-top:40px solid rgba(0,0,0,0.1);
+  border-right:20px solid transparent;
+  border-left:0px solid transparent;
+  
+}
+
 .Tabs-Button .bg
 {
   position: absolute;
@@ -142,4 +177,33 @@ margin: 0;
   right: 0px;
   content: ' ';
   width: auto;
+  z-index: 1;
+}
+
+.Tabs-Button.active .text::after,
+.Tabs-Button.sel .text::after,
+.Tabs-Button:hover .text::after,
+.Tabs-Button.active .text::before,
+.Tabs-Button.sel .text::before,
+.Tabs-Button:hover .text::before{
+  border-top:40px solid rgba(0, 0, 0, 0.123);
+}
+
+.Tabs-Button.active .text::after,
+.Tabs-Button.sel .text::after,
+.Tabs-Button:hover .text::after{
+  border-right:20px solid transparent;
+}
+.Tabs-Button.active .text::before,
+.Tabs-Button.sel .text::before,
+.Tabs-Button:hover .text::before{
+border-left:20px solid transparent;
+}
+
+.Tabs-Button.active .text,
+.Tabs-Button.sel .text,
+.Tabs-Button:hover .text
+{
+  background: rgba(0, 0, 0, 0.123);
+  color:#fff;
 }

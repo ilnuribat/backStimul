@@ -708,11 +708,21 @@ class Board extends Component {
                           </div>
                         </div>
                         <div className="BoardTabs">
-                          <div className="Tabs-Button"><span className="bg"></span><span className="text">Предпроектные работы</span> </div>
-                          <div className="Tabs-Button"><span className="bg"></span><span className="text">Изыскательские работы</span> </div>
-                          <div className="Tabs-Button sel" onClick={this.toSnab}><span className="bg"></span><span className="text">Снабжение</span> </div>
-                          <div className="Tabs-Button"><span className="bg"></span><span className="text">Строительство</span> </div>
-                          <div className="Tabs-Button"><span className="bg"></span><span className="text">+</span> </div>
+                          <div className="Tabs-Button">
+                            <span className="text">Предпроектные работы</span>
+                          </div>
+                          <div className="Tabs-Button">
+                            <span className="text">Изыскательские работы</span>
+                          </div>
+                          <div className="Tabs-Button sel" onClick={this.toSnab}>
+                            <span className="text">Снабжение</span>
+                          </div>
+                          <div className="Tabs-Button">
+                            <span className="text">Строительство</span>
+                          </div>
+                          <div className="Tabs-Button">
+                            <span className="text">+</span>
+                          </div>
                         </div>
                       </div>
 
