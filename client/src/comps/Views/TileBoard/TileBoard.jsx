@@ -82,13 +82,13 @@ class TileBoard extends Component {
         parentid: parentId || "",
       });
     }
-    else if(id && type === 'Object'){
-      localStorage.setItem('ObjectId',id);
-      localStorage.setItem('ObjectName',name);
+    else if(id && type === 'Area'){
+      // localStorage.setItem('ObjectId',id);
+      // localStorage.setItem('ObjectName',name);
       this.setState({
-        objectId: id,
-        objectname: name,
-        object: true,
+        areaId: id,
+        areaname: name,
+        area: true,
       })
     }
     else{
@@ -121,14 +121,14 @@ class TileBoard extends Component {
 
 
   render() {
-    let { tiles, rootid, parentid, object, objectId, objectname } = this.state;
+    let { rootid, parentid, area, areaId } = this.state;
 
-    if(object && objectId){
-      console.log(objectId)
+    if (area && areaId){
+      console.log(areaId)
 
       return <Redirect to={{
-        pathname: '/board',
-        state: { objectId: this.state.objectId }
+        pathname: '/area',
+        state: { id: this.state.areaId }
       }} />
     }
 
@@ -205,10 +205,10 @@ class TileBoard extends Component {
                           })
                         }
                         {
-                          data.rootObject && data.rootObject.objects && data.rootObject.objects.map((e)=>{
+                          data.rootObject && data.rootObject.areas && data.rootObject.areas.map((e)=>{
 
                             return(
-                              <Tile fulltile={e} key={'tile'+e.id} id={e.id} name={e.name} type={e.__typename||'object'} click={this.query} refetch={this.refetch1} remove={this.remove} addr={e.address.value} parentId={data.rootObject.id} updateObject={this.updateObject} />
+                              <Tile fulltile={e} key={'tile' + e.id} id={e.id} name={e.name} type={e.__typename ||'Area'} click={this.query} refetch={this.refetch1} remove={this.remove} addr={e.address.value} parentId={data.rootObject.id} updateObject={this.updateObject} />
                             )
                           })
                         }

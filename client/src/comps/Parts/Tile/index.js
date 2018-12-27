@@ -100,22 +100,25 @@ class Tile extends Component {
       });
 
       return (
-        <div className={`Tile ${ type ? type : null }`}>
-          {type === "Object" ? (<div className="Edit" onClick={()=>{this.setState({edit:!edit})}}><SvgEdit /></div>) : null}
-          {type === "Object" ? (<div className="Rem" onClick={()=>refetch(id, parentId)}><SvgRem /></div>) : null}
+        <div className={`Tile ${ type ? type : 'none' }`}>
+          {type === "Area" ? (<div className="Edit" onClick={()=>{this.setState({edit:!edit})}}><SvgEdit /></div>) : null}
+          {type === "Area" ? (<div className="Rem" onClick={()=>refetch(id, parentId)}><SvgRem /></div>) : null}
           <div className="name" onClick={()=>click({id:id,type:type,name:name, parentId:parentId})}>{name}</div>
 
           {
-            descr ? <div className="descr">{descr}</div> : null
+            type ? <div className="descr">{type}</div> : null
           }
           {
-            type === "Object" && fulltile.address && fulltile.address.value && <div className="descr">{ fulltile.address.value }</div>
+            id ? <div className="descr">{id}</div> : null
           }
           {
-            type === "Object" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">Задач: {fulltile.tasks.length}</div>
+            type === "Area" && fulltile.address && fulltile.address.value && <div className="descr">{ fulltile.address.value }</div>
+          }
+          {
+            type === "Area" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">Задач: {fulltile.tasks.length}</div>
           }
 
-          {type === "Object" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 &&
+          {type === "Area" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 &&
             <div className="TileHighliter">
               <span>{counters.all}</span>
               <span className={counters.prefail && 'orgf'}>{counters.prefail}</span>
@@ -123,7 +126,7 @@ class Tile extends Component {
             </div>
           }
           {
-            type === "Object" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">
+            type === "Area" && fulltile && fulltile.tasks && fulltile.tasks.length > 0 && <div className="descr">
               {counters.new > 0 && <span>Новых <span>{counters.new}</span></span> }
               {counters.inwork > 0 && <span>В работе <span>{counters.inwork}</span></span> }
               {counters.inwork > 0 && <span>Завершены <span>{counters.end}</span></span> }

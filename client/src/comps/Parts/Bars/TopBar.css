@@ -1,0 +1,52 @@
+.TopBar{
+  width: 100%;
+  height: auto;
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.TopBar .top{
+  width: 100%;
+  height: auto;
+  min-height: 30px;
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.TopBar .bottom{
+  width: 100%;
+  height: auto;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.TopBar .top .Left{
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width:auto;
+}
+.TopBar .top .Center{
+  width:100%;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+}
+.TopBar .top .Right{
+  width:auto;
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.TopBar .top{
+  background: #202225;
+}

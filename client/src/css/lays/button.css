@@ -5,6 +5,9 @@
   width:auto;
   cursor: pointer;
   border-radius: 2px;
+  border:0px solid transparent;
+  background: transparent;
+  background-color: transparent;
 }
 
 .Button2{

@@ -510,15 +510,9 @@ query rootObject($id: ID){
         name
         __typename
       }
-      objects{
+      areas{
         id
         name
-        tasks{
-          id
-          status
-          endDate
-          __typename
-        }
         address {
           value
         }
@@ -526,6 +520,18 @@ query rootObject($id: ID){
       }
     }
 }
+`;
+export const QUERY_AREA = gql `
+query area($id: ID!){
+    area(id: $id){
+      id
+      name
+      objects{
+        id
+        name
+      }
+      }
+    }
 `;
 
 export const glossaryStatus = () => `

@@ -52,7 +52,33 @@ class NavBottom extends Component {
   }
 
   render() {
-    let ColorParent, ColorSecond, BgFirst, tr, BgSecond, BgThird, Master, Accent, BakgrColorPrimary, BakgrColorSecondary, BakgrColorMaster, BakgrColorSlave, BakgrColorBlue, LightBlue, bglight, bglight2, bglighttr;
+    let ColorParent,
+      ColorSecond,
+      BgFirst,
+      tr,
+      BgSecond,
+      BgThird,
+      Master,
+      Accent,
+      BakgrColorPrimary,
+      BakgrColorSecondary,
+      BakgrColorMaster,
+      BakgrColorSlave,
+      BakgrColorBlue,
+      LightBlue,
+      bglight,
+      bglight2,
+      bglighttr,
+      rgba1,
+      rgba2,
+      rgba3,
+      rgba4,
+      col1,
+      col2,
+      col3,
+      col4,
+      na,
+      no;
 
     if(this.state.theme === 'white'){
       ColorParent = "#222";
@@ -74,6 +100,14 @@ class NavBottom extends Component {
       bglighttr = '#eeeeeeee';
       bglighttr = '#eeeeeeee';
       tr = 'transparent';
+      rgba1 = 'rgba(255, 255, 255, 0.5)';
+      rgba2 = 'rgba(255, 255, 255, 0.1)';
+      rgba3 = 'rgba(255, 255, 255, 0.3)';
+      rgba4 = 'rgba(255, 255, 255, 1)';
+      col1 = '#222';
+      col2 = '#555';
+      col3 = '#999';
+      col4 = '#aaa';
     }
 
     // if(this.state.theme === 'gold'){
@@ -314,6 +348,56 @@ class NavBottom extends Component {
             {
               border-top-color:#fff;
             }
+            .TopBar .top{
+  background:${rgba1};
+}
+.Tab .text{
+  background: ${rgba1};
+  color:${col4};
+  border-bottom:1px solid ${rgba1};
+}
+.Tab::after,
+.Tab::before
+{
+  border-left:0px solid transparent;
+  border-right:0px solid transparent;
+  border-bottom:0px solid transparent;
+}
+.Tab.a::after,
+.Tab:hover::after,
+.Tab.a::before,
+.Tab:hover::before{
+  border-top:40px solid ${rgba4};
+}
+
+.Tab.a::after,
+.Tab:hover::after{
+  border-right:20px solid transparent;
+}
+.Tab.a::before,
+.Tab:hover::before{
+  border-left:20px solid transparent;
+}
+
+.Tab.a .text,
+.Tab:hover .text
+{
+  background: ${rgba4};
+  color:${col1};
+}
+
+.Tab::before
+{
+  border-top:40px solid ${rgba1};
+  border-right:0px solid transparent;
+  border-left:20px solid transparent;
+}
+.Tab::after
+{
+  border-top:40px solid ${rgba1};
+  border-right:20px solid transparent;
+  border-left:0px solid transparent;
+}
 
           `}</style>) : null}
       </div>

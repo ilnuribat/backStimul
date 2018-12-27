@@ -27,16 +27,9 @@ import 'animate.css';
 import { BarInner } from './comps/Parts/Bars/BarInner';
 import { DocsView } from './comps/Views/DocsView/DocsView';
 import NavBottom from './comps/Views/NavBottom';
-import Error from './comps/Error';
-// import Ldap from './comps/Ldap';
+import Area from './comps/Views/Area/Area';
+import ErrorPage from './comps/Views/ErrorPage/ErrorPage';
 
-
-// const Components = [
-//   {name:'', link: ''},
-//   {name:'', link: ''},
-//   {name:'', link: ''},
-//   {name:'', link: ''},
-// ];
 
 class App extends Component {
   constructor(props) {
@@ -130,16 +123,18 @@ class App extends Component {
                   // })
                 }
                 {/* <Route exact path="/ldap" component={Ldap} /> */}
-                <Route exact path="/error" component={Error} />
-                <Route exact path="/task" component={TaskView} />
-                <Route exact path="/docs" component={DocsView} />
-                <Route exact path="/board" component={Board} />
+                <Route exact path="/error" component={ErrorPage} />
+                {/* <Route exact path="/task" component={TaskView} /> */}
+                {/* <Route exact path="/docs" component={DocsView} /> */}
+                {/* <Route exact path="/board" component={Board} /> */}
+                <Route exact path="/area" component={Area} />
                 <Route exact path="/tile" component={TileBoard} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/map" component={Map} />
                 {/* <Route exact path="/profile" component={Login} /> */}
                 <Route exact path="/chat" component={Private} />
                 <Route exact path="/" component={RootLoader} />
+                <Route component={ErrorPage} />
               </Switch>
             </Root>
           </Fragment>
