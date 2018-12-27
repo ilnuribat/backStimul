@@ -45,6 +45,11 @@ module.exports = {
 
       return res.nModified;
     },
+    async delete({ id }) {
+      const res = await Group.deleteOne({ _id: id });
+
+      return res.n;
+    },
   },
   Query: {
     area(parent, { id }, { user }) {
