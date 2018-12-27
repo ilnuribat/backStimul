@@ -122,8 +122,8 @@ const comps = ({id,name}) => ({
 const Err = ({ children, id, text, color, click, size}) => {
   return (
     <div className="Err" style={{ width: size && size + "px" || "", minWidth: size && size + "px" || "" }}>
+      <div className="text">{text}</div>
       {children}
-      {text}
       Err
     </div>
   )
@@ -131,8 +131,8 @@ const Err = ({ children, id, text, color, click, size}) => {
 const Warn = ({ children, id, text, color, click, size}) => {
   return (
     <div className="Warn" style={{ width: size && size + "px" || "", minWidth: size && size + "px" || "" }}>
+      <div className="text">{text}</div>
       {children}
-      {text}
       Warn
     </div>
   )
@@ -140,8 +140,8 @@ const Warn = ({ children, id, text, color, click, size}) => {
 const Mess = ({ children, id, text, color, click, size}) => {
   return (
     <div className="Mess" style={{ width: size && size + "px" || "", minWidth: size && size + "px" || "" }}>
+      <div className="text">{text}</div>
       {children}
-      {text}
       Mess
     </div>
   )

@@ -193,3 +193,33 @@
   box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
   cursor:pointer;
 }
+.Err{
+  display: inline-block;
+  padding: 10px;
+  background: #b23e3e;
+  color: #fff;
+  margin:10px auto;
+  font-size: 12px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+}
+.Mess{
+  display: inline-block;
+  padding: 10px;
+  background: #68b23e;
+  color: #fff;
+  margin:10px auto;
+    font-size: 12px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+}
+.Warn{
+  display: inline-block;
+  padding: 10px;
+  background: #b2973e;
+  color: #fff;
+  margin:10px auto;
+    font-size: 12px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+}
