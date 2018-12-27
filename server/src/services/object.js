@@ -22,6 +22,7 @@ async function rootObjectQuery(parent, { id: addressId }) {
 
   if (addressId) {
     areas = await Group.find({
+      type: 'OBJECT',
       'address.fiasId': addressId,
     });
   }
@@ -67,16 +68,10 @@ async function deleteObject(parent, { id }) {
 }
 
 async function createObject(parent, { object }) {
-  Object.assign(object, {
+  const res = await Group.create({
+    ...object,
     type: 'OBJECT',
   });
-  if (object.address) {
-    // провалидировать адрес, вытащить цепочку родителей
-    const formedAddress = await addressService.formAddress(object.address);
-
-    Object.assign(object, { address: formedAddress });
-  }
-  const res = await Group.create(object);
 
   return res;
 }

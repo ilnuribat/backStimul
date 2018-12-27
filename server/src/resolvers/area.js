@@ -1,14 +1,49 @@
 const { ERROR_CODES } = require('../services/constants');
 const { Group } = require('../models');
 const objectService = require('../services/object');
+const addressService = require('../services/address');
 
 module.exports = {
   Area: {
     id: parent => parent.id || parent._id.toString(),
     objects(parent) {
       return Group.find({
+        type: 'OBJECT',
         areaId: parent.id,
       });
+    },
+  },
+  AreaMutation: {
+    async create(parent, args) {
+      const { area } = args;
+
+      if (!area.address) {
+        throw new Error('cant create area without address');
+      }
+
+      // провалидировать адрес, вытащить цепочку родителей
+      const formedAddress = await addressService.formAddress(area.address);
+
+      return Group.create({
+        name: area.name,
+        type: 'AREA',
+        address: formedAddress,
+      });
+    },
+    async update({ id }, { area }) {
+      if (!id) {
+        throw new Error('id is required for update');
+      }
+
+      const res = await Group.updateOne({
+        _id: id,
+      }, {
+        $set: {
+          name: area.name,
+        },
+      });
+
+      return res.nModified;
     },
   },
   Query: {

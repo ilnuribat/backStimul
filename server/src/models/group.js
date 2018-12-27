@@ -30,7 +30,7 @@ const schema = new Schema({
   endDate: Date,
   address: addressSchema,
   objectId: ObjectId,
-  constructionId: ObjectId,
+  areaId: ObjectId,
   type: {
     type: String,
     enum: GROUP_TYPES,
@@ -45,6 +45,10 @@ schema.virtual('id').get(function () {
 
 schema.static('getGroupedLevel', async function (level = 0, parentId = null) {
   const res = await this.aggregate([{
+    $match: {
+      type: 'AREA',
+    },
+  }, {
     $project: {
       chain: {
         $arrayElemAt: ['$address.parentChain', level],

@@ -72,5 +72,36 @@ async function setObjectId() {
   console.log(res);
 }
 
-// updateLastCursor();
-setObjectId();
+async function areaObject() {
+  await connect();
+
+  const cursor = await models.Group.findOne({ type: 'OBJECT' }).cursor();
+  let object = await cursor.next();
+
+  while (object) {
+    if (object.areaId) {
+      console.log('skip this!');
+      object = await cursor.next();
+
+      continue;
+    }
+
+    const area = await models.Group.create({
+      name: object.name,
+      address: object.address,
+      type: 'AREA',
+    });
+
+    await models.Group.updateOne({
+      _id: object._id,
+    }, {
+      $set: {
+        areaId: area._id,
+      }
+    });
+
+    object = await cursor.next();
+  }
+}
+
+// areaObject();
