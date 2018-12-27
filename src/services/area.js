@@ -34,6 +34,7 @@ async function rootObjectQuery(parent, { id: addressId }) {
     areas = await Group.find({
       type: 'AREA',
       'address.fiasId': addressId,
+      type: 'OBJECT',
     });
   }
 
