@@ -54,7 +54,17 @@ module.exports = {
       return {};
     },
     createObject: objectService.createObject,
-    updateObject: objectService.updateObject,
+    async updateObject(parent, args, { user }) {
+      if (!user) {
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
+      }
+      const foundObject = await Group.findOne({
+        type: 'OBJECT',
+        _id: args.id,
+      });
+
+      return objectService.updateObject(foundObject, args);
+    },
     deleteObject: objectService.deleteObject,
   },
 };
