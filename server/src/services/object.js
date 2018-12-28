@@ -68,8 +68,15 @@ async function deleteObject(parent, { id }) {
 }
 
 async function createObject(parent, { object }) {
+  if (!object.areaId) {
+    throw new Error('no areaId');
+  }
+  if (!object.name) {
+    throw new Error('no name');
+  }
   const res = await Group.create({
-    ...object,
+    name: object.name,
+    areaId: object.areaId,
     type: 'OBJECT',
   });
 
