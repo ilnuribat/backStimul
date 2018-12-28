@@ -5,7 +5,7 @@ const addressService = require('../services/address');
 
 module.exports = {
   Area: {
-    id: parent => parent.id || parent._id.toString(),
+    id: parent => parent._id.toString(),
     objects(parent) {
       return Group.find({
         type: 'OBJECT',

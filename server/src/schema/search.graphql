@@ -11,6 +11,7 @@ type SearchType {
   tasks(statuses: [Int]): [Task]
   users: [User]
   files: [File]
+  areas: [Area]
 }
 
 type Query {

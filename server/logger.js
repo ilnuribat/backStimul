@@ -19,7 +19,7 @@ const customFormat = printf(log => `${
 }: ${
   log.label
 } ${
-  typeof log.message === 'string' ? log.message : log.message.toString()
+  log.message
 } ${
   handleMeta(log.metadata)
 }`);
