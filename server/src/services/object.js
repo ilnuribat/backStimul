@@ -1,5 +1,4 @@
 const { Group } = require('../models');
-const addressService = require('./address');
 
 const uuidRegEx = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
@@ -39,12 +38,8 @@ async function rootObjectQuery(parent, { id: addressId }) {
 
 async function searchObjects(user, regExp, limit) {
   const res = await Group.find({
-    type: 'AREA',
-    $or: [{
-      name: regExp,
-    }, {
-      'address.value': regExp,
-    }],
+    type: 'OBJECT',
+    name: regExp,
   }).limit(limit).lean();
 
   return res;
@@ -83,23 +78,7 @@ async function createObject(parent, { object }) {
   return res;
 }
 
-async function updateObject(parent, args) {
-  const { object, id } = args;
-  const objectId = id;
-  const foundObject = await Group.findOne({ _id: objectId, type: 'OBJECT' });
-
-  if (!foundObject) {
-    throw new Error('no object found');
-  }
-
-  if (object.address && object.address !== foundObject.address.value) {
-    const formedAddress = await addressService.formAddress(object.address);
-
-    Object.assign(object, { address: formedAddress });
-  } else {
-    Object.assign(object, { address: foundObject.address });
-  }
-
+async function updateObject({ id }, { object }) {
   const res = await Group.updateOne({
     _id: id,
   }, {
