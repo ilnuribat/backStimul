@@ -9,7 +9,7 @@ module.exports = {
     objects(parent) {
       return Group.find({
         type: 'OBJECT',
-        areaId: parent.id,
+        areaId: parent._id,
       });
     },
   },

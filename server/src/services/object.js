@@ -22,7 +22,7 @@ async function rootObjectQuery(parent, { id: addressId }) {
 
   if (addressId) {
     areas = await Group.find({
-      type: 'OBJECT',
+      type: 'AREA',
       'address.fiasId': addressId,
     });
   }
@@ -39,7 +39,7 @@ async function rootObjectQuery(parent, { id: addressId }) {
 
 async function searchObjects(user, regExp, limit) {
   const res = await Group.find({
-    type: 'OBJECT',
+    type: 'AREA',
     $or: [{
       name: regExp,
     }, {
