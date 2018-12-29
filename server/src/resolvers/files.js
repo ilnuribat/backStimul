@@ -59,7 +59,7 @@ module.exports = {
         path: '$fileBody',
       },
     }, {
-      $addFields: {
+      $project: {
         id: '$fileId',
         size: '$fileBody.length',
         name: '$fileBody.filename',
@@ -67,12 +67,6 @@ module.exports = {
           $toString: '$fileBody.uploadDate',
         },
         mimeType: '$mimetype',
-      },
-    }, {
-      $project: {
-        fileBody: 0,
-        fileIdObject: 0,
-        fileId: 0,
       },
     }]),
   },
