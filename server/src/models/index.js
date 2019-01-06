@@ -5,7 +5,12 @@ const user = require('./user');
 const userGroup = require('./userGroup');
 const message = require('./message');
 const files = require('./files');
-const avatar = require('./avatar');
+
+delete mongoose.connection.models.groups;
+delete mongoose.connection.models.users;
+delete mongoose.connection.models.userGroups;
+delete mongoose.connection.models.messages;
+delete mongoose.connection.models.files;
 
 module.exports = {
   Group: mongoose.model('groups', group),
@@ -13,7 +18,6 @@ module.exports = {
   UserGroup: mongoose.model('userGroups', userGroup),
   Message: mongoose.model('messages', message),
   Files: mongoose.model('files', files),
-  Avatar: mongoose.model('avatars', avatar),
   Schemas: {
     Group: group,
     User: user,
