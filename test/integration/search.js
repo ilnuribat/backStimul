@@ -17,7 +17,7 @@ describe('integration: search', () => {
     await User.deleteOne({ email: this.tmpEmail });
   });
   it('search with special characters', async function () {
-    const res = await search(null, { query: 'test \sdfфыва !\ @#$%^&*&*)(' }, { user: this.user });
+    const res = await search(null, { query: 'test \\sdfфыва !\\ @#$%^&*&*)(' }, { user: this.user });
 
     assert.isArray(res);
   });
@@ -35,17 +35,24 @@ describe('integration: search', () => {
   });
   describe('search with types', () => {
     before(async function () {
+      this.areas = await Group.insertMany([{
+        name: 'test area 1',
+        type: 'AREA',
+        address: {
+          value: 'test addresss',
+        },
+      }, {
+        name: 'some area',
+        type: 'AREA',
+        address: {
+          value: 'some test',
+        },
+      }]);
       this.objects = await Group.insertMany([{
         name: 'test object',
-        address: {
-          value: 'some address',
-        },
         type: 'OBJECT',
       }, {
-        name: 'some object',
-        address: {
-          value: 'test address',
-        },
+        name: 'some test',
         type: 'OBJECT',
       }]);
       this.tmpTasks = await Group.insertMany([{
@@ -94,6 +101,11 @@ describe('integration: search', () => {
           $in: this.objects.map(o => o._id),
         },
       });
+      await Group.deleteMany({
+        _id: {
+          $in: this.areas.map(a => a._id),
+        },
+      });
       await Group.deleteOne({ _id: this.tmpDirect._id });
       await Message.deleteMany({
         groupId: {
@@ -101,7 +113,7 @@ describe('integration: search', () => {
         },
       });
     });
-    const types = ['USERS', 'TASKS', 'OBJECTS', 'MESSAGES'];
+    const types = ['USERS', 'TASKS', 'OBJECTS', 'MESSAGES', 'AREAS'];
 
     types.forEach((type) => {
       it(`search ${type} with type`, async function () {

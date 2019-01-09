@@ -5,11 +5,11 @@ const addressService = require('../services/address');
 
 module.exports = {
   Area: {
-    id: parent => parent.id || parent._id.toString(),
+    id: parent => parent._id.toString(),
     objects(parent) {
       return Group.find({
         type: 'OBJECT',
-        areaId: parent.id,
+        areaId: parent._id,
       });
     },
   },
@@ -44,6 +44,11 @@ module.exports = {
       });
 
       return res.nModified;
+    },
+    async delete({ id }) {
+      const res = await Group.deleteOne({ _id: id });
+
+      return res.n;
     },
   },
   Query: {

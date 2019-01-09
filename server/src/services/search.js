@@ -3,6 +3,7 @@ const { searchObjects } = require('../services/object');
 const { searchTasks } = require('../services/task');
 const { searchUsers } = require('../services/user');
 const { searchFiles } = require('../services/files');
+const { searchAreas } = require('../services/area.js');
 
 async function search(parent, {
   query, type, limit = 10, statuses,
@@ -54,16 +55,25 @@ async function search(parent, {
           ...f,
         })));
         break;
+      case 'AREAS':
+        tempRes = await searchAreas(user, regExQuery, limit);
+
+        result.push(...tempRes.map(a => ({
+          __typename: 'Area',
+          ...a,
+        })));
+        break;
       default:
         break;
     }
   } else {
-    const [users, tasks, objects, messages, files] = await Promise.all([
+    const [users, tasks, objects, messages, files, areas] = await Promise.all([
       searchUsers(user, regExQuery, limit),
       searchTasks(user, regExQuery, limit),
       searchObjects(user, regExQuery, limit),
       searchMessages(user, regExQuery, limit),
       searchFiles(user, regExQuery, limit),
+      searchAreas(user, regExQuery, limit),
     ]);
 
     return [
@@ -86,6 +96,10 @@ async function search(parent, {
       ...files.map(f => ({
         __typename: 'File',
         ...f,
+      })),
+      ...areas.map(a => ({
+        __typename: 'Area',
+        ...a,
       })),
     ];
   }

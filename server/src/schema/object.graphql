@@ -7,6 +7,7 @@ type Object {
 
 input ObjectInput {
   name: String
+  areaId: ID
 }
 
 type ObjectMutations {
@@ -25,5 +26,5 @@ type Mutation {
   updateObject(id: ID!, object: ObjectInput): Boolean @deprecated
   deleteObject(id: ID!): Boolean @deprecated
 
-  object(id: ID!): ObjectMutations
+  object(id: ID): ObjectMutations
 }

@@ -1,5 +1,6 @@
 const { PubSub } = require('graphql-subscriptions');
-
+const SECTIONS = require('./assets/sections.json');
+const KEYWORDS = require('./assets/sections.json');
 
 const pubsub = new PubSub();
 const MESSAGE_ADDED = 'MESSAGE_ADDED';
@@ -50,4 +51,6 @@ module.exports = {
   KICKED,
   INVITED,
   ERROR_CODES,
+  SECTIONS,
+  KEYWORDS,
 };
