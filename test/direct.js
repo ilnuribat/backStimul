@@ -1,5 +1,7 @@
 const { assert } = require('chai');
-const { Group, UserGroup, Message, User } = require('../server/src/models');
+const {
+  Group, UserGroup, Message, User,
+} = require('../server/src/models');
 
 describe('direct', () => {
   before(async function () {
@@ -51,10 +53,10 @@ describe('direct', () => {
 
     assert.equal(message.text, text);
   });
-  describe.only('direct chat', () => {
-   before(async function () {
+  describe('direct chat', () => {
+    before(async function () {
       this.tmpUser = await User.create({
-        email: 'tmpDirectUser'
+        email: 'tmpDirectUser',
       });
     });
     it('create direct', async function () {
@@ -66,11 +68,13 @@ describe('direct', () => {
           }
         }`,
       });
-      
-      console.log(data, errors);
-      const ids = [this..user._id.toString(), this.tmpUser._id.toString()].sort();
 
-      console.log(ids);
+      assert.isUndefined(errors);
+
+      const ids = [this.user._id.toString(), this.tmpUser._id.toString()].sort().join('|');
+      const directData = await Group.findById(data.directMessage.id);
+
+      assert.equal(ids, directData.code);
     });
     after(async function () {
       await User.deleteOne({ _id: this.tmpUser._id });
@@ -85,10 +89,11 @@ describe('direct', () => {
     });
   });
 });
-    // создать юзеров, создать приватный чат
-    // убедиться что чат создан
-    // что повтороное создание вернет тот же идентификатор
-    // сообщение создается
-    // сообщение видно другому юзеру
-    // lastMessage подгружается
- 
+// создать юзеров, создать приватный чат
+// убедиться что чат создан
+
+// что повтороное создание вернет тот же идентификатор
+// сообщение создается
+// сообщение видно другому юзеру
+// lastMessage подгружается
+
