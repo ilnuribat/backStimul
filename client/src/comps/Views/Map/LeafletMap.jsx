@@ -1,30 +1,34 @@
 import React, { Component } from "react";
+import Axios from "axios";
 import {
   LayerGroup,
   LayersControl,
   Map,
-  Marker,
   Popup,
-  TileLayer
+  TileLayer,
 } from "react-leaflet";
 import MarkerClusterGroup from 'react-leaflet-markercluster';
-import { Query, compose, graphql } from "react-apollo";
-import { divIcon } from "leaflet";
-import { L } from 'leaflet-control-geocoder'
-import PropTypes from 'prop-types';
+import { Query } from "react-apollo";
+import M from 'leaflet-control-geocoder'
 import { Redirect } from "react-router-dom";
 import { ReactLeafletSearch } from 'react-leaflet-search'
 
-import b from "./buttons.css";
 import "./LeafletMap.css";
 
 import { getObjects } from '../../../GraphQL/Qur/Query/index';
 import Loading from '../../Loading';
 import Content from '../../Lays/Content';
-import { getPlaceName, setPlaceName } from "../../../GraphQL/Cache";
+// import { getPlaceName, setPlaceName } from "../../../GraphQL/Cache";
 import MapInfo from "./MapInfo";
 import TileMaker from '../../Parts/TileMaker';
-import Axios from "axios";
+import Panel from "./Panel";
+import Modal, {ModalRowName} from "../../Lays/Modal/Modal";
+
+import states from "./kadastrBase/states.json"
+import utilizations from "./kadastrBase/utilizations.json"
+import parcelOwnership from "./kadastrBase/parcelOwnership.json"
+import categoryTypes from "./kadastrBase/categoryTypes.json"
+
 
 const { BaseLayer, Overlay } = LayersControl;
 
@@ -49,32 +53,33 @@ function zoom(mapPx, worldPx, fraction) {
 class LeafletMap extends Component {
   constructor(props) {
     super(props)
-    // this.myInput = React.createRef()
     this.state = {
       redirect: false,
       offsetWidth: 1024,
       offsetHeight: 768,
       objectId: "",
       edit: false,
-      address: ""
+      showReestr: false,
+      address: "",
+      reestr: {}
     };
-
     this.setEdit = this.setEdit.bind(this)
+    this.closeModal = this.closeModal.bind(this)
   }
 
   componentDidMount() {
     // console.warn("COORD", document.body.clientWidth,document.body.offsetHeight)
-    const { getPlaceName } = this.props;
-    let { setPlaceName } = this.props;
-    let place = 'Map';
+    // const { getPlaceName } = this.props;
+    // let { setPlaceName } = this.props;
+    // let place = 'Map';
 
-    if (getPlaceName && getPlaceName.placename != place) {
-      setPlaceName({
-        variables: {
-          name: place,
-        }
-      })
-    }
+    // if (getPlaceName && getPlaceName.placename != place) {
+    //   setPlaceName({
+    //     variables: {
+    //       name: place,
+    //     }
+    //   })
+    // }
     this.setState({
       offsetWidth: document.body.clientWidth,
       offsetHeight: document.body.offsetHeight
@@ -105,16 +110,55 @@ class LeafletMap extends Component {
       })
   }
 
+  kadastrReqCoord (coords) {
+    // console.warn(coords)
+    Axios(
+      `https://pkk5.rosreestr.ru/api/features/1?text=${coords.lat}%20${coords.lng}&limit=1`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+      })
+      .then(response => {
+        if (response.data && response.data.features && response.data.features[0])
+          this.kadastrReqCn(response.data.features[0].attrs.id)
+      })
+  }
+
+  kadastrReqCn (cn) {
+    Axios(
+      `https://pkk5.rosreestr.ru/api/features/1/${cn}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+      })
+      .then(response => {
+        if (response.data && response.data.feature) {
+          // console.warn(response.data.feature.attrs)
+          this.setState({
+            showReestr: true,
+            reestr: response.data.feature.attrs
+          })
+        }
+      })
+  }
+
   setEdit(latlng) {
+    this.kadastrReqCoord(latlng)
     new Promise((resolve, reject) => {
-      L.Control.Geocoder.nominatim({
+      M.L.Control.Geocoder.nominatim({
         htmlTemplate: ({ address }) => {
           const res = `${address.state} ${address.city || ''} ${address.county || ''} ${address.hamlet || ''} ${address.road || ''} ${address.house_number || ''}`;
 
           return res.replace(/\s+/g,' ').trim();
         }
       }).reverse(latlng, this.map ? this.map.leafletElement.getZoom() : 13, results => {
-        if (results) resolve(results[0].html)
+        if (results && results[0]) resolve(results[0].html)
         else reject("AAA")
       })
     })
@@ -144,8 +188,12 @@ class LeafletMap extends Component {
     this.setState({ redirect: true, objectId: index });
   }
 
+  closeModal () {
+    this.setState({ showReestr: false });
+  }
+
   render() {
-    let { edit, address } = this.state;
+    let { edit, address, reestr} = this.state;
 
     return (
       <Content >
@@ -209,19 +257,20 @@ class LeafletMap extends Component {
               const center = [centerLat, centerLon];
 
               return (
-                <Map ref={(ref) => { this.map = ref }} center={center} zoom={currentZoom} style={styleLeaf} maxZoom="18" >
+                <Map ref={(ref) => { this.map = ref }} center={center} zoom={currentZoom} style={styleLeaf} maxZoom="18"  >
                   <LayersControl position="topright" >
                     <BaseLayer checked name="Landscape">
                       <TileLayer
                         attribution="GUOV"
                         url="https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=a6a77717902441f4a58bf630a325ab72"
+                        zIndex="-2"
                       />
                     </BaseLayer>
-
                     <BaseLayer name="Черно-белая карта">
                       <TileLayer
                         attribution="GUOV"
                         url="https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
+                        zIndex="-2"
                       />
                     </BaseLayer>
                     <BaseLayer name="OpenCycleMap">
@@ -276,48 +325,19 @@ class LeafletMap extends Component {
                       <TileLayer
                         attribution="GUOV"
                         url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
-                      />
+                      >
+                      </TileLayer>
                     </BaseLayer>
-                    {
-                      data.objects ? (
-                        <Overlay checked name="Задачи новые" >
-                          <LayerGroup >
-                            <MarkerClusterGroup>
-                              <Panel type="1" name="Задача новая" data={data.objects} click={this.handleTabChange} />
-                            </MarkerClusterGroup>
-                          </LayerGroup>
-                        </Overlay>) : null}
-                    {/* {
-                        data.objects ? (
-                          <Overlay checked name="Задачи неназначенные">
-                            <LayerGroup >
-                              <Panel type="2" name="Задача неназначенная" data={data.objects} click={this.handleTabChange} />
-                            </LayerGroup>
-                          </Overlay>) : null }
-                      {
-                        data.objects ? (
-                          <Overlay checked name="Задачи в работе">
-                            <LayerGroup >
-                              <Panel type="3" name="Задача в работе"  data={data.objects} click={this.handleTabChange} />
-                            </LayerGroup>
-                          </Overlay>) : null }
-                      {
-                        data.objects ? (
-                          <Overlay checked name="Задачи на согласовании">
-                            <LayerGroup >
-                              <Panel type="4" name="Задача на согласовании"  data={data.objects} click={this.handleTabChange} />
-                            </LayerGroup>
-                          </Overlay>) : null }
-                      {
-                        data.objects ? (
-                          <Overlay checked name="Задачи завершенные">
-                            <LayerGroup >
-                              <Panel type="5" name="Задача завершенная"  data={data.objects} click={this.handleTabChange} />
-                            </LayerGroup>
-                          </Overlay>) : null } */}
+                    {data.objects && (
+                      <Overlay checked name="Задачи новые" >
+                        <LayerGroup >
+                          <MarkerClusterGroup>
+                            <Panel type="1" name="Задача новая" data={data.objects} click={this.handleTabChange} />
+                          </MarkerClusterGroup>
+                        </LayerGroup>
+                      </Overlay>)}
                     <ReactLeafletSearch
                       position="topleft"
-
                       showMarker={true}
                       zoom={15}
                       showPopup={true}
@@ -339,8 +359,25 @@ class LeafletMap extends Component {
                     />
                     <MapInfo edit={edit} setEdit={this.setEdit} />
                   </LayersControl>
-                  {edit ? <TileMaker edit={true} address={address} setEdit={() => { this.setState({ edit: !edit }) }} />
-                    : null}
+                  {edit && <TileMaker edit={true} address={address} setEdit={() => { this.setState({ edit: !edit }) }} />}
+                  {this.state.showReestr && (
+                    <Modal close={this.closeModal} size="450">
+                      <ModalRowName name="Кад.номер:">{reestr.cn}</ModalRowName>
+                      <ModalRowName name="Кад.квартал:">{reestr.kvartal_cn}</ModalRowName>
+                      {reestr.name && <ModalRowName name="Наименование:">{reestr.name}</ModalRowName>}
+                      {reestr.address && <ModalRowName name="Информация:"> {reestr.address}</ModalRowName>}
+                      {reestr.cad_cost && <ModalRowName name="Кадастровая стоимость:"> {reestr.cad_cost} рублей</ModalRowName>}
+                      {reestr.area_value && <ModalRowName name="Общая площадь:">{reestr.area_value} кв.м</ModalRowName>}
+                      {reestr.statecd && <ModalRowName name="Статус:"> {states[reestr.statecd]}</ModalRowName>}
+                      {reestr.category_type && <ModalRowName name="Категория земель:"> {categoryTypes[reestr.category_type]}</ModalRowName>}
+                      {reestr.fp && <ModalRowName name="Форма собственности:"> {parcelOwnership[reestr.fp]}</ModalRowName>}
+                      {reestr.util_code && <ModalRowName name="Разрешенное использование:"> {utilizations[reestr.util_code]}</ModalRowName>}
+                      {reestr.util_by_doc && <ModalRowName name="по документу:"> {reestr.util_by_doc}</ModalRowName>}
+                      {reestr.date_create && <ModalRowName name="Дата постановки на учет:"> {reestr.date_create}</ModalRowName>}
+                      {reestr.cad_record_date && <ModalRowName name="Дата изменения сведений в ГКН:"> {reestr.cad_record_date}</ModalRowName>}
+                      {reestr.adate && <ModalRowName name="Дата выгрузки сведений из ГКН:"> {reestr.adate}</ModalRowName>}
+                    </Modal>
+                  )}
                 </Map>
               );
             } else {
@@ -348,101 +385,11 @@ class LeafletMap extends Component {
                 <div>Нет данных</div>
               )
             }
-
           }}
         </Query>
       </Content>
     )
-
-
-
   }
 }
 
-
-// const ddd = divIcon({
-//   className: "schoolRed",
-//   iconSize: [50, 50],
-// });
-
-
-const Panel = ({ data, type, name, click }) => {
-  // console.warn(data.user.groups)
-
-  return (
-    data.map((post) =>
-      // post.status == type &&
-      post.address && post.address.coordinates && post.address.coordinates.length > 0 && post.address.coordinates[0] && post.address.coordinates[1] ?
-        <Marker key={post.id} position={post.address.coordinates} icon={SwitchIcon(1)}>
-          <Popup >
-            <div className="mapModal" >
-              <ul>
-                <li>Тип объекта: {name}</li>
-                <li>Название объекта: {post.name}</li>
-                <li>Адрес объекта: {post.address.value}</li>
-                <li>Ответственный: <span className="userCloud2">{post.assignedTo ? post.assignedTo.username : null}</span></li>
-                <li>Последнее сообщение от <span className="userCloud2">{post.lastMessage ? post.lastMessage.from.username : null} </span>: <span className="msgCloud">{post.lastMessage ? post.lastMessage.text : null}</span></li>
-              </ul>
-              <div className="button">
-                <NavLink index={post.id} name={post.name} onClick1={click} btnColor={b.btnBlue}>Детальная информация</NavLink>
-              </div>
-            </div>
-          </Popup>
-        </Marker>
-        :
-        <span key={post.id} />
-    )
-  );
-};
-
-
-class NavLink extends React.Component {
-  handleClick = () => {
-    this.props.onClick1(this.props.index, this.props.name);
-  }
-  render() {
-    return (
-      <button type="button" onClick={this.handleClick} className={b.btn + " " + this.props.btnColor} style={{ "width": "100%", "height": "39px" }} >{this.props.children}</button>
-    );
-  }
-}
-
-
-
-const SwitchIcon = (status) => {
-  let value;
-
-  switch (status) {
-  case 1:
-    value = "pinRed";
-    break;
-  case 2:
-    value = "pinYellow";
-    break;
-  case 3:
-    value = "pinPurp";
-    break;
-  case 4:
-    value = "pinBlue";
-    break;
-  default:
-    value = "pinGreen";
-  }
-
-  return divIcon({
-    className: value,
-    iconSize: [50, 50],
-  });
-};
-
-
-LeafletMap.propTypes = {
-  getPlaceName: PropTypes.object.isRequired,
-  setPlaceName: PropTypes.func.isRequired,
-};
-
-export default
-compose(
-  graphql(getPlaceName, { name: 'getPlaceName' }),
-  graphql(setPlaceName, { name: 'setPlaceName' }),
-)(LeafletMap);
+export default LeafletMap;
