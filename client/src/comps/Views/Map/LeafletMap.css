@@ -1,3 +1,28 @@
+.leaflet-search-control-info-ul{
+  color: black
+}
+
+.leaflet-control {
+  color: #63644ddc
+}
+
+.Name {
+  width: 160px;
+  margin:0 5px 0 0;
+}
+.text {
+  width: 100%;
+}
+
+.ModalRowName {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: 0px;
+  padding: 2px 0 5px;
+  border-bottom: 1px solid rgba(250,250,250,0.1);
+}
 .photo {
     width: 100%;
 }
@@ -7,6 +32,11 @@
     color: white;
     font-family: Avenir;
     font-size: 14px;
+}
+
+
+.ModalRow {
+  text-align: left;
 }
 
 .bigButton {
@@ -23,6 +53,8 @@
 form div {
   text-align: left;
 }
+
+
 
 input[type="radio"] {
   height:10px;

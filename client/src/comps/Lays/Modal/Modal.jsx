@@ -36,6 +36,19 @@ export const ModalRow = ({ children })=>{
   )
 }
 
+export const ModalRowName = ({ name, children })=>{
+  return(
+    <div className="ModalRowName">
+      <div className="Name">
+        {name}
+      </div>
+      <div className="text">
+        {children}
+      </div>
+    </div>
+  )
+}
+
 export const InputWrapper = ({ children, name, save, placeholder, click, change })=>{
   let value = name;
   let old = name;
@@ -53,6 +66,7 @@ export const InputWrapper = ({ children, name, save, placeholder, click, change 
   )
 }
 
+
 class Modal extends Component {
 
   constructor(props) {
@@ -69,34 +83,78 @@ class Modal extends Component {
   }
 
   render() {
-    const { children, big, small, click, close, size, message } = this.props;
+    const { children, big, small, click, close, size, message, ver = 0, top = 0 } = this.props;
+    ver = parseInt(ver);
+    top = parseInt(top);
 
-    return (
-      <div className="ModalFull">
-        <div className="ModalWrap">
+    if (ver <= 1) {
+      return (
+        <div className="ModalFull">
+          <div className="ModalWrap">
 
-          <div className="ModalBig" style={size ? {"maxWidth":size+"px"} : {} }>
+            <div className="ModalBig" style={size ? { "maxWidth": size + "px" } : {}}>
 
 
-            <ModalClose click={()=>{close ? close() : console.log("No close function") }}/>
-            <div className="inner">
-              {message?(<div className="ModalMessage">{message}</div>) : null}
-              {children}
-
-            </div>
-          </div>
-          {small?(
-            <div className="ModalSmall">
+              <ModalClose click={() => { close ? close() : console.log("No close function") }} />
               <div className="inner">
-                <div className="ModalCol"></div>
+                {message ? (<div className="ModalMessage">{message}</div>) : null}
+                {children}
+
               </div>
             </div>
-          ): null}
+            {small ? (
+              <div className="ModalSmall">
+                <div className="inner">
+                  <div className="ModalCol"></div>
+                </div>
+              </div>
+            ) : null}
+
+          </div>
 
         </div>
+      )
+    } else if (ver == 2) {
+      if (top) {
+        top = parseInt(top);
+      }
+      return (
+        <div className="ModalFull">
+          <div className="Modal ver2">
 
-      </div>
-    )
+          </div>
+        </div>
+      )
+    } else {
+      return (
+        <div className="ModalFull">
+          <div className="ModalWrap">
+
+            <div className="ModalBig" style={size ? { "maxWidth": size + "px" } : {}}>
+
+
+              <ModalClose click={() => { close ? close() : console.log("No close function") }} />
+              <div className="inner">
+                {message ? (<div className="ModalMessage">{message}</div>) : null}
+                {children}
+
+              </div>
+            </div>
+            {small ? (
+              <div className="ModalSmall">
+                <div className="inner">
+                  <div className="ModalCol"></div>
+                </div>
+              </div>
+            ) : null}
+
+          </div>
+
+        </div>
+      )
+    }
+
+
   }
 }
 
