@@ -53,12 +53,55 @@ describe('direct', () => {
 
     assert.equal(message.text, text);
   });
-  describe('direct chat', () => {
+  describe.only('direct chat', () => {
     before(async function () {
       this.tmpUser = await User.create({
         email: 'tmpDirectUser',
       });
+      this.tmpUser2 = await User.create({
+        email: 'tmpDirectUser2',
+      });
+      this.directChat = await Group.create({
+        code: [this.user._id.toString(), this.tmpUser2._id.toString()].sort().join('|'),
+        name: 'test',
+      });
+      await UserGroup.insertMany([{
+        userId: this.user._id,
+        groupId: this.directChat._id,
+      }, {
+        userId: this.tmpUser2._id,
+        groupId: this.directChat._id,
+      }]);
+      this.directCode = [this.user._id.toString(), this.tmpUser._id.toString()].sort().join('|');
     });
+    after(async function () {
+      await User.deleteMany({
+        _id: {
+          $in: [
+            this.tmpUser._id,
+            this.tmpUser2._id,
+          ],
+        },
+      });
+      await UserGroup.deleteMany({
+        userId: {
+          $in: [
+            this.user._id,
+            this.tmpUser._id,
+            this.tmpUser2._id,
+          ],
+        },
+      });
+      await Group.deleteOne({
+        code: {
+          $in: [
+            this.directCode,
+            this.directChat.code,
+          ],
+        },
+      });
+    });
+
     it('create direct', async function () {
       const { data, errors } = await this.request({
         query: `mutation {
@@ -70,22 +113,9 @@ describe('direct', () => {
       });
 
       assert.isUndefined(errors);
-
-      const ids = [this.user._id.toString(), this.tmpUser._id.toString()].sort().join('|');
       const directData = await Group.findById(data.directMessage.id);
 
-      assert.equal(ids, directData.code);
-    });
-    after(async function () {
-      await User.deleteOne({ _id: this.tmpUser._id });
-      await UserGroup.deleteMany({
-        userId: {
-          $in: [
-            this.user._id.toString(),
-            this.tmpUser._id.toString(),
-          ],
-        },
-      });
+      assert.equal(this.directCode, directData.code);
     });
   });
 });
