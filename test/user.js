@@ -34,8 +34,8 @@ describe('user', () => {
   it('try to get info with wrong token', async function () {
     const { data, errors } = await this.request({ query, token: 'fasdf' });
 
-    assert.isUndefined(data);
+    assert.isNotOk(data.user);
     assert.isArray(errors);
-    assert.include(errors[0].message, ERROR_CODES.INVALID_TOKEN);
+    assert.include(errors[0].message, ERROR_CODES.NOT_AUTHENTICATED);
   });
 });

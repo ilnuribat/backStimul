@@ -1,7 +1,10 @@
 const { assert } = require('chai');
+const { Types: { ObjectId } } = require('mongoose');
 const {
   Group, UserGroup, Message, User,
 } = require('../server/src/models');
+const { ERROR_CODES } = require('../server/src/services/constants');
+const { generateToken } = require('../server/src/services/user');
 
 describe('direct', () => {
   before(async function () {
@@ -53,7 +56,7 @@ describe('direct', () => {
 
     assert.equal(message.text, text);
   });
-  describe.only('direct chat', () => {
+  describe('direct chat', () => {
     before(async function () {
       this.tmpUser = await User.create({
         email: 'tmpDirectUser',
@@ -100,6 +103,13 @@ describe('direct', () => {
           ],
         },
       });
+      await Message.deleteMany({
+        groupId: {
+          $in: [
+            this.directChat._id,
+          ],
+        },
+      });
     });
 
     it('create direct for first time, must be created new group', async function () {
@@ -131,26 +141,102 @@ describe('direct', () => {
       assert.isUndefined(errors);
       assert.equal(data.directMessage.id, this.directChat._id.toString());
     });
-  });
-  it('create message in existing direct chat', async function () {
-    const { errors } = await this.request({
-      query: `
-        mutation {
-          message {
-            create
+    it('create message in existing direct chat', async function () {
+      const messageText = 'test message';
+      const { data, errors } = await this.request({
+        query: `
+          mutation {
+            message {
+              create(message: { groupId: "${this.directChat._id.toString()}", text: "${messageText}" }) {
+                id
+              }
+            }
           }
-        }
-      `,
-    });
+        `,
+      });
 
-    assert.isUndefined(errors);
+      assert.isUndefined(errors);
+      const message = await Message.findById(data.message.create.id);
+
+      assert.equal(message.text, messageText);
+    });
+    describe('errors', () => {
+      it('try to send message without authorization', async function () {
+        const { errors } = await this.request({
+          query: `
+            mutation {
+              message {
+                create(message: {groupId: "asdf", text: "asdf" }) {
+                  id
+                }
+              }
+            }
+          `,
+          token: 'asdf',
+        });
+
+        assert.isArray(errors);
+        assert.isObject(errors[0]);
+        assert.equal(errors[0].message, ERROR_CODES.NOT_AUTHENTICATED);
+      });
+      it('try to send message to private chat of another two users', async function () {
+        const token = generateToken(this.tmpUser);
+        const { errors } = await this.request({
+          query: `
+            mutation {
+              message {
+                create(message: { groupId: "${this.directChat._id.toString()}", text: "not permitted"}) {
+                  id
+                }
+              }
+            }
+          `,
+          token,
+        });
+
+        assert.isArray(errors);
+        assert.isNotEmpty(errors);
+        assert.equal(errors[0].message, ERROR_CODES.FORBIDDEN);
+      });
+      it('deprecated graphql method to create message, no authentication', async function () {
+        const { errors } = await this.request({
+          query: `
+            mutation {
+              createMessage(message: { groupId: "asdf", text: "asdf" }) {
+                id
+              }
+            }
+          `,
+          token: 'asdf',
+        });
+
+        assert.isNotEmpty(errors);
+        assert.equal(errors[0].message, ERROR_CODES.NOT_AUTHENTICATED);
+      });
+      it('send message to non-existing group', async function () {
+        const { errors } = await this.request({
+          query: `
+            mutation {
+              message {
+                create(message: { groupId: "${ObjectId.createFromTime(Date.now())}", text: "no group found" }) {
+                  id
+                }
+              }
+            }
+          `,
+        });
+
+        assert.isNotEmpty(errors);
+        assert.equal(errors[0].message, ERROR_CODES.NOT_FOUND);
+      });
+    });
   });
 });
 // создать юзеров, создать приватный чат
 // убедиться что чат создан
 // что повтороное создание вернет тот же идентификатор
-
 // сообщение создается
+
 // сообщение видно другому юзеру
 // lastMessage подгружается
 
