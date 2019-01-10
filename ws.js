@@ -112,7 +112,7 @@ async function subscribeMessageAdded(ws) {
   });
 }
 
-async function test() {
+async function wsTest() {
   try {
     const ws = await openConnect();
 
@@ -123,4 +123,4 @@ async function test() {
   }
 }
 
-test();
+wsTest();

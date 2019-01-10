@@ -1,5 +1,7 @@
 const { assert } = require('chai');
-const { Group, UserGroup, Message, User } = require('../server/src/models');
+const {
+  Group, UserGroup, Message, User,
+} = require('../server/src/models');
 
 describe('direct', () => {
   before(async function () {
@@ -52,12 +54,55 @@ describe('direct', () => {
     assert.equal(message.text, text);
   });
   describe.only('direct chat', () => {
-   before(async function () {
+    before(async function () {
       this.tmpUser = await User.create({
-        email: 'tmpDirectUser'
+        email: 'tmpDirectUser',
+      });
+      this.tmpUser2 = await User.create({
+        email: 'tmpDirectUser2',
+      });
+      this.directChat = await Group.create({
+        code: [this.user._id.toString(), this.tmpUser2._id.toString()].sort().join('|'),
+        name: 'test',
+      });
+      await UserGroup.insertMany([{
+        userId: this.user._id,
+        groupId: this.directChat._id,
+      }, {
+        userId: this.tmpUser2._id,
+        groupId: this.directChat._id,
+      }]);
+      this.directCode = [this.user._id.toString(), this.tmpUser._id.toString()].sort().join('|');
+    });
+    after(async function () {
+      await User.deleteMany({
+        _id: {
+          $in: [
+            this.tmpUser._id,
+            this.tmpUser2._id,
+          ],
+        },
+      });
+      await UserGroup.deleteMany({
+        userId: {
+          $in: [
+            this.user._id,
+            this.tmpUser._id,
+            this.tmpUser2._id,
+          ],
+        },
+      });
+      await Group.deleteOne({
+        code: {
+          $in: [
+            this.directCode,
+            this.directChat.code,
+          ],
+        },
       });
     });
-    it('create direct', async function () {
+
+    it('create direct for first time, must be created new group', async function () {
       const { data, errors } = await this.request({
         query: `mutation {
           directMessage(id: "${this.tmpUser._id.toString()}") {
@@ -66,29 +111,46 @@ describe('direct', () => {
           }
         }`,
       });
-      
-      console.log(data, errors);
-      const ids = [this..user._id.toString(), this.tmpUser._id.toString()].sort();
 
-      console.log(ids);
+      assert.isUndefined(errors);
+      const directData = await Group.findById(data.directMessage.id);
+
+      assert.equal(this.directCode, directData.code);
     });
-    after(async function () {
-      await User.deleteOne({ _id: this.tmpUser._id });
-      await UserGroup.deleteMany({
-        userId: {
-          $in: [
-            this.user._id.toString(),
-            this.tmpUser._id.toString(),
-          ],
-        },
+    it('direct chat is already exists, try to create one more time - should return same id', async function () {
+      const { data, errors } = await this.request({
+        query: `
+          mutation {
+            directMessage(id: "${this.tmpUser2._id.toString()}") {
+              id
+            }
+          }
+        `,
       });
+
+      assert.isUndefined(errors);
+      assert.equal(data.directMessage.id, this.directChat._id.toString());
     });
   });
+  it('create message in existing direct chat', async function () {
+    const { errors } = await this.request({
+      query: `
+        mutation {
+          message {
+            create
+          }
+        }
+      `,
+    });
+
+    assert.isUndefined(errors);
+  });
 });
-    // создать юзеров, создать приватный чат
-    // убедиться что чат создан
-    // что повтороное создание вернет тот же идентификатор
-    // сообщение создается
-    // сообщение видно другому юзеру
-    // lastMessage подгружается
- 
+// создать юзеров, создать приватный чат
+// убедиться что чат создан
+// что повтороное создание вернет тот же идентификатор
+
+// сообщение создается
+// сообщение видно другому юзеру
+// lastMessage подгружается
+
