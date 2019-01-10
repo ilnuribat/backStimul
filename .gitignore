@@ -1,4 +1,5 @@
 node_modules
+client/ReactTests
 i
 *.reuse
 .DS_Store
