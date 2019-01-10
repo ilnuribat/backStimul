@@ -4,6 +4,9 @@ module.exports = {
     es6: true,
     mocha: true
   },
+  plugins: [
+    'mocha'
+  ],
   rules: {
     'padding-line-between-statements': [
       'error',
@@ -19,6 +22,7 @@ module.exports = {
     'func-names': ['off'],
     'class-methods-use-this': ['off'],
     'no-underscore-dangle': ['error', {'allow': ['_id', '__typename']}],
-    'no-multiple-empty-lines': ['error', { maxEOF: 1, max: 2 }]
+    'no-multiple-empty-lines': ['error', { maxEOF: 1, max: 2 }],
+    'mocha/no-global-tests': ['error']
   }
 };
