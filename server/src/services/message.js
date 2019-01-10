@@ -14,19 +14,19 @@ async function createMessage(parent, { message }, { user }) {
     throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
   }
 
+  const group = await Group.findById(message.groupId);
+
+  if (!group) {
+    throw new Error(ERROR_CODES.NOT_FOUND);
+  }
+
   const userGroup = await UserGroup.findOne({
     userId: user._id,
     groupId: message.groupId,
   });
 
   if (!userGroup) {
-    throw new Error('forbidden');
-  }
-
-  const group = await Group.findById(message.groupId);
-
-  if (!group) {
-    throw new Error('no such group');
+    throw new Error(ERROR_CODES.FORBIDDEN);
   }
 
   const isDirect = !!group.code;
