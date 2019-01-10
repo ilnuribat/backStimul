@@ -78,11 +78,11 @@ export default {
     //   return {lastMessage, lastMessageId, lastMessageGroupId, __typename: 'lastMessageCache' };
     // },
 
-    meSet: (_, { meid, mename, memail },  { cache }) => {
-      cache.writeData({ data: { meid: meid, mename: mename, memail: memail } });
+    // meSet: (_, { meid, mename, memail },  { cache }) => {
+    //   cache.writeData({ data: { meid: meid, mename: mename, memail: memail } });
 
-      return {meid, mename, memail, __typename: 'me' };
-    },
+    //   return {meid, mename, memail, __typename: 'me' };
+    // },
 
     setTemp: (_, { tempObj },  { cache }) => {
       cache.writeData({ data: { tempObj: tempObj } });

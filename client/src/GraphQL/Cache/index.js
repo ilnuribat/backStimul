@@ -1,13 +1,13 @@
 import gql from 'graphql-tag';
 
 
-export const meGet = gql `
-  query meGet{
-      meid @client
-      mename @client
-      memail @client
-    }
-`;
+// export const meGet = gql `
+//   query meGet{
+//       meid @client
+//       mename @client
+//       memail @client
+//     }
+// `;
 
 export const getObjectId = gql `
   query getObjectId{

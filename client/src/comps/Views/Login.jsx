@@ -4,7 +4,7 @@ import { graphql, compose, Query  } from "react-apollo";
 
 import { quf, AUTH_TOKEN } from '../../constants';
 import { LoginQuery, USER_QUERY } from '../../GraphQL/Qur/Query';
-import { meGet, meSet } from '../../GraphQL/Cache';
+// import { meGet, meSet } from '../../GraphQL/Cache';
 import '../../css/lays/login.css'
 import Content from '../Lays/Content/index';
 import logoImg from '../Img/Logo';
@@ -64,12 +64,12 @@ class Login extends Component {
         this._saveUserData(jwt, username, id);
         // let { meSet } = this.props;
 
-        this.props.meSet({variables:{
-          meid: id,
-          mename: username,
-          memail: username,
-        }
-        });
+        // this.props.meSet({variables:{
+        //   meid: id,
+        //   mename: username,
+        //   memail: username,
+        // }
+        // });
         this.setState({
           meid: id,
           mename: username,
@@ -130,13 +130,13 @@ class Login extends Component {
                     }
                     if (error) {
                       console.warn('Error TOP', error.message);
-                      this.props.meSet({
-                        variables: {
-                          meid: "",
-                          mename: "",
-                          memail: "",
-                        }
-                      });
+                      // this.props.meSet({
+                      //   variables: {
+                      //     meid: "",
+                      //     mename: "",
+                      //     memail: "",
+                      //   }
+                      // });
 
                       localStorage.removeItem(AUTH_TOKEN)
                       localStorage.removeItem('username')
@@ -213,13 +213,13 @@ class Login extends Component {
                                 className="button"
                                 role="presentation"
                                 onClick={() => {
-                                  this.props.meSet({
-                                    variables: {
-                                      meid: "",
-                                      mename: "",
-                                      memail: "",
-                                    }
-                                  });
+                                  // this.props.meSet({
+                                  //   variables: {
+                                  //     meid: "",
+                                  //     mename: "",
+                                  //     memail: "",
+                                  //   }
+                                  // });
 
                                   localStorage.removeItem(AUTH_TOKEN)
                                   localStorage.removeItem('username')
@@ -244,9 +244,4 @@ class Login extends Component {
   }
 }
 
-
-
-export default compose(
-  graphql(meSet, { name: 'meSet' }),
-  graphql(meGet, { name: 'meGet' }),
-)(Login);
+export default Login

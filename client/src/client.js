@@ -9,7 +9,7 @@ import { createUploadLink } from 'apollo-upload-client';
 import { _url, protocol, wsProtocol } from './constants';
 import resolvers from './GraphQL/Res';
 
-console.warn({ _url, protocol, wsProtocol });
+// console.warn({ _url, protocol, wsProtocol });
 
 const httpLink = createUploadLink({
   uri: `${protocol}${_url}/`,
@@ -48,10 +48,6 @@ const stateLink = withClientState({
     name: "",
     unr: 0,
     priv: 0,
-    // meid: "",
-    // mename: "",
-    // memail: "",
-    // tempObj:"",
     __info:[],
     ref: false,
     ActUrl: "",
