@@ -37,9 +37,7 @@ const apolloServer = new ApolloServer({
     try {
       jwtBody = jwt.verify(token, JWT_SECRET);
     } catch (err) {
-      logger.debug('invalid jwt');
-
-      throw new Error(ERROR_CODES.INVALID_TOKEN);
+      return {};
     }
 
     const { id } = jwtBody;
