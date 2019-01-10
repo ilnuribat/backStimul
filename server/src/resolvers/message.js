@@ -1,6 +1,5 @@
 const { withFilter } = require('apollo-server');
 const moment = require('moment');
-const { Types: { ObjectId } } = require('mongoose');
 const {
   Message, User, Group, UserGroup,
 } = require('../models');
@@ -8,6 +7,7 @@ const {
   MESSAGE_READ, pubsub, MESSAGE_ADDED, ERROR_CODES,
 } = require('../services/constants');
 const { getUserInfoFromAD } = require('../services/ad');
+const messageService = require('../services/message');
 
 
 module.exports = {
@@ -49,6 +49,10 @@ module.exports = {
       return unReadMessages.length === 0;
     },
   },
+  MessageMutation: {
+    create: messageService.createMessage,
+    read: messageService.messageRead,
+  },
   Query: {
     messages: (parent, { groupId }) => Message.find({ groupId }),
     message: (parent, { id }, { user }) => {
@@ -60,118 +64,14 @@ module.exports = {
     },
   },
   Mutation: {
-    async createMessage(parent, { message }, { user }) {
-      if (!user) {
-        throw new Error(401);
-      }
-
-      const userGroup = await UserGroup.findOne({
-        userId: user._id,
-        groupId: message.groupId,
-      });
-
-      if (!userGroup) {
-        throw new Error('forbidden');
-      }
-
-      const group = await Group.findById(message.groupId);
-
-      if (!group) {
-        throw new Error('no such group');
-      }
-
-      const isDirect = !!group.code;
-      const objectId = isDirect ? null : group.objectId;
-
-      const createdMessage = await Message.create({
-        userId: user.id,
-        isDirect,
-        objectId,
-        ...message,
-      });
-
-      await UserGroup.updateOne({
-        userId: user._id,
-        groupId: message.groupId,
-      }, {
-        $set: {
-          lastReadCursor: createdMessage._id,
-        },
-      });
-
-      await Group.updateOne({
-        _id: message.groupId,
-      }, {
-        $set: {
-          lastMessageAt: moment(),
-        },
-      });
-
-      pubsub.publish(MESSAGE_ADDED, { messageAdded: createdMessage });
-
-      return createdMessage;
-    },
-    async messageRead(parent, { id }, { user }) {
+    createMessage: messageService.createMessage,
+    messageRead: messageService.messageRead,
+    message(parent, { id }, { user }) {
       if (!user) {
         throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
-      const message = await Message.findById(id);
 
-      if (!message) {
-        throw new Error('no message found');
-      }
-
-      // Вытащить последний чужой курсор.
-      const lastAnotherReadCursor = await UserGroup.findOne({
-        groupId: ObjectId(message.groupId),
-        userId: {
-          $ne: ObjectId(user.id),
-        },
-      }).sort({ _id: 1 });
-      // вытащить свой курсор
-      const myOldCursor = await UserGroup.findOne({
-        groupId: ObjectId(message.groupId),
-        userId: ObjectId(user.id),
-      });
-
-      const userGroup = await UserGroup.updateOne({
-        userId: ObjectId(user.id),
-        groupId: ObjectId(message.groupId),
-      }, {
-        $set: {
-          lastReadCursor: ObjectId(message.id),
-        },
-      });
-
-      // диалог с самим собой, просто выходим
-      if (!lastAnotherReadCursor) {
-        return true;
-      }
-
-      // Если мой курсор был старее всех остальных
-      // значит все сообщения в этом отрезке должны быть прочитаны.
-      if (myOldCursor.lastReadCursor < lastAnotherReadCursor.lastReadCursor) {
-        // важно понимать, что endCursor может быть и меньше чем lastAnotherCursor
-        // например, зашли в чат и увидели только начало непрочитанных сообщений.
-        // тогда отрезок прочитанных сообщений будет от myOldCursor до message._id
-        const endCursor = lastAnotherReadCursor.lastReadCursor < message._id
-          ? lastAnotherReadCursor.lastReadCursor
-          : message._id;
-        const messages = await Message.find({
-          _id: {
-            $gt: ObjectId(myOldCursor.lastReadCursor),
-            $lte: ObjectId(endCursor),
-          },
-          groupId: ObjectId(message.groupId),
-          userId: { $ne: ObjectId(user.id) },
-        }).lean();
-
-        messages.forEach((m) => {
-          pubsub.publish(MESSAGE_READ, { messageRead: { isRead: true, ...m } });
-        });
-      }
-
-      return userGroup.nModified;
+      return { id };
     },
   },
   Subscription: {

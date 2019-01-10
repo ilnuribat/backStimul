@@ -36,6 +36,11 @@ type MessageReadEvent {
   isRead: Boolean
 }
 
+type MessageMutation {
+  create(message: MessageInput): Message
+  read(id: ID!): Boolean
+}
+
 type Query {
   messages(groupId: String!): [Message]
   message(id: ID!): Message
@@ -44,6 +49,7 @@ type Query {
 type Mutation {
   createMessage(message: MessageInput): Message
   messageRead(id: ID!): Boolean
+  message(id: ID): MessageMutation
 }
 
 type Subscription {
