@@ -102,7 +102,7 @@ describe('direct', () => {
       });
     });
 
-    it('create direct', async function () {
+    it('create direct for first time, must be created new group', async function () {
       const { data, errors } = await this.request({
         query: `mutation {
           directMessage(id: "${this.tmpUser._id.toString()}") {
@@ -117,12 +117,39 @@ describe('direct', () => {
 
       assert.equal(this.directCode, directData.code);
     });
+    it('direct chat is already exists, try to create one more time - should return same id', async function () {
+      const { data, errors } = await this.request({
+        query: `
+          mutation {
+            directMessage(id: "${this.tmpUser2._id.toString()}") {
+              id
+            }
+          }
+        `,
+      });
+
+      assert.isUndefined(errors);
+      assert.equal(data.directMessage.id, this.directChat._id.toString());
+    });
+  });
+  it('create message in existing direct chat', async function () {
+    const { errors } = await this.request({
+      query: `
+        mutation {
+          message {
+            create
+          }
+        }
+      `,
+    });
+
+    assert.isUndefined(errors);
   });
 });
 // создать юзеров, создать приватный чат
 // убедиться что чат создан
-
 // что повтороное создание вернет тот же идентификатор
+
 // сообщение создается
 // сообщение видно другому юзеру
 // lastMessage подгружается
