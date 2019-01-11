@@ -14,6 +14,7 @@ const config = {
   password: ACTIVE_DIRECTORY_PASSWORD,
   attributes: {
     user: [
+      'employeeNumber',
       'dn',
       'cn',
       'mail',
@@ -76,7 +77,15 @@ async function getUserInfoFromAD(user) {
   }
 
   return new Promise((resolve, reject) => {
-    ad.findUser({ scope: 'sub' }, user.email, (err, userAd) => {
+    const opts = {};
+    let { email } = user;
+
+    if (user.employeeNumber) {
+      opts.filter = `(employeeNumber=${user.employeeNumber})`;
+      email = null;
+    }
+
+    ad.findUser(opts, email, (err, userAd) => {
       if (err) {
         return reject(err);
       }
@@ -87,17 +96,7 @@ async function getUserInfoFromAD(user) {
         return resolve(user);
       }
 
-      let initials = '';
-
-      if (userAd && userAd.name) {
-        const F = userAd.name.replace(/ +(?= )/g, '').split(' ')[0];
-        const I = userAd.name.replace(/ +(?= )/g, '').split(' ')[1].split('')[0];
-        const O = userAd.name.replace(/ +(?= )/g, '').split(' ')[2].split('')[0];
-
-        initials = `${F} ${I}.${O}.`;
-      }
-
-      const append = Object.assign({}, { initials }, user, userAd);
+      const append = Object.assign({}, { initials: userAd.name }, user, userAd);
 
       return resolve(append);
     });
