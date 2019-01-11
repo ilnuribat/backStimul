@@ -59,6 +59,13 @@ module.exports = {
 
       return Group.findById(id).lean();
     },
+    areas(parent, args, { user }) {
+      if (!user) {
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
+      }
+
+      return Group.find({ type: 'AREA' });
+    },
     rootObject(parent, args, ctx) {
       return objectService.rootObjectQuery(parent, args, ctx);
     },

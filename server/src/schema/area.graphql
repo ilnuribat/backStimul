@@ -45,6 +45,7 @@ type AreaMutation {
 type Query {
   rootObject(id: ID): rootObject
   area(id: ID!): Area
+  areas: [Area]
 }
 
 type Mutation {
