@@ -61,7 +61,7 @@ async function createMessage(parent, { message }, { user }) {
   return createdMessage;
 }
 
-async function messageRead(parent, args, { user }) {
+async function messageRead(parent = {}, args, { user }) {
   const id = parent.id || args.id;
 
   if (!user) {
