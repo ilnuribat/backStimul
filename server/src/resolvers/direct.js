@@ -1,8 +1,13 @@
-const { Group, Message, User } = require('../models');
 const { getDirectChats } = require('../services/chat');
 const groupService = require('../services/group');
 const { directMessage } = require('../services/chat');
 const { ERROR_CODES } = require('../services/constants');
+const {
+  Group,
+  Message,
+  User,
+  UserGroup,
+} = require('../models');
 
 
 module.exports = {
@@ -35,6 +40,15 @@ module.exports = {
     direct: async (parent, { id }, { user }) => {
       if (!user) {
         throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
+      }
+
+      const userGroup = await UserGroup.findOne({
+        groupId: id,
+        userId: user._id,
+      });
+
+      if (!userGroup) {
+        throw new Error(ERROR_CODES.FORBIDDEN);
       }
 
       return Group.findOne({
