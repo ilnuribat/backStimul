@@ -2,6 +2,7 @@ const { Types: { ObjectId } } = require('mongoose');
 const {
   Message, Group, UserGroup, User,
 } = require('../models');
+const { ERROR_CODES } = require('./constants');
 
 function formWhere({ id, before, after }) {
   let idCond;
@@ -133,8 +134,9 @@ async function directMessage(parent, { id }, { user }) {
   const dUser = await User.findById(id);
 
   if (!dUser) {
-    throw new Error('no user found with such id');
+    throw new Error(ERROR_CODES.NO_USER_FOUND);
   }
+
   const ids = [user.id, dUser.id].sort();
 
   // try to create such group
@@ -146,28 +148,24 @@ async function directMessage(parent, { id }, { user }) {
       code: ids.join('|'),
     });
   } catch (err) {
+    /* istanbul ignore else */
     if (err.errmsg && err.errmsg.indexOf('duplicate key error') > -1) {
-      group = await Group.findOne({ code: ids.join('|') });
-    }
-  }
-
-  try {
-    await UserGroup.insertMany([{
-      userId: user.id,
-      groupId: group.id,
-      lastReadCursor: ObjectId.createFromTime(0),
-    }, {
-      userId: dUser.id,
-      groupId: group.id,
-      lastReadCursor: ObjectId.createFromTime(0),
-    }]);
-  } catch (err) {
-    if (err.errmsg && err.errmsg.indexOf('duplicate key error')) {
-      return group;
+      return Group.findOne({ code: ids.join('|') });
     }
 
+    /* istanbul ignore next */
     throw err;
   }
+
+  await UserGroup.insertMany([{
+    userId: user.id,
+    groupId: group.id,
+    lastReadCursor: ObjectId.createFromTime(0),
+  }, {
+    userId: dUser.id,
+    groupId: group.id,
+    lastReadCursor: ObjectId.createFromTime(0),
+  }]);
 
   return group;
 }
