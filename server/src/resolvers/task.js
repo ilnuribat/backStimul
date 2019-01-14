@@ -31,7 +31,7 @@ module.exports = {
         throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
 
-      return Group.findOne({ code: null, _id: id });
+      return Group.findOne({ type: 'TASK', _id: id });
     },
   },
   Mutation: {
