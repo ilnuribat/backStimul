@@ -1,11 +1,12 @@
-type TaskStatus {
+type IDName {
   id: ID
   name: String
 }
 
 type Glossary {
-  taskStatuses: [TaskStatus]
+  taskStatuses: [IDName]
   abstractResource(id: ID!): String
+  SU: [IDName]
 }
 
 type Query {

@@ -13,6 +13,16 @@ const INVITED = 'INVITED';
 const GROUP_TYPES = ['DIRECT', 'TASK', 'OBJECT', 'AREA'];
 const ADDRESS_LEVELS = ['region', 'area', 'city', 'settlement', 'street', 'house'];
 
+const SU = [...Array(11).keys()]
+  .map(i => i + 1)
+  .map(n => ({
+    id: `Строительное управление № ${n}`,
+  }))
+  .map(n => ({
+    id: n.id,
+    name: n.id,
+  }));
+
 const TASK_STATUSES = [{
   id: 1,
   name: 'Новое',
@@ -53,4 +63,5 @@ module.exports = {
   ERROR_CODES,
   SECTIONS,
   KEYWORDS,
+  SU,
 };

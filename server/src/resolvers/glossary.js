@@ -1,6 +1,5 @@
-const { TASK_STATUSES } = require('../services/constants');
+const { TASK_STATUSES, ERROR_CODES, SU } = require('../services/constants');
 const { Group } = require('../models');
-const { ERROR_CODES } = require('../services/constants');
 
 module.exports = {
   Glossary: {
@@ -25,6 +24,7 @@ module.exports = {
 
       throw new Error(foundGroup.toString());
     },
+    SU: () => SU,
   },
   Query: {
     glossary: () => ({}),
