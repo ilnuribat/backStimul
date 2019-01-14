@@ -53,9 +53,7 @@ module.exports = {
 
       return Group.findOne({
         _id: id,
-        code: {
-          $exists: true,
-        },
+        type: 'DIRECT',
       });
     },
   },

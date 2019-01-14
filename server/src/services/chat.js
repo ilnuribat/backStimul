@@ -76,14 +76,12 @@ async function getDirectChats(user) {
     _id: {
       $in: usersGroups.map(u => u.groupId),
     },
-    code: {
-      $exists: true,
-    },
+    type: 'DIRECT',
   }).sort({ lastMessageAt: -1 }).lean();
 
   const directs = directsRaw.map(d => ({
     ...d,
-    name: d.code
+    ids: d.code
       .split('|')
       .filter(dId => dId !== user.id)[0] || user.id,
     id: d._id.toString(),
@@ -92,13 +90,13 @@ async function getDirectChats(user) {
 
   const users = await User.find({
     _id: {
-      $in: directs.map(d => d.name),
+      $in: directs.map(d => d.ids),
     },
   });
 
   const res = directs.map(d => ({
     ...d,
-    name: (users.find(u => u.id === d.name) || {}).email,
+    name: (users.find(u => u.id === d.ids) || {}).email,
   }));
 
   return res.filter(r => r.name);
@@ -146,6 +144,7 @@ async function directMessage(parent, { id }, { user }) {
     group = await Group.create({
       name: ids.join(', '),
       code: ids.join('|'),
+      type: 'DIRECT',
     });
   } catch (err) {
     /* istanbul ignore else */
