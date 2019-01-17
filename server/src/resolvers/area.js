@@ -17,17 +17,20 @@ module.exports = {
     async create(parent, args) {
       const { area } = args;
 
-      if (!area.address) {
-        throw new Error('cant create area without address');
-      }
+      console.log(area.address);
 
       // провалидировать адрес, вытащить цепочку родителей
-      const formedAddress = await addressService.formAddress(area.address);
+      const formedAddress = await addressService.formAddress(area.address.value);
 
       return Group.create({
         name: area.name,
         type: 'AREA',
-        address: formedAddress,
+        address: {
+          center: area.address.center,
+          northEast: area.address.northEast,
+          southWest: area.address.southWest,
+          ...formedAddress,
+        },
       });
     },
     async update({ id }, { area }) {

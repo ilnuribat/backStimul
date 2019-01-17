@@ -71,7 +71,6 @@ async function formAddress(rawAddress) {
 
   const result = {
     value: address.result,
-    coordinates: [address.geo_lat, address.geo_lon],
     fiasId: address.fias_id,
     fiasLevel: address.fias_level,
     geoLat: address.geo_lat,

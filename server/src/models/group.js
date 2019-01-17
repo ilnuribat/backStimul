@@ -15,7 +15,9 @@ const addressDefinition = {
   value: String,
   fiasId: String,
   fiasLevel: String,
-  coordinates: [String],
+  center: [String],
+  northEast: [String],
+  southWest: [String],
   parentChain: [parentChainItem],
 };
 

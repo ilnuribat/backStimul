@@ -6,8 +6,19 @@ type Area {
 }
 
 input AreaInput {
-  name: String
-  address: String
+  name: String!
+  address: AreaAddressInput!
+}
+
+input AreaUpdateInput {
+  name: String!
+}
+
+input AreaAddressInput {
+  value: String!
+  center: [String]!
+  northEast: [String]
+  southWest: [String]
 }
 
 type AddressObject {
@@ -30,15 +41,15 @@ type rootObject {
 }
 
 type Address {
-	geoLat: String @deprecated
-	geoLon: String @deprecated
-	value: String
-  coordinates: [String]
+	value: String!
+  center: [String]!
+  northEast: [String]
+  southWest: [String]
 }
 
 type AreaMutation {
   create(area: AreaInput): Area
-  update(area: AreaInput): Boolean
+  update(area: AreaUpdateInput): Boolean
   delete: Boolean
 }
 
