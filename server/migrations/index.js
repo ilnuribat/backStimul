@@ -24,7 +24,6 @@ async function nativeConnect() {
   return new Promise((resolve, reject) => {
     MongoClient.connect(MONGODB_HOST, {
       useNewUrlParser: true,
-      // logger: msg => console.log(msg),
     }, (err, client) => {
       Logger.setLevel('debug');
       Logger.filter('class', ['Db']);
