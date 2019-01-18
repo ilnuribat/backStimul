@@ -18,6 +18,7 @@ const addressDefinition = {
   center: [String],
   northEast: [String],
   southWest: [String],
+  coordinates: [String],
   parentChain: [parentChainItem],
 };
 

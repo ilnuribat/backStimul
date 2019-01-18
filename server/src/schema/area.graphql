@@ -47,6 +47,7 @@ type Address {
 	value: String!
   center: [String]!
   northEast: [String]
+  coordinates: [String] @deprecated
   southWest: [String]
 }
 
