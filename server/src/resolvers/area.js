@@ -17,8 +17,6 @@ module.exports = {
     async create(parent, args) {
       const { area } = args;
 
-      console.log(area.address);
-
       // провалидировать адрес, вытащить цепочку родителей
       const formedAddress = await addressService.formAddress(area.address.value);
 
