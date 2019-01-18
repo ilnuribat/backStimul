@@ -1,6 +1,7 @@
 require('dotenv').config();
 const WebSocket = require('ws');
 const { EventEmitter } = require('events');
+const { logger } = require('./server/logger.js');
 
 const { token } = process.env;
 
@@ -15,11 +16,11 @@ class Subscriber extends EventEmitter {
         },
       );
       const connectionErrorHandler = (code) => {
-        console.log('connectionErrorHandler', { code });
+        logger.debug('connectionErrorHandler', { code });
         reject(code);
       };
       const connectionOpennedHandler = () => {
-        console.log('connected');
+        logger.debug('connected');
         resolve(this.ws);
       };
 
@@ -68,10 +69,10 @@ async function authorize(ws) {
 
   return auth
     .then(() => {
-      console.log('authorized');
+      logger.debug('authorized');
     })
     .catch((err) => {
-      console.error(err);
+      logger.error('error: ', err);
     });
 }
 
@@ -102,7 +103,6 @@ async function subscribeMessageAdded(ws) {
     ws.once('message', (data) => {
       const body = JSON.parse(data);
 
-      console.log({ body });
       if (Array.isArray(body.payload.errors)) {
         reject(body.payload.errors);
       } else {
@@ -119,7 +119,7 @@ async function wsTest() {
     await authorize(ws);
     await subscribeMessageAdded(ws);
   } catch (err) {
-    console.error(err);
+    logger.error(err);
   }
 }
 
