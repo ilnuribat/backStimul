@@ -1,41 +1,5 @@
 const { Group } = require('../models');
 
-const uuidRegEx = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
-
-async function rootObjectQuery(parent, { id: addressId }) {
-  if (!addressId || !uuidRegEx.test(addressId)) {
-    // вывести корень. потом рассчитаем кратчайший путь
-    const addresses = await Group.getGroupedLevel();
-
-    return { addresses };
-  }
-  const rootObject = await Group.getFiasIdLevel(addressId);
-
-  if (!rootObject) {
-    throw new Error('no such address');
-  }
-
-  const addresses = await Group.getGroupedLevel(rootObject.level + 1, rootObject.id);
-
-  let areas;
-
-  if (addressId) {
-    areas = await Group.find({
-      type: 'AREA',
-      'address.fiasId': addressId,
-    });
-  }
-
-  const crumbs = await Group.getParentChain(addressId, rootObject.level);
-
-  return {
-    ...rootObject,
-    addresses,
-    areas,
-    crumbs,
-  };
-}
-
 async function searchObjects(user, regExp, limit) {
   const res = await Group.find({
     type: 'OBJECT',
@@ -89,7 +53,6 @@ async function updateObject({ id }, { object }) {
 
 
 module.exports = {
-  rootObjectQuery,
   searchObjects,
   deleteObject,
   createObject,
