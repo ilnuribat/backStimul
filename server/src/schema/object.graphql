@@ -3,11 +3,21 @@ type Object {
   name: String
   tasks: [Task]
   parentId: String
+  address: ObjectAdress
+}
+
+type ObjectAdress {
+  center: [String]
+}
+
+input ObjectAddressInput {
+  center: [String]
 }
 
 input ObjectInput {
   name: String
   areaId: ID
+  address: ObjectAddressInput
 }
 
 type ObjectMutations {
@@ -28,3 +38,4 @@ type Mutation {
 
   object(id: ID): ObjectMutations
 }
+

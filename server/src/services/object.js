@@ -70,8 +70,7 @@ async function createObject(parent, { object }) {
     throw new Error('no name');
   }
   const res = await Group.create({
-    name: object.name,
-    areaId: object.areaId,
+    ...object,
     type: 'OBJECT',
   });
 
