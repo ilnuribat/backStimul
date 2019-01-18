@@ -38,6 +38,7 @@ const schema = new Schema({
     enum: GROUP_TYPES,
   },
   parentId: ObjectId,
+  SU: String,
 });
 
 

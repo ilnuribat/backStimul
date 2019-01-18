@@ -24,6 +24,7 @@ module.exports = {
 
       return Group.create({
         name: area.name,
+        SU: area.SU,
         type: 'AREA',
         address: {
           center: area.address.center,

@@ -3,15 +3,18 @@ type Area {
   name: String
   address: Address
   objects: [Object]
+  SU: String
 }
 
 input AreaInput {
   name: String!
   address: AreaAddressInput!
+  SU: String!
 }
 
 input AreaUpdateInput {
   name: String!
+  SU: String
 }
 
 input AreaAddressInput {
