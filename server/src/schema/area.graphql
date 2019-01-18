@@ -4,6 +4,7 @@ type Area {
   address: Address
   objects: [Object]
   SU: String
+  crumbs: [Crumbs]
 }
 
 input AreaInput {

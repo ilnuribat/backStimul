@@ -1,6 +1,6 @@
 const { ERROR_CODES } = require('../services/constants');
 const { Group } = require('../models');
-const objectService = require('../services/object');
+const areaService = require('../services/area');
 const addressService = require('../services/address');
 
 module.exports = {
@@ -12,6 +12,10 @@ module.exports = {
         areaId: parent._id,
       });
     },
+    crumbs: parent => (parent.address.parentChain || []).map(c => ({
+      id: c.fiasId,
+      name: c.name,
+    })),
   },
   AreaMutation: {
     async create(parent, args) {
@@ -69,7 +73,7 @@ module.exports = {
       return Group.find({ type: 'AREA' });
     },
     rootObject(parent, args, ctx) {
-      return objectService.rootObjectQuery(parent, args, ctx);
+      return areaService.rootObjectQuery(parent, args, ctx);
     },
   },
   Mutation: {
