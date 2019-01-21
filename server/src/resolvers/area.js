@@ -21,6 +21,18 @@ module.exports = {
       type: 'ADDRESS',
     }),
   },
+  RootObject: {
+    parent: (parent) => {
+      if (!parent.parentId) {
+        return null;
+      }
+
+      return {
+        id: parent.parentId,
+        type: 'ADDRESS',
+      };
+    },
+  },
   AreaMutation: {
     async create(parent, args) {
       const { area } = args;

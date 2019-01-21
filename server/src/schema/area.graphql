@@ -36,13 +36,14 @@ type Crumbs {
   name: String
 }
 
-type rootObject {
+type RootObject {
   id: ID
   name: String
   parentId: ID
   addresses: [AddressObject]
   areas: [Area]
   crumbs: [Crumbs]
+  parent: ParentNode
 }
 
 type Address {
@@ -60,7 +61,7 @@ type AreaMutation {
 }
 
 type Query {
-  rootObject(id: ID): rootObject
+  rootObject(id: ID): RootObject
   area(id: ID!): Area
   areas: [Area]
 }
