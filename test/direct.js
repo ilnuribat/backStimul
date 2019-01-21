@@ -18,6 +18,7 @@ describe('direct chat', () => {
     this.directChat = await Group.create({
       code: [this.user._id.toString(), this.tmpUser2._id.toString()].sort().join('|'),
       name: 'test',
+      type: 'DIRECT',
     });
     await UserGroup.insertMany([{
       userId: this.user._id,

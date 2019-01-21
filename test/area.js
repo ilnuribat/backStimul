@@ -36,7 +36,14 @@ describe('area', () => {
       query: `
         mutation {
           area {
-            create(area: { name: "test", address: "${addresses[0].raw}"}) {
+            create(area: {
+              name: "test",
+                address: {
+                  value: "${addresses[0].raw}",
+                  center: ["lat", "lon"]
+                },
+                SU: "test SU"
+            }) {
               id
               name
               address {
@@ -48,6 +55,7 @@ describe('area', () => {
         }
       `,
     });
+
     const { errors, data } = this.tmpArea;
     const area = await Group.findById(data.area.create.id);
 
