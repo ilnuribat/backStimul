@@ -6,6 +6,7 @@ type Area {
   SU: String
   crumbs: [Crumbs]
   parent: ParentNode
+  object(id: ID!): Object
 }
 
 input AreaInput {

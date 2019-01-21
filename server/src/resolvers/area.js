@@ -20,6 +20,13 @@ module.exports = {
       id: parent.address.parentChain.slice(-1)[0].fiasId,
       type: 'ADDRESS',
     }),
+    object(parent, args) {
+      return Group.findOne({
+        _id: args.id,
+        type: 'OBJECT',
+        areaId: parent._id,
+      });
+    },
   },
   RootObject: {
     parent: (parent) => {
