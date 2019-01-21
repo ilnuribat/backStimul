@@ -19,15 +19,13 @@ module.exports = {
       });
     },
     parentId(parent) {
-      const { address } = parent;
-
-      if (address) {
-        const { length } = address.parentChain;
-
-        return address.parentChain[length - 1].fiasId;
-      }
-
-      return null;
+      return parent.areaId.toString();
+    },
+    parent(parent) {
+      return {
+        id: parent.areaId.toString(),
+        type: 'AREA',
+      };
     },
   },
   ObjectMutations: {

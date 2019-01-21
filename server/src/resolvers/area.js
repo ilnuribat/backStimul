@@ -12,10 +12,14 @@ module.exports = {
         areaId: parent._id,
       });
     },
-    crumbs: parent => (parent.address.parentChain || []).map(c => ({
+    crumbs: parent => parent.address.parentChain.map(c => ({
       id: c.fiasId,
       name: c.name,
     })),
+    parent: parent => ({
+      id: parent.address.parentChain.slice(-1)[0].fiasId,
+      type: 'ADDRESS',
+    }),
   },
   AreaMutation: {
     async create(parent, args) {

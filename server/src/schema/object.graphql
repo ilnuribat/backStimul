@@ -4,6 +4,7 @@ type Object {
   tasks: [Task]
   parentId: String
   address: ObjectAdress
+  parent: ParentNode
 }
 
 type ObjectAdress {
@@ -24,6 +25,17 @@ type ObjectMutations {
   create(object: ObjectInput): Object
   update(object: ObjectInput): Boolean
   delete: Boolean
+}
+
+enum PARENT_TYPE {
+  ADDRESS
+  AREA
+  OBJECT
+}
+
+type ParentNode {
+  id: ID!
+  type: PARENT_TYPE
 }
 
 type Query {

@@ -24,6 +24,10 @@ module.exports = {
       return null;
     },
     objectId: ({ objectId }) => objectId.toString(),
+    parent: parent => ({
+      id: parent.objectId.toString(),
+      type: 'OBJECT',
+    }),
   },
   Query: {
     task(parent, { id }, { user }) {

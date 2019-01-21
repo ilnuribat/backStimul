@@ -11,6 +11,7 @@ type Task {
   parentId: ID
   objectId: ID
   files: [File]
+  parent: ParentNode
 }
 
 input TaskInput {
