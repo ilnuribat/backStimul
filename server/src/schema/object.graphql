@@ -34,7 +34,7 @@ enum PARENT_TYPE {
 }
 
 type ParentNode {
-  id: ID!
+  id: ID
   type: PARENT_TYPE
 }
 

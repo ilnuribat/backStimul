@@ -31,7 +31,10 @@ module.exports = {
   RootObject: {
     parent: (parent) => {
       if (!parent.parentId) {
-        return null;
+        return {
+          id: null,
+          type: 'ADDRESS',
+        };
       }
 
       return {
