@@ -3,10 +3,16 @@ type IDName {
   name: String
 }
 
+type shortnameDescription {
+  shortName: String
+  description: String
+}
+
 type Glossary {
   taskStatuses: [IDName]
   abstractResource(id: ID!): String
   SU: [IDName]
+  constructionTypes: [shortnameDescription]
 }
 
 type Query {
