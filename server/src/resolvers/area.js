@@ -18,7 +18,7 @@ module.exports = {
     })),
     parent: parent => ({
       id: parent.address.parentChain.slice(-1)[0].fiasId,
-      type: 'ADDRESS',
+      type: 'AddressObject',
     }),
     object(parent, args) {
       return Group.findOne({
@@ -33,13 +33,13 @@ module.exports = {
       if (!parent.parentId) {
         return {
           id: null,
-          type: 'ADDRESS',
+          type: 'AddressObject',
         };
       }
 
       return {
         id: parent.parentId,
-        type: 'ADDRESS',
+        type: 'AddressObject',
       };
     },
   },

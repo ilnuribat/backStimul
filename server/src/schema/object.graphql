@@ -35,9 +35,9 @@ type ObjectMutations {
 }
 
 enum PARENT_TYPE {
-  ADDRESS
-  AREA
-  OBJECT
+  AddressObject
+  Area
+  Object
 }
 
 type ParentNode {

@@ -1,21 +1,14 @@
-const { Group, UserGroup } = require('../models');
+const { Group } = require('../models');
 const objectService = require('../services/object');
 const { ERROR_CODES, constructionTypeMap } = require('../services/constants');
 
 module.exports = {
   Object: {
     id: object => object._id.toString(),
-    async tasks(parent, args, { user }) {
-      const userGroups = await UserGroup.find({
-        userId: user.id,
-      });
-
+    async tasks(parent) {
       return Group.find({
-        objectId: parent.id,
-        code: null,
-        _id: {
-          $in: userGroups.map(ug => ug.groupId),
-        },
+        objectId: parent._id,
+        type: 'TASK',
       });
     },
     parentId(parent) {
@@ -24,7 +17,7 @@ module.exports = {
     parent(parent) {
       return {
         id: parent.areaId.toString(),
-        type: 'AREA',
+        type: 'Area',
       };
     },
     constructionType: parent => constructionTypeMap[parent.constructionTypeId],

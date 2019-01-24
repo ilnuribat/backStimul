@@ -26,7 +26,7 @@ module.exports = {
     objectId: ({ objectId }) => objectId.toString(),
     parent: parent => ({
       id: parent.objectId.toString(),
-      type: 'OBJECT',
+      type: 'Object',
     }),
   },
   Query: {
