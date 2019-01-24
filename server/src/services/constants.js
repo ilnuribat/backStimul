@@ -1,6 +1,5 @@
 const { PubSub } = require('graphql-subscriptions');
-const SECTIONS = require('./assets/sections.json');
-const KEYWORDS = require('./assets/sections.json');
+const CONSTRUCTION_TYPES = require('./assets/sections.json');
 
 const pubsub = new PubSub();
 const MESSAGE_ADDED = 'MESSAGE_ADDED';
@@ -23,13 +22,16 @@ const SU = [...Array(11).keys()]
     name: n.id,
   }));
 
+const constructionTypeMap = CONSTRUCTION_TYPES.reduce((acc, cur) => {
+  acc[cur.id] = cur;
+
+  return acc;
+}, {});
+
 const TASK_STATUSES = [{
   id: 1,
   name: 'Новое',
 }, {
-//   id: 2,
-//   name: 'Неназначенное',
-// }, {
   id: 3,
   name: 'В работе',
 }, {
@@ -61,7 +63,6 @@ module.exports = {
   KICKED,
   INVITED,
   ERROR_CODES,
-  SECTIONS,
-  KEYWORDS,
   SU,
+  constructionTypeMap,
 };

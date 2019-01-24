@@ -10,7 +10,7 @@ module.exports = {
       return Group.find({
         type: 'OBJECT',
         areaId: parent._id,
-      });
+      }).lean();
     },
     crumbs: parent => parent.address.parentChain.map(c => ({
       id: c.fiasId,
@@ -25,7 +25,7 @@ module.exports = {
         _id: args.id,
         type: 'OBJECT',
         areaId: parent._id,
-      });
+      }).lean();
     },
   },
   RootObject: {

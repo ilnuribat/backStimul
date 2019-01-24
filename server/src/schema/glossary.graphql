@@ -3,7 +3,8 @@ type IDName {
   name: String
 }
 
-type shortnameDescription {
+type ConstructionType {
+  id: ID
   shortName: String
   description: String
 }
@@ -12,7 +13,7 @@ type Glossary {
   taskStatuses: [IDName]
   abstractResource(id: ID!): String
   SU: [IDName]
-  constructionTypes: [shortnameDescription]
+  constructionTypes: [ConstructionType]
 }
 
 type Query {

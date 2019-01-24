@@ -44,6 +44,7 @@ async function createObject(parent, { object }) {
 async function updateObject({ id }, { object }) {
   const res = await Group.updateOne({
     _id: id,
+    type: 'OBJECT',
   }, {
     $set: object,
   });

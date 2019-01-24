@@ -40,6 +40,7 @@ const schema = new Schema({
   },
   parentId: ObjectId,
   SU: String,
+  constructionTypeId: Number,
 });
 
 

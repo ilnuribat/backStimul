@@ -5,6 +5,7 @@ type Object {
   parentId: String
   address: ObjectAdress
   parent: ParentNode
+  constructionType: ConstructionType 
 }
 
 type ObjectAdress {
@@ -16,14 +17,20 @@ input ObjectAddressInput {
 }
 
 input ObjectInput {
+  name: String!
+  areaId: ID!
+  address: ObjectAddressInput!
+  constructionTypeId: ID!
+}
+
+input ObjectUpdateInput {
   name: String
-  areaId: ID
-  address: ObjectAddressInput
+  constructionTypeId: ID 
 }
 
 type ObjectMutations {
   create(object: ObjectInput): Object
-  update(object: ObjectInput): Boolean
+  update(object: ObjectUpdateInput): Boolean
   delete: Boolean
 }
 

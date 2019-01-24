@@ -1,6 +1,6 @@
 const { Group, UserGroup } = require('../models');
 const objectService = require('../services/object');
-const { ERROR_CODES } = require('../services/constants');
+const { ERROR_CODES, constructionTypeMap } = require('../services/constants');
 
 module.exports = {
   Object: {
@@ -27,6 +27,7 @@ module.exports = {
         type: 'AREA',
       };
     },
+    constructionType: parent => constructionTypeMap[parent.constructionTypeId],
   },
   ObjectMutations: {
     create: objectService.createObject,
@@ -34,10 +35,10 @@ module.exports = {
   },
   Query: {
     async object(parent, { id }) {
-      return Group.findById(id);
+      return Group.findById(id).lean();
     },
     objects() {
-      return Group.find({ type: 'OBJECT' });
+      return Group.find({ type: 'OBJECT' }).lean();
     },
   },
   Mutation: {
