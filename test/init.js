@@ -1,8 +1,8 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const { generateToken } = require('../server/src/services/user');
-const { User } = require('../server/src/models');
-const { server } = require('../server');
+const { generateToken } = require('../src/services/user');
+const { User } = require('../src/models');
+const { server } = require('../index');
 
 before(async function () {
   chai.use(chaiHttp);
@@ -16,6 +16,7 @@ before(async function () {
   this.user = await User.create({
     email: this.email,
     password: this.password,
+    id1C: Math.random(),
   });
 
   this.generatedToken = generateToken(this.user);

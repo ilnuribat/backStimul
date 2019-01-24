@@ -2,9 +2,9 @@ const { assert } = require('chai');
 const { Types: { ObjectId } } = require('mongoose');
 const {
   Group, UserGroup, Message, User,
-} = require('../server/src/models');
-const { ERROR_CODES } = require('../server/src/services/constants');
-const { generateToken } = require('../server/src/services/user');
+} = require('../src/models');
+const { ERROR_CODES } = require('../src/services/constants');
+const { generateToken } = require('../src/services/user');
 
 describe('direct chat', () => {
   // создаем tmpUser, tmpUser2, directChat для user и tmpUser2

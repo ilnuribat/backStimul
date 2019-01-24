@@ -1,4 +1,4 @@
-const { Group } = require('../../server/src/models');
+const { Group } = require('../../src/models');
 
 describe('task', () => {
   before(async function () {

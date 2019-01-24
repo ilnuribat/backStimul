@@ -1,6 +1,6 @@
 const { assert } = require('chai');
-const { Group } = require('../server/src/models');
-const { formAddress } = require('../server/src/services/address');
+const { Group } = require('../src/models');
+const { formAddress } = require('../src/services/address');
 
 const addresses = [
   {

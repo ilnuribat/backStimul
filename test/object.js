@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const { Group } = require('../server/src/models');
+const { Group } = require('../src/models');
 
 describe('object', () => {
   before(async function () {
@@ -32,6 +32,10 @@ describe('object', () => {
           create(object: {
             name: "test"
             areaId: "${this.area._id.toString()}"
+            constructionTypeId: 1
+            address: {
+              center: ["lat", "lon"]
+            }
           }) {
             id
             name
@@ -41,7 +45,7 @@ describe('object', () => {
     `,
     });
 
-    assert.isUndefined(errors);
+    assert.isUndefined(errors, JSON.stringify(errors));
     assert.equal(data.object.create.name, 'test');
 
     const object = await Group.findById(data.object.create.id);

@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const { ERROR_CODES } = require('../server/src/services/constants');
+const { ERROR_CODES } = require('../src/services/constants');
 
 const query = `
   {

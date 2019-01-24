@@ -1,12 +1,12 @@
 const { assert } = require('chai');
-const { search } = require('../../server/src/services/search');
+const { search } = require('../../src/services/search');
 const {
   User,
   Group,
   UserGroup,
   Message,
-} = require('../../server/src/models');
-const { directMessage } = require('../../server/src/services/chat');
+} = require('../../src/models');
+const { directMessage } = require('../../src/services/chat');
 
 describe('integration: search', () => {
   before(async function () {

@@ -1,7 +1,7 @@
 require('dotenv').config();
 const WebSocket = require('ws');
 const { EventEmitter } = require('events');
-const { logger } = require('./server/logger.js');
+const { logger } = require('../logger.js');
 
 const { token } = process.env;
 

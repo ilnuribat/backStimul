@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { assert } = require('chai');
-const objectService = require('../../server/src/services/object.js');
-const { Group, UserGroup } = require('../../server/src/models');
+const objectService = require('../../src/services/object.js');
+const { Group, UserGroup } = require('../../src/models');
 
 describe('object', () => {
   beforeEach(async function () {

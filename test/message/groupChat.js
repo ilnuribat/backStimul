@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const { Group, UserGroup, Message } = require('../../server/src/models');
+const { Group, UserGroup, Message } = require('../../src/models');
 
 describe('message', () => {
   before(async function () {

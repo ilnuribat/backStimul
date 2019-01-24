@@ -1,5 +1,5 @@
-const models = require('./src/models');
-const { connect } = require('./connectDB');
+const models = require('../src/models');
+const { connect } = require('../connectDB');
 
 /* eslint-disable */
 async function cleanUserGroups() {

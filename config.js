@@ -1,6 +1,4 @@
-const path = `${__dirname.slice(0, -6)}.env`;
-
-require('dotenv').config({ path });
+require('dotenv').config();
 
 const {
   HTTP_PORT = 8500,

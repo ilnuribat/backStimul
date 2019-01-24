@@ -1,10 +1,10 @@
 const { assert } = require('chai');
 const bcrypt = require('bcrypt');
 const { Types: { ObjectId } } = require('mongoose');
-const { User } = require('../server/src/models');
-const { subscriptionConnectHandler } = require('../server');
-const { generateToken } = require('../server/src/services/user');
-const { ERROR_CODES } = require('../server/src/services/constants');
+const { User } = require('../src/models');
+const { subscriptionConnectHandler } = require('../index');
+const { generateToken } = require('../src/services/user');
+const { ERROR_CODES } = require('../src/services/constants');
 
 describe.skip('login', () => {
   it('correct credentials', async function () {
