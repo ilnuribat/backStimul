@@ -25,6 +25,7 @@ module.exports = {
   ObjectMutations: {
     create: objectService.createObject,
     update: objectService.updateObject,
+    delete: objectService.deleteObject,
   },
   Query: {
     async object(parent, { id }) {
