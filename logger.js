@@ -1,16 +1,10 @@
 const { createLogger, transports, format } = require('winston');
+const _ = require('lodash');
 const { LOG_LEVEL, MICROSERVICES } = require('./config');
 
 const {
   combine, timestamp, label, printf, colorize, metadata,
 } = format;
-
-function handleMeta(meta) {
-  return Object.keys(meta)
-    .filter(k => !['label', 'timestamp'].includes(k))
-    .map(key => `${key}: ${meta[key]}`)
-    .join(', ');
-}
 
 const customFormat = printf(log => `${
   log.level
@@ -21,7 +15,7 @@ const customFormat = printf(log => `${
 } ${
   log.message
 } ${
-  handleMeta(log.metadata)
+  _.isEmpty(log.metadata) ? '' : JSON.stringify(_.omit(log.metadata, 'label', 'timestamp'))
 }`);
 
 const logFormat = combine(

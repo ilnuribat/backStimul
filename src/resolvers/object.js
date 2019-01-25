@@ -40,11 +40,12 @@ module.exports = {
       if (!user) {
         throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
+
       if (id) {
         return Group.findById(id);
       }
 
-      return {};
+      return null;
     },
     createObject: objectService.createObject,
     async updateObject(parent, args, { user }) {
