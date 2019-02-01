@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server",
-    "dev": "nodemon server",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "databases:up": "docker-compose -f dev/docker-compose.yml up --build -d",
     "databases:down": "docker-compose -f dev/docker-compose.yml down --volumes",
     "migrate:add": "node migrations/createMigration",
