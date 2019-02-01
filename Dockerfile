@@ -10,4 +10,4 @@ RUN npm i --production
 
 COPY . .
 
-CMD ["node", "server"]
+CMD ["npm", "start"]
