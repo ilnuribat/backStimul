@@ -1,5 +1,5 @@
 const { Schema } = require('mongoose');
-const { GROUP_TYPES } = require('../services/constants');
+const { GROUP_TYPES, OBJECTS_TABS } = require('../services/constants');
 
 const { ObjectId } = Schema.Types;
 
@@ -41,12 +41,12 @@ const schema = new Schema({
   parentId: ObjectId,
   SU: String,
   constructionTypeId: Number,
+  tab: {
+    type: String,
+    enum: OBJECTS_TABS,
+  },
 });
 
-
-schema.virtual('id').get(function () {
-  return this._id.toString();
-});
 
 schema.static('getGroupedLevel', async function (level = 0, parentId = null) {
   const res = await this.aggregate([{

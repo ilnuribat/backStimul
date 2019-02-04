@@ -1,7 +1,7 @@
 type Object {
   id: ID!
   name: String
-  tasks: [Task]
+  tasks(tab: TaskTabEnum): [Task]
   parentId: String
   address: ObjectAdress
   parent: ParentNode

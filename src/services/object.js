@@ -1,5 +1,7 @@
+const bluebird = require('bluebird');
 const { Group, UserGroup } = require('../models');
 const { logger } = require('../../logger');
+const objectTasksTemplate = require('./temlates/objectTasks');
 
 async function searchObjects(user, regExp, limit) {
   const res = await Group.find({
@@ -10,9 +12,11 @@ async function searchObjects(user, regExp, limit) {
   return res;
 }
 
-async function deleteObject(parent) {
-  logger.debug('deleting object with id', { parent });
-  const foundObject = await Group.findById(parent._id);
+async function deleteObject(parent, args) {
+  const id = parent ? parent._id : args.id;
+
+  logger.debug('deleting object with id', { parent, args, id });
+  const foundObject = await Group.findById(id);
 
   if (!foundObject) {
     throw new Error('no object found to delete');
@@ -38,7 +42,7 @@ async function deleteObject(parent) {
 
   logger.debug('deleted inner tasks', tasksRes);
 
-  const res = await Group.deleteOne({ _id: parent._id });
+  const res = await Group.deleteOne({ _id: id });
 
   logger.debug('deleted object', res);
 
@@ -46,16 +50,29 @@ async function deleteObject(parent) {
 }
 
 async function createObject(parent, { object }) {
-  if (!object.areaId) {
-    throw new Error('no areaId');
-  }
-  if (!object.name) {
-    throw new Error('no name');
-  }
   const res = await Group.create({
     ...object,
     type: 'OBJECT',
   });
+
+  async function createTemplateTasks({ parentId, tasks }) {
+    if (!tasks) {
+      return null;
+    }
+
+    return bluebird.each(tasks, async (task) => {
+      const createdTask = await Group.create({
+        type: 'TASK',
+        objectId: res._id,
+        parentId,
+        ...task,
+      });
+
+      return createTemplateTasks({ parentId: createdTask._id, tasks: task.tasks });
+    });
+  }
+
+  await createTemplateTasks({ parentId: null, tasks: objectTasksTemplate });
 
   return res;
 }

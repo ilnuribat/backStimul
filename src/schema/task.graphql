@@ -12,6 +12,15 @@ type Task {
   objectId: ID
   files: [File]
   parent: ParentNode
+  tasks: [Task]
+  tab: TaskTabEnum
+}
+
+enum TaskTabEnum {
+  PREPROJECT
+  PROJECT
+  SMR
+  PASS
 }
 
 input TaskInput {

@@ -5,11 +5,17 @@ const { ERROR_CODES, constructionTypeMap } = require('../services/constants');
 module.exports = {
   Object: {
     id: object => object._id.toString(),
-    async tasks(parent) {
-      return Group.find({
+    async tasks(parent, { tab }) {
+      const where = {
         objectId: parent._id,
         type: 'TASK',
-      });
+      };
+
+      if (tab) {
+        where.tab = tab;
+      }
+
+      return Group.find(where);
     },
     parentId(parent) {
       return parent.areaId.toString();
@@ -45,7 +51,7 @@ module.exports = {
         return Group.findById(id);
       }
 
-      return null;
+      return {};
     },
     createObject: objectService.createObject,
     async updateObject(parent, args, { user }) {

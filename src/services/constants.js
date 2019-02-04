@@ -11,6 +11,7 @@ const INVITED = 'INVITED';
 
 const GROUP_TYPES = ['DIRECT', 'TASK', 'OBJECT', 'AREA'];
 const ADDRESS_LEVELS = ['region', 'area', 'city', 'settlement', 'street', 'house'];
+const OBJECTS_TABS = ['PREPROJECT', 'PROJECT', 'SMR', 'PASS'];
 
 const SU = [...Array(11).keys()]
   .map(i => i + 1)
@@ -65,4 +66,5 @@ module.exports = {
   ERROR_CODES,
   SU,
   constructionTypeMap,
+  OBJECTS_TABS,
 };

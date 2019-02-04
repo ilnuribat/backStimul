@@ -28,6 +28,10 @@ module.exports = {
       id: parent.objectId.toString(),
       type: 'Object',
     }),
+    tasks: parent => Group.find({
+      type: 'TASK',
+      parentId: parent._id,
+    }),
   },
   Query: {
     task(parent, { id }, { user }) {
