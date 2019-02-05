@@ -1,6 +1,6 @@
 const { Group } = require('../models');
 const objectService = require('../services/object');
-const { ERROR_CODES, constructionTypeMap } = require('../services/constants');
+const { ERROR_CODES, constructionTypeMap, OBJECTS_TABS_NAMES } = require('../services/constants');
 
 module.exports = {
   Object: {
@@ -20,6 +20,7 @@ module.exports = {
     parentId(parent) {
       return parent.areaId.toString();
     },
+    tabs: () => OBJECTS_TABS_NAMES,
     parent(parent) {
       return {
         id: parent.areaId.toString(),

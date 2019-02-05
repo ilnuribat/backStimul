@@ -1,6 +1,7 @@
 type Object {
   id: ID!
   name: String
+  tabs: [ObjectTabs]
   tasks(tab: TaskTabEnum): [Task]
   parentId: String
   address: ObjectAdress
@@ -10,6 +11,10 @@ type Object {
 
 type ObjectAdress {
   center: [String]
+}
+type ObjectTabs {
+  id: ID
+  name: String
 }
 
 input ObjectAddressInput {

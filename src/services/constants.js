@@ -12,6 +12,12 @@ const INVITED = 'INVITED';
 const GROUP_TYPES = ['DIRECT', 'TASK', 'OBJECT', 'AREA'];
 const ADDRESS_LEVELS = ['region', 'area', 'city', 'settlement', 'street', 'house'];
 const OBJECTS_TABS = ['PREPROJECT', 'PROJECT', 'SMR', 'PASS'];
+const OBJECTS_TABS_NAMES = [
+  { id: 'PREPROJECT', name: 'Предпроектные работы' },
+  { id: 'PROJECT', name: 'Проектные работы' },
+  { id: 'SMR', name: 'СМР и снабжение' },
+  { id: 'PASS', name: 'Ввод в эксплуатацию' },
+];
 
 const SU = [...Array(11).keys()]
   .map(i => i + 1)
@@ -96,4 +102,5 @@ module.exports = {
   constructionTypeMap,
   OBJECTS_TABS,
   STATUSES,
+  OBJECTS_TABS_NAMES,
 };
