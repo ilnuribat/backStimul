@@ -20,67 +20,75 @@ const PROJECT_DOCUMENTATION = [
   { name: 'Иная документация в случаях, предусмотренных федеральными законами' },
 ];
 
-module.exports = [
-  {
-    name: 'Концепция',
-    tab: 'PREPROJECT',
+const allTasks = [{
+  name: 'Концепция',
+  tab: 'PREPROJECT',
+}, {
+  name: 'Гос контракт',
+  tab: 'PREPROJECT',
+  tasks: [{
+    name: 'Техническое задание',
+    statusType: 'TZ',
   }, {
-    name: 'Гос контракт',
-    tab: 'PREPROJECT',
-    tasks: [{
-      name: 'Техническое задание',
-    }, {
-      name: 'ОН (М) Ц',
-    }, {
-      name: 'Проект Гос. контракта',
-    }, {
-      name: 'Казначейство',
-    }],
+    name: 'ОН (М) Ц',
+    statusType: 'ONC',
   }, {
-    name: 'Изыскательские работы',
-    tab: 'PROJECT',
-    tasks: [{
-      name: 'Геодезические изыскания',
-    }, {
-      name: 'Геологические изыскания',
-    }, {
-      name: 'Экологические изыскания',
-    }, {
-      name: 'Гидрометеорогические изыскания',
-    }, {
-      name: 'Специальные исследования и обследование земельного участка на предмет наличия взрывоопасных предметов',
-    }],
+    name: 'Проект Гос. контракта',
+    statusType: 'PROJECT_GK',
   }, {
-    name: 'Гос. экспертиза',
-    tab: 'PROJECT',
+    name: 'Казначейство',
+    statusType: 'KAZNA',
+  }],
+}, {
+  name: 'Изыскательские работы',
+  tab: 'PROJECT',
+  tasks: [{
+    name: 'Геодезические изыскания',
   }, {
-    name: 'Проектная документация',
-    tab: 'PROJECT',
-    tasks: PROJECT_DOCUMENTATION,
+    name: 'Геологические изыскания',
   }, {
-    name: 'История рабочей документации',
-    tab: 'PROJECT',
-  },
-  ...PROJECT_DOCUMENTATION.map(pd => ({
-    name: pd.name,
-    tab: 'SMR',
-  })),
-  {
-    name: 'РНС (Разрешение на строительство)',
-    tab: 'PASS',
+    name: 'Экологические изыскания',
   }, {
-    name: 'ЗОС',
-    tab: 'PASS',
+    name: 'Гидрометеорогические изыскания',
   }, {
-    name: 'РНВ',
-    tab: 'PASS',
-  }, {
-    name: 'Оформить право собственности РФ',
-    tab: 'PASS',
-  }, {
-    name: 'Итоговая проверка ГАСН',
-    tab: 'PASS',
-  }, {
-    name: 'Передать в эксплуатирующие организации',
-    tab: 'PASS',
-  }];
+    name: 'Специальные исследования и обследование земельного участка на предмет наличия взрывоопасных предметов',
+  }],
+}, {
+  name: 'Гос. экспертиза',
+  tab: 'PROJECT',
+}, {
+  name: 'Проектная документация',
+  tab: 'PROJECT',
+  tasks: PROJECT_DOCUMENTATION,
+}, {
+  name: 'История рабочей документации',
+  tab: 'PROJECT',
+},
+...PROJECT_DOCUMENTATION.map(pd => ({
+  name: pd.name,
+  tab: 'SMR',
+})),
+{
+  name: 'РНС (Разрешение на строительство)',
+  tab: 'PASS',
+}, {
+  name: 'ЗОС',
+  tab: 'PASS',
+}, {
+  name: 'РНВ',
+  tab: 'PASS',
+}, {
+  name: 'Оформить право собственности РФ',
+  tab: 'PASS',
+}, {
+  name: 'Итоговая проверка ГАСН',
+  tab: 'PASS',
+}, {
+  name: 'Передать в эксплуатирующие организации',
+  tab: 'PASS',
+}];
+
+module.exports = {
+  allTasks,
+  PROJECT_DOCUMENTATION,
+};

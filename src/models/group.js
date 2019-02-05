@@ -1,5 +1,5 @@
 const { Schema } = require('mongoose');
-const { GROUP_TYPES, OBJECTS_TABS } = require('../services/constants');
+const { GROUP_TYPES, OBJECTS_TABS, STATUSES } = require('../services/constants');
 
 const { ObjectId } = Schema.Types;
 
@@ -40,10 +40,13 @@ const schema = new Schema({
   },
   parentId: ObjectId,
   SU: String,
-  constructionTypeId: Number,
   tab: {
     type: String,
     enum: OBJECTS_TABS,
+  },
+  statusType: {
+    type: String,
+    enum: Object.keys(STATUSES),
   },
 });
 

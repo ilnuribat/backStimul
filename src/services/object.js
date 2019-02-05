@@ -72,7 +72,7 @@ async function createObject(parent, { object }) {
     });
   }
 
-  await createTemplateTasks({ parentId: null, tasks: objectTasksTemplate });
+  await createTemplateTasks({ parentId: null, tasks: objectTasksTemplate.allTasks });
 
   return res;
 }

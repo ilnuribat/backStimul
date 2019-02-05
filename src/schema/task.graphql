@@ -4,7 +4,7 @@ type Task {
   users: [User]
   messages(messageConnection: ConnectionInput): MessageConnection
   unreadCount: Int
-  status: Int
+  status: ID
   assignedTo: User
   lastMessage: Message
   endDate: String
@@ -14,6 +14,7 @@ type Task {
   parent: ParentNode
   tasks: [Task]
   tab: TaskTabEnum
+  statuses: [ID!]!
 }
 
 enum TaskTabEnum {
@@ -27,7 +28,7 @@ input TaskInput {
   name: String
   objectId: ID
   parentId: ID
-  status: Int
+  status: ID
   assignedTo: ID
   endDate: String
 }

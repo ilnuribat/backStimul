@@ -2,7 +2,7 @@ const moment = require('moment');
 const { withFilter } = require('apollo-server');
 const { Group, UserGroup } = require('../models');
 const {
-  pubsub, TASK_UPDATED, USER_TASK_UPDATED, ERROR_CODES,
+  pubsub, TASK_UPDATED, USER_TASK_UPDATED, ERROR_CODES, STATUSES,
 } = require('../services/constants');
 const taskService = require('../services/task');
 const groupService = require('../services/group');
@@ -32,6 +32,13 @@ module.exports = {
       type: 'TASK',
       parentId: parent._id,
     }),
+    statuses: (parent) => {
+      if (!parent.statusType) {
+        return STATUSES.STANDART.map(s => s.id);
+      }
+
+      return STATUSES[parent.statusType].map(s => s.id);
+    },
   },
   Query: {
     task(parent, { id }, { user }) {
