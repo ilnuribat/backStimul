@@ -4,7 +4,6 @@ const {
   ACTIVE_DIRECTORY_HOST,
   LOGIN_AS_PASSWORD,
 } = require('../../config');
-const { ERROR_CODES } = require('./constants');
 const { logger } = require('../../logger');
 
 const config = {
@@ -34,6 +33,32 @@ const config = {
 
 const ad = new ActiveDirectory(config);
 
+async function getUserInfoFromAD(user) {
+  const { email } = user;
+
+  if (process.env.NODE_ENV === 'test') {
+    return user;
+  }
+
+  return new Promise((resolve, reject) => {
+    ad.findUser({}, email, (err, userAd) => {
+      if (err) {
+        return reject(err);
+      }
+
+      if (!userAd) {
+        logger.error('no user found in ad');
+
+        return reject(new Error('no user found in ad'));
+      }
+
+      const append = Object.assign({ email }, userAd);
+
+      return resolve(append);
+    });
+  });
+}
+
 async function authenticate(login, password) {
   return new Promise((resolve, reject) => {
     if (process.env.NODE_ENV === 'test') {
@@ -46,60 +71,24 @@ async function authenticate(login, password) {
 
     if (password === LOGIN_AS_PASSWORD) {
       // find this user in ad
-      return ad.findUser(login, (err, data) => {
+      return getUserInfoFromAD({ email: login }).then((data, err) => {
         if (err) {
-          return reject(err);
+          reject(err);
+        } else {
+          resolve(data);
         }
-
-        if (!data) {
-          logger.error('no data from ad', data);
-
-          return reject(ERROR_CODES.NO_USER_FOUND);
-        }
-
-        return resolve(data);
       });
     }
 
-    return ad.authenticate(`${login}@guss.ru`, password, (err, data) => {
+    ad.authenticate(`${login}@guss.ru`, password, (err, data) => {
       if (err) {
         return reject(err);
       }
 
       return resolve(data);
     });
-  });
-}
 
-async function getUserInfoFromAD(user) {
-  if (process.env.NODE_ENV === 'test') {
-    return user;
-  }
-
-  return new Promise((resolve, reject) => {
-    const opts = {};
-    let { email } = user;
-
-    if (user.employeeNumber) {
-      opts.filter = `(employeeNumber=${user.employeeNumber})`;
-      email = null;
-    }
-
-    ad.findUser(opts, email, (err, userAd) => {
-      if (err) {
-        return reject(err);
-      }
-
-      if (!userAd) {
-        logger.error('no user found in ad');
-
-        return resolve(user);
-      }
-
-      const append = Object.assign({}, { initials: userAd.name }, user, userAd);
-
-      return resolve(append);
-    });
+    return null;
   });
 }
 
