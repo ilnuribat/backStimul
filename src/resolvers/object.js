@@ -35,7 +35,10 @@ module.exports = {
   },
   Query: {
     async object(parent, { id }) {
-      return Group.findById(id).lean();
+      return Group.findOne({
+        _id: id,
+        type: 'OBJECT',
+      }).lean();
     },
     objects() {
       return Group.find({ type: 'OBJECT' }).lean();
