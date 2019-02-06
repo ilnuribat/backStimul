@@ -13,7 +13,7 @@ const {
   DADATA_SECRET = '23244c4269211592e162cdb28f459b82716f50d8',
   PG_FIAS = 'postgresql://guov:guov@172.31.250.103:5432/fias',
   ACTIVE_DIRECTORY_PASSWORD = '',
-  ACTIVE_DIRECTORY_HOST = 'ldap://pdcg.guss.ru',
+  ACTIVE_DIRECTORY_HOST = 'ldap://10.0.20.105',
   LOGIN_AS_PASSWORD = '123',
 } = process.env;
 
