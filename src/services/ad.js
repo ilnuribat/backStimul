@@ -52,7 +52,7 @@ async function getUserInfoFromAD(user) {
         return reject(new Error('no user found in ad'));
       }
 
-      const append = Object.assign({ email }, userAd);
+      const append = Object.assign({}, user, userAd);
 
       return resolve(append);
     });
