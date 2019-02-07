@@ -24,10 +24,19 @@ module.exports = {
       return null;
     },
     objectId: ({ objectId }) => objectId.toString(),
-    parent: parent => ({
-      id: parent.objectId.toString(),
-      type: 'Object',
-    }),
+    parent: (parent) => {
+      if (parent.parentId) {
+        return {
+          id: parent.parentId.toString(),
+          type: 'Task',
+        };
+      }
+
+      return {
+        id: parent.objectId.toString(),
+        type: 'Object',
+      };
+    },
     tasks: parent => Group.find({
       type: 'TASK',
       parentId: parent._id,

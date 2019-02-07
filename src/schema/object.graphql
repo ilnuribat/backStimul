@@ -43,6 +43,7 @@ enum PARENT_TYPE {
   AddressObject
   Area
   Object
+  Task
 }
 
 type ParentNode {
