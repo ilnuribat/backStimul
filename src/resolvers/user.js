@@ -24,7 +24,7 @@ module.exports = {
     async directs(parent, args, { user }) {
       return getDirectChats(user);
     },
-    id: user => user.id || user._id.toString(),
+    id: ({ id }) => id,
     username: user => user.email,
     icon: async (user) => {
       if (user && user.name && user.email) {
@@ -44,7 +44,10 @@ module.exports = {
 
       const adUser = await getUserInfoFromAD(user);
 
-      return adUser;
+      return {
+        ...adUser,
+        ...user,
+      };
     },
     userInfo: async (parent, args, { user }) => {
       if (!user) {
