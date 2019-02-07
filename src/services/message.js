@@ -26,7 +26,10 @@ async function createMessage(parent, { message }, { user }) {
   });
 
   if (!userGroup) {
-    throw new Error(ERROR_CODES.FORBIDDEN);
+    await UserGroup.create({
+      userId: user._id,
+      groupId: message.groupId,
+    });
   }
 
   const isDirect = !!group.code;
