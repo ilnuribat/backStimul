@@ -97,7 +97,7 @@ async function unreadCount({ id }, args, { user }) {
 async function getMembers(group) {
   const { id } = group;
   const usersGroup = await UserGroup.find({ groupId: id });
-  const users = await User.find({ _id: { $in: usersGroup.map(u => u.userId) } });
+  const users = await User.find({ _id: { $in: usersGroup.map(u => u.userId) } }).lean();
 
   return users;
 }
