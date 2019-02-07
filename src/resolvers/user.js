@@ -24,7 +24,7 @@ module.exports = {
     async directs(parent, args, { user }) {
       return getDirectChats(user);
     },
-    id: ({ id }) => id,
+    id: ({ id, _id }) => id || _id.toString(),
     username: user => user.email,
     icon: async (user) => {
       if (user && user.name && user.email) {
@@ -35,6 +35,8 @@ module.exports = {
 
       return 'https://dev.scis.xyz/images/download';
     },
+    initials: parent => `${parent.lastName} ${parent.firstName[0]}. ${parent.middleName[0]}`,
+    name: ({ firstName }) => firstName,
   },
   Query: {
     user: async (parent, args, { user }) => {
@@ -42,12 +44,7 @@ module.exports = {
         throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
 
-      const adUser = await getUserInfoFromAD(user);
-
-      return {
-        ...adUser,
-        ...user,
-      };
+      return user;
     },
     userInfo: async (parent, args, { user }) => {
       if (!user) {

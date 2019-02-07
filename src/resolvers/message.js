@@ -6,7 +6,6 @@ const {
 const {
   MESSAGE_READ, pubsub, MESSAGE_ADDED, ERROR_CODES,
 } = require('../services/constants');
-const { getUserInfoFromAD } = require('../services/ad');
 const messageService = require('../services/message');
 
 
@@ -15,13 +14,8 @@ module.exports = {
     id: message => message._id.toString(),
     from: async (parent) => {
       const { userId } = parent;
-      const user = await User.findById(userId).lean();
 
-      if (user.email) {
-        return getUserInfoFromAD(user);
-      }
-
-      return user;
+      return User.findById(userId).lean();
     },
     to(parent) {
       const { groupId } = parent;
