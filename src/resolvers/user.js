@@ -1,13 +1,10 @@
-const bcrypt = require('bcrypt');
 const {
   User,
   Message,
 } = require('../models');
-const { logger } = require('../../logger');
 const { getDirectChats } = require('../services/chat');
 const { getTasks, generateToken } = require('../services/user');
 const { authenticate, getUserInfoFromAD } = require('../services/ad');
-const { BCRYPT_ROUNDS } = require('../../config');
 const { ERROR_CODES } = require('../services/constants');
 
 module.exports = {
@@ -35,7 +32,8 @@ module.exports = {
 
       return 'https://dev.scis.xyz/images/download';
     },
-    initials: parent => `${parent.lastName} ${parent.firstName[0]}. ${parent.middleName[0]}`,
+    initials: parent => `${parent.lastName} ${parent.firstName[0]}. ${parent.middleName[0]}.`,
+    fullName: parent => `${parent.lastName} ${parent.firstName} ${parent.middleName}`,
     name: ({ firstName }) => firstName,
   },
   Query: {
@@ -46,96 +44,41 @@ module.exports = {
 
       return user;
     },
-    userInfo: async (parent, args, { user }) => {
-      if (!user) {
-        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
-      }
-
-      const adUser = await getUserInfoFromAD(user);
-
-      return adUser;
-    },
-    users: async () => {
-      const allUsers = await User.find({}).lean();
-
-      return allUsers;
-    },
+    users: async () => User.find({ email: { $exists: true } }).lean(),
   },
 
   Mutation: {
     async login(parent, { user }) {
       const { password } = user;
       const email = user.email.toLowerCase();
-      let foundUser;
 
-      try {
-        await authenticate(email, password);
+      // Проверяем пароль в AD
+      await authenticate(email, password);
 
-        foundUser = await User.findOne({ email });
+      // Получаем id от 1С
+      const adUser = await getUserInfoFromAD({ email });
 
-        if (!foundUser) {
-          foundUser = await User.create({
-            email,
-            password: `${Math.random()}:${Math.random()}`,
-          });
-        }
-      } catch (err) {
-        logger.error({ err });
-        if (err === ERROR_CODES.NO_USER_FOUND) {
-          throw new Error(err);
-        }
+      // Проверяем по этому айдишнику по базе в монго, есть ли такой юзер
+      const rawUser = await User.findOne({
+        id1C: adUser.employeeNumber,
+      }).lean();
 
-        logger.error('error in ad', err);
-        foundUser = await User.findOne({ email });
+      // обновляем поле email в монго,
+      // потому что могло просто напросто поменяться почта
 
-        if (!foundUser) {
-          throw new Error('Пользователь не найден');
-        }
+      const answer = await User.updateOne({ _id: rawUser._id }, { email: adUser.mail });
 
-        const validatePassword = await bcrypt.compare(password, foundUser.password);
+      console.log({ adUser, rawUser, answer });
 
-        if (!validatePassword && password !== foundUser.password) {
-          throw new Error(ERROR_CODES.INCORRECT_PASSWORD);
-        }
-      }
-
-      const token = generateToken(foundUser);
+      const token = generateToken(rawUser);
 
       return {
-        userId: foundUser.id,
-        id: foundUser.id,
+        userId: rawUser._id.toString(),
+        id: rawUser._id.toString(),
         token,
         jwt: token,
         username: email,
       };
-    },
-    async signup(_, { user }) {
-      if (process.env.NODE_ENV === 'production') {
-        throw new Error('only dev mode');
-      }
-
-      const { email, password } = user;
-
-      try {
-        const hashPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
-        const newUser = await User.create({ email, password: hashPassword });
-        const token = generateToken(newUser);
-
-        return {
-          token,
-          userId: newUser.id,
-          id: newUser.id,
-          username: newUser.email,
-          jwt: token,
-        };
-      } catch (err) {
-        if (err.errmsg.indexOf('duplicate key error')) {
-          logger.error('user with such email exists', { email });
-          throw new Error('Пользователь уже существует');
-        }
-
-        throw err;
-      }
     },
   },
 };

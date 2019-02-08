@@ -23,6 +23,10 @@ module.exports = {
       const anotherUserId = direct.code.split('|').filter(dId => dId !== ctx.user.id);
       const anotherUser = await User.findById(anotherUserId);
 
+      if (!anotherUser) {
+        return ctx.user.email;
+      }
+
       return anotherUser.email;
     },
     users: groupService.getMembers,

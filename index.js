@@ -40,8 +40,8 @@ const apolloServer = new ApolloServer({
       return {};
     }
 
-    const { id } = jwtBody;
-    const user = await User.findById(id).lean();
+    const { id1C } = jwtBody;
+    const user = await User.findOne({ id1C }).lean();
 
     if (!user) {
       return {};
@@ -105,7 +105,7 @@ async function subscriptionConnectHandler(connectionParams) {
   }
 
   const res = jwt.verify(body, JWT_SECRET);
-  const user = await User.findById(res.id).lean();
+  const user = await User.findOne({ id1C: res.id1C }).lean();
 
   if (!user) {
     throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
