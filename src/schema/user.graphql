@@ -5,25 +5,22 @@ input AuthUserInput {
 }
 
 type User {
-  id: ID! # unique id for the user
-  email: String! # we will also require a unique email per user
-  username: String
-  cn: String
-  mail: String
-  company: String
-  department: String
-  description: String
-  displayName: String
+  id: ID!
+  email: String!
+  fullName: String!
+  initials: String!
+  birthdate: String!
   icon: String
-  name: String
-  sn: String
-  title: String
-  primaryGroupId: String
+  specialization: String
+  OU: [String]
+
+  username: String @deprecated
+  name: String @deprecated
+
   messages: [Message]
   groups: [Group]
   directs: [Direct]
   tasks: [Task]
-  initials: String
 }
 
 type AuthToken {

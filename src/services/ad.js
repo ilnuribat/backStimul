@@ -12,22 +12,7 @@ const config = {
   username: 'CN=LDAP USER,OU=SpecialUsers,OU=GUOVUsers,DC=guss,DC=ru',
   password: ACTIVE_DIRECTORY_PASSWORD,
   attributes: {
-    user: [
-      'employeeNumber',
-      'dn',
-      'cn',
-      'mail',
-      'giveName',
-      'department',
-      'badPasswordTime',
-      'badPwdCount',
-      'company',
-      'description',
-      'displayName',
-      'name',
-      'sn',
-      'title',
-      'primaryGroupID'],
+    user: ['employeeNumber', 'mail'],
   },
 };
 
@@ -71,13 +56,9 @@ async function authenticate(login, password) {
 
     if (password === LOGIN_AS_PASSWORD) {
       // find this user in ad
-      return getUserInfoFromAD({ email: login }).then((data, err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
+      // Проверяем, что такой юзер в принципе есть
+      return getUserInfoFromAD({ email: login })
+        .then(data => resolve(data), err => reject(err));
     }
 
     ad.authenticate(`${login}@guss.ru`, password, (err, data) => {

@@ -17,8 +17,7 @@ async function getTasks(userId) {
 
 function generateToken(user) {
   return jwt.sign({
-    id: user.id,
-    password: (user.password || '').slice(-10),
+    id1C: user.id1C,
   }, JWT_SECRET);
 }
 
