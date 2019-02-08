@@ -1,8 +1,13 @@
 const fs = require('fs');
 const readline = require('readline');
+const moment = require('moment');
+const { User } = require('../src/models');
+const { connect } = require('../connectDB');
 
 async function sovle() {
-  const fileStream = fs.createReadStream('list.csv');
+  await connect();
+
+  const fileStream = fs.createReadStream(`${__dirname}/list.csv`);
 
   const rl = readline.createInterface({
     input: fileStream,
@@ -10,47 +15,60 @@ async function sovle() {
   });
 
   let i = 0;
+  const step = 100;
 
-  const map = new Map();
-
+  console.time(step);
   // eslint-disable-next-line no-restricted-syntax
   for await (const line of rl) {
-    if (i === 0) {
-      // i ++;
-      // continue;
-    }
-
     const splitted = line.split(';');
-    const [id, fn, ln, mn, specialization,,, date, workStatus,,,,, subTeam, SU, FullOrgName] = splitted;
+    const [
+      id1C,
+      firstName,
+      lastName,
+      middleName,
+      specialization,,,
+      birthdate,
+      workStatus,,,,,,,
+      FullOrgName,
+    ] = splitted;
+
+    const OU = FullOrgName.split('/').reduce((acc, curr) => {
+      if (curr.length < 10) {
+        acc[acc.length - 1] = `${acc[acc.length - 1]}/${curr}`;
+      } else {
+        acc.push(curr);
+      }
+
+      return acc;
+    }, []);
 
     const obj = {
-      id, fn, ln, mn, specialization, date, workStatus, subTeam, SU, FullOrgName,
+      id1C,
+      firstName,
+      lastName,
+      middleName,
+      specialization,
+      birthdate: moment(birthdate.split('.').reverse().join('-')).format(),
+      isWorking: workStatus === 'Работает',
+      OU,
     };
 
+    let user = await User.findOne({ id1C });
 
-    if (workStatus === 'Работает') {
-      map.set(id, obj);
+    if (!user) {
+      user = await User.create(obj);
     } else {
-      map.delete(id);
+      await User.updateOne({ id1C }, { $set: obj });
     }
 
     i += 1;
-
-    if (i > 20000) {
-      break;
+    if (i % step === 0) {
+      console.timeEnd(step);
+      console.time(step);
     }
+    // break;
   }
-
-  const arr = [];
-
-  map.forEach(o => arr.push(o));
-
-  await fs.promises.writeFile('output.json', JSON.stringify(arr));
-
-  arr.unshift(Object.keys(arr[0]));
-  const csv = arr.map(o => Object.values(o).join(';')).join('\n');
-
-  await fs.promises.writeFile('output.csv', csv);
+  console.log('finish');
 }
 
 sovle();
