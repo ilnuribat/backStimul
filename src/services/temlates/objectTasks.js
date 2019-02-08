@@ -40,6 +40,9 @@ const allTasks = [{
     statusType: 'KAZNA',
   }],
 }, {
+  name: 'Сбор исходных данных (обследование)',
+  tab: 'PROJECT',
+}, {
   name: 'Изыскательские работы',
   tab: 'PROJECT',
   tasks: [{
@@ -54,21 +57,34 @@ const allTasks = [{
     name: 'Специальные исследования и обследование земельного участка на предмет наличия взрывоопасных предметов',
   }],
 }, {
-  name: 'Гос. экспертиза',
-  tab: 'PROJECT',
-}, {
   name: 'Проектная документация',
   tab: 'PROJECT',
   tasks: PROJECT_DOCUMENTATION,
 }, {
+  name: 'Гос. экспертиза',
+  tab: 'PROJECT',
+}, {
   name: 'История рабочей документации',
   tab: 'PROJECT',
-},
-...PROJECT_DOCUMENTATION.map(pd => ({
-  name: pd.name,
+}, {
+  name: 'Торгово-закупочные процедуры',
   tab: 'SMR',
-})),
-{
+}, {
+  name: 'Акты выполненных работ',
+  tab: 'SMR',
+}, {
+  name: 'Процентовка',
+  tab: 'SMR',
+}, {
+  name: 'КС - 2',
+  tab: 'SMR',
+}, {
+  name: 'Допуск рабочих на объект строительства',
+  tab: 'SMR',
+}, {
+  name: 'Строительство',
+  tab: 'SMR',
+}, {
   name: 'РНС (Разрешение на строительство)',
   tab: 'PASS',
 }, {
