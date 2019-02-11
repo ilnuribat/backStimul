@@ -6,6 +6,7 @@ const { getDirectChats } = require('../services/chat');
 const { getTasks, generateToken } = require('../services/user');
 const { authenticate, getUserInfoFromAD } = require('../services/ad');
 const { ERROR_CODES } = require('../services/constants');
+const { logger } = require('../../logger');
 
 module.exports = {
   User: {
@@ -23,15 +24,7 @@ module.exports = {
     },
     id: ({ id, _id }) => id || _id.toString(),
     username: user => user.email,
-    icon: async (user) => {
-      if (user && user.name && user.email) {
-        const name = user.name.replace(/\s/gi, '%20');
-
-        return `https://dev.scis.xyz/images/${name}`;
-      }
-
-      return 'https://dev.scis.xyz/images/download';
-    },
+    icon: user => `https://dev.scis.xyz/images/${user.lastName} ${user.firstName} ${user.middleName}`,
     initials: parent => `${parent.lastName} ${parent.firstName[0]}. ${parent.middleName[0]}.`,
     fullName: parent => `${parent.lastName} ${parent.firstName} ${parent.middleName}`,
     name: ({ firstName }) => firstName,
@@ -68,7 +61,7 @@ module.exports = {
 
       const answer = await User.updateOne({ _id: rawUser._id }, { email: adUser.mail });
 
-      console.log({ adUser, rawUser, answer });
+      logger.info({ adUser, rawUser, answer });
 
       const token = generateToken(rawUser);
 
