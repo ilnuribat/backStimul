@@ -41,13 +41,7 @@ module.exports = {
       type: 'TASK',
       parentId: parent._id,
     }),
-    statuses: (parent) => {
-      if (!parent.statusType) {
-        return STATUSES.STANDART.map(s => s.id);
-      }
-
-      return STATUSES[parent.statusType].map(s => s.id);
-    },
+    statuses: parent => STATUSES[parent.statusType] || STATUSES.STANDART,
   },
   Query: {
     task(parent, { id }, { user }) {

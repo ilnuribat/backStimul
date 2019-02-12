@@ -14,7 +14,7 @@ type Task {
   parent: ParentNode
   tasks: [Task]
   tab: TaskTabEnum
-  statuses: [ID!]!
+  statuses: [IDName!]!
 }
 
 enum TaskTabEnum {
