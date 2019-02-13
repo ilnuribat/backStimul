@@ -9,14 +9,15 @@ const { logger } = require('../../logger');
 
 
 async function createTask(parent, { task }, { user }) {
-  if (!task.objectId) {
-    throw new Error('no objectId');
-  }
-  const foundObject = await Group.findById(task.objectId);
+  const parentTask = await Group.findOne({
+    _id: task.parentId,
+    type: 'TASK',
+  });
 
-  if (!foundObject || foundObject.type !== 'OBJECT') {
-    throw new Error('no object found');
+  if (!parentTask) {
+    throw new Error('no parent task found');
   }
+
   const group = await Group.create(Object.assign(task, {
     type: 'TASK',
   }));

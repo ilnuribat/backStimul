@@ -25,9 +25,12 @@ enum TaskTabEnum {
 }
 
 input TaskInput {
+  name: String!
+  parentId: ID!
+}
+
+input TaskUpdateInput {
   name: String
-  objectId: ID
-  parentId: ID
   status: ID
   assignedTo: ID
   endDate: String
@@ -51,15 +54,6 @@ enum UserTaskActionEnum {
   KICKED
 }
 
-type UserTaskRole {
-  id: ID
-  username: String
-  email: String
-  # name: String
-  # mail: String
-  # initials: String
-}
-
 type UserTaskAction {
   action: UserTaskActionEnum
   user: User
@@ -70,11 +64,18 @@ type Query {
   task(id: ID!): Task
 }
 
+type TaskMutations {
+  create(task: TaskInput): Task!
+  update(task: TaskUpdateInput): Boolean!
+  delete: Boolean!
+}
+
 type Mutation {
   createTask(task: TaskInput): Task
-  updateTask(id: ID, task: TaskInput): Boolean
-  deleteTask(id: ID!): Boolean
-  updateUsersTask(task: UsersTaskInput): Boolean
+  updateTask(id: ID, task: TaskUpdateInput): Boolean!
+  deleteTask(id: ID!): Boolean!
+  task(id: ID): TaskMutations
+  updateUsersTask(task: UsersTaskInput): Boolean!
 }
 
 type Subscription {

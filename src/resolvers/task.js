@@ -52,7 +52,26 @@ module.exports = {
       return Group.findOne({ type: 'TASK', _id: id });
     },
   },
+  TaskMutations: {
+    create: taskService.createTask,
+    update: taskService.updateTask,
+    delete: taskService.deleteTask,
+  },
   Mutation: {
+    task: (parent, { id }, { user }) => {
+      if (!user) {
+        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
+      }
+
+      if (!id) {
+        return {};
+      }
+
+      return Group.findOne({
+        _id: id,
+        type: 'TASK',
+      });
+    },
     createTask: taskService.createTask,
     updateTask: taskService.updateTask,
     deleteTask: taskService.deleteTask,
