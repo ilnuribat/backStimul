@@ -10,11 +10,13 @@ const { directMessage } = require('../../src/services/chat');
 
 describe('integration: search', () => {
   before(async function () {
-    this.tmpEmail = 'testGrouv@gouv';
-    this.tmpUser = await User.create({ email: this.tmpEmail, password: '123123' });
+    this.tmpUser = await User.create({
+      email: 'testGrouv@gouv',
+      id1C: Math.random(),
+    });
   });
   after(async function () {
-    await User.deleteOne({ email: this.tmpEmail });
+    await User.deleteOne({ _id: this.tmpUser._id });
   });
   it('search with special characters', async function () {
     const res = await search(null, { query: 'test \\sdfфыва !\\ @#$%^&*&*)(' }, { user: this.user });

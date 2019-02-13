@@ -10,10 +10,10 @@ describe('direct chat', () => {
   // создаем tmpUser, tmpUser2, directChat для user и tmpUser2
   before(async function () {
     this.tmpUser = await User.create({
-      email: 'tmpDirectUser',
+      id1C: Math.random(),
     });
     this.tmpUser2 = await User.create({
-      email: 'tmpDirectUser2',
+      id1C: Math.random(),
     });
     this.directChat = await Group.create({
       code: [this.user._id.toString(), this.tmpUser2._id.toString()].sort().join('|'),
@@ -30,18 +30,18 @@ describe('direct chat', () => {
     this.directCode = [this.user._id.toString(), this.tmpUser._id.toString()].sort().join('|');
   });
   after(async function () {
-    await User.deleteMany({
-      _id: {
+    await UserGroup.deleteMany({
+      userId: {
         $in: [
+          this.user._id,
           this.tmpUser._id,
           this.tmpUser2._id,
         ],
       },
     });
-    await UserGroup.deleteMany({
-      userId: {
+    await User.deleteMany({
+      _id: {
         $in: [
-          this.user._id,
           this.tmpUser._id,
           this.tmpUser2._id,
         ],

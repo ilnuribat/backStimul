@@ -25,11 +25,15 @@ async function createMessage(parent, { message }, { user }) {
     groupId: message.groupId,
   });
 
-  if (!userGroup) {
+  if (group.type === 'TASK' && !userGroup) {
     await UserGroup.create({
       userId: user._id,
       groupId: message.groupId,
     });
+  }
+
+  if (group.type === 'DIRECT' && !userGroup) {
+    throw new Error(ERROR_CODES.FORBIDDEN);
   }
 
   const isDirect = !!group.code;
