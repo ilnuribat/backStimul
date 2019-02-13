@@ -20,6 +20,7 @@ async function createTask(parent, { task }, { user }) {
 
   const group = await Group.create(Object.assign(task, {
     type: 'TASK',
+    objectId: parentTask.objectId,
   }));
 
   await UserGroup.create({
