@@ -43,7 +43,9 @@ async function createTask(parent, { task }, { user }) {
   return group;
 }
 
-async function updateTask(parent, { id, task }) {
+async function updateTask(parent, { id: oldId, task }) {
+  const id = (parent && parent._id.toString()) || oldId || task.id;
+
   const foundGroup = await Group.findById(id);
 
   if (!foundGroup || foundGroup.type !== 'TASK') {
@@ -73,7 +75,7 @@ async function kickUsersFromGroup({ group, users }) {
     userId: {
       $in: users.map(u => u._id),
     },
-    groupId: group.id,
+    groupId: group._id,
   });
 
   users.map(u => pubsub.publish(USER_TASK_UPDATED, {
@@ -144,14 +146,15 @@ async function updateUsersTask(parent, { task }) {
   return kickUsersFromGroup({ group: foundGroup, users: taskUsers });
 }
 
-async function deleteTask(parent, { id }) {
+async function deleteTask(parent, args) {
+  const id = parent._id.toString() || args.id;
   const userGroups = await UserGroup.find({ groupId: id });
   const users = await User.find({
     _id: {
       $in: userGroups.map(ug => ug.userId),
     },
   });
-  const task = await Group.findById(id);
+  const task = await Group.findOne({ _id: id, type: 'TASK' }).lean();
 
 
   await kickUsersFromGroup({ group: task, users });

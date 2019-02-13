@@ -67,4 +67,63 @@ describe('task', () => {
       assert.equal(task.objectId, this.object._id.toString());
     });
   });
+  describe('update, delete', () => {
+    before(async function () {
+      this.task = await Group.create({
+        name: 'test',
+        parentId: this.parentTask._id,
+        objectId: this.object._id,
+        type: 'TASK',
+      });
+    });
+    after(async function () {
+      await Group.deleteOne({
+        _id: this.task._id,
+      });
+    });
+    it('update', async function () {
+      const { data, errors } = await this.request({
+        query: `
+          mutation {
+            task(id: "${this.task._id.toString()}") {
+              update(task: {
+                name: "new name"
+              })
+            }
+          }
+        `,
+      });
+
+      assert.isUndefined(errors);
+      assert.isTrue(data.task.update);
+
+      const task = await Group.findOne({
+        _id: this.task._id,
+        type: 'TASK',
+      });
+
+      assert.equal(task.name, 'new name');
+    });
+    it('delete', async function () {
+      const { data, errors } = await this.request({
+        query: `
+          mutation {
+            task(id: "${this.task._id.toString()}") {
+              delete
+            }
+          }
+        `,
+      });
+
+      assert.isUndefined(errors);
+      assert.isTrue(data.task.delete);
+
+      const task = await Group.findOne({
+        _id: this.task._id,
+        type: 'TASK',
+      });
+
+      assert.isNull(task);
+    });
+  });
 });

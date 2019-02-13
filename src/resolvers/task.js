@@ -58,7 +58,9 @@ module.exports = {
     delete: taskService.deleteTask,
   },
   Mutation: {
-    task: (parent, { id }, { user }) => {
+    task: async (parent, args, { user }) => {
+      const { id } = args;
+
       if (!user) {
         throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
@@ -70,7 +72,7 @@ module.exports = {
       return Group.findOne({
         _id: id,
         type: 'TASK',
-      });
+      }).lean();
     },
     createTask: taskService.createTask,
     updateTask: taskService.updateTask,
