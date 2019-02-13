@@ -1,10 +1,13 @@
-const { TASK_STATUSES, ERROR_CODES, SU } = require('../services/constants');
+const {
+  TASK_STATUSES, ERROR_CODES, SU, STATUSES,
+} = require('../services/constants');
 const { Group } = require('../models');
 const constructionTypes = require('../services/assets/sections.json');
 
 module.exports = {
   Glossary: {
     taskStatuses: () => TASK_STATUSES,
+    defaultStatuses: () => STATUSES.STANDART,
     abstractResource: async (parent, { id }) => {
       const foundGroup = await Group.findById(id);
 
