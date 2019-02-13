@@ -3,7 +3,12 @@ require('dotenv').config();
 const {
   HTTP_PORT = 8500,
   JWT_SECRET = 'super secret',
-  MONGODB_HOST = 'mongodb://guov:guov@172.31.250.103:27017/guov?authSource=admin',
+  // MONGODB_HOST = 'mongodb://guov:guov@172.31.250.103:27017/guov?authSource=admin',
+  MONGO_HOST = '172.31.250.103',
+  MONGO_PORT = '27017',
+  MONGO_DATABASE = 'guov',
+  MONGO_USER = 'guov',
+  MONGO_PASSWORD = 'guov',
   NODE_ENV = 'dev',
   SOCKET_PORT = 4080,
   MICROSERVICES = '',
@@ -17,12 +22,10 @@ const {
   LOGIN_AS_PASSWORD = '123',
 } = process.env;
 
-const BCRYPT_ROUNDS = process.env.NODE_ENV === 'production' ? 12 : 1;
-
 module.exports = {
   HTTP_PORT,
   JWT_SECRET,
-  MONGODB_HOST,
+  MONGODB_HOST: `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}?authSource=admin`,
   NODE_ENV,
   SOCKET_PORT,
   MICROSERVICES,
@@ -31,7 +34,6 @@ module.exports = {
   DADATA_API,
   DADATA_SECRET,
   PG_FIAS,
-  BCRYPT_ROUNDS,
   ACTIVE_DIRECTORY_PASSWORD,
   ACTIVE_DIRECTORY_HOST,
   LOGIN_AS_PASSWORD,
