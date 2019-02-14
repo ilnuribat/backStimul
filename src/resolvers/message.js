@@ -10,6 +10,12 @@ const messageService = require('../services/message');
 
 
 module.exports = {
+  ChatGroup: {
+    __resolveType: obj => obj.__typename,
+  },
+  Direct: {
+    id: parent => parent._id.toString(),
+  },
   Message: {
     id: message => message._id.toString(),
     from: async (parent) => {
@@ -17,10 +23,13 @@ module.exports = {
 
       return User.findById(userId).lean();
     },
-    to(parent) {
-      const { groupId } = parent;
+    to: async (parent) => {
+      const chatGroup = await Group.findById(parent.groupId).lean();
 
-      return Group.findById(groupId);
+      return {
+        __typename: parent.isDirect ? 'Direct' : 'Task',
+        ...chatGroup,
+      };
     },
     createdAt: message => moment(message.createdAt).format(),
     userId: message => message.userId.toString(),
