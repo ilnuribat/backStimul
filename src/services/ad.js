@@ -58,7 +58,8 @@ async function authenticate(login, password) {
       // find this user in ad
       // Проверяем, что такой юзер в принципе есть
       return getUserInfoFromAD({ email: login })
-        .then(data => resolve(data), err => reject(err));
+        .then(data => resolve(data))
+        .catch(err => reject(err));
     }
 
     ad.authenticate(`${login}@guss.ru`, password, (err, data) => {
