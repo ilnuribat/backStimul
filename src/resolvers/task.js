@@ -107,7 +107,7 @@ module.exports = {
           const ug = await UserGroup.findOne({
             userId: user.id,
             groupId: userTaskUpdated.task.id,
-          });
+          }).lean();
 
           return !!ug;
         },

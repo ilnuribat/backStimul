@@ -1,12 +1,15 @@
 const moment = require('moment');
 const { Types: { ObjectId } } = require('mongoose');
-const { Message, UserGroup, Group } = require('../models');
+const {
+  Message, UserGroup, Group,
+} = require('../models');
 const {
   MESSAGE_ADDED,
   MESSAGE_READ,
   pubsub,
   ERROR_CODES,
 } = require('./constants');
+const taskService = require('./task');
 
 
 async function createMessage(parent, { message }, { user }) {
@@ -26,10 +29,8 @@ async function createMessage(parent, { message }, { user }) {
   });
 
   if (group.type === 'TASK' && !userGroup) {
-    await UserGroup.create({
-      userId: user._id,
-      groupId: message.groupId,
-    });
+    // invite user to task
+    await taskService.inviteUsersToGroup({ group, users: [user] });
   }
 
   if (group.type === 'DIRECT' && !userGroup) {

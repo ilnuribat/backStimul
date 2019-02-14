@@ -8,41 +8,6 @@ const {
 const { logger } = require('../../logger');
 
 
-async function createTask(parent, { task }, { user }) {
-  const parentTask = await Group.findOne({
-    _id: task.parentId,
-    type: 'TASK',
-  });
-
-  if (!parentTask) {
-    throw new Error('no parent task found');
-  }
-
-  const group = await Group.create(Object.assign(task, {
-    type: 'TASK',
-    objectId: parentTask.objectId,
-  }));
-
-  await UserGroup.create({
-    groupId: group.id,
-    userId: user.id,
-  });
-
-  pubsub.publish(USER_TASK_UPDATED, {
-    userTaskUpdated: {
-      user: {
-        ...user,
-        id: user._id.toString(),
-        username: user.email,
-      },
-      task: group,
-      action: INVITED,
-    },
-  });
-
-  return group;
-}
-
 async function updateTask(parent, { id: oldId, task }) {
   const id = (parent && parent._id.toString()) || oldId || task.id;
 
@@ -78,24 +43,77 @@ async function kickUsersFromGroup({ group, users }) {
     groupId: group._id,
   });
 
-  users.map(u => pubsub.publish(USER_TASK_UPDATED, {
+  if (!res.n) {
+    return false;
+  }
+
+  users.map(user => pubsub.publish(USER_TASK_UPDATED, {
     userTaskUpdated: {
-      user: {
-        id: u._id.toString(),
-        username: u.email,
-        ...u,
-      },
+      user,
       task: group,
       action: KICKED,
     },
   }));
 
-  return !!res.n;
+  return true;
+}
+
+// users - массив объектов из юзеров
+async function inviteUsersToGroup({ group, users = [] }) {
+  try {
+    const lastMessage = (await Message.findOne({ groupId: group._id })) || {};
+
+    await UserGroup.insertMany(users.map(u => ({
+      userId: u,
+      groupId: group.id,
+      lastReadCursor: lastMessage._id || ObjectId.createFromTime(0),
+    })));
+
+    users.map(user => pubsub.publish(USER_TASK_UPDATED, {
+      userTaskUpdated: {
+        user,
+        task: group,
+        action: INVITED,
+      },
+    }));
+
+    return true;
+  } catch (err) {
+    if (err.message.indexOf('duplicate') === -1) {
+      logger.error(err);
+      throw err;
+    }
+
+    return false;
+  }
+}
+
+async function createTask(parent, { task }, { user }) {
+  const parentTask = await Group.findOne({
+    _id: task.parentId,
+    type: 'TASK',
+  });
+
+  if (!parentTask) {
+    throw new Error('no parent task found');
+  }
+
+  const group = await Group.create(Object.assign(task, {
+    type: 'TASK',
+    objectId: parentTask.objectId,
+  }));
+
+  await inviteUsersToGroup({ group, users: [user] });
+
+  return group;
 }
 
 async function updateUsersTask(parent, { task }) {
   const groupId = task.id;
-  const foundGroup = await Group.findById(groupId);
+  const foundGroup = await Group.findOne({
+    _id: groupId,
+    type: 'TASK',
+  });
 
   if (!foundGroup) {
     return false;
@@ -114,33 +132,7 @@ async function updateUsersTask(parent, { task }) {
   });
 
   if (!task.delete) {
-    try {
-      const lastMessage = (await Message.findOne({ groupId })) || {};
-
-      await UserGroup.insertMany(users.map(u => ({
-        userId: u,
-        groupId: foundGroup.id,
-        lastReadCursor: lastMessage._id || ObjectId.createFromTime(0),
-      })));
-
-      taskUsers.map(u => pubsub.publish(USER_TASK_UPDATED, {
-        userTaskUpdated: {
-          user: {
-            id: u._id.toString(),
-            username: u.email,
-            ...u,
-          },
-          task: foundGroup,
-          action: INVITED,
-        },
-      }));
-
-      return true;
-    } catch (err) {
-      logger.error(err);
-
-      return false;
-    }
+    return inviteUsersToGroup({ group: foundGroup, users: taskUsers });
   }
 
   return kickUsersFromGroup({ group: foundGroup, users: taskUsers });
@@ -208,4 +200,5 @@ module.exports = {
   deleteTask,
   searchTasks,
   kickUsersFromGroup,
+  inviteUsersToGroup,
 };
