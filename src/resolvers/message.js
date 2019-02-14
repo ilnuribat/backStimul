@@ -42,6 +42,18 @@ module.exports = {
 
       return unReadMessages.length === 0;
     },
+    parentId: async (message) => {
+      if (!message.isDirect) {
+        const task = await Group.findOne({
+          _id: message.groupId,
+          type: 'TASK',
+        }).lean();
+
+        return task.parentId && task.parentId.toString();
+      }
+
+      return null;
+    },
   },
   MessageMutation: {
     create: messageService.createMessage,
