@@ -45,6 +45,9 @@ module.exports = {
   },
   Query: {
     task(parent, { id }, { user }) {
+      if (!id) {
+        throw new Error('id is required');
+      }
       if (!user) {
         throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
