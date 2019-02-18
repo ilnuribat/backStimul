@@ -1,0 +1,18 @@
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "UNION",
+        "name": "ChatGroupUnion",
+        "possibleTypes": [
+          {
+            "name": "Task"
+          },
+          {
+            "name": "Direct"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -3,7 +3,7 @@ type Message {
   text: String
   createdAt: String
   from: User
-  to: ChatGroup
+  to: ChatGroupUnion
   userId: String
   isRead: Boolean
   objectId: ID
@@ -13,7 +13,7 @@ type Message {
   parentId: ID @deprecated
 }
 
-union ChatGroup = Task | Direct
+union ChatGroupUnion = Task | Direct
 
 type MessageConnection {
   edges: [MessageEdge]!

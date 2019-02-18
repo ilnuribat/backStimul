@@ -10,7 +10,7 @@ const messageService = require('../services/message');
 
 
 module.exports = {
-  ChatGroup: {
+  ChatGroupUnion: {
     __resolveType: obj => obj.__typename,
   },
   Direct: {
