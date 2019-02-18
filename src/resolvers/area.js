@@ -30,14 +30,8 @@ module.exports = {
   },
   RootObject: {
     parent: (parent) => {
-      if (!parent.parentId && !parent.level && parent.level !== 0) {
+      if (parent.parentId === undefined) {
         return null;
-      }
-      if (!parent.parentId) {
-        return {
-          id: null,
-          type: 'AddressObject',
-        };
       }
 
       return {
