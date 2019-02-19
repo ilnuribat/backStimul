@@ -5,7 +5,8 @@ module.exports = {
     mocha: true
   },
   plugins: [
-    'mocha'
+    'mocha',
+    'graphql',
   ],
   rules: {
     'padding-line-between-statements': [
