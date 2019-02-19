@@ -17,23 +17,23 @@ type User {
   username: String @deprecated
   name: String @deprecated
 
-  messages: [Message]
-  groups: [Group]
-  directs: [Direct]
-  tasks: [Task]
+  messages: [Message!]!
+  groups: [Group!]!
+  directs: [Direct!]!
+  tasks: [Task!]!
+  notifications(limit: Int!, offset: Int): NotificationConnection!
 }
 
 type AuthToken {
   id: ID
   token: String!
   userId: String
-  username: String
-  jwt: String
+  username: String @deprecated
+  jwt: String @deprecated
 }
 
 type Query {
   user(email: String, id: String): User
-  userInfo(email: String, id: String): User
   users: [User]
 }
 

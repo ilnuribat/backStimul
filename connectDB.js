@@ -10,7 +10,7 @@ const pool = new Pool({
 
 async function connect(connection = MONGODB_HOST) {
   mongoose.set('debug', !['test', 'production'].includes(process.env.NODE_ENV));
-  logger.info('connecting to mongo...');
+  logger.info('connecting to mongo...', connection);
   await mongoose
     .connect(connection, {
       useNewUrlParser: true,

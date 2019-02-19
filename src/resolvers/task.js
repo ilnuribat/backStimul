@@ -77,9 +77,6 @@ module.exports = {
         type: 'TASK',
       }).lean();
     },
-    createTask: taskService.createTask,
-    updateTask: taskService.updateTask,
-    deleteTask: taskService.deleteTask,
     updateUsersTask: taskService.updateUsersTask,
   },
   Subscription: {

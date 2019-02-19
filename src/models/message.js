@@ -8,7 +8,6 @@ const schema = new Schema({
     type: Date,
     default: () => new Date(),
   },
-  createdAt_: Date,
   isDirect: Boolean,
   objectId: Schema.Types.ObjectId,
 });

@@ -5,12 +5,14 @@ const user = require('./user');
 const userGroup = require('./userGroup');
 const message = require('./message');
 const files = require('./files');
+const notification = require('./notification.js');
 
 delete mongoose.connection.models.groups;
 delete mongoose.connection.models.users;
 delete mongoose.connection.models.userGroups;
 delete mongoose.connection.models.messages;
 delete mongoose.connection.models.files;
+delete mongoose.connection.models.history;
 
 module.exports = {
   Group: mongoose.model('groups', group),
@@ -18,11 +20,5 @@ module.exports = {
   UserGroup: mongoose.model('userGroups', userGroup),
   Message: mongoose.model('messages', message),
   Files: mongoose.model('files', files),
-  Schemas: {
-    Group: group,
-    User: user,
-    UserGroup: userGroup,
-    Message: message,
-    Files: files,
-  },
+  Notification: mongoose.model('notifications', notification),
 };

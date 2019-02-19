@@ -20,7 +20,7 @@ async function sovle() {
   console.time(step);
   // eslint-disable-next-line no-restricted-syntax
   for await (const line of rl) {
-    const splitted = line.split(';');
+    const splitted = line.split(';').map(s => s.trim());
     const [
       id1C,
       firstName,
@@ -47,6 +47,8 @@ async function sovle() {
       firstName,
       lastName,
       middleName,
+      initials: `${lastName} ${firstName[0]}.${middleName[0]}.`,
+      fullName: `${lastName} ${firstName} ${middleName}`,
       specialization,
       birthdate: moment(birthdate.split('.').reverse().join('-')).format(),
       isWorking: workStatus === 'Работает',
@@ -66,6 +68,7 @@ async function sovle() {
       console.timeEnd(step);
       console.time(step);
     }
+
     // break;
   }
   console.log('finish');

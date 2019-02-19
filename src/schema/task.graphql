@@ -73,10 +73,6 @@ type TaskMutations {
 type Mutation {
   task(id: ID): TaskMutations
   updateUsersTask(task: UsersTaskInput): Boolean!
-
-  updateTask(id: ID, task: TaskUpdateInput): Boolean! @deprecated
-  deleteTask(id: ID!): Boolean! @deprecated
-  createTask(task: TaskInput): Task @deprecated
 }
 
 type Subscription {

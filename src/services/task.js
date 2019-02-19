@@ -6,19 +6,25 @@ const {
   pubsub, TASK_UPDATED, USER_TASK_UPDATED, KICKED, INVITED,
 } = require('../services/constants');
 const { logger } = require('../../logger');
+const notificationService = require('./notification.js');
 
 
-async function updateTask(parent, { id: oldId, task }) {
-  const id = (parent && parent._id.toString()) || oldId || task.id;
+async function updateTask(parent, { task }, { user }) {
+  const id = parent._id.toString();
 
-  const foundGroup = await Group.findById(id);
+  const foundTask = await Group.findOne({
+    _id: id,
+    type: 'TASK',
+  });
 
-  if (!foundGroup || foundGroup.type !== 'TASK') {
+  if (!foundTask) {
     throw new Error('no task found');
   }
-  if (task.objectId) {
-    throw new Error('no ability to change objectId');
+
+  if (Object.keys(task).length > 1) {
+    throw new Error('updating multiple fields forbidden');
   }
+  const [fieldName] = Object.keys(task);
 
   const res = await Group.updateOne({
     _id: id,
@@ -30,6 +36,16 @@ async function updateTask(parent, { id: oldId, task }) {
     const updatedTask = await Group.findById(id);
 
     pubsub.publish(TASK_UPDATED, { taskUpdated: updatedTask });
+
+    await notificationService.create({
+      fieldName,
+      oldValue: foundTask[fieldName],
+      newValue: updatedTask[fieldName],
+      operationType: 'UPDATE',
+      targetType: 'TASK',
+      targetId: parent._id,
+      user,
+    });
   }
 
   return res.nModified;
@@ -110,12 +126,12 @@ async function createTask(parent, { task }, { user }) {
 
 async function updateUsersTask(parent, { task }) {
   const groupId = task.id;
-  const foundGroup = await Group.findOne({
+  const foundTask = await Group.findOne({
     _id: groupId,
     type: 'TASK',
   });
 
-  if (!foundGroup) {
+  if (!foundTask) {
     return false;
   }
 
@@ -132,10 +148,10 @@ async function updateUsersTask(parent, { task }) {
   });
 
   if (!task.delete) {
-    return inviteUsersToGroup({ group: foundGroup, users: taskUsers });
+    return inviteUsersToGroup({ group: foundTask, users: taskUsers });
   }
 
-  return kickUsersFromGroup({ group: foundGroup, users: taskUsers });
+  return kickUsersFromGroup({ group: foundTask, users: taskUsers });
 }
 
 async function deleteTask(parent, args) {

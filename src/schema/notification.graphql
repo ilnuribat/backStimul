@@ -1,0 +1,14 @@
+type NotificationConnection {
+  nodes: [Notification]
+  count: Int
+}
+
+type Notification {
+  id: ID!
+  isRead: Boolean!
+  target: NotificationTargetUnion!
+  text: String! #Пользователь Ильнур поменял изменил название на "Гос контракт"
+  date: String!
+}
+
+union NotificationTargetUnion = Task|Object|Area

@@ -1,3 +1,4 @@
+const moment = require('moment');
 const {
   User,
   Message,
@@ -25,9 +26,23 @@ module.exports = {
     id: ({ id, _id }) => id || _id.toString(),
     username: user => user.email,
     icon: user => `https://dev.scis.xyz/images/${user.lastName} ${user.firstName} ${user.middleName}`,
-    initials: parent => `${parent.lastName} ${parent.firstName[0]}. ${parent.middleName[0]}.`,
-    fullName: parent => `${parent.lastName} ${parent.firstName} ${parent.middleName}`,
     name: ({ firstName }) => firstName,
+    async notifications(parent) {
+      return {
+        count: 1,
+        nodes: [{
+          id: 1,
+          isRead: false,
+          target: {
+            __typename: 'Task',
+            _id: '12341234',
+            name: 'test task',
+          },
+          text: `Пользователь ${parent.initials} изменил поле "Статус" на "В работе"`,
+          date: moment().format(),
+        }],
+      };
+    },
   },
   Query: {
     user: async (parent, args, { user }) => {
