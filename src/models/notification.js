@@ -30,7 +30,7 @@ const schema = new Schema({
   },
   createdAt: {
     type: Date,
-    defaultValue: new Date(),
+    default: new Date(),
   },
   // extra field depends on type of resource and action
   fieldName: String,
