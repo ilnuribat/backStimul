@@ -26,7 +26,7 @@ module.exports = {
         AREA: 'Area',
       };
 
-      return map[parent.targetType] || 'Task';
+      return map[parent.type];
     },
   },
   Notification: {
