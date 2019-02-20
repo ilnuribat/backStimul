@@ -13,11 +13,6 @@ const user = new Schema({
   birthdate: String,
   OU: [String],
   lastNotificationId: Schema.Types.ObjectId,
-}, {
-  timestamps: {
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-  },
 });
 
 module.exports = user;

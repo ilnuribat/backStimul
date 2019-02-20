@@ -11,6 +11,14 @@ type Notification {
   date: String!
 }
 
+type NotificationMutation {
+  read: Boolean!
+}
+
+type Mutation {
+  notification: NotificationMutation!
+}
+
 type Subscription {
   notificationCreated: Notification
 }
