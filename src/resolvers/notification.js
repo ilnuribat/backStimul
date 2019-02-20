@@ -1,5 +1,7 @@
+const { withFilter } = require('apollo-server');
 const moment = require('moment');
 const { Group, Notification } = require('../models');
+const { pubsub, NOTIFICATION_CREATED } = require('../services/constants');
 
 module.exports = {
   NotificationConnection: {
@@ -43,5 +45,16 @@ module.exports = {
       _id: parent.targetId,
     }),
     date: parent => moment(parent.createdAt).format(),
+  },
+  Subscription: {
+    notificationCreated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([NOTIFICATION_CREATED]),
+        ({ notificationCreated }, args, { user }) => notificationCreated.userId.toString() !== user._id.toString()
+          && notificationCreated.watchers
+            .map(_id => _id.toString())
+            .includes(user._id.toString()),
+      ),
+    },
   },
 };

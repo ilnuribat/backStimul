@@ -8,6 +8,7 @@ const TASK_UPDATED = 'TASK_UPDATED';
 const USER_TASK_UPDATED = 'USER_TASK_UPDATED';
 const KICKED = 'KICKED';
 const INVITED = 'INVITED';
+const NOTIFICATION_CREATED = 'NOTIFICATION_CREATED';
 
 const GROUP_TYPES = ['DIRECT', 'TASK', 'OBJECT', 'AREA'];
 const ADDRESS_LEVELS = ['region', 'area', 'city', 'settlement', 'street', 'house'];
@@ -98,6 +99,8 @@ module.exports = {
   MESSAGE_READ,
   TASK_UPDATED,
   USER_TASK_UPDATED,
+  NOTIFICATION_CREATED,
+
   GROUP_TYPES,
   ADDRESS_LEVELS,
   TASK_STATUSES,
@@ -110,4 +113,5 @@ module.exports = {
   STATUSES,
   OBJECTS_TABS_NAMES,
   TASK_STATUSES_MAP,
+
 };

@@ -11,4 +11,8 @@ type Notification {
   date: String!
 }
 
+type Subscription {
+  notificationCreated: Notification
+}
+
 union NotificationTargetUnion = Task|Object|Area

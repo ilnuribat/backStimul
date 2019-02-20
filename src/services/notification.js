@@ -1,6 +1,6 @@
 const moment = require('moment');
 const { Notification, User, UserGroup } = require('../models');
-const { TASK_STATUSES_MAP } = require('../services/constants');
+const { TASK_STATUSES_MAP, pubsub, NOTIFICATION_CREATED } = require('../services/constants');
 
 async function generateNotificationText(args) {
   const {
@@ -57,6 +57,7 @@ async function create(args) {
   const watchers = await UserGroup.find({
     groupId: args.targetId,
   });
+
   const notification = await Notification.create({
     text,
     userId: args.user._id,
@@ -64,7 +65,9 @@ async function create(args) {
     ...args,
   });
 
-  console.log(notification);
+  pubsub.publish(NOTIFICATION_CREATED, {
+    notificationCreated: notification,
+  });
 }
 
 module.exports = {
