@@ -44,6 +44,7 @@ async function updateTask(parent, { task }, { user }) {
       operationType: 'UPDATE',
       targetType: 'TASK',
       targetId: parent._id,
+      targetResourceName: foundTask.name,
       user,
     });
   }

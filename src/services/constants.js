@@ -77,6 +77,12 @@ const TASK_STATUSES = Object.keys(STATUSES).reduce((acc, key) => {
   return acc;
 }, []);
 
+const TASK_STATUSES_MAP = TASK_STATUSES.reduce((acc, value) => {
+  acc[value.id] = value.name;
+
+  return acc;
+}, {});
+
 const ERROR_CODES = {
   NOT_AUTHENTICATED: 'NOT_AUTHENTICATED',
   INVALID_TOKEN: 'INVALID_TOKEN',
@@ -103,4 +109,5 @@ module.exports = {
   OBJECTS_TABS,
   STATUSES,
   OBJECTS_TABS_NAMES,
+  TASK_STATUSES_MAP,
 };
