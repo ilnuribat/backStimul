@@ -104,4 +104,31 @@ async function areaObject() {
   }
 }
 
-// areaObject();
+async function userInitials() {
+  await connect();
+
+  const cursor = await models.User.findOne().cursor();
+  let user = await cursor.next();
+
+  while (user) {
+    const { firstName, lastName, middleName } = user;
+
+    console.log(user);
+
+    await models.User.updateOne({
+      _id: user._id,
+    }, {
+      $set: {
+        initials: `${lastName} ${firstName[0]}.${middleName[0]}.`,
+        fullName: `${lastName} ${firstName} ${middleName}`,
+      },
+    });
+
+    user = await cursor.next();
+
+    // break;
+  }
+
+}
+
+// userInitials();
