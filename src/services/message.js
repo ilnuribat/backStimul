@@ -17,7 +17,7 @@ async function createMessage(parent, { message }, { user }) {
     throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
   }
 
-  const group = await Group.findById(message.groupId);
+  const group = await Group.findById(message.groupId).lean();
 
   if (!group) {
     throw new Error(ERROR_CODES.NOT_FOUND);
@@ -30,7 +30,7 @@ async function createMessage(parent, { message }, { user }) {
 
   if (group.type === 'TASK' && !userGroup) {
     // invite user to task
-    await taskService.inviteUsersToGroup({ group, users: [user] });
+    await taskService.inviteUserToGroup({ group, user });
   }
 
   if (group.type === 'DIRECT' && !userGroup) {
