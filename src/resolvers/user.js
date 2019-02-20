@@ -1,4 +1,3 @@
-const moment = require('moment');
 const {
   User,
   Message,
@@ -27,22 +26,7 @@ module.exports = {
     username: user => user.email,
     icon: user => `https://dev.scis.xyz/images/${user.lastName} ${user.firstName} ${user.middleName}`,
     name: ({ firstName }) => firstName,
-    async notifications(parent) {
-      return {
-        count: 1,
-        nodes: [{
-          id: 1,
-          isRead: false,
-          target: {
-            __typename: 'Task',
-            _id: '12341234',
-            name: 'test task',
-          },
-          text: `Пользователь ${parent.initials} изменил поле "Статус" на "В работе"`,
-          date: moment().format(),
-        }],
-      };
-    },
+    notifications: (parent, { limit = 10, offset = 0 }) => ({ limit, offset }),
   },
   Query: {
     user: async (parent, args, { user }) => {
