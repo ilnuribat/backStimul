@@ -1,8 +1,8 @@
 const moment = require('moment');
-const { Notification } = require('../models');
+const { Notification, User } = require('../models');
 const { TASK_STATUSES_MAP } = require('../services/constants');
 
-function generateNotificationText(args) {
+async function generateNotificationText(args) {
   const {
     newValue,
     user,
@@ -25,6 +25,18 @@ function generateNotificationText(args) {
       humanFieldName = 'Статус';
       humanNewValue = TASK_STATUSES_MAP[newValue];
       break;
+    case 'assignedTo': {
+      const assignedToUser = await User.findById(newValue);
+
+      if (!assignedToUser) {
+        throw new Error('cant set assignedTo, no user found');
+      }
+
+      humanFieldName = 'Ответственный';
+      humanNewValue = assignedToUser.initials;
+
+      break;
+    }
     default:
       break;
   }
@@ -41,8 +53,9 @@ function generateNotificationText(args) {
 }
 
 async function create(args) {
+  const text = await generateNotificationText(args);
   const notification = await Notification.create({
-    text: generateNotificationText(args),
+    text,
     userId: args.user._id,
     ...args,
   });
