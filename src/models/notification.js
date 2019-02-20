@@ -32,6 +32,7 @@ const schema = new Schema({
     type: Date,
     default: new Date(),
   },
+  watchers: [Schema.Types.ObjectId],
   // extra field depends on type of resource and action
   fieldName: String,
   oldValue: String,
