@@ -9,11 +9,18 @@ const { generateToken } = require('../src/services/user');
 describe('direct chat', () => {
   // создаем tmpUser, tmpUser2, directChat для user и tmpUser2
   before(async function () {
+    const initials = 'Test T.T.';
+    const fullName = 'Test Test Test';
+
     this.tmpUser = await User.create({
       id1C: Math.random(),
+      initials,
+      fullName,
     });
     this.tmpUser2 = await User.create({
       id1C: Math.random(),
+      initials,
+      fullName,
     });
     this.directChat = await Group.create({
       code: [this.user._id.toString(), this.tmpUser2._id.toString()].sort().join('|'),

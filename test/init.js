@@ -14,9 +14,10 @@ before(async function () {
   this.password = '123123';
 
   this.user = await User.create({
-    email: this.email,
-    password: this.password,
     id1C: Math.random(),
+    initials: 'Test T.T. main',
+    fullName: 'Test Test Test',
+    email: this.email,
   });
 
   this.generatedToken = generateToken(this.user);
@@ -53,6 +54,6 @@ before(async function () {
 
 after(async function () {
   await User.deleteOne({
-    email: this.email,
+    _id: this.user._id,
   });
 });
