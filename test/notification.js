@@ -3,7 +3,7 @@ const {
   Group, Notification, UserGroup, User,
 } = require('../src/models');
 
-describe('notification', () => {
+describe.only('notification', () => {
   before(async function () {
     this.task = await Group.create({
       name: 'test',
@@ -51,16 +51,16 @@ describe('notification', () => {
     assert.equal(notification.fieldName, 'name');
   });
   describe('user has notifications', () => {
-    const text = `Пользователь "фыва" изменил поле "название" на значение "new name1"`;
+    const text = 'Пользователь "фыва" изменил поле "название" на значение "new name1"';
 
     before(async function () {
-      const notificationUser = await User.create({
+      this.notificationUser = await User.create({
         id1C: Math.random(),
       });
 
       await Notification.create({
         targetId: this.task._id,
-        userId: notificationUser._id,
+        userId: this.notificationUser._id,
         text,
         targetType: 'TASK',
         operationType: 'UPDATE',
@@ -69,6 +69,9 @@ describe('notification', () => {
         fieldName: 'name',
         watchers: [this.user._id],
       });
+    });
+    after(async function () {
+      await User.deleteOne({ _id: this.notificationUser._id });
     });
     it('get notification with all fields', async function () {
       const { data, errors } = await this.request({
