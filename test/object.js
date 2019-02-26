@@ -17,11 +17,14 @@ describe('object', () => {
     await Group.deleteMany({
       _id: {
         $in: [
-          this.objectId,
+          this.objectId, // create object test
           this.area._id,
           this.object._id,
         ],
       },
+    });
+    await Group.deleteMany({
+      objectId: this.objectId,
     });
   });
   it('create', async function () {
@@ -54,7 +57,7 @@ describe('object', () => {
     assert.equal(object.name, 'test');
     assert.equal(object.areaId.toString(), this.area._id.toString());
 
-    this.objectId = object.id;
+    this.objectId = object._id;
   });
   it('update', async function () {
     const { data, errors } = await this.request({

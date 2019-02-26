@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const { Group } = require('../src/models');
+const { Group, Notification, UserGroup } = require('../src/models');
 
 describe('task', () => {
   before(async function () {
@@ -35,6 +35,13 @@ describe('task', () => {
       await Group.deleteMany({
         parentId: this.parentTask._id,
       });
+      await UserGroup.deleteMany({
+        groupId: {
+          $in: [
+            this.createdTask._id,
+          ],
+        },
+      });
     });
     it('new graphql method', async function () {
       const { data, errors } = await this.request({
@@ -62,6 +69,8 @@ describe('task', () => {
         type: 'TASK',
       });
 
+      this.createdTask = task;
+
       assert.isNotNull(task);
       assert.equal(task.name, 'test task');
       assert.equal(task.objectId, this.object._id.toString());
@@ -80,14 +89,21 @@ describe('task', () => {
       await Group.deleteOne({
         _id: this.task._id,
       });
+      await UserGroup.deleteMany({
+        groupId: this.task._id,
+      });
+      await Notification.deleteMany({
+        targetId: this.task._id,
+      });
     });
     it('update', async function () {
+      const newName = 'new name, task Updated';
       const { data, errors } = await this.request({
         query: `
           mutation {
             task(id: "${this.task._id.toString()}") {
               update(task: {
-                name: "new name"
+                name: "${newName}"
               })
             }
           }
@@ -102,7 +118,7 @@ describe('task', () => {
         type: 'TASK',
       });
 
-      assert.equal(task.name, 'new name');
+      assert.equal(task.name, newName);
     });
     it('delete', async function () {
       const { data, errors } = await this.request({
