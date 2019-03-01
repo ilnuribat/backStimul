@@ -1,10 +1,8 @@
-const models = require('../src/models');
-
 module.exports = {
-  async up() {
-    await models.User.findOne();
+  async up(client) {
+    await client.collection('users');
   },
-  async down() {
-    await models.Group.findOne();
+  async down(client) {
+    await client.collection('users');
   },
 };

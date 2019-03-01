@@ -25,6 +25,11 @@ async function connect(connection = MONGODB_HOST) {
   logger.info('connected to postgres');
 }
 
+async function disconnect() {
+  return mongoose.disconnect();
+}
+
 module.exports = {
   connect,
+  disconnect,
 };
