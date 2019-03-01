@@ -1,7 +1,7 @@
 const fs = require('fs');
 const moment = require('moment');
 
-const datetime = moment().format('YYYYMMDDThhmmss');
+const datetime = moment().format('YYYYMMDDTHHmmss');
 const name = process.argv[2] || 'name';
 
 fs
