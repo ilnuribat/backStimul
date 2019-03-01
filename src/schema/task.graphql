@@ -15,6 +15,7 @@ type Task {
   tasks: [Task]
   tab: TaskTabEnum
   statuses: [IDName!]!
+  approvers: [Approval!]!
 }
 
 enum TaskTabEnum {
@@ -60,6 +61,18 @@ type UserTaskAction {
   task: Task
 }
 
+enum ApproveDecision {
+  APPROVED
+  DECLINED
+  NONE
+} 
+
+type Approval {
+  user: User!
+  comment: String
+  decision: ApproveDecision! 
+}
+
 type Query {
   task(id: ID!): Task
 }
@@ -68,6 +81,10 @@ type TaskMutations {
   create(task: TaskInput): Task!
   update(task: TaskUpdateInput): Boolean!
   delete: Boolean!
+  addApprover(userId: ID!): Boolean!
+  removeApprover(userId: ID!): Boolean!
+  approve(comment: String): Boolean!
+  decline(comment: String): Boolean!
 }
 
 type Mutation {
@@ -78,4 +95,5 @@ type Mutation {
 type Subscription {
   taskUpdated: Task
   userTaskUpdated: UserTaskAction
+  taskApproved(id: ID!): User!
 }

@@ -1,11 +1,27 @@
 const { Schema, Types } = require('mongoose');
 
 const schema = new Schema({
-  userId: Schema.Types.ObjectId,
-  groupId: Schema.Types.ObjectId,
+  userId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
+  groupId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
   lastReadCursor: {
     type: Schema.Types.ObjectId,
     default: Types.ObjectId.createFromTime(0),
+  },
+  type: {
+    type: String,
+    enum: ['CHAT', 'APPROVER'],
+    required: true,
+  },
+  comment: String,
+  approveDecision: {
+    type: String,
+    enum: ['APPROVED', 'DECLINED'],
   },
 });
 
