@@ -2,6 +2,7 @@
 const fs = require('fs');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const fetch = require('node-fetch');
+const { logger } = require('../logger.js');
 
 fetch('http://localhost:8500/graphql', {
   method: 'POST',
@@ -34,9 +35,9 @@ fetch('http://localhost:8500/graphql', {
     result.data.__schema.types = filteredData;
     fs.writeFile('./fragmentTypes.json', JSON.stringify(result.data), (err) => {
       if (err) {
-        console.error('Error writing fragmentTypes file', err);
+        logger.error('Error writing fragmentTypes file', err);
       } else {
-        console.log('Fragment types successfully extracted!');
+        logger.info('Fragment types successfully extracted!');
       }
     });
   });

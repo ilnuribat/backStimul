@@ -24,6 +24,7 @@ module.exports = {
     'class-methods-use-this': ['off'],
     'no-underscore-dangle': ['error', {'allow': ['_id', '__typename']}],
     'no-multiple-empty-lines': ['error', { maxEOF: 1, max: 2 }],
-    'mocha/no-global-tests': ['error']
+    'mocha/no-global-tests': ['error'],
+    'no-console': ['error', { allow: ['time', 'timeEnd'] }]
   }
 };

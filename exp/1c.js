@@ -3,6 +3,7 @@ const readline = require('readline');
 const moment = require('moment');
 const { User } = require('../src/models');
 const { connect } = require('../connectDB');
+const { logger } = require('../logger.js');
 
 async function sovle() {
   await connect();
@@ -71,7 +72,7 @@ async function sovle() {
 
     // break;
   }
-  console.log('finish');
+  logger.info('finish');
 }
 
 sovle();
