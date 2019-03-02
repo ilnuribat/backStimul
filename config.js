@@ -3,7 +3,6 @@ require('dotenv').config();
 const {
   HTTP_PORT = 8500,
   JWT_SECRET = 'super secret',
-  // MONGODB_HOST = 'mongodb://guov:guov@172.31.250.103:27017/guov?authSource=admin',
   MONGO_HOST = '172.31.250.103',
   MONGO_PORT = '27017',
   MONGO_DATABASE = 'guov',
