@@ -10,6 +10,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=guov
     ports:
       - 27017:27017
+    restart: always
   postgres:
     image: postgres:10
     volumes:
@@ -20,6 +21,7 @@ services:
       - POSTGRES_USER=guov
       - POSTGRES_PASSWORD=guov
       - POSTGRES_DATABASE=fias
+    restart: always
   nginx:
     image: nginx:1.14
     network_mode: host
@@ -27,3 +29,4 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ../../client/build:/app/build
       - /tmp/pics/:/app/images/
+    restart: always
