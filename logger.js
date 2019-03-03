@@ -8,9 +8,11 @@ const {
 
 const customFormat = printf(log => `${
   log.level
-}: ${
-  log.timestamp
-}: ${
+}${
+  process.env.NODE_ENV === 'production'
+    ? `${log.timestamp}: `
+    : ''
+}${
   log.label
 } ${
   log.message
