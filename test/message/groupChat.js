@@ -9,6 +9,7 @@ describe('message', () => {
     await UserGroup.create({
       userId: this.user._id,
       groupId: this.groupChat._id,
+      type: 'CHAT',
     });
   });
   after(async function () {

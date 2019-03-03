@@ -69,9 +69,11 @@ describe('integration: search', () => {
       await UserGroup.insertMany([{
         userId: this.user._id,
         groupId: this.tmpTasks[0]._id,
+        type: 'CHAT',
       }, {
         userId: this.user._id,
         groupId: this.tmpTasks[1]._id,
+        type: 'CHAT',
       }]);
       this.tmpDirect = await directMessage(null, { id: this.tmpUser._id.toString() }, { user: this.user });
 

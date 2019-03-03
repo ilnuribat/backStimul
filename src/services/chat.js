@@ -70,7 +70,10 @@ async function getPageInfo({
 }
 
 async function getDirectChats(user) {
-  const usersGroups = await UserGroup.find({ userId: user.id });
+  const usersGroups = await UserGroup.find({
+    userId: user.id,
+    type: 'CHAT',
+  });
 
   const directsRaw = await Group.find({
     _id: {
@@ -106,6 +109,7 @@ async function searchMessages(user, regExp, limit = 10) {
   const res = await UserGroup.aggregate([{
     $match: {
       userId: user._id,
+      type: 'CHAT',
     },
   }, {
     $graphLookup: {
@@ -160,10 +164,12 @@ async function directMessage(parent, { id }, { user }) {
     userId: user.id,
     groupId: group.id,
     lastReadCursor: ObjectId.createFromTime(0),
+    type: 'CHAT',
   }, {
     userId: dUser.id,
     groupId: group.id,
     lastReadCursor: ObjectId.createFromTime(0),
+    type: 'CHAT',
   }]);
 
   return group;

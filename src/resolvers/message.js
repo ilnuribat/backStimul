@@ -45,6 +45,7 @@ module.exports = {
           $ne: message.userId,
         },
         groupId: message.groupId,
+        type: 'CHAT',
       }).sort({ _id: 1 });
 
       const unReadMessages = userGroups.filter(ug => ug.lastReadCursor < message.id);
@@ -101,6 +102,7 @@ module.exports = {
           const userGroup = await UserGroup.findOne({
             groupId: mGroupId,
             userId: user.id,
+            type: 'CHAT',
           });
 
           if (userGroup) {

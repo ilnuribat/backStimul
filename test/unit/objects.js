@@ -20,6 +20,7 @@ describe('object', () => {
     await UserGroup.create({
       userId: this.user._id,
       groupId: this.tmpTask._id,
+      type: 'CHAT',
     });
   });
   it('deleting object deletes all tasks inside it', async function () {

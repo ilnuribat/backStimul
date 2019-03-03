@@ -9,7 +9,7 @@ async function getTasks(userId) {
     _id: {
       $in: usersGroups.map(u => u.groupId),
     },
-    code: null,
+    type: 'TASK',
   }).sort({
     lastMessageAt: -1,
   });

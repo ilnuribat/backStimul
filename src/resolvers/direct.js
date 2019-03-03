@@ -49,6 +49,7 @@ module.exports = {
       const userGroup = await UserGroup.findOne({
         groupId: id,
         userId: user._id,
+        type: 'CHAT',
       });
 
       if (!userGroup) {

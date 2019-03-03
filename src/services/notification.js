@@ -1,6 +1,14 @@
 const moment = require('moment');
-const { Notification, User, UserGroup } = require('../models');
-const { TASK_STATUSES_MAP, pubsub, NOTIFICATION_CREATED } = require('../services/constants');
+const {
+  Notification,
+  User,
+  UserGroup,
+} = require('../models');
+const {
+  TASK_STATUSES_MAP,
+  pubsub,
+  NOTIFICATION_CREATED,
+} = require('../services/constants');
 
 async function generateNotificationText(args) {
   const {
@@ -56,6 +64,7 @@ async function create(args) {
   const text = await generateNotificationText(args);
   const watchers = await UserGroup.find({
     groupId: args.targetId,
+    type: 'CHAT',
   });
 
   const notification = await Notification.create({

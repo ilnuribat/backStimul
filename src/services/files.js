@@ -19,6 +19,7 @@ async function download(id) {
 
 async function searchFiles(user, regExp, limit) {
   const res = await UserGroup.aggregate([{
+    // TODO search in all tasks
     $match: {
       userId: ObjectId(user.id),
     },

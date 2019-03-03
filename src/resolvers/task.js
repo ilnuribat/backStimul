@@ -1,6 +1,6 @@
 const moment = require('moment');
 const { withFilter } = require('apollo-server');
-const { Group, UserGroup } = require('../models');
+const { Group } = require('../models');
 const {
   pubsub, TASK_UPDATED, USER_TASK_UPDATED, ERROR_CODES, STATUSES,
 } = require('../services/constants');
@@ -83,31 +83,13 @@ module.exports = {
     taskUpdated: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([TASK_UPDATED]),
-        async ({ taskUpdated: { _id: _mId, id: mId } }, args, { user }) => {
-          const res = await UserGroup.findOne({
-            groupId: mId || _mId,
-            userId: user.id,
-          });
-
-          return !!res;
-        },
+        async () => true,
       ),
     },
     userTaskUpdated: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([USER_TASK_UPDATED]),
-        async ({ userTaskUpdated }, args, { user }) => {
-          if (user._id.equals(userTaskUpdated.user.id)) {
-            return true;
-          }
-
-          const ug = await UserGroup.findOne({
-            userId: user.id,
-            groupId: userTaskUpdated.task.id,
-          }).lean();
-
-          return !!ug;
-        },
+        async () => true,
       ),
     },
   },

@@ -26,6 +26,7 @@ async function createMessage(parent, { message }, { user }) {
   const userGroup = await UserGroup.findOne({
     userId: user._id,
     groupId: message.groupId,
+    type: 'CHAT',
   });
 
   if (group.type === 'TASK' && !userGroup) {
@@ -50,6 +51,7 @@ async function createMessage(parent, { message }, { user }) {
   await UserGroup.updateOne({
     userId: user._id,
     groupId: message.groupId,
+    type: 'CHAT',
   }, {
     $set: {
       lastReadCursor: createdMessage._id,
@@ -87,16 +89,19 @@ async function messageRead(parent = {}, args, { user }) {
     userId: {
       $ne: ObjectId(user.id),
     },
+    type: 'CHAT',
   }).sort({ _id: 1 });
   // вытащить свой курсор
   const myOldCursor = await UserGroup.findOne({
     groupId: ObjectId(message.groupId),
     userId: ObjectId(user.id),
+    type: 'CHAT',
   });
 
   const userGroup = await UserGroup.updateOne({
     userId: ObjectId(user.id),
     groupId: ObjectId(message.groupId),
+    type: 'CHAT',
   }, {
     $set: {
       lastReadCursor: ObjectId(message.id),

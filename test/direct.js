@@ -30,9 +30,11 @@ describe('direct chat', () => {
     await UserGroup.insertMany([{
       userId: this.user._id,
       groupId: this.directChat._id,
+      type: 'CHAT',
     }, {
       userId: this.tmpUser2._id,
       groupId: this.directChat._id,
+      type: 'CHAT',
     }]);
     this.directCode = [this.user._id.toString(), this.tmpUser._id.toString()].sort().join('|');
   });

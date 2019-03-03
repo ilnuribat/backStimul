@@ -17,6 +17,7 @@ async function inviteUserToGroup({ group, user }) {
       userId: user._id,
       groupId: group._id,
       lastReadCursor: lastMessage._id || ObjectId.createFromTime(0),
+      type: 'CHAT',
     });
 
     pubsub.publish(USER_TASK_UPDATED, {
@@ -53,6 +54,7 @@ async function updateTask(parent, { task }, { user }) {
   const userInTask = await UserGroup.findOne({
     userId: user._id,
     groupId: id,
+    type: 'CHAT',
   });
 
   if (!userInTask) {
@@ -95,6 +97,7 @@ async function kickUserFromGroup({ group, user = {} }) {
   const res = await UserGroup.deleteMany({
     userId: user._id,
     groupId: group._id,
+    type: 'CHAT',
   });
 
   if (!res.n) {
@@ -186,6 +189,7 @@ async function searchTasks(user, regExp, limit = 10, statuses) {
     };
   }
   const res = await UserGroup.aggregate([{
+    // TODO search in all tasks
     $match: {
       userId: user._id,
     },
