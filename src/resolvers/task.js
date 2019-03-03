@@ -1,6 +1,6 @@
 const moment = require('moment');
 const { withFilter } = require('apollo-server');
-const { Group } = require('../models');
+const { Group, User, UserGroup } = require('../models');
 const {
   pubsub, TASK_UPDATED, USER_TASK_UPDATED, ERROR_CODES, STATUSES,
 } = require('../services/constants');
@@ -42,6 +42,24 @@ module.exports = {
       parentId: parent._id,
     }),
     statuses: parent => STATUSES[parent.statusType] || STATUSES.STANDART,
+    approvers: async (parent) => {
+      const ugs = await UserGroup.find({
+        groupId: parent._id,
+        type: 'APPROVER',
+      });
+
+      const approvers = await User.find({
+        _id: {
+          $in: ugs.map(ug => ug.userId),
+        },
+      });
+
+      return approvers.map(a => ({
+        user: a,
+        comment: 'asdf',
+        decision: 'NONE',
+      }));
+    },
   },
   Query: {
     task(parent, { id }, { user }) {
@@ -59,6 +77,44 @@ module.exports = {
     create: taskService.createTask,
     update: taskService.updateTask,
     delete: taskService.deleteTask,
+    addApprover: async (parent, { userId }) => {
+      if (!parent) {
+        throw new Error('taskId is required');
+      }
+      const approver = await User.findById(userId);
+
+      if (!approver) {
+        throw new Error('no approver found');
+      }
+
+      await UserGroup.insertOne({
+        groupId: parent._id,
+        userId,
+        type: 'APPROVER',
+      });
+      // TODO add notification about it
+    },
+    removeApprover: async (parent, { userId }) => {
+      if (!parent) {
+        throw new Error('taskId is required');
+      }
+      const approver = await UserGroup.findOne({
+        userId,
+        groupId: parent._id,
+        type: 'APPROVER',
+      });
+
+      if (!approver) {
+        throw new Error('no approver found to remove');
+      }
+
+      await UserGroup.deleteOne({
+        userId,
+        groupId: parent._id,
+        type: 'APPROVER',
+      });
+      // TODO add notification
+    },
   },
   Mutation: {
     task: async (parent, args, { user }) => {

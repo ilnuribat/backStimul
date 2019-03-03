@@ -18,6 +18,19 @@ type Task {
   approvers: [Approval!]!
 }
 
+enum ApproveDecision {
+  APPROVED
+  DECLINED
+  NONE
+} 
+
+type Approval {
+  user: User!
+  comment: String
+  decision: ApproveDecision! 
+}
+
+
 enum TaskTabEnum {
   PREPROJECT
   PROJECT
@@ -59,18 +72,6 @@ type UserTaskAction {
   action: UserTaskActionEnum
   user: User
   task: Task
-}
-
-enum ApproveDecision {
-  APPROVED
-  DECLINED
-  NONE
-} 
-
-type Approval {
-  user: User!
-  comment: String
-  decision: ApproveDecision! 
 }
 
 type Query {
