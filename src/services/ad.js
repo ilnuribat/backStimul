@@ -5,6 +5,7 @@ const {
   LOGIN_AS_PASSWORD,
 } = require('../../config');
 const { logger } = require('../../logger');
+const { User } = require('../models');
 
 const config = {
   url: ACTIVE_DIRECTORY_HOST,
@@ -21,8 +22,12 @@ const ad = new ActiveDirectory(config);
 async function getUserInfoFromAD(user) {
   const { email } = user;
 
-  if (process.env.NODE_ENV === 'test') {
-    return user;
+  if (process.env.NODE_ENV !== 'production') {
+    const dbUser = await User.findOne({ email });
+
+    if (dbUser) {
+      return dbUser;
+    }
   }
 
   return new Promise((resolve, reject) => {
