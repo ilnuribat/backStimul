@@ -20,7 +20,7 @@ const schema = new Schema({
 schema.index({ name: 1 }, { unique: true });
 
 async function nativeConnect() {
-  await connect();
+  await connect({ pg: false });
 
   return new Promise((resolve, reject) => {
     MongoClient.connect(MONGODB_HOST, {

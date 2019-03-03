@@ -1,5 +1,14 @@
 module.exports = {
   async up(client) {
+    await client.collection('usergroups').updateMany({
+      type: {
+        $exists: false,
+      },
+    }, {
+      $set: {
+        type: 'CHAT',
+      },
+    });
     await client.collection('usergroups').createIndex({
       userId: 1,
       groupId: 1,

@@ -17,6 +17,7 @@ const schema = new Schema({
     type: String,
     enum: ['CHAT', 'APPROVER'],
     required: true,
+    default: 'CHAT',
   },
   comment: String,
   approveDecision: {
