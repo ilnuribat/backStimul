@@ -87,12 +87,14 @@ module.exports = {
         throw new Error('no approver found');
       }
 
-      await UserGroup.insertOne({
+      await UserGroup.create({
         groupId: parent._id,
         userId,
         type: 'APPROVER',
       });
       // TODO add notification about it
+
+      return true;
     },
     removeApprover: async (parent, { userId }) => {
       if (!parent) {
@@ -114,6 +116,8 @@ module.exports = {
         type: 'APPROVER',
       });
       // TODO add notification
+
+      return true;
     },
   },
   Mutation: {
