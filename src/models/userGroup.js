@@ -21,7 +21,7 @@ const schema = new Schema({
   comment: String,
   approveDecision: {
     type: String,
-    enum: ['APPROVED', 'DECLINED'],
+    enum: ['APPROVED', 'DECLINED', 'NONE'],
   },
 });
 
