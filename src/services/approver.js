@@ -20,7 +20,7 @@ async function getApprovers(task) {
   return ugs.map(a => ({
     user: approverMap[a.userId.toString()],
     comment: a.comment,
-    decision: a.approveDecision,
+    decision: a.approveDecision || 'NONE',
   }));
 }
 
