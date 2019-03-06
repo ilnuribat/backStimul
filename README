@@ -11,8 +11,8 @@
 ### шаги для старта backend-а
 
 ```
-git pull git@bitbucket.org:guov/guov-kanban-back
-cd guov-kanban-back
+git pull git@bitbucket.org:guov/backstimul.git
+cd backstimul 
 npm i
 cp .env.example .env
 npm run databases:up
