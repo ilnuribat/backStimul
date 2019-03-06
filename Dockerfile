@@ -4,9 +4,7 @@ WORKDIR /app
 
 COPY package*.json /app/
 
-
-RUN npm i --production
-
+RUN npm i
 
 COPY . .
 
