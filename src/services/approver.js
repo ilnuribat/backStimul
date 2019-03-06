@@ -1,4 +1,5 @@
 const { UserGroup, User } = require('../models');
+const { pubsub, TASK_UPDATED } = require('./constants.js');
 
 async function getApprovers(task) {
   const ugs = await UserGroup.find({
@@ -51,6 +52,12 @@ async function makeDecision({
 
   // TODO send notification
 
+  if (res.nModified) {
+    pubsub.publish(TASK_UPDATED, {
+      taskUpdated: task,
+    });
+  }
+
   return res.nModified;
 }
 
@@ -58,6 +65,7 @@ async function addApprover(task, userId) {
   if (!task) {
     throw new Error('taskId is required');
   }
+
   const approver = await User.findById(userId);
 
   if (!approver) {
@@ -71,6 +79,9 @@ async function addApprover(task, userId) {
       type: 'APPROVER',
     });
     // TODO add notification about it
+    pubsub.publish(TASK_UPDATED, {
+      taskUpdated: task,
+    });
 
     return true;
   } catch (err) {
@@ -96,14 +107,20 @@ async function removeApprover(task, userId) {
     throw new Error('no approver found to remove');
   }
 
-  await UserGroup.deleteOne({
+  const res = await UserGroup.deleteOne({
     userId,
     groupId: task._id,
     type: 'APPROVER',
   });
   // TODO add notification
 
-  return true;
+  if (res.n) {
+    pubsub.publish(TASK_UPDATED, {
+      taskUpdated: task,
+    });
+  }
+
+  return res.n;
 }
 
 module.exports = {

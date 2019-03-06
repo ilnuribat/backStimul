@@ -94,7 +94,7 @@ async function updateTask(parent, { task }, { user }) {
 
 // user may be empty, in case of deleting task
 async function kickUserFromGroup({ group, user = {} }) {
-  const res = await UserGroup.deleteMany({
+  const res = await UserGroup.deleteOne({
     userId: user._id,
     groupId: group._id,
     type: 'CHAT',
