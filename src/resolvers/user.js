@@ -29,9 +29,13 @@ module.exports = {
     notifications: (parent, { limit = 10, offset = 0 }) => ({ limit, offset }),
   },
   Query: {
-    user: async (parent, args, { user }) => {
+    user: async (parent, { id }, { user }) => {
       if (!user) {
         throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
+      }
+
+      if (id) {
+        return User.findById(id);
       }
 
       return user;

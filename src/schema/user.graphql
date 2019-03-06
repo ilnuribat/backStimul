@@ -33,7 +33,7 @@ type AuthToken {
 }
 
 type Query {
-  user(email: String, id: String): User
+  user(id: ID): User
   users: [User]
 }
 
