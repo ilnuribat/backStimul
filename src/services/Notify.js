@@ -7,7 +7,7 @@ const docCreate = async (data, Type) => {
   Noty.updatedAt = new Date();
   Noty.createdAt = new Date();
 
-  const usersIds = await UserGroup.find({ groupId: Noty.entityId, type: 'CHAT' });
+  const usersIds = await UserGroup.find({ groupId: Noty.entityId, type: 'CHAT' }, 'userId -_id');
   const users = [];
 
   usersIds.forEach(({ userId }) => {
