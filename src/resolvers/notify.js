@@ -8,8 +8,8 @@ module.exports = {
       }
 
       const docs = await Notify.find({ usersId: user._id })
-        .skip(offset)
-        .limit(limit)
+        .skip(Number(offset))
+        .limit(Number(limit))
         .sort({ updatedAt: -1 });
 
       if (!docs) return false;

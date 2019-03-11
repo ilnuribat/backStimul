@@ -1,21 +1,22 @@
-const { Notify, UserGroup, Message } = require('../models');
+const { Notify, UserGroup } = require('../models');
 const { pubsub, NOTIFICATION_CREATED } = require('../services/constants');
 
 const docCreate = async (data, Type) => {
   const Noty = data;
-  const usersIds = [];
 
   Noty.updatedAt = new Date();
   Noty.createdAt = new Date();
-  Noty.lastMessage = (await Message.findOne({ groupId: Noty.entityId })) || {};
 
-  Noty.usersId = [];
-  await UserGroup.find({ groupId: Noty.entityId }, 'userId -_id', (err, docs) => {
-    docs.forEach((element) => { if (element.userId) usersIds.push(element.userId.toString()); });
+  const usersIds = await UserGroup.find({ groupId: Noty.entityId, type: 'CHAT' });
+  const users = [];
 
-    return docs;
+  usersIds.forEach(({ userId }) => {
+    // ToDo: Видит ли пользователь свои же изменения
+    // if (userId && userId.toString() !== Noty.userId.toString()) { users.push(userId); }
+    if (userId) { users.push(userId); }
   });
-  Noty.usersId = usersIds;
+
+  Noty.usersId = users;
   const NewDoc = new Type(Noty);
 
   return NewDoc.save((err, doc) => {
@@ -37,21 +38,20 @@ async function makeNotify(data) {
   }
 
   const Noty = data;
-  const usersIds = [];
+  const usersIds = await UserGroup.find({ groupId: Noty.entityId, type: 'CHAT' }, 'userId -_id');
 
-  await UserGroup.find({ groupId: Noty.entityId }, 'userId -_id', (err, docs) => {
-    docs.forEach((element) => { if (element.userId) usersIds.push(element.userId.toString()); });
+  const users = [];
 
-    return docs;
+  usersIds.forEach(({ userId }) => {
+    // if (userId && userId.toString() !== Noty.userId.toString()) { users.push(userId); }
+    if (userId) { users.push(userId); }
   });
 
-  doc.usersId = usersIds;
+  doc.usersId = users;
   doc.name = data.name;
   doc.updatedAt = new Date();
-  // doc.lastMessage = data.lastMessage;
+  doc.lastMessage = data.lastMessage;
   let events = [...data.events, ...doc.events];
-
-  doc.lastMessage = (await Message.findOne({ groupId: Noty.entityId })) || {};
 
   events = events.sort((a, b) => {
     const aa = new Date(a.date);

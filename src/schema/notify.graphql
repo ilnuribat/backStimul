@@ -1,5 +1,5 @@
 type Query {
-  notifys: [Notify]
+  notifys(limit: Int, offset: Int): [Notify]
 }
 type Mutation {
   notifys(id: String): String
