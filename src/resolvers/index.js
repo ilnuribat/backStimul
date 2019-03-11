@@ -9,6 +9,7 @@ const task = require('./task');
 const search = require('./search');
 const area = require('./area');
 const notification = require('./notification.js');
+const notify = require('./notify');
 
 module.exports = mergeResolvers([
   user,
@@ -21,4 +22,5 @@ module.exports = mergeResolvers([
   search,
   area,
   notification,
+  notify,
 ]);

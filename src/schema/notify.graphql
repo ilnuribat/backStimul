@@ -1,0 +1,40 @@
+type Query {
+  notifys: [Notify]
+}
+type Mutation {
+  notifys(id: String): String
+}
+
+type Notify {
+  id: String
+  name: String
+  userId: String
+  groupId: String
+  entityId: String
+  notyId: String
+  parentId: String
+  lastMessage: LastMessage
+  events: [Events]
+  createdAt: String
+  updatedAt: String
+}
+
+type LastMessage {
+    id: String
+    text: String
+    userId: String
+    fullName: String
+    isDirect: String
+    objectId: String
+    groupId: String
+    date: String
+    createdAt: String
+    count: String
+}
+
+type Events {
+    id: String
+    type: String
+    date: String
+    text: String
+}

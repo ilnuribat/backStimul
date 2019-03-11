@@ -6,7 +6,7 @@ const {
   pubsub, TASK_UPDATED, USER_TASK_UPDATED, KICKED, INVITED,
 } = require('../services/constants');
 const { logger } = require('../../logger');
-const notificationService = require('./notification.js');
+const notyMe = require('./Notify.js');
 
 
 async function inviteUserToGroup({ group, user }) {
@@ -41,6 +41,7 @@ async function inviteUserToGroup({ group, user }) {
 
 async function updateTask(parent, { task }, { user }) {
   const id = parent._id.toString();
+  const dataForNotify = {};
 
   const foundTask = await Group.findOne({
     _id: id,
@@ -61,10 +62,25 @@ async function updateTask(parent, { task }, { user }) {
     await inviteUserToGroup({ group: foundTask, user });
   }
 
-  if (Object.keys(task).length > 1) {
-    throw new Error('updating multiple fields forbidden');
-  }
-  const [fieldName] = Object.keys(task);
+  const fields = () => ({
+    name: 'Название',
+    status: 'Статус',
+    assignedTo: 'Ответственный',
+    endDate: 'Дата завершения',
+  });
+
+  dataForNotify.groupId = id;
+  dataForNotify.entityId = id;
+  dataForNotify.notyId = id;
+  dataForNotify.parentId = id;
+  dataForNotify.userId = user._id;
+  dataForNotify.name = foundTask.name;
+  dataForNotify.events = [];
+
+  Object.keys(task).forEach((element) => {
+    // eslint-disable-next-line max-len
+    dataForNotify.events.push({ date: new Date(), text: `${user.initials} изменил ${fields()[element]} с "${foundTask[element]}" на "${task[element]}"` });
+  });
 
   const res = await Group.updateOne({
     _id: id,
@@ -76,17 +92,7 @@ async function updateTask(parent, { task }, { user }) {
     const updatedTask = await Group.findById(id);
 
     pubsub.publish(TASK_UPDATED, { taskUpdated: updatedTask });
-
-    await notificationService.create({
-      fieldName,
-      oldValue: foundTask[fieldName],
-      newValue: updatedTask[fieldName],
-      operationType: 'UPDATE',
-      targetType: 'TASK',
-      targetId: parent._id,
-      targetResourceName: foundTask.name,
-      user,
-    });
+    notyMe.makeNotify(dataForNotify);
   }
 
   return res.nModified;
