@@ -1,6 +1,15 @@
+const { withFilter } = require('apollo-server');
 const { Group } = require('../models');
 const objectService = require('../services/object');
-const { ERROR_CODES, constructionTypeMap, OBJECTS_TABS_NAMES } = require('../services/constants');
+const {
+  ERROR_CODES,
+  constructionTypeMap,
+  OBJECTS_TABS_NAMES,
+  pubsub,
+  OBJECT_CREATED,
+  OBJECT_DELETED,
+  OBJECT_UPDATED,
+} = require('../services/constants');
 
 module.exports = {
   Object: {
@@ -18,6 +27,9 @@ module.exports = {
       return Group.find(where);
     },
     parentId(parent) {
+      return parent.areaId.toString();
+    },
+    areaId(parent) {
       return parent.areaId.toString();
     },
     tabs: () => OBJECTS_TABS_NAMES,
@@ -52,23 +64,33 @@ module.exports = {
       }
 
       if (id) {
-        return Group.findById(id);
+        return Group.findOne({
+          type: 'OBJECT',
+          _id: id,
+        });
       }
 
       return {};
     },
-    createObject: objectService.createObject,
-    async updateObject(parent, args, { user }) {
-      if (!user) {
-        throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
-      }
-      const foundObject = await Group.findOne({
-        type: 'OBJECT',
-        _id: args.id,
-      });
-
-      return objectService.updateObject(foundObject, args);
+  },
+  Subscription: {
+    objectCreated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([OBJECT_CREATED]),
+        () => true,
+      ),
     },
-    deleteObject: objectService.deleteObject,
+    objectDeleted: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([OBJECT_DELETED]),
+        () => true,
+      ),
+    },
+    objectUpdated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([OBJECT_UPDATED]),
+        () => true,
+      ),
+    },
   },
 };
