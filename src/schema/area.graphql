@@ -70,3 +70,9 @@ type Query {
 type Mutation {
   area(id: ID): AreaMutation
 }
+
+type Subscription {
+  areaCreated: Area!
+  areaUpdated: Area!
+  areaDeleted: Area!
+}
