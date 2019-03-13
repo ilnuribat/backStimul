@@ -3,7 +3,7 @@ const {
   Group, UserGroup, User, Message,
 } = require('../models');
 const {
-  pubsub, TASK_UPDATED, USER_TASK_UPDATED, KICKED, INVITED,
+  pubsub, TASK_UPDATED, USER_TASK_UPDATED, KICKED, INVITED, STATUSES
 } = require('../services/constants');
 const { logger } = require('../../logger');
 const notyMe = require('./Notify.js');
@@ -40,6 +40,7 @@ async function inviteUserToGroup({ group, user }) {
 }
 
 async function updateTask(parent, { task }, { user }) {
+
   const id = parent._id.toString();
   const dataForNotify = {};
 
@@ -77,9 +78,21 @@ async function updateTask(parent, { task }, { user }) {
   dataForNotify.name = foundTask.name;
   dataForNotify.events = [];
 
-  Object.keys(task).forEach((element) => {
+  Object.keys(task).forEach(async (element) => {
+    let oldparam = foundTask[element];
+    let newparam = task[element];
+
+    if(element === 'assignedTo')
+    {
+      const oldu = await User.findById(foundTask[element],'fullName initials -_id');
+      const newu = await User.findById(task[element],'fullName initials -_id');
+
+      oldparam = oldu.initials || foundTask[element];
+      newparam = newu.initials || task[element];
+    }
+
     // eslint-disable-next-line max-len
-    dataForNotify.events.push({ date: new Date(), text: `${user.initials} изменил ${fields()[element]} с "${foundTask[element]}" на "${task[element]}"` });
+    dataForNotify.events.push({ date: new Date(), text: `${user.initials} изменил ${fields()[element]} с "${oldparam}" на "${newparam}"` });
   });
 
   const res = await Group.updateOne({
