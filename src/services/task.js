@@ -3,7 +3,13 @@ const {
   Group, UserGroup, User, Message,
 } = require('../models');
 const {
-  pubsub, TASK_UPDATED, USER_TASK_UPDATED, KICKED, INVITED,
+  pubsub,
+  TASK_UPDATED,
+  USER_TASK_UPDATED,
+  KICKED,
+  INVITED,
+  TASK_CREATED,
+  TASK_DELETED,
 } = require('../services/constants');
 const { logger } = require('../../logger');
 const notificationService = require('./notification.js');
@@ -134,6 +140,10 @@ async function createTask(parent, { task }, { user }) {
 
   await inviteUserToGroup({ group, user });
 
+  pubsub.publish(TASK_CREATED, {
+    taskCreated: group,
+  });
+
   return group;
 }
 
@@ -174,6 +184,12 @@ async function deleteTask(parent, args) {
   await kickUserFromGroup({ group: task });
 
   const res = await Group.deleteOne({ _id: id });
+
+  if (res.n) {
+    pubsub.publish(TASK_DELETED, {
+      taskDeleted: task,
+    });
+  }
 
   return res.n;
 }
