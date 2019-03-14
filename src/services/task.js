@@ -82,16 +82,16 @@ async function updateTask(parent, { task }, { user }) {
     let newparam = task[element];
 
     if (element === 'assignedTo') {
-      const oldu = await User.findById(foundTask[element], 'fullName initials -_id');
-      const newu = await User.findById(task[element], 'fullName initials -_id');
+      const oldu = await User.findById(oldparam, 'fullName initials -_id');
+      const newu = await User.findById(newparam, 'fullName initials -_id');
 
       oldparam = oldu && oldu.initials && oldu.initials;
       newparam = newu && newu.initials && newu.initials;
     }
     if (element === 'status') {
       const statuses = STATUSES[parent.statusType] || STATUSES.STANDART;
-      const oldi = statuses && statuses.find(x => x.id && x.id.toString() === foundTask[element] && foundTask[element].toString());
-      const newi = statuses && statuses.find(x => x.id && x.id.toString() === task[element] && task[element].toString());
+      const oldi = statuses && statuses.find(x => x.id && x.id.toString() === oldparam.toString());
+      const newi = statuses && statuses.find(x => x.id && x.id.toString() === newparam.toString());
 
       oldparam = oldi && oldi.name && oldi.name;
       newparam = newi && newi.name && newi.name;
