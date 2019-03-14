@@ -40,7 +40,6 @@ async function inviteUserToGroup({ group, user }) {
 }
 
 async function updateTask(parent, { task }, { user }) {
-
   const id = parent._id.toString();
   const dataForNotify = {};
 
@@ -82,17 +81,24 @@ async function updateTask(parent, { task }, { user }) {
     let oldparam = foundTask[element];
     let newparam = task[element];
 
-    if(element === 'assignedTo')
-    {
-      const oldu = await User.findById(foundTask[element],'fullName initials -_id');
-      const newu = await User.findById(task[element],'fullName initials -_id');
+    if (element === 'assignedTo') {
+      const oldu = await User.findById(foundTask[element], 'fullName initials -_id');
+      const newu = await User.findById(task[element], 'fullName initials -_id');
 
-      oldparam = oldu.initials || foundTask[element];
-      newparam = newu.initials || task[element];
+      oldparam = oldu && oldu.initials && oldu.initials;
+      newparam = newu && newu.initials && newu.initials;
+    }
+    if (element === 'status') {
+      const statuses = STATUSES[parent.statusType] || STATUSES.STANDART;
+      const oldi = statuses && statuses.find(x => x.id && x.id.toString() === foundTask[element] && foundTask[element].toString());
+      const newi = statuses && statuses.find(x => x.id && x.id.toString() === task[element] && task[element].toString());
+
+      oldparam = oldi && oldi.name && oldi.name;
+      newparam = newi && newi.name && newi.name;
     }
 
     // eslint-disable-next-line max-len
-    dataForNotify.events.push({ date: new Date(), text: `${user.initials} изменил ${fields()[element]} с "${oldparam}" на "${newparam}"` });
+    dataForNotify.events.push({ date: new Date(), text: `${user.initials} изменил ${fields()[element]} с "${oldparam || foundTask[element] || 'Не указано'}" на "${newparam || task[element] || 'Неизвестно'}"` });
   });
 
   const res = await Group.updateOne({
