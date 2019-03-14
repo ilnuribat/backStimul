@@ -78,6 +78,7 @@ module.exports = {
       }, {
         $set: {
           name: area.name,
+          SU: area.SU,
         },
       });
 
