@@ -3,7 +3,8 @@ type Object {
   name: String
   tabs: [ObjectTabs]
   tasks(tab: TaskTabEnum): [Task]
-  parentId: String
+  parentId: ID
+  areaId: ID!
   address: ObjectAdress
   parent: ParentNode
   constructionType: ConstructionType 
@@ -57,10 +58,11 @@ type Query {
 }
 
 type Mutation {
-  createObject(object: ObjectInput): Object @deprecated
-  updateObject(id: ID!, object: ObjectInput): Boolean @deprecated
-  deleteObject(id: ID!): Boolean @deprecated
-
   object(id: ID): ObjectMutations
 }
 
+type Subscription {
+  objectCreated: Object!
+  objectUpdated: Object!
+  objectDeleted: Object!
+}

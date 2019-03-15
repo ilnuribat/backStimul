@@ -1,7 +1,10 @@
-const { ERROR_CODES } = require('../services/constants');
+const { withFilter } = require('apollo-server');
 const { Group } = require('../models');
 const areaService = require('../services/area');
 const addressService = require('../services/address');
+const {
+  ERROR_CODES, pubsub, AREA_CREATED, AREA_UPDATED, AREA_DELETED,
+} = require('../services/constants');
 
 module.exports = {
   Area: {
@@ -47,7 +50,7 @@ module.exports = {
       // провалидировать адрес, вытащить цепочку родителей
       const formedAddress = await addressService.formAddress(area.address.value);
 
-      return Group.create({
+      const areaCreated = await Group.create({
         name: area.name,
         SU: area.SU,
         type: 'AREA',
@@ -58,24 +61,45 @@ module.exports = {
           ...formedAddress,
         },
       });
+
+      pubsub.publish(AREA_CREATED, {
+        areaCreated,
+      });
+
+      return areaCreated;
     },
-    async update({ id }, { area }) {
-      if (!id) {
+    async update({ _id }, { area }) {
+      if (!_id) {
         throw new Error('id is required for update');
       }
 
       const res = await Group.updateOne({
-        _id: id,
+        _id,
       }, {
         $set: {
           name: area.name,
+          SU: area.SU,
         },
       });
 
+      if (res.nModified) {
+        const updatedArea = await Group.findById(_id);
+
+        pubsub.publish(AREA_UPDATED, {
+          areaUpdated: updatedArea,
+        });
+      }
+
       return res.nModified;
     },
-    async delete({ id }) {
-      const res = await Group.deleteOne({ _id: id });
+    async delete(parent) {
+      const res = await Group.deleteOne({ _id: parent._id });
+
+      if (res.n) {
+        pubsub.publish(AREA_DELETED, {
+          areaDeleted: parent,
+        });
+      }
 
       return res.n;
     },
@@ -110,6 +134,26 @@ module.exports = {
       }
 
       return {};
+    },
+  },
+  Subscription: {
+    areaCreated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([AREA_CREATED]),
+        () => true,
+      ),
+    },
+    areaUpdated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([AREA_UPDATED]),
+        () => true,
+      ),
+    },
+    areaDeleted: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([AREA_DELETED]),
+        () => true,
+      ),
     },
   },
 };

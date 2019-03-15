@@ -12,7 +12,7 @@ const {
   TASK_DELETED,
 } = require('../services/constants');
 const { logger } = require('../../logger');
-const notyMe = require('./Notify.js');
+const notificationService = require('./notification.js');
 
 
 async function inviteUserToGroup({ group, user }) {
@@ -67,7 +67,9 @@ async function updateTask(parent, { task }, { user }) {
     await inviteUserToGroup({ group: foundTask, user });
   }
 
-
+  if (Object.keys(task).length > 1) {
+    throw new Error('updating multiple fields forbidden');
+  }
   const [fieldName] = Object.keys(task);
 
   const res = await Group.updateOne({
@@ -80,8 +82,17 @@ async function updateTask(parent, { task }, { user }) {
     const updatedTask = await Group.findById(id);
 
     pubsub.publish(TASK_UPDATED, { taskUpdated: updatedTask });
-    notyMe.doNotify(parent, task, user, foundTask);
 
+    await notificationService.create({
+      fieldName,
+      oldValue: foundTask[fieldName],
+      newValue: updatedTask[fieldName],
+      operationType: 'UPDATE',
+      targetType: 'TASK',
+      targetId: parent._id,
+      targetResourceName: foundTask.name,
+      user,
+    });
   }
 
   return res.nModified;
@@ -136,7 +147,7 @@ async function createTask(parent, { task }, { user }) {
   return group;
 }
 
-async function updateUsersTask(parent, { task }, { user }) {
+async function updateUsersTask(parent, { task }) {
   const groupId = task.id;
   const foundTask = await Group.findOne({
     _id: groupId,
@@ -158,8 +169,6 @@ async function updateUsersTask(parent, { task }, { user }) {
   }
 
   const taskUser = await User.findById(users[0]);
-
-  notyMe.doNotify(parent, task, user, foundTask, taskUser);
 
   if (!task.delete) {
     return inviteUserToGroup({ group: foundTask, user: taskUser });

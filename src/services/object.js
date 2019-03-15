@@ -2,6 +2,9 @@ const bluebird = require('bluebird');
 const { Group, UserGroup } = require('../models');
 const { logger } = require('../../logger');
 const objectTasksTemplate = require('./temlates/objectTasks');
+const {
+  pubsub, OBJECT_CREATED, OBJECT_UPDATED, OBJECT_DELETED,
+} = require('./constants.js');
 
 async function searchObjects(user, regExp, limit) {
   const res = await Group.find({
@@ -46,6 +49,12 @@ async function deleteObject(parent, args) {
 
   logger.debug('deleted object', res);
 
+  if (res.n) {
+    pubsub.publish(OBJECT_DELETED, {
+      objectDeleted: foundObject,
+    });
+  }
+
   return res.n;
 }
 
@@ -74,20 +83,31 @@ async function createObject(parent, { object }) {
 
   await createTemplateTasks({ parentId: null, tasks: objectTasksTemplate.allTasks });
 
+  pubsub.publish(OBJECT_CREATED, {
+    objectCreated: res,
+  });
+
   return res;
 }
 
-async function updateObject({ id }, { object }) {
+async function updateObject({ _id }, { object }) {
   const res = await Group.updateOne({
-    _id: id,
+    _id,
     type: 'OBJECT',
   }, {
     $set: object,
   });
 
+  if (res.nModified) {
+    const updatedObject = await Group.findById(_id);
+
+    pubsub.publish(OBJECT_UPDATED, {
+      objectUpdated: updatedObject,
+    });
+  }
+
   return res.nModified;
 }
-
 
 module.exports = {
   searchObjects,

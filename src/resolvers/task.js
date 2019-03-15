@@ -2,7 +2,13 @@ const moment = require('moment');
 const { withFilter } = require('apollo-server');
 const { Group } = require('../models');
 const {
-  pubsub, TASK_UPDATED, USER_TASK_UPDATED, ERROR_CODES, STATUSES,
+  pubsub,
+  TASK_UPDATED,
+  USER_TASK_UPDATED,
+  ERROR_CODES,
+  STATUSES,
+  TASK_CREATED,
+  TASK_DELETED,
 } = require('../services/constants');
 const taskService = require('../services/task');
 const groupService = require('../services/group');
@@ -100,6 +106,18 @@ module.exports = {
       subscribe: withFilter(
         () => pubsub.asyncIterator([USER_TASK_UPDATED]),
         async () => true,
+      ),
+    },
+    taskCreated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([TASK_CREATED]),
+        () => true,
+      ),
+    },
+    taskDeleted: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([TASK_DELETED]),
+        () => true,
       ),
     },
   },

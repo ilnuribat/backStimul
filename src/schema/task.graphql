@@ -97,4 +97,6 @@ type Subscription {
   taskUpdated: Task
   userTaskUpdated: UserTaskAction
   taskApproved(id: ID!): User!
+  taskCreated: Task!
+  taskDeleted: Task!
 }
