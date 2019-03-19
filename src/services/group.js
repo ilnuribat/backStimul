@@ -58,6 +58,7 @@ async function getMessages(parent, { messageConnection }, { user }) {
     userId: {
       $ne: user.id,
     },
+    type: 'CHAT',
   }).sort({ lastReadCursor: 1 });
 
   messages = messages.map(m => ({
@@ -80,7 +81,7 @@ async function getMessages(parent, { messageConnection }, { user }) {
 }
 
 async function unreadCount({ id }, args, { user }) {
-  const userGroup = await UserGroup.findOne({ groupId: id, userId: user.id });
+  const userGroup = await UserGroup.findOne({ groupId: id, userId: user.id, type: 'CHAT' });
   const { lastReadCursor } = userGroup || {};
 
   return Message.find({
