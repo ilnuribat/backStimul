@@ -68,12 +68,15 @@ async function updateTask(parent, { task }, { user }) {
   }
 
 
-  const [fieldName] = Object.keys(task);
+  // const [fieldName] = Object.keys(task);
 
   const res = await Group.updateOne({
     _id: id,
   }, {
     $set: task,
+  },
+  {
+    strict: false,
   });
 
   if (res.nModified) {
