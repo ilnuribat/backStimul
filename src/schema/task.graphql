@@ -5,6 +5,7 @@ type Task {
   messages(messageConnection: ConnectionInput): MessageConnection
   unreadCount: Int
   status: ID
+  vindex: Int
   assignedTo: User
   lastMessage: Message
   endDate: String
@@ -46,6 +47,7 @@ input TaskInput {
 input TaskUpdateInput {
   name: String
   status: ID
+  vindex: Int
   assignedTo: ID
   endDate: String
 }

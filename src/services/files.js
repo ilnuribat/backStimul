@@ -22,6 +22,7 @@ async function searchFiles(user, regExp, limit) {
     // TODO search in all tasks
     $match: {
       userId: ObjectId(user.id),
+      // no type specified! it is search
     },
   }, {
     $lookup: {

@@ -29,6 +29,7 @@ const schema = new Schema({
   code: String,
   lastMessageAt: Date,
   status: Number,
+  vindex: Number,
   assignedTo: ObjectId,
   endDate: Date,
   address: addressSchema,
