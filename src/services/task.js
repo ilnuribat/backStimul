@@ -67,7 +67,6 @@ async function updateTask(parent, { task }, { user }) {
     await inviteUserToGroup({ group: foundTask, user });
   }
 
-
   // const [fieldName] = Object.keys(task);
 
   const res = await Group.updateOne({
@@ -84,7 +83,6 @@ async function updateTask(parent, { task }, { user }) {
 
     pubsub.publish(TASK_UPDATED, { taskUpdated: updatedTask });
     notyMe.doNotify(parent, task, user, foundTask);
-
   }
 
   return res.nModified;
