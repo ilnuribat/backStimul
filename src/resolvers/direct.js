@@ -30,6 +30,17 @@ module.exports = {
       return anotherUser.email;
     },
     users: groupService.getMembers,
+    user: async (parent, args, { user }) => {
+      const ug = await UserGroup.findOne({
+        groupId: parent._id,
+        userId: {
+          $ne: user._id,
+        },
+        type: 'CHAT',
+      });
+
+      return User.findById(ug.userId);
+    },
     unreadCount: groupService.unreadCount,
     messages: groupService.getMessages,
   },

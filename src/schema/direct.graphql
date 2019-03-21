@@ -5,6 +5,7 @@ type Direct {
   messages(messageConnection: ConnectionInput): MessageConnection
   unreadCount: Int
   lastMessage: Message
+  user: User!
 }
 
 type Query {
