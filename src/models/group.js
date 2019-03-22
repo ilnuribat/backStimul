@@ -49,6 +49,7 @@ const schema = new Schema({
     type: String,
     enum: Object.keys(STATUSES),
   },
+  constructionTypeId: String,
 });
 
 
