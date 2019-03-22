@@ -110,7 +110,7 @@ module.exports = {
         throw new Error(ERROR_CODES.NOT_AUTHENTICATED);
       }
 
-      return Group.findById(id).lean();
+      return Group.findOne({ _id: id, type: 'AREA' }).lean();
     },
     areas(parent, args, { user }) {
       if (!user) {
