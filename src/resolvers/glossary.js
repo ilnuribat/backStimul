@@ -2,7 +2,7 @@ const {
   TASK_STATUSES, ERROR_CODES, SU, STATUSES,
 } = require('../services/constants');
 const { Group } = require('../models');
-const constructionTypes = require('../services/assets/sections.json');
+const sakuraObjectTypes = require('../services/assets/sakuraObjectTypes.json');
 
 module.exports = {
   Glossary: {
@@ -29,7 +29,7 @@ module.exports = {
       throw new Error(foundGroup.toString());
     },
     SU: () => SU,
-    constructionTypes: () => constructionTypes,
+    constructionTypes: () => sakuraObjectTypes,
   },
   Query: {
     glossary: () => ({}),
