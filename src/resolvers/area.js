@@ -17,7 +17,7 @@ module.exports = {
     },
     crumbs: parent => parent.address.parentChain.map(c => ({
       id: c.fiasId,
-      name: c.name,
+      name: `${c.type}. ${c.name}`,
     })),
     parent: parent => ({
       id: parent.address.parentChain.slice(-1)[0].fiasId,
