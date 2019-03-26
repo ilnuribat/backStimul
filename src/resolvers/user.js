@@ -24,7 +24,7 @@ module.exports = {
     },
     id: ({ id, _id }) => id || _id.toString(),
     username: user => user.email,
-    icon: user => `https://dev.scis.xyz/images/${user.lastName} ${user.firstName} ${user.middleName}`,
+    icon: user => `/images/${user.lastName} ${user.firstName} ${user.middleName}`,
     name: ({ firstName }) => firstName,
     notifications: (parent, { limit = 10, offset = 0 }) => ({ limit, offset }),
   },
