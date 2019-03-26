@@ -15,7 +15,9 @@ delete mongoose.connection.models.userGroups;
 delete mongoose.connection.models.messages;
 delete mongoose.connection.models.files;
 delete mongoose.connection.models.notifications;
-delete mongoose.connection.models.notifys;
+delete mongoose.connection.models.notifies;
+delete mongoose.connection.models.notifyevents;
+delete mongoose.connection.models.transition;
 
 module.exports = {
   Group: mongoose.model('groups', group),
