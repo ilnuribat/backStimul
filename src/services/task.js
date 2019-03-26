@@ -13,6 +13,7 @@ const {
 } = require('../services/constants');
 const { logger } = require('../../logger');
 const notyMe = require('./Notify.js');
+const notificationService = require('./notification.js');
 
 
 async function inviteUserToGroup({ group, user }) {
@@ -67,7 +68,7 @@ async function updateTask(parent, { task }, { user }) {
     await inviteUserToGroup({ group: foundTask, user });
   }
 
-  // const [fieldName] = Object.keys(task);
+  const [fieldName] = Object.keys(task);
 
   const res = await Group.updateOne({
     _id: id,
@@ -82,6 +83,18 @@ async function updateTask(parent, { task }, { user }) {
     const updatedTask = await Group.findById(id);
 
     pubsub.publish(TASK_UPDATED, { taskUpdated: updatedTask });
+
+    await notificationService.create({
+      fieldName,
+      oldValue: foundTask[fieldName],
+      newValue: updatedTask[fieldName],
+      operationType: 'UPDATE',
+      targetType: 'TASK',
+      targetId: parent._id,
+      targetResourceName: foundTask.name,
+      user,
+    });
+
     notyMe.doNotify(parent, task, user, foundTask);
   }
 
