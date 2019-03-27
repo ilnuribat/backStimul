@@ -41,6 +41,7 @@ async function rootObjectQuery(parent, { id: addressId }) {
 
   return {
     ...rootObject,
+    name: `${rootObject.type}. ${rootObject.name}`,
     addresses,
     areas,
     crumbs,
