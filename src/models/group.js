@@ -135,7 +135,7 @@ schema.static('getParentChain', async function (fiasId, level) {
     .slice(0, level)
     .map(pc => ({
       id: pc.fiasId,
-      name: pc.name,
+      name: `${pc.type}. ${pc.name}`,
     }));
 
   chain.unshift({
