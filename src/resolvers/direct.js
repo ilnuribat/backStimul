@@ -39,6 +39,10 @@ module.exports = {
         type: 'CHAT',
       });
 
+      if (!ug) {
+        throw new Error('no way to chat with yourselves');
+      }
+
       return User.findById(ug.userId);
     },
     unreadCount: groupService.unreadCount,

@@ -133,13 +133,16 @@ async function searchMessages(user, regExp, limit = 10) {
 }
 
 async function directMessage(parent, { id }, { user }) {
+  if (user._id.toString() === id) {
+    throw new Error('FORBIDDEN to chat with yourselves');
+  }
   const dUser = await User.findById(id);
 
   if (!dUser) {
     throw new Error(ERROR_CODES.NO_USER_FOUND);
   }
 
-  const ids = [user.id, dUser.id].sort();
+  const ids = [user._id, dUser.id].sort();
 
   // try to create such group
   let group;
