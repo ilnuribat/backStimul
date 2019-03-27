@@ -3,13 +3,13 @@ const { Group } = require('../models');
 const objectService = require('../services/object');
 const {
   ERROR_CODES,
-  constructionTypeMap,
   OBJECTS_TABS_NAMES,
   pubsub,
   OBJECT_CREATED,
   OBJECT_DELETED,
   OBJECT_UPDATED,
 } = require('../services/constants');
+const sakuraObjectsTypes = require('../services/assets/sakuraObjectTypes.json');
 
 module.exports = {
   Object: {
@@ -39,7 +39,7 @@ module.exports = {
         type: 'Area',
       };
     },
-    constructionType: parent => constructionTypeMap[parent.constructionTypeId],
+    constructionType: parent => sakuraObjectsTypes[parent.constructionTypeId],
   },
   ObjectMutations: {
     create: objectService.createObject,
