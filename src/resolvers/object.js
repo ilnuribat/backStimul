@@ -39,7 +39,8 @@ module.exports = {
         type: 'Area',
       };
     },
-    constructionType: parent => sakuraObjectsTypes[parent.constructionTypeId],
+    constructionType: parent => sakuraObjectsTypes
+      .find(e => e.id === Number(parent.constructionTypeId)),
   },
   ObjectMutations: {
     create: objectService.createObject,
