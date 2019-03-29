@@ -4,6 +4,7 @@ type File {
   size: String
   mimeType: String
   date: String
+  task: Task!
 }
 
 type Mutation {

@@ -40,7 +40,11 @@ const storeUpload = ({
 module.exports = {
   Upload: GraphQLUpload,
   File: {
-    id: ({ id }) => id.toString(),
+    id: ({ _id }) => _id.toString(),
+    task: parent => Group.findOne({
+      type: 'TASK',
+      _id: parent.groupId,
+    }),
   },
   Task: {
     files: async ({ id }) => Files.aggregate([{
