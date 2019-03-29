@@ -1,5 +1,5 @@
 const { connection, mongo: { GridFSBucket }, Types: { ObjectId } } = require('mongoose');
-const { UserGroup } = require('../models');
+const { Files } = require('../models');
 
 async function download(id) {
   if (!ObjectId.isValid(id)) {
@@ -18,42 +18,27 @@ async function download(id) {
 }
 
 async function searchFiles(user, regExp, limit) {
-  const res = await UserGroup.aggregate([{
-    // TODO search in all tasks
-    $match: {
-      userId: ObjectId(user.id),
-      // no type specified! it is search
-    },
-  }, {
-    $lookup: {
-      from: 'files',
-      localField: 'groupId',
-      foreignField: 'taskId',
-      as: 'files',
-    },
-  }, {
-    $unwind: '$files',
-  }, {
+  const res = await Files.aggregate([{
     $lookup: {
       from: 'gridfs.files',
-      localField: 'files.fileId',
+      localField: 'fileId',
       foreignField: '_id',
-      as: 'gridFile',
+      as: 'gridfs',
     },
   }, {
-    $unwind: '$gridFile',
+    $unwind: '$gridfs',
   }, {
     $match: {
-      'gridFile.filename': regExp,
+      'gridfs.filename': regExp,
     },
   }, {
     $project: {
-      id: '$gridFile._id',
-      name: '$gridFile.filename',
-      size: '$gridFile.length',
-      date: '$gridFile.uploadDate',
-      mimeType: '$files.mimetype',
-      groupId: '$groupId',
+      id: '$gridfs._id',
+      name: '$gridfs.filename',
+      size: '$gridfs.length',
+      date: '$gridfs.uploadDate',
+      mimeType: '$mimetype',
+      groupId: '$taskId',
     },
   }, {
     $limit: limit,
