@@ -41,6 +41,15 @@ async function searchFiles(user, regExp, limit) {
       groupId: '$taskId',
     },
   }, {
+    $lookup: {
+      from: 'groups',
+      localField: 'taskId',
+      foreignField: '_id',
+      as: 'task',
+    },
+  }, {
+    $unwind: '$task',
+  }, {
     $limit: limit,
   }]);
 
