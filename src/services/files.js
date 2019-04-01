@@ -32,15 +32,6 @@ async function searchFiles(user, regExp, limit) {
       'gridfs.filename': regExp,
     },
   }, {
-    $project: {
-      id: '$gridfs._id',
-      name: '$gridfs.filename',
-      size: '$gridfs.length',
-      date: '$gridfs.uploadDate',
-      mimeType: '$mimetype',
-      groupId: '$taskId',
-    },
-  }, {
     $lookup: {
       from: 'groups',
       localField: 'taskId',
@@ -49,6 +40,16 @@ async function searchFiles(user, regExp, limit) {
     },
   }, {
     $unwind: '$task',
+  }, {
+    $project: {
+      id: '$gridfs._id',
+      name: '$gridfs.filename',
+      size: '$gridfs.length',
+      date: '$gridfs.uploadDate',
+      mimeType: '$mimetype',
+      groupId: '$taskId',
+      task: '$task',
+    },
   }, {
     $limit: limit,
   }]);
