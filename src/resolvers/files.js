@@ -89,6 +89,10 @@ module.exports = {
       const taskFile = await Files.findOne({
         fileId: id,
       });
+
+      if (!taskFile) {
+        return false;
+      }
       const task = await Group.findById(taskFile.taskId);
 
       if (!task) {
