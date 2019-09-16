@@ -60,7 +60,7 @@
     "istanbul": "0.4.5",
     "jsonwebtoken": "8.4.0",
     "knex": "0.14",
-    "lodash": "4.17.11",
+    "lodash": "4.17.13",
     "merge-graphql-schemas": "1.5.8",
     "mocha": "5.2.0",
     "moment": "2.22.2",
